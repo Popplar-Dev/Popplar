@@ -1,0 +1,26 @@
+# Spring Boot 설정
+spring:
+  application:
+    name: hotspot  # 애플리케이션의 이름
+
+# 데이터베이스 연결 설정
+datasource:
+  url: jdbc:mysql://localhost:3316/  # MySQL 서버 및 데이터베이스 이름
+  username: your_username  # MySQL 사용자 이름
+  password: your_password  # MySQL 사용자 비밀번호
+  driver-class-name: com.mysql.cj.jdbc.Driver
+
+# JPA 설정
+jpa:
+  hibernate:
+    ddl-auto: update  # 데이터베이스 스키마 자동 업데이트 (update, create, create-drop, validate, none)
+  show-sql: true  # SQL 쿼리 디버그 출력
+
+# 시간대 설정 (선택 사항)
+# spring:
+#   jackson:
+#     time-zone: UTC
+
+# 포트 설정 (선택 사항)
+# server:
+#   port: 8080
