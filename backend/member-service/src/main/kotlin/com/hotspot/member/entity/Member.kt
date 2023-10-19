@@ -21,4 +21,16 @@ class Member (
 
     var exp: Int,
 
-)
+) {
+    companion object {
+        fun create(oAuthMember: OAuthMember): Member {
+            return Member(
+                email = oAuthMember.email,
+                name = "새 유저",
+                profileImage = "test",
+                exp = 0,
+                socialType = oAuthMember.socialType
+            )
+        }
+    }
+}
