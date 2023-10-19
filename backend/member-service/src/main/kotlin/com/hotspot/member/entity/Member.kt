@@ -8,16 +8,17 @@ class Member (
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Long? = null,
+    val id: Long? = null,
 
-    private val email: String,
+    val email: String,
 
-    private var name: String,
+    var name: String,
 
-    private var profileImage: String,
+    var profileImage: String,
 
-    private val socialType: SocialType,
+    @Enumerated(EnumType.STRING)
+    val socialType: SocialType,
 
-    private var exp: Int,
+    var exp: Int,
 
-    )
+)
