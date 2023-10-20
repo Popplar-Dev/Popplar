@@ -1,5 +1,6 @@
 package com.hotspot.member.entity
 
+import com.hotspot.member.oauth.OAuthMember
 import jakarta.persistence.*
 
 @Entity
@@ -8,16 +9,29 @@ class Member (
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Long? = null,
+    val id: Long? = null,
 
-    private val email: String,
+    var name: String,
 
-    private var name: String,
+    var profileImage: String,
 
-    private var profileImage: String,
+    @Enumerated(EnumType.STRING)
+    val socialType: SocialType,
 
-    private val socialType: SocialType,
+    val socialId: String,
 
-    private var exp: Int,
+    var exp: Int,
 
-    )
+) : BaseEntity() {
+    companion object {
+        fun create(oAuthMember: OAuthMember): Member {
+            return Member(
+                name = "새 유저",
+                profileImage = "default profile",
+                exp = 0,
+                socialType = oAuthMember.socialType,
+                socialId = oAuthMember.socialId,
+            )
+        }
+    }
+}
