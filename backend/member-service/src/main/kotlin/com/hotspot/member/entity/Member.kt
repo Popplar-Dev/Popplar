@@ -1,5 +1,6 @@
 package com.hotspot.member.entity
 
+import com.hotspot.member.oauth.OAuthMember
 import jakarta.persistence.*
 
 @Entity
