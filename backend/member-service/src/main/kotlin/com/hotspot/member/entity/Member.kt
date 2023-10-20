@@ -10,8 +10,6 @@ class Member (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    val email: String,
-
     var name: String,
 
     var profileImage: String,
@@ -19,17 +17,19 @@ class Member (
     @Enumerated(EnumType.STRING)
     val socialType: SocialType,
 
+    val socialId: String,
+
     var exp: Int,
 
-) {
+) : BaseEntity() {
     companion object {
         fun create(oAuthMember: OAuthMember): Member {
             return Member(
-                email = oAuthMember.email,
                 name = "새 유저",
-                profileImage = "test",
+                profileImage = "default profile",
                 exp = 0,
-                socialType = oAuthMember.socialType
+                socialType = oAuthMember.socialType,
+                socialId = oAuthMember.socialId,
             )
         }
     }
