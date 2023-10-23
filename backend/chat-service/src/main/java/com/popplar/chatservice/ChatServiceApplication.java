@@ -1,4 +1,4 @@
-package com.example.chatservice;
+package com.popplar.chatservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
