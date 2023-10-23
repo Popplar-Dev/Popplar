@@ -30,14 +30,6 @@ class MemberController(
         // TODO
         //  프론트 완성 전 임시로 code만 받음
         //  추후 class 생성해서 code, type post로 받도록 해야 함
-        val oAuthTokenDto: OAuthTokenDto =
-            oAuthServiceFactory.getOauthService(SocialType.GOOGLE).getAccessToken(code)
-        val oAuthMember: OAuthMember =
-            oAuthServiceFactory.getOauthService(SocialType.GOOGLE).getUser(oAuthTokenDto.accessToken)
-        val member = oAuthServiceFactory.getOauthService(SocialType.KAKAO).login(oAuthMember)
-
-        // TODO
-        //  HATEOAS 적용 필요
-        return MemberMapper.INSTANCE.entityToMemberDto(member)
+        return oAuthServiceFactory.getOauthService(SocialType.GOOGLE).process(code)
     }
 }
