@@ -11,6 +11,8 @@ eureka:
 spring:
   application:
     name: api-gateway
+  config:
+    import: optional:file:.env[.properties]
   cloud:
     gateway:
       routes:
@@ -24,3 +26,5 @@ spring:
 #          uri: lb://ORDER-SERVICE
 #          predicates:
 #            - Path=/order/**
+
+SALT: ${SALT_KEY}
