@@ -9,14 +9,16 @@ import com.hotspot.member.oauth.service.OAuthService
 import com.hotspot.member.repository.MemberRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
 
 @Service
+@Transactional(readOnly = true)
 class KakaoOAuthService(
     private val webClient: WebClient,
     private val memberRepository: MemberRepository,
     @Value("\${KAKAO_RESTAPI_KEY}")
-    private var KAKAO_RESTPAPI_KEY: String,
+    private val KAKAO_RESTPAPI_KEY: String,
     @Value("\${KAKAO_REDIRECT_URL}")
     private val KAKAO_REDIRECT_URL: String,
 ) : OAuthService {
@@ -51,6 +53,7 @@ class KakaoOAuthService(
         )
     }
 
+    @Transactional
     override fun login(oAuthMember: OAuthMember): Member {
         return memberRepository.findBySocialIdAndDeletedFalse(oAuthMember.socialId) ?: memberRepository.save(Member.create(oAuthMember))
     }

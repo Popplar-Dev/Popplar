@@ -1,18 +1,23 @@
 package com.hotspot.member.entity
 
 import jakarta.persistence.*
+import java.util.ArrayList
 
 @Entity
-@Table(name = "stamps")
-class Stamp(
+@Table(name = "achievements")
+class Achievement(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    val memberId: Long,
+    var title: String,
 
-    val hotPlaceId: Long,
+    var description: String,
+
+    var targetCount: Int,
+
+    var finished: Boolean,
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
