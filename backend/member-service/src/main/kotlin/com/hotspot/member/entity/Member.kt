@@ -1,5 +1,6 @@
 package com.hotspot.member.entity
 
+import com.hotspot.member.dto.MemberUpdateReqDto
 import com.hotspot.member.oauth.OAuthMember
 import jakarta.persistence.*
 
@@ -22,7 +23,13 @@ class Member(
 
     var exp: Int,
 
-) : BaseEntity() {
+    ) : BaseEntity() {
+
+    fun update(memberUpdateReqDto: MemberUpdateReqDto) {
+        this.name = memberUpdateReqDto.name ?: this.name
+        this.profileImage = memberUpdateReqDto.profileImage ?: this.profileImage
+    }
+
     companion object {
         fun create(oAuthMember: OAuthMember): Member {
             return Member(

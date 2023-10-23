@@ -21,7 +21,7 @@ class CryptService (
         return memberProfileResDto.encrypt(saltA, saltB, saltC)
     }
 
-    fun decrypt(memberProfileResDto: MemberProfileResDto): MemberProfileResDto {
-        return memberProfileResDto.decrypt(saltA, saltB, saltC)
+    fun decrypt(id: Long): Long {
+        return id / (saltA * saltB * saltC)
     }
 }
