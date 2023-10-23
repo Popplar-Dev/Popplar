@@ -10,15 +10,15 @@ eureka:
 
 spring:
   application:
-    name: gateway-service
+    name: api-gateway
   cloud:
     gateway:
       routes:
-        - id: user-service
-          uri: lb://USER-SERVICE
+        - id: chat-service
+          uri: lb://CHAT-SERVICE
           predicates:
-              - Path=/user/**
-        - id: order-service
-          uri: lb://ORDER-SERVICE
-          predicates:
-            - Path=/order/**
+              - Path=/chat/**
+#        - id: order-service
+#          uri: lb://ORDER-SERVICE
+#          predicates:
+#            - Path=/order/**
