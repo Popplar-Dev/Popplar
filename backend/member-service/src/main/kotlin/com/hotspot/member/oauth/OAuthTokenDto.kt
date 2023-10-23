@@ -7,5 +7,5 @@ class OAuthTokenDto(
     val accessToken: String,
 
     @JsonProperty("refresh_token")
-    val refreshToken: String,
+    val refreshToken: String? = null,
 )
