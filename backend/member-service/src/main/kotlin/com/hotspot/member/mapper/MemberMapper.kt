@@ -8,7 +8,7 @@ import org.mapstruct.factory.Mappers
 @Mapper
 interface MemberMapper {
 
-    fun entityToMemberDto(member: Member): MemberProfileResDto
+    fun entityToMemberProfileDto(member: Member): MemberProfileResDto
 
     companion object {
         val INSTANCE: MemberMapper = Mappers.getMapper(MemberMapper::class.java)

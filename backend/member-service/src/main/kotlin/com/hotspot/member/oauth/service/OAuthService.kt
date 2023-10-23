@@ -9,7 +9,7 @@ import com.hotspot.member.oauth.OAuthTokenDto
 
 interface OAuthService {
     fun process(code: String): MemberProfileResDto {
-        return MemberMapper.INSTANCE.entityToMemberDto(login(getUser(getAccessToken(code).accessToken)))
+        return MemberMapper.INSTANCE.entityToMemberProfileDto(login(getUser(getAccessToken(code).accessToken)))
     }
 
     fun getSocialType(): SocialType
