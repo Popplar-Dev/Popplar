@@ -2,7 +2,7 @@ package com.hotspot.member.oauth
 
 import com.hotspot.member.entity.SocialType
 
-class OAuthMember (
+class OAuthMember(
     val socialType: SocialType,
     val socialId: String,
 )

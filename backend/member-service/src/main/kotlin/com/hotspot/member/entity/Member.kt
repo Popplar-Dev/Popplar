@@ -5,7 +5,7 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "members")
-class Member (
+class Member(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

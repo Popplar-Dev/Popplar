@@ -4,7 +4,7 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "stamps")
-class Stamp (
+class Stamp(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

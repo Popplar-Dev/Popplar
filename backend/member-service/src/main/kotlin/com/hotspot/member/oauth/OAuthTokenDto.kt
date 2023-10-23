@@ -2,7 +2,7 @@ package com.hotspot.member.oauth
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-class OAuthTokenDto (
+class OAuthTokenDto(
     @JsonProperty("access_token")
     val accessToken: String,
 
