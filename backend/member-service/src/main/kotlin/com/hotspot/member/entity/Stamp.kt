@@ -13,4 +13,4 @@ class Stamp (
     private val memberId: Long,
 
     private val hotPlaceId: Long,
-)
+) : BaseEntity()
