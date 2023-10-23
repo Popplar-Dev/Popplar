@@ -18,6 +18,8 @@ spring:
           uri: lb://CHAT-SERVICE
           predicates:
               - Path=/chat/**
+          filters:
+            - CustomAuthFilter
 #        - id: order-service
 #          uri: lb://ORDER-SERVICE
 #          predicates:
