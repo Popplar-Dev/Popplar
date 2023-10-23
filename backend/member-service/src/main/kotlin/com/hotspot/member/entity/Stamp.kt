@@ -8,9 +8,9 @@ class Stamp (
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Long? = null,
+    val id: Long? = null,
 
-    private val memberId: Long,
+    val memberId: Long,
 
-    private val hotPlaceId: Long,
+    val hotPlaceId: Long,
 ) : BaseEntity()
