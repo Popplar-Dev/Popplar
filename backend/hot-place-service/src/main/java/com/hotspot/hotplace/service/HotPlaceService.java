@@ -1,7 +1,9 @@
 package com.hotspot.hotplace.service;
 
-import com.hotspot.hotplace.dto.HotPlaceDto;
+import com.hotspot.hotplace.dto.HotPlaceResDto;
+import com.hotspot.hotplace.dto.HotPlaceReqDto;
 import com.hotspot.hotplace.entity.HotPlace;
+import com.hotspot.hotplace.entity.HotPlaceType;
 import com.hotspot.hotplace.entity.Like;
 import com.hotspot.hotplace.mapper.HotPlaceMapper;
 import com.hotspot.hotplace.repository.HotPlaceRepository;
@@ -22,21 +24,33 @@ public class HotPlaceService {
     private final HotPlaceRepository hotPlaceRepository;
     private final LikeRepository likeRepository;
 
-    public List<HotPlaceDto> findAllHotPlace() {
+    public List<HotPlaceResDto> findAllHotPlace() {
         List<HotPlace> hotPlaceList = hotPlaceRepository.findAll();
-        List<HotPlaceDto> hotPlaceDtoList = new ArrayList<>();
+        List<HotPlaceResDto> hotPlaceResDtoList = new ArrayList<>();
         for (HotPlace hotPlace : hotPlaceList) {
-            HotPlaceDto hotPlaceDto = HotPlaceMapper.INSTANCE.entityToHotPlaceDto(hotPlace);
-            hotPlaceDtoList.add(hotPlaceDto);
+            HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(
+                hotPlace);
+            hotPlaceResDtoList.add(hotPlaceResDto);
         }
 
-        return hotPlaceDtoList;
+        return hotPlaceResDtoList;
     }
 
-    public HotPlaceDto findHotPlace(Long hotPlaceId) {
+    public HotPlaceResDto findHotPlace(Long hotPlaceId) {
         HotPlace hotPlace = findHotPlaceById(hotPlaceId);
 
-        return HotPlaceMapper.INSTANCE.entityToHotPlaceDto(hotPlace);
+        return HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
+    }
+
+    @Transactional
+    public HotPlaceResDto insertHotPlace(HotPlaceReqDto hotPlaceReqDto) {
+        if (hotPlaceRepository.findById(hotPlaceReqDto.getId()).isPresent()) {
+            throw new ArithmeticException("이미 핫플레이스로 등록되어있습니다.");
+        }
+        HotPlace hotPlace = HotPlaceMapper.INSTANCE.hotPlaceReqDtoToEntity(hotPlaceReqDto);
+        hotPlaceRepository.save(hotPlace);
+
+        return HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
     }
 
     @Transactional
@@ -47,6 +61,9 @@ public class HotPlaceService {
         }
         likeRepository.save(Like.builder().memberId(memberId).hotPlace(hotPlace).build());
         hotPlace.increaseLikeCount();
+        if (hotPlace.getLikeCount() >= 5) {
+            hotPlace.upgrade(HotPlaceType.HOT_PLACE);
+        }
     }
 
     @Transactional
@@ -63,5 +80,6 @@ public class HotPlaceService {
         return hotPlaceRepository.findById(hotPlaceId)
             .orElseThrow(() -> new ArithmeticException("핫플레이스가 존재하지 않습니다"));
     }
+
 }
 

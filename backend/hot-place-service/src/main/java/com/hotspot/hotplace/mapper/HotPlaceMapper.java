@@ -1,6 +1,7 @@
 package com.hotspot.hotplace.mapper;
 
-import com.hotspot.hotplace.dto.HotPlaceDto;
+import com.hotspot.hotplace.dto.HotPlaceResDto;
+import com.hotspot.hotplace.dto.HotPlaceReqDto;
 import com.hotspot.hotplace.entity.HotPlace;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -9,5 +10,7 @@ import org.mapstruct.factory.Mappers;
 public interface HotPlaceMapper {
     HotPlaceMapper INSTANCE = Mappers.getMapper(HotPlaceMapper.class);
 
-    HotPlaceDto entityToHotPlaceDto(HotPlace hotPlace);
+    HotPlaceResDto entityToHotPlaceResDto(HotPlace hotPlace);
+
+    HotPlace hotPlaceReqDtoToEntity(HotPlaceReqDto hotPlaceReqDto);
 }

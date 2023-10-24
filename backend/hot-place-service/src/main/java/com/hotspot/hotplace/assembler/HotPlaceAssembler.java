@@ -4,16 +4,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.hotspot.hotplace.controller.HotPlaceController;
-import com.hotspot.hotplace.dto.HotPlaceDto;
+import com.hotspot.hotplace.dto.HotPlaceResDto;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Component;
 
 @Component
 public class HotPlaceAssembler {
 
-    public EntityModel<HotPlaceDto> findHotPlaceToModel(HotPlaceDto hotPlaceDto) {
-        return EntityModel.of(hotPlaceDto, linkTo(
-            methodOn(HotPlaceController.class).findHotPlace(hotPlaceDto.getId())).withSelfRel());
+    public EntityModel<HotPlaceResDto> findHotPlaceToModel(HotPlaceResDto hotPlaceResDto) {
+        return EntityModel.of(hotPlaceResDto, linkTo(
+            methodOn(HotPlaceController.class).findHotPlace(hotPlaceResDto.getId())).withSelfRel());
     }
 
     public EntityModel<?> likeHotPlaceToModel(Long hotPlaceId) {
