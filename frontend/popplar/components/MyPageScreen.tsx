@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button  } from 'react-native';
 import { useState, useEffect } from 'react';
 import axios from "axios";
-import { getuserinfo } from '../utills/https'
+import { getuserinfo } from '../utils/https'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import SettingScreen from './SettingScreen';
