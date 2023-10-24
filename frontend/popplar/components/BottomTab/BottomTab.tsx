@@ -1,4 +1,5 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {View, StyleSheet} from 'react-native';
 
@@ -8,8 +9,21 @@ import ChatScreen from '../ChatScreen';
 import MyPageScreen from '../MyPageScreen';
 import AllPlacesScreen from '../AllPlacesScreen';
 import NotificationsScreen from '../NotificationsScreen';
+import SettingScreen from '../Settings/SettingScreen';
+import ProfileSetting from '../Settings/ProfileSetting';
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+const MyPageStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Mypage" component={MyPageScreen} />
+      <Stack.Screen name="Settings" component={SettingScreen} />
+      <Stack.Screen name="ProfileSetting" component={ProfileSetting} />
+    </Stack.Navigator>
+  );
+}
 
 export default function BottomTab() {
   return (
@@ -75,7 +89,7 @@ export default function BottomTab() {
       />
       <Tab.Screen
         name="MyPage"
-        component={MyPageScreen}
+        component={MyPageStack}
         options={{
           tabBarIcon: ({focused}) => (
             <Icon
