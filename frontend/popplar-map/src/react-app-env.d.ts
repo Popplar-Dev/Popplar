@@ -1,7 +1,9 @@
 /// <reference types="react-scripts" />
 
 interface Window {
-  kakao: any;
+  kakao: {
+    maps: any;
+  }
 }
 
 declare module 'react-https-redirect' {

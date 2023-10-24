@@ -22,7 +22,7 @@ function App() {
     <div className={styles.container}>
       <div className={styles.map}>
         <div className={styles.searchInput}>
-          <input type="text" placeholder="검색어를 입력하세요" onChange={e => setPlaceKeyword(e.target.value)}/>
+          <input type="text" placeholder="search..." onChange={e => setPlaceKeyword(e.target.value)}/>
         </div>
 
         {!placeKeyword ?

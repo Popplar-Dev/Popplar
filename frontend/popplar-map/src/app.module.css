@@ -6,20 +6,20 @@
   position: absolute;
   width: 70%;
 
-  top: 12%;
+  top: 14%;
   left: 13%;
   z-index: 999;
 }
 
 .searchInput input {
-  width: 100%;
+  width: 97%;
   height: 35px;
 
   border: 0;
   border-radius: 14px;
   background-color: #4941bb4a;
   color: black;
-  padding-left: 10px;
+  padding-left: 20px;
 }
 
 .searchInput input::placeholder {
