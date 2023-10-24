@@ -44,20 +44,32 @@ class MemberService(
 
     @Transactional
     fun blockMember(memberId: Long, blockedMemberId: Long) {
-        if (blockedMemberRepository.findByMemberIdAndBlockedMemberId(memberId, blockedMemberId) == null)
+        val decryptedMemberId = cryptService.decrypt(memberId)
+        val decryptedBlockedMemberId = cryptService.decrypt(blockedMemberId)
+        if (blockedMemberRepository.findByMemberIdAndBlockedMemberId(
+                decryptedMemberId,
+                decryptedBlockedMemberId
+            ) != null
+        ) {
             throw RuntimeException("이미 차단한 회원입니다.")
+        }
         blockedMemberRepository.save(
             BlockedMember(
-                memberId = memberId,
-                blockedMemberId = blockedMemberId
+                memberId = decryptedMemberId,
+                blockedMemberId = decryptedBlockedMemberId
             )
         )
     }
 
     @Transactional
     fun unBlockMember(memberId: Long, blockedMemberId: Long) {
+        val decryptedMemberId = cryptService.decrypt(memberId)
+        val decryptedBlockedMemberId = cryptService.decrypt(blockedMemberId)
         val blockedMember =
-            blockedMemberRepository.findByMemberIdAndBlockedMemberId(memberId, blockedMemberId)
+            blockedMemberRepository.findByMemberIdAndBlockedMemberId(
+                decryptedMemberId,
+                decryptedBlockedMemberId
+            )
                 ?: throw RuntimeException("차단하지 않은 회원입니다.")
         blockedMemberRepository.delete(blockedMember)
     }

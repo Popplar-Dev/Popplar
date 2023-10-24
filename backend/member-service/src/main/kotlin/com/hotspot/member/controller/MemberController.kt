@@ -73,4 +73,18 @@ class MemberController(
     fun deleteMember(@PathVariable memberId: Long) {
         memberService.deleteMember(memberId)
     }
+
+    // TODO
+    //  본인 검증 로직 추가 필요
+    @PostMapping("/block/{memberId}/{blockedMemberId}")
+    fun blockMember(@PathVariable memberId: Long, @PathVariable blockedMemberId: Long) {
+        memberService.blockMember(memberId, blockedMemberId)
+    }
+
+    // TODO
+    //  본인 검증 로직 추가 필요
+    @DeleteMapping("/block/{memberId}/{blockedMemberId}")
+    fun unBlockMember(@PathVariable memberId: Long, @PathVariable blockedMemberId: Long) {
+        memberService.unBlockMember(memberId, blockedMemberId)
+    }
 }
