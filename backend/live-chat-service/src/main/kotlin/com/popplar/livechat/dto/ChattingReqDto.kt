@@ -2,7 +2,7 @@ package com.popplar.livechat.dto
 
 class ChattingReqDto(
 
-    val chattingId: Long,
+    val chattingRoomId: Long,
+    val chattingContent: String,
     val memberId: Long,
-    val content: String,
 )
