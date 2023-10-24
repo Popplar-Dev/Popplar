@@ -6,7 +6,6 @@ import com.hotspot.hotplace.dto.HotPlaceResDto;
 import com.hotspot.hotplace.dto.HotPlaceReqDto;
 import com.hotspot.hotplace.service.HotPlaceService;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
@@ -34,7 +33,7 @@ public class HotPlaceController {
         List<EntityModel<HotPlaceResDto>> hotPlaceDtolist = hotPlaceService.findAllHotPlace()
             .stream()
             .map(hotPlaceAssembler::findHotPlaceToModel)
-            .collect(Collectors.toList());
+            .toList();
 
         return CollectionModel.of(hotPlaceDtolist);
     }
@@ -56,7 +55,7 @@ public class HotPlaceController {
 
     @PostMapping("/{hotPlaceId}/like")
     public EntityModel<?> likeHotPlace(@PathVariable Long hotPlaceId) {
-        // 임시 멤버 id
+        // TODO 임시 memberId
         Long memberId = 1L;
         hotPlaceService.likeHotPlace(hotPlaceId, memberId);
 
@@ -65,7 +64,7 @@ public class HotPlaceController {
 
     @DeleteMapping("/{hotPlaceId}/like")
     public EntityModel<?> deleteLikeHotPlace(@PathVariable Long hotPlaceId) {
-        // 임시 멤버 id
+        // TODO 임시 memberId
         Long memberId = 1L;
         hotPlaceService.deleteLikeHotPlace(hotPlaceId, memberId);
 
