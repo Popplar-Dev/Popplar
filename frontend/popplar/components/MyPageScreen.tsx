@@ -2,10 +2,10 @@ import React from 'react';
 import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button  } from 'react-native';
 import { useState, useEffect } from 'react';
 import axios from "axios";
-import { getuserinfo } from '../utils/https'
+// import { getuserinfo } from '../utills/https'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import SettingScreen from './SettingScreen';
+import SettingScreen from './Settings/SettingScreen';
 
 
 function MyPageScreen() {
@@ -55,15 +55,15 @@ function MyPageScreen() {
 
   const navigation = useNavigation();
 
-  // const handleSettingPress = () => {
-  //   navigation.navigate('Setting');
-  // };
+  const handleSettingPress = () => {
+    navigation.navigate('Settings' as never);
+  };
 
 
   return (
     <View style={styles.container}>
 			<ImageBackground
-        source={require('../assets/stars.png')} // 배경 이미지
+        source={require('../assets/stars.png')}
         style={styles.backgroundImage}
       >
 				<View style={styles.profileContainer}>
@@ -72,7 +72,7 @@ function MyPageScreen() {
           name='settings-outline'
           size={30}
           color='#ffffff'
-          // onPress={handleSettingPress} 
+          onPress={handleSettingPress} 
         />
           {isEditing ? (
             <View style={styles.editingContainer}>
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2C2C2C',
   },
 	backgroundImage: {
-    flex: 1, // 배경 이미지가 전체 화면을 채우기
+    flex: 1, 
     width: '100%', 
     height: '100%', 
   },
