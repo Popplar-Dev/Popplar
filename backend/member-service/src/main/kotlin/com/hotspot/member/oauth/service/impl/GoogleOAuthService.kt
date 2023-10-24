@@ -17,6 +17,7 @@ import org.springframework.web.reactive.function.client.WebClient
 @Service
 @Transactional(readOnly = true)
 class GoogleOAuthService(
+
     private val webClient: WebClient,
     private val memberRepository: MemberRepository,
     @Value("\${GOOGLE_CLIENT_ID}")
@@ -26,6 +27,7 @@ class GoogleOAuthService(
     @Value("\${GOOGLE_REDIRECT_URI}")
     private val GOOGLE_REDIRECT_URI: String,
 ) : OAuthService {
+
     override fun getSocialType(): SocialType {
         return SocialType.GOOGLE
     }
@@ -64,6 +66,7 @@ class GoogleOAuthService(
         )
     }
 
+    @Transactional
     override fun login(oAuthMember: OAuthMember): Member {
         return memberRepository.findBySocialIdAndDeletedFalse(oAuthMember.socialId)
             ?: memberRepository.save(Member.create(oAuthMember))
