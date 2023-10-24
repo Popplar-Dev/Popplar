@@ -5,9 +5,10 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
+import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,23 +21,22 @@ public class JwtServiceImpl implements JwtService {
 
     public static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
 
-    @Value("${SALT}")
+    @Value("${SALT_KEY}")
     private String SALT;
 
-    private byte[] generateKey() {
-        byte[] key;
-        key = SALT.getBytes(StandardCharsets.UTF_8);
-        return key;
+    private SecretKey generateKey() {
+        byte[] keyBytes = SALT.getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     @Override
     public boolean checkToken(String jwt) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey())
-                .parseClaimsJws(jwt);
+            Jws<Claims> claims = Jwts.parser().verifyWith(this.generateKey()).build()
+                .parseSignedClaims(jwt);
             logger.debug("claims: {}", claims);
             return true;
-        } catch (SignatureException | MalformedJwtException ex) {
+        } catch (MalformedJwtException ex) {
             log.error("잘못된 JWT 서명입니다");
         } catch (ExpiredJwtException ex) {
             log.error("만료된 JWT 토큰입니다");
@@ -49,33 +49,27 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public Claims get(String key) {
-        Claims claim = parseClaims(key);
-        System.out.println("토큰 받은거 해석");
-        System.out.println(claim);
-        return parseClaims(key);
-    }
-
-    @Override
-    public long getMemberIdFromAccessToken(String accessToken) {
-        Jws<Claims> claims;
+    public String getMemberIdFromAccessToken(String accessToken) {
         try {
-            claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(accessToken);
+            Claims claims = Jwts.parser()
+                .verifyWith(this.generateKey())
+                .build().parseSignedClaims(accessToken).getPayload();
+
+            return claims.get("id", String.class);
         } catch (Exception e) {
             logger.error(e.getMessage());
             //TODO: UnAuthorized 예외로 바꿔서 처리해야함요
             throw new ArithmeticException();
         }
-        return claims.getBody().get("id", Long.class);
     }
 
     @Override
-    public Claims parseClaims(String accessToken) {
+    public Object parseClaims(String accessToken) {
         try {
             return Jwts.parser()
-                .setSigningKey(SALT.getBytes(StandardCharsets.UTF_8))
-                .parseClaimsJws(accessToken)
-                .getBody();
+                .verifyWith(this.generateKey())
+                .build()
+                .parse(accessToken).getPayload();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }

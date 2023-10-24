@@ -19,12 +19,10 @@ spring:
         - id: chat-service
           uri: lb://CHAT-SERVICE
           predicates:
-              - Path=/chat/**
+            - Path=/chat/**
           filters:
             - CustomAuthFilter
 #        - id: order-service
 #          uri: lb://ORDER-SERVICE
 #          predicates:
 #            - Path=/order/**
-
-SALT: ${SALT_KEY}
