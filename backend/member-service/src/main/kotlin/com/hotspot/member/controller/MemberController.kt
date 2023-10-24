@@ -4,6 +4,7 @@ import com.hotspot.member.assembler.MemberProfileResDtoRA
 import com.hotspot.member.dto.MemberProfileResDto
 import com.hotspot.member.dto.MemberUpdateReqDto
 import com.hotspot.member.entity.SocialType
+import com.hotspot.member.oauth.OAuthLoginReqDto
 import com.hotspot.member.oauth.service.OAuthServiceFactory
 import com.hotspot.member.service.CryptService
 import com.hotspot.member.service.MemberService
@@ -21,20 +22,25 @@ class MemberController(
     private val memberProfileResDtoRA: MemberProfileResDtoRA,
 ) {
 
+    // 테스트용 코드
     @GetMapping("/login")
-
-    fun login(@RequestParam code: String): EntityModel<MemberProfileResDto> {
-        // TODO
-        //  프론트 완성 전 임시로 code만 받음
-        //  추후 class 생성해서 code, type post로 받도록 해야 함
-        //  JWT 발급 로직 추가 필요
-
+    fun loginTest(@RequestParam code: String): EntityModel<MemberProfileResDto> {
         return memberProfileResDtoRA.toModel(
             cryptService.encrypt(
                 oAuthServiceFactory.getOauthService(SocialType.GOOGLE).process(code)
             )
         )
+    }
 
+    @PostMapping("/login")
+    fun login(@RequestBody oAuthLoginReqDto: OAuthLoginReqDto): EntityModel<MemberProfileResDto> {
+        // TODO JWT 생성 로직 추가 필요
+        return memberProfileResDtoRA.toModel(
+            cryptService.encrypt(
+                oAuthServiceFactory.getOauthService(oAuthLoginReqDto.loginType)
+                    .process(oAuthLoginReqDto.code)
+            )
+        )
     }
 
     @GetMapping("/{memberId}")
