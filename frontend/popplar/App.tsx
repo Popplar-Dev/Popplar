@@ -1,51 +1,49 @@
-import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Text, View, StyleSheet } from 'react-native';
+import {ImageBackground, StyleSheet} from 'react-native';
+import {StatusBar} from 'expo-status-bar';
+import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 
-//스크린 컴포넌트
-import MapScreen from './components/MapScreen';
-import ChatScreen from './components/ChatScreen';
-import MyPageScreen from './components/MyPageScreen';
-
-function MapStackScreen() {
-  return <MapScreen/>
-    // <MapStack.Navigator>
-    //   <MapStack.Screen name="MapStackScreenMap" component={MapScreen} />
-    // </MapStack.Navigator>
-  
-}
-
-function ChatStackScreen() {
-  return <ChatScreen/>
-}
-
-function MyPageStackScreen() {
-  return <MyPageScreen/>
-}
-
-// Bottom Tab 네비게이터
-const Tab = createBottomTabNavigator();
+import BottomTab from './components/BottomTab/BottomTab';
 
 function App() {
+  const navTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: '#613EEA',
+      background: 'transparent',
+      card: '#1E1E1E',
+      text: '#9DB2CE',
+      border: 'transparent',
+    },
+  };
+
   return (
-    <View style={styles.container}>
-      <NavigationContainer>
-        <Tab.Navigator screenOptions={{headerShown: false}}>
-          <Tab.Screen name="Map" component={MapStackScreen} />
-          <Tab.Screen name="Chat" component={ChatStackScreen} />
-          <Tab.Screen name="MyPage" component={MyPageStackScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <StatusBar style="light" />
+        <ImageBackground
+          source={require('./assets/stars.png')}
+          style={styles.backgroundImage}>
+          <NavigationContainer theme={navTheme}>
+            <BottomTab />
+          </NavigationContainer>
+        </ImageBackground>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2C2C2C', // 배경색??
+    backgroundColor: '#2C2C2C',
+  },
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
 });
 
