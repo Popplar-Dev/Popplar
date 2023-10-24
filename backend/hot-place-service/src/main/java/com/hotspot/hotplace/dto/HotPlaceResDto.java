@@ -1,8 +1,10 @@
 package com.hotspot.hotplace.dto;
+
+import com.hotspot.hotplace.entity.HotPlaceType;
 import lombok.Data;
 
 @Data
-public class HotPlaceDto {
+public class HotPlaceResDto {
 
     private Long id;
 
@@ -14,7 +16,7 @@ public class HotPlaceDto {
 
     private double posY;
 
-    private int level;
+    private HotPlaceType category;
 
     private int likeCount;
 }

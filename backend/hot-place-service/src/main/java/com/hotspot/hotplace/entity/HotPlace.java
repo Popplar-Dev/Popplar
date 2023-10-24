@@ -32,15 +32,31 @@ public class HotPlace {
     private double posY;
 
     @NotNull
-    private int level;
+    private HotPlaceType category;
+
+    @NotNull
+    private int likeCount;
 
     @Builder
-    public HotPlace(Long id, String name, String address, double posX, double posY, int level) {
+    public HotPlace(Long id, String name, String address, double posX, double posY) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.posX = posX;
         this.posY = posY;
-        this.level = level;
+        this.category = HotPlaceType.FLAG;
+        this.likeCount = 0;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount--;
+    }
+
+    public void upgrade(HotPlaceType hotPlaceType) {
+        this.category = hotPlaceType;
     }
 }
