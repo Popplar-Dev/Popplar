@@ -10,6 +10,9 @@ function SettingScreen() {
   const navigateToProfile = () => {
     navigation.navigate('ProfileSetting' as never); 
   };
+  const navigateToAlarm = () => {
+    navigation.navigate('AlarmSetting' as never); 
+  };
 
 
   return (
@@ -24,15 +27,16 @@ function SettingScreen() {
               <View style={styles.menu}>
                 <Icon style={styles.icons} name='person-outline' size={25} color='#ffffff'
                 />
-                <Text style={styles.text}>프로필 정보</Text>
+                <Text style={styles.text}>프로필 수정</Text>
               </View>
             </TouchableOpacity>
-            <View style={styles.menu}>
-              <Icon style={styles.icons} name='notifications-outline' size={25} color='#ffffff'
-                // onPress={handleSettingPress} 
-              />
-              <Text style={styles.text}>알림</Text>
-            </View>
+            <TouchableOpacity onPress={navigateToAlarm}>
+              <View style={styles.menu}>
+                <Icon style={styles.icons} name='notifications-outline' size={25} color='#ffffff'
+                />
+                <Text style={styles.text}>알림</Text>
+              </View>
+            </TouchableOpacity>
             <View style={styles.menu}>
               <Icon style={styles.icons} name='help-circle-outline' size={25} color='#ffffff'
                 // onPress={handleSettingPress} 
