@@ -3,6 +3,7 @@ package com.hotspot.member.entity
 import jakarta.persistence.*
 
 @Entity
+@Table(name = "achievement_targets")
 class AchievementTarget(
 
     @Id
