@@ -21,8 +21,8 @@ class MemberService(
     }
 
     @Transactional
-    fun updateMemberProfile(memberUpdateReqDto: MemberUpdateReqDto): MemberProfileResDto {
-        val decryptedId = cryptService.decrypt(memberUpdateReqDto.id)
+    fun updateMemberProfile(memberId: Long, memberUpdateReqDto: MemberUpdateReqDto): MemberProfileResDto {
+        val decryptedId = cryptService.decrypt(memberId)
         val member = findMemberById(decryptedId)
         member.update(memberUpdateReqDto)
         return MemberMapper.INSTANCE.entityToMemberProfileDto(member)
