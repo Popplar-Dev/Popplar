@@ -34,6 +34,9 @@ public class HotPlace {
     @NotNull
     private int level;
 
+    @NotNull
+    private int likeCount;
+
     @Builder
     public HotPlace(Long id, String name, String address, double posX, double posY, int level) {
         this.id = id;
@@ -42,5 +45,14 @@ public class HotPlace {
         this.posX = posX;
         this.posY = posY;
         this.level = level;
+        this.likeCount = 0;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount--;
     }
 }
