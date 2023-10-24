@@ -44,8 +44,8 @@ class MemberService(
 
     @Transactional
     fun blockMember(memberId: Long, blockedMemberId: Long) {
-        blockedMemberRepository.findByMemberIdAndBlockedMemberId(memberId, blockedMemberId)
-            ?: throw RuntimeException("이미 차단한 회원입니다.")
+        if (blockedMemberRepository.findByMemberIdAndBlockedMemberId(memberId, blockedMemberId) == null)
+            throw RuntimeException("이미 차단한 회원입니다.")
         blockedMemberRepository.save(
             BlockedMember(
                 memberId = memberId,
@@ -58,7 +58,7 @@ class MemberService(
     fun unBlockMember(memberId: Long, blockedMemberId: Long) {
         val blockedMember =
             blockedMemberRepository.findByMemberIdAndBlockedMemberId(memberId, blockedMemberId)
-                ?: throw RuntimeException("차단하지 않은 회원입니다")
+                ?: throw RuntimeException("차단하지 않은 회원입니다.")
         blockedMemberRepository.delete(blockedMember)
     }
 
