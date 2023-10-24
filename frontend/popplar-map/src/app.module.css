@@ -1,0 +1,32 @@
+.container {
+  position: relative;
+}
+
+.searchInput {
+  position: absolute;
+  width: 70%;
+
+  top: 12%;
+  left: 13%;
+  z-index: 999;
+}
+
+.searchInput input {
+  width: 100%;
+  height: 35px;
+
+  border: 0;
+  border-radius: 14px;
+  background-color: #4941bb4a;
+  color: black;
+  padding-left: 10px;
+}
+
+.searchInput input::placeholder {
+  color: white;
+}
+
+.map {
+  position: relative;
+  /* height: 100vh; */
+}

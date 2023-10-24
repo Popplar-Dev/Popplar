@@ -1,4 +1,7 @@
 .container {
-  width: 500px;
+  position: relative;
+
+  /* width: calc(var(--vw, 1vw) * 100);; */
+  width: 100%;
   height: calc(var(--vh, 1vh) * 100);
 }
