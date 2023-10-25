@@ -18,7 +18,7 @@ function MyPageScreen() {
 
 	useEffect(() => {
     axios.get(
-        `http://10.0.2.2:8080/member/4`,
+        `http://10.0.2.2:8080/member/356931964684`,
       )
 			.then((response) => {
 				console.log(response.data)
@@ -39,13 +39,12 @@ function MyPageScreen() {
     setNickname(newNickname);
 
 		const updatedInfo = {
-			id: userinfo.id,
 			name: newNickname,
 			profileImage: "url",
       socialType: userinfo.socialType
 		};
 
-    axios.patch(`http://10.0.2.2:8080/member`, updatedInfo)
+    axios.patch(`http://10.0.2.2:8080/member/356931964684`, updatedInfo)
       .then((response) => {
         console.log("멤버 정보 업데이트 성공!!:", response.data);
 				 setUserInfo({ ...userinfo, name: newNickname });
@@ -97,11 +96,11 @@ function MyPageScreen() {
         <View>
           <View style={styles.info}>
             <Text style={styles.t}>
-                경험치: {userinfo.exp} xp
+                경험치 : {userinfo.exp} xp
             </Text>
           </View>
           <View style={styles.info}>
-            <Text style={styles.t}>연동 정보 </Text>
+            <Text style={styles.t}>연동 정보 : </Text>
             <Text style={styles.t}>{userinfo.socialType}</Text>
           </View>
           <View style={styles.info}>

@@ -97,7 +97,8 @@ const styles = StyleSheet.create({
   logout: {
     color:'red',
     fontSize:15,
-    marginTop:30
+    marginTop:30,
+    fontWeight:'bold'
   }
 });
 

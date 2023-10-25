@@ -22,7 +22,7 @@ function AlarmSetting() {
           <Text style={styles.text}>알림 {isEnabled ? '끄기' : '켜기'}</Text>
           <Switch
             trackColor={{false: '#767577', true: '#8B90F7'}}
-            thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+            thumbColor={isEnabled ? 'blue' : '#f4f3f4'}
             ios_backgroundColor="#3e3e3e"
             onValueChange={toggleSwitch}
             value={isEnabled}
