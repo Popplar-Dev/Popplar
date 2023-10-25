@@ -1,8 +1,10 @@
 package com.hotspot.member.service
 
+import com.hotspot.member.dto.MemberCategoryCountResDto
 import com.hotspot.member.entity.Category
 import com.hotspot.member.entity.MemberCategoryCount
 import com.hotspot.member.entity.Stamp
+import com.hotspot.member.mapper.MemberCategoryCountMapper
 import com.hotspot.member.repository.MemberCategoryCountRepository
 import com.hotspot.member.repository.StampRepository
 import org.springframework.stereotype.Service
@@ -46,5 +48,13 @@ class AchievementService(
 //    fun checkAchievement() {
 //        TODO()
 //    }
+
+    fun getMemberCategoryCountList(memberId: Long): MutableList<MemberCategoryCountResDto> {
+        val decryptedId = cryptService.decrypt(memberId)
+        return memberCategoryCountRepository.findByMemberId(decryptedId)
+            .stream()
+            .map { MemberCategoryCountMapper.INSTANCE.entityToMemberCategoryCountResDto(it) }
+            .toList()!!
+    }
 
 }

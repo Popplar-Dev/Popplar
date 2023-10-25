@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface MemberCategoryCountRepository : JpaRepository<MemberCategoryCount, Long> {
 
-    fun findByMemberIdAndCategory(memberId: Long, category: Category):MemberCategoryCount?
+    fun findByMemberIdAndCategory(memberId: Long, category: Category): MemberCategoryCount?
+
+    fun findByMemberId(memberId: Long): ArrayList<MemberCategoryCount>
 }

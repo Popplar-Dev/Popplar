@@ -14,6 +14,24 @@ class Stamp(
 
     val hotPlaceId: Long,
 
-    val visitedCount: Int,
+    val category: Category,
 
-) : BaseEntity()
+    var visitedCount: Int,
+
+) : BaseEntity() {
+    fun increaseVisitCount() {
+        visitedCount++
+    }
+
+    companion object {
+        fun create(memberId: Long, hotPlaceId: Long, category: Category): Stamp {
+            return Stamp(
+                memberId = memberId,
+                hotPlaceId = hotPlaceId,
+                category = category,
+                visitedCount = 1
+            )
+        }
+    }
+
+}
