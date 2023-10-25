@@ -11,6 +11,7 @@ import AllPlacesScreen from '../AllPlacesScreen';
 import NotificationsScreen from '../NotificationsScreen';
 import SettingScreen from '../Settings/SettingScreen';
 import ProfileSetting from '../Settings/ProfileSetting';
+import AlarmSetting from '../Settings/AlarmSetting';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -21,6 +22,7 @@ const MyPageStack = () => {
       <Stack.Screen name="Mypage" component={MyPageScreen} />
       <Stack.Screen name="Settings" component={SettingScreen} />
       <Stack.Screen name="ProfileSetting" component={ProfileSetting} />
+      <Stack.Screen name="AlarmSetting" component={AlarmSetting} />
     </Stack.Navigator>
   );
 }
