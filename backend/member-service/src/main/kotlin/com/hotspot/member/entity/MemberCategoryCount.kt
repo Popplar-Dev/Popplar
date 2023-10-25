@@ -3,17 +3,15 @@ package com.hotspot.member.entity
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "stamps")
-class Stamp(
+@Table(name = "member_category_counts")
+class MemberCategoryCount (
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    val memberId: Long,
+    @Enumerated(EnumType.STRING)
+    val category: Category,
 
-    val hotPlaceId: Long,
-
-    val visitedCount: Int,
-
-) : BaseEntity()
+    var visitedSet: Int,
+)
