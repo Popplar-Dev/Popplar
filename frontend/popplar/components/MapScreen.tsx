@@ -11,7 +11,7 @@ const MapScreen: React.FC = () => {
       <Text>Map</Text>
       <WebView 
       style={styles.webview}
-      source={{uri: 'https://naver.com'}}
+      source={{uri: 'https://jiwoopaeng.github.io/popmmm/'}}
       />
     </View>
   );
