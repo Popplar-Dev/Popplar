@@ -15,6 +15,7 @@ export default function BottomTab() {
   return (
     <Tab.Navigator
       initialRouteName="Map"
+      backBehavior='history'
       screenOptions={{
         headerShown: false,
         tabBarHideOnKeyboard: true,
@@ -26,7 +27,7 @@ export default function BottomTab() {
         },
       }}>
       <Tab.Screen
-        name="AllPlacesScreen"
+        name="AllPlaces"
         component={AllPlacesScreen}
         options={{
           tabBarIcon: ({focused}) => (
