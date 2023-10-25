@@ -67,44 +67,31 @@ function MyPageScreen() {
         style={styles.backgroundImage}
       >
 				<View style={styles.profileContainer}>
-        <Icon
-          style={styles.setting}
-          name='settings-outline'
-          size={30}
-          color='#ffffff'
-          onPress={handleSettingPress} 
-        />
-          {isEditing ? (
-            <View style={styles.editingContainer}>
-              <TextInput
-                style={styles.input}
-                value={newNickname}
-                onChangeText={(text) => setNewNickname(text)}
-              />
-              <Button title="Save" onPress={saveNickname} />
-            </View>
-          ) : (
-            <>
-              <Text style={styles.name}>{userinfo.name}</Text>
-              <Button title="Edit" onPress={startEditing} />
-            </>
-          )}
-					<View>
-						<Text style={styles.t}>Name: {userinfo.name}</Text>
-						<Text style={styles.t}>ID: {userinfo.id}</Text>
-						<Text style={styles.t}>Exp: {userinfo.exp}</Text>
-					</View>
+          <Icon
+            style={styles.setting}
+            name='settings-outline'
+            size={30}
+            color='#ffffff'
+            onPress={handleSettingPress} 
+          />
+          <>
+            <Text style={styles.name}>{userinfo.name}</Text>
+          </>
           <View style={styles.profileImageContainer}>
             <Image
               source={require('../assets/profile.png')}
               style={styles.profileImage}
             />
-            
           </View>
           <Image
             source={require('../assets/업적버튼.png')}
             style={styles.buttonImage}
           />
+          <View>
+						<Text style={styles.t}>
+              경험치: {userinfo.exp} xp
+            </Text>
+					</View>
         </View>
 			</ImageBackground>
     </View>
@@ -161,8 +148,7 @@ const styles = StyleSheet.create({
     borderRadius: 75, 
   },
 	buttonImage: {
-		// width: 200,
-		// height: 50,
+    marginBottom:10
 	},
 	editingContainer: {
     justifyContent: 'center',

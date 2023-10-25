@@ -12,6 +12,8 @@ import NotificationsScreen from '../NotificationsScreen';
 import SettingScreen from '../Settings/SettingScreen';
 import ProfileSetting from '../Settings/ProfileSetting';
 import AlarmSetting from '../Settings/AlarmSetting';
+import Terms from '../Settings/Terms';
+import Inquire from '../Settings/Inquire';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -23,6 +25,8 @@ const MyPageStack = () => {
       <Stack.Screen name="Settings" component={SettingScreen} />
       <Stack.Screen name="ProfileSetting" component={ProfileSetting} />
       <Stack.Screen name="AlarmSetting" component={AlarmSetting} />
+      <Stack.Screen name="Terms" component={Terms} />
+      <Stack.Screen name="Inquire" component={Inquire} />
     </Stack.Navigator>
   );
 }

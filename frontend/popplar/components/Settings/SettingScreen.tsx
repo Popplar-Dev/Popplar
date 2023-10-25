@@ -13,6 +13,12 @@ function SettingScreen() {
   const navigateToAlarm = () => {
     navigation.navigate('AlarmSetting' as never); 
   };
+  const navigateToTerm = () => {
+    navigation.navigate('Terms' as never); 
+  };
+  const navigateToInquire = () => {
+    navigation.navigate('Inquire' as never); 
+  };
 
 
   return (
@@ -37,18 +43,20 @@ function SettingScreen() {
                 <Text style={styles.text}>알림</Text>
               </View>
             </TouchableOpacity>
-            <View style={styles.menu}>
-              <Icon style={styles.icons} name='help-circle-outline' size={25} color='#ffffff'
-                // onPress={handleSettingPress} 
-              />
-              <Text style={styles.text}>문의하기</Text>
-            </View>
-            <View style={styles.menu}>
-              <Icon style={styles.icons} name='information-circle-outline' size={25} color='#ffffff'
-                // onPress={handleSettingPress} 
-              />
-              <Text style={styles.text}>이용약관 및 개인정보 정책</Text>
-            </View>
+            <TouchableOpacity onPress={navigateToInquire}>
+              <View style={styles.menu}>
+                <Icon style={styles.icons} name='help-circle-outline' size={25} color='#ffffff'
+                />
+                <Text style={styles.text}>문의하기</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={navigateToTerm}>
+              <View style={styles.menu}>
+                <Icon style={styles.icons} name='information-circle-outline' size={25} color='#ffffff'
+                />
+                <Text style={styles.text}>이용약관 및 개인정보 정책</Text>
+              </View>
+            </TouchableOpacity>
           </View>
           <Text style={styles.logout}>로그아웃</Text>
         </View>
