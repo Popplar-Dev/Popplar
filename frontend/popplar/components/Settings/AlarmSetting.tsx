@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Switch } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
+import { useState, useEffect } from 'react';
 
 function AlarmSetting() {
+  const [isEnabled, setIsEnabled] = useState(true);
+  const toggleSwitch = (value: boolean) => setIsEnabled(value);
 
   return (
     <View style={styles.container}>
@@ -11,9 +13,21 @@ function AlarmSetting() {
         source={require('popplar/assets/stars.png')}
         style={styles.backgroundImage}
       >
-				<View>
-					<Text style={styles.text}>알람설정</Text>
-				</View>
+				<View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={styles.text}>알림 {isEnabled ? '끄기' : '켜기'}</Text>
+          <Switch
+            trackColor={{false: '#767577', true: '#8B90F7'}}
+            thumbColor={isEnabled ? 'blue' : '#f4f3f4'}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
+        </View>
       </ImageBackground>
     </View>
   );

@@ -12,17 +12,23 @@ import NotificationsScreen from '../NotificationsScreen';
 import SettingScreen from '../Settings/SettingScreen';
 import ProfileSetting from '../Settings/ProfileSetting';
 import AlarmSetting from '../Settings/AlarmSetting';
+import Terms from '../Settings/Terms';
+import Inquire from '../Settings/Inquire';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const MyPageStack = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Mypage" component={MyPageScreen} />
-      <Stack.Screen name="Settings" component={SettingScreen} />
-      <Stack.Screen name="ProfileSetting" component={ProfileSetting} />
-      <Stack.Screen name="AlarmSetting" component={AlarmSetting} />
+    <Stack.Navigator
+      screenOptions={{headerTintColor:'#8B90F7'}}
+    >
+      <Stack.Screen name="Mypage" component={MyPageScreen} options={{headerShown: false}}/>
+      <Stack.Screen name="Settings" component={SettingScreen} options={{headerTitle: 'SETTINGS'}}/>
+      <Stack.Screen name="ProfileSetting" component={ProfileSetting} options={{headerTitle: '프로필 수정'}}/>
+      <Stack.Screen name="AlarmSetting" component={AlarmSetting} options={{headerTitle: '알림 설정'}}/>
+      <Stack.Screen name="Inquire" component={Inquire} options={{headerTitle: '문의하기'}}/>
+      <Stack.Screen name="Terms" component={Terms} options={{headerTitle: '이용약관'}}/>
     </Stack.Navigator>
   );
 }

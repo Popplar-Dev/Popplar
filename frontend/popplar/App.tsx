@@ -22,7 +22,7 @@ function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <StatusBar style="light" />
+        {/* <StatusBar style="light" /> */}
         <ImageBackground
           source={require('./assets/stars.png')}
           style={styles.backgroundImage}>
