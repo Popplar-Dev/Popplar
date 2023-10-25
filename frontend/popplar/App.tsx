@@ -20,7 +20,7 @@ function App() {
   };
 
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider> 
       <SafeAreaView style={styles.container}>
         <StatusBar style="light" />
         <ImageBackground
