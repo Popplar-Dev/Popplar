@@ -12,10 +12,11 @@ class MessageController (
     private val messageService: MessageService,
 ){
 
+    // TODO
+    //  게이트웨이에서 받은 헤더로 받은 사람이 본인인지 확인 로직 필요
+
     @GetMapping("/{messageId}")
     fun getMessage(@PathVariable messageId: Long): MessageResDto {
-        // TODO
-        //  게이트웨이에서 받은 헤더로 받은 사람이 본인인지 확인 로직 필요
         return messageService.getMessage(messageId)
     }
 
@@ -26,6 +27,11 @@ class MessageController (
         @RequestBody messageReqDto: MessageReqDto,
     ) {
         messageService.postMessage(sentMemberId, receivedMemberId, messageReqDto.content)
+    }
+
+    @DeleteMapping("/{messageId}")
+    fun deleteMessage(@PathVariable messageId: Long) {
+        messageService.deleteMessage(messageId)
     }
 
     @GetMapping("/find-all")

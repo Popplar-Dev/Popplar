@@ -20,9 +20,7 @@ class MessageService(
 
     @Transactional
     fun getMessage(messageId: Long): MessageResDto {
-
-        val message = messageRepository.findById(messageId)
-            .orElseThrow { throw RuntimeException("메시지를 찾을 수 없습니다") }
+        val message = findMessage(messageId)
 
         message.check()
 
@@ -46,25 +44,28 @@ class MessageService(
         )
     }
 
+    @Transactional
+    fun deleteMessage(messageId: Long) {
+        findMessage(messageId).delete()
+    }
+
     fun getMyMessageList(receivedMemberId: Long): MutableList<MessageResDto> {
         val decryptedReceivedMemberId = cryptService.decrypt(receivedMemberId)
         val messageList =
-            messageRepository.findAllByReceivedMemberId(decryptedReceivedMemberId)
+            messageRepository.findAllByReceivedMemberIdAndDeletedFalse(decryptedReceivedMemberId)
 
 
         return messageList.stream().map {
             val sentMember = findMember(it.sentMemberId)
             val receivedMember = findMember(it.receivedMemberId)
 
-            MessageResDto(
-                sentMember.id!!,
-                if (sentMember.deleted) "탈퇴 회원" else sentMember.name,
-                receivedMember.id!!,
-                receivedMember.name,
-                it.content,
-                it.checked
-            )
+            MessageResDto.create(it, sentMember, receivedMember)
         }.toList()!!
+    }
+
+    fun findMessage(messageId: Long): Message {
+        return messageRepository.findByIdAndDeletedFalse(messageId)
+            ?: throw RuntimeException("찾는 쪽지가 없습니다.")
     }
 
     fun findMember(memberId: Long): Member {

@@ -5,6 +5,8 @@ import com.hotspot.member.entity.Message
 
 class MessageResDto(
 
+    val messageId: Long,
+
     val sentMemberId: Long,
 
     val sentMemberName: String,
@@ -22,9 +24,10 @@ class MessageResDto(
         fun create(message: Message, sentMember: Member, receivedMember: Member): MessageResDto {
             return MessageResDto(
                 sentMemberId = sentMember.id!!,
-                sentMemberName = sentMember.name,
+                sentMemberName = if (sentMember.deleted) "탈퇴 회원" else sentMember.name,
                 receivedMemberId = receivedMember.id!!,
                 receivedMemberName = receivedMember.name,
+                messageId = message.id!!,
                 content = message.content,
                 checked = message.checked
             )
