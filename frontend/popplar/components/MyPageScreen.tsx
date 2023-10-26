@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button, ActivityIndicator ,ScrollView, TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
 import axios from "axios";
 // import { getuserinfo } from '../utills/https'
@@ -49,6 +49,8 @@ function MyPageScreen() {
       });
   }, []);
 
+  console.log(stamp)
+
   const navigation = useNavigation();
   const handleSettingPress = () => {
     navigation.navigate('Settings' as never);
@@ -89,136 +91,143 @@ function MyPageScreen() {
             source={require('../assets/업적버튼.png')}
             style={styles.buttonImage}
           />
-          <View style={styles.planetcontainer}>
-            <View style={styles.planet}>
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedPlanet({
-                    name: `${stamp[0].category}`,
-                    image: require('../assets/planet/planet-01.png'),
-                    visit:`${stamp[0].visitedSet}`
-                    // visit:`0`
-                  });
-                  setModalVisible(true);
-                }}
-                style={styles.planet}
-              >
-                <Text style={styles.t}>{stamp[0].category}</Text>
-                <Image
-                  source={require('../assets/planet/planet-01.png')}
-                  style={styles.planetimage}
-                />
-                <Text style={styles.t}>{stamp[0].visitedSet}/10</Text>
-              </TouchableOpacity>
-            </View>
+          {loading  ? (
+              <ActivityIndicator size="large" color="#ffffff" />
+            ) : (
+            <View>
+              <View style={styles.planetcontainer}>
+                <View style={styles.planet}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSelectedPlanet({
+                        name: `${stamp[0].category}`,
+                        image: require('../assets/planet/planet-01.png'),
+                        visit:`${stamp[0].visitedSet}`
+                        // visit:`0`
+                      });
+                      setModalVisible(true);
+                    }}
+                    style={styles.planet}
+                  >
+                    <Text style={styles.t}>{stamp[0].category}</Text>
+                    <Image
+                      source={require('../assets/planet/planet-01.png')}
+                      style={styles.planetimage}
+                    />
+                    <Text style={styles.t}>{stamp[0].visitedSet}/10</Text>
+                  </TouchableOpacity>
+                </View>
 
-            <View style={styles.planet}>
-              <TouchableOpacity
-                  onPress={() => {
-                    setSelectedPlanet({
-                      name: `${stamp[1].category}`,
-                      image: require('../assets/planet/planet-02.png'),
-                      visit:`${stamp[1].visitedSet}`
-                      // visit:`0`
-                    });
-                    setModalVisible(true);
-                  }}
-                  style={styles.planet}
-                >
-                  <Text style={styles.t}>{stamp[1].category}</Text>
-                  <Image
-                    source={require('../assets/planet/planet-02.png')}
-                    style={styles.planetimage}
-                  />
-                  <Text style={styles.t}>{stamp[1].visitedSet}/10</Text>
-                </TouchableOpacity>
-            </View>
+                <View style={styles.planet}>
+                  <TouchableOpacity
+                      onPress={() => {
+                        setSelectedPlanet({
+                          name: `${stamp[1].category}`,
+                          image: require('../assets/planet/planet-02.png'),
+                          visit:`${stamp[1].visitedSet}`
+                          // visit:`0`
+                        });
+                        setModalVisible(true);
+                      }}
+                      style={styles.planet}
+                    >
+                      <Text style={styles.t}>{stamp[1].category}</Text>
+                      <Image
+                        source={require('../assets/planet/planet-02.png')}
+                        style={styles.planetimage}
+                      />
+                      <Text style={styles.t}>{stamp[1].visitedSet}/10</Text>
+                    </TouchableOpacity>
+                </View>
 
-            <View style={styles.planet}>
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedPlanet({
-                    name: '업적 3',
-                    image: require('../assets/planet/planet-12.png'),
-                    visit:'0'
-                  });
-                  setModalVisible(true);
-                }}
-                style={styles.planet}
-              >
-                <Text style={styles.t}>업적3</Text>
-                <Image
-                  source={require('../assets/planet/planet-12.png')}
-                  style={styles.planetimage}
-                />
-                <Text style={styles.t}>0/0</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+                <View style={styles.planet}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSelectedPlanet({
+                        name: '업적 3',
+                        image: require('../assets/planet/planet-12.png'),
+                        visit:'0'
+                      });
+                      setModalVisible(true);
+                    }}
+                    style={styles.planet}
+                  >
+                    <Text style={styles.t}>업적3</Text>
+                    <Image
+                      source={require('../assets/planet/planet-12.png')}
+                      style={styles.planetimage}
+                    />
+                    <Text style={styles.t}>0/0</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
 
-          <View style={styles.planetcontainer}>
-            <View style={styles.planet}>
-            <TouchableOpacity
-                onPress={() => {
-                  setSelectedPlanet({
-                    name: '업적 4',
-                    image: require('../assets/planet/planet-03.png'),
-                    visit:'0'
-                  });
-                  setModalVisible(true);
-                }}
-                style={styles.planet}
-              >
-                <Text style={styles.t}>업적4</Text>
-                <Image
-                  source={require('../assets/planet/planet-03.png')}
-                  style={styles.planetimage}
-                />
-                <Text style={styles.t}>0/0</Text>
-              </TouchableOpacity>
-            </View>
+              <View style={styles.planetcontainer}>
+                <View style={styles.planet}>
+                <TouchableOpacity
+                    onPress={() => {
+                      setSelectedPlanet({
+                        name: '업적 4',
+                        image: require('../assets/planet/planet-03.png'),
+                        visit:'0'
+                      });
+                      setModalVisible(true);
+                    }}
+                    style={styles.planet}
+                  >
+                    <Text style={styles.t}>업적4</Text>
+                    <Image
+                      source={require('../assets/planet/planet-03.png')}
+                      style={styles.planetimage}
+                    />
+                    <Text style={styles.t}>0/0</Text>
+                  </TouchableOpacity>
+                </View>
 
-            <View style={styles.planet}>
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedPlanet({
-                    name: '업적 5',
-                    image: require('../assets/planet/planet-05.png'),
-                    visit:'0'
-                  });
-                  setModalVisible(true);
-                }}
-                style={styles.planet}
-              >
-                <Text style={styles.t}>업적5</Text>
-                <Image
-                  source={require('../assets/planet/planet-05.png')}
-                  style={styles.planetimage}
-                />
-                <Text style={styles.t}>0/0</Text>
-              </TouchableOpacity>
-            </View>
+                <View style={styles.planet}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSelectedPlanet({
+                        name: '업적 5',
+                        image: require('../assets/planet/planet-05.png'),
+                        visit:'0'
+                      });
+                      setModalVisible(true);
+                    }}
+                    style={styles.planet}
+                  >
+                    <Text style={styles.t}>업적5</Text>
+                    <Image
+                      source={require('../assets/planet/planet-05.png')}
+                      style={styles.planetimage}
+                    />
+                    <Text style={styles.t}>0/0</Text>
+                  </TouchableOpacity>
+                </View>
 
-            <View style={styles.planet}>
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedPlanet({
-                    name: '업적 6',
-                    image: require('../assets/planet/planet-06.png'),
-                    visit:'0'
-                  });
-                  setModalVisible(true);
-                }}
-                style={styles.planet}
-              >
-                <Text style={styles.t}>업적6</Text>
-                <Image
-                  source={require('../assets/planet/planet-06.png')}
-                  style={styles.planetimage}
-                />
-                <Text style={styles.t}>0/0</Text>
-              </TouchableOpacity>
-            </View>
+                <View style={styles.planet}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSelectedPlanet({
+                        name: '업적 6',
+                        image: require('../assets/planet/planet-06.png'),
+                        visit:'0'
+                      });
+                      setModalVisible(true);
+                    }}
+                    style={styles.planet}
+                  >
+                    <Text style={styles.t}>업적6</Text>
+                    <Image
+                      source={require('../assets/planet/planet-06.png')}
+                      style={styles.planetimage}
+                    />
+                    <Text style={styles.t}>0/0</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>        
+            )}
           </View>
           <PlanetModal
             visible={modalVisible}
@@ -227,7 +236,6 @@ function MyPageScreen() {
             planetImage={selectedPlanet.image}
             visit={selectedPlanet.visit}
           />
-        </View>
 			</ImageBackground>
     </ScrollView >
   );
