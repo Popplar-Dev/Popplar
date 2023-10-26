@@ -1,0 +1,18 @@
+version: '3.1'
+
+services:
+  database:
+    image: mysql:8.0
+    container_name: mysql-container-hot-place
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PWD}
+    ports:
+      - 3306:3306
+
+  backend:
+    image: popplar/hot-place:latest
+    container_name: hot-place
+    hostname: hot-place
+    expose:
+      - "8200"
