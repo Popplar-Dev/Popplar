@@ -6,7 +6,7 @@ import axios from "axios";
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
-function MyPageScreen() {
+function ProfileSetting() {
 	const [nickname, setNickname] = useState('') 
 	const [isEditing, setIsEditing] = useState(false);
   const [newNickname, setNewNickname] = useState('');
@@ -46,7 +46,6 @@ function MyPageScreen() {
 
     axios.patch(`http://10.0.2.2:8080/member/356931964684`, updatedInfo)
       .then((response) => {
-        console.log("멤버 정보 업데이트 성공!!:", response.data);
 				 setUserInfo({ ...userinfo, name: newNickname });
 				setIsEditing(false);
       })
@@ -217,4 +216,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default MyPageScreen;
+export default ProfileSetting;
