@@ -21,7 +21,7 @@ class MemberService(
 
     fun getMemberProfile(id: Long): MemberProfileResDto {
         val decryptedId = cryptService.decrypt(id)
-        return MemberMapper.INSTANCE.entityToMemberProfileDto(findMemberById(decryptedId));
+        return MemberMapper.INSTANCE.entityToMemberProfileDto(findMemberById(decryptedId))
     }
 
     @Transactional
@@ -76,6 +76,6 @@ class MemberService(
 
     fun findMemberById(id: Long): Member {
         return memberRepository.findById(id)
-            .orElseThrow { throw ArithmeticException("사용자 정보가 없습니다.") };
+            .orElseThrow { throw ArithmeticException("사용자 정보가 없습니다.") }
     }
 }

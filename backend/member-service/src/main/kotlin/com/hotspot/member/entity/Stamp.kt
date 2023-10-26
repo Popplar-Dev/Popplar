@@ -14,8 +14,24 @@ class Stamp(
 
     val hotPlaceId: Long,
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    var achievementTargetList: MutableList<AchievementTarget> = ArrayList(),
+    val category: Category,
 
-) : BaseEntity()
+    var visitedCount: Int,
+
+) : BaseEntity() {
+    fun increaseVisitCount() {
+        visitedCount++
+    }
+
+    companion object {
+        fun create(memberId: Long, hotPlaceId: Long, category: Category): Stamp {
+            return Stamp(
+                memberId = memberId,
+                hotPlaceId = hotPlaceId,
+                category = category,
+                visitedCount = 1
+            )
+        }
+    }
+
+}

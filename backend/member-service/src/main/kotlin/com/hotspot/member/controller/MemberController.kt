@@ -1,11 +1,13 @@
 package com.hotspot.member.controller
 
 import com.hotspot.member.assembler.MemberProfileResDtoRA
+import com.hotspot.member.dto.MemberCategoryCountResDto
 import com.hotspot.member.dto.MemberProfileResDto
 import com.hotspot.member.dto.MemberUpdateReqDto
 import com.hotspot.member.entity.SocialType
 import com.hotspot.member.oauth.OAuthLoginReqDto
 import com.hotspot.member.oauth.service.OAuthServiceFactory
+import com.hotspot.member.service.AchievementService
 import com.hotspot.member.service.CryptService
 import com.hotspot.member.service.MemberService
 import lombok.RequiredArgsConstructor
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/member")
 class MemberController(
     private val memberService: MemberService,
+    private val achievementService: AchievementService,
     private val oAuthServiceFactory: OAuthServiceFactory,
     private val cryptService: CryptService,
     private val memberProfileResDtoRA: MemberProfileResDtoRA,
@@ -86,5 +89,10 @@ class MemberController(
     @DeleteMapping("/block/{memberId}/{blockedMemberId}")
     fun unBlockMember(@PathVariable memberId: Long, @PathVariable blockedMemberId: Long) {
         memberService.unBlockMember(memberId, blockedMemberId)
+    }
+
+    @GetMapping("/stamp/{memberId}")
+    fun getMemberCategoryCountList(@PathVariable memberId: Long): MutableList<MemberCategoryCountResDto> {
+        return achievementService.getMemberCategoryCountList(memberId)
     }
 }
