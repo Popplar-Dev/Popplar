@@ -20,7 +20,6 @@ class MemberController(
     private val oAuthServiceFactory: OAuthServiceFactory,
     private val cryptService: CryptService,
     private val memberProfileResDtoRA: MemberProfileResDtoRA,
-    private val messageService: MessageService,
 ) {
 
     // 테스트용 코드
@@ -96,21 +95,4 @@ class MemberController(
 
     // TODO
     //  스탬프 추가 로직 필요 (스탬프 추가 시 핫플레이스 서버에 방문자 추가 요청)
-
-    @GetMapping("/message/{messageId}")
-    fun getMessage(@PathVariable messageId: Long): MessageResDto {
-        // TODO
-        //  게이트웨이에서 받은 헤더로 받은 사람이 본인인지 확인 로직 필요
-        return messageService.getMessage(messageId)
-    }
-
-    @PostMapping("/message/{sentMemberId}/{receivedMemberId}")
-    fun postMessage(
-        @PathVariable sentMemberId: Long,
-        @PathVariable receivedMemberId: Long,
-        @RequestBody messageReqDto: MessageReqDto,
-    ) {
-        messageService.postMessage(sentMemberId, receivedMemberId, messageReqDto.content)
-    }
-
 }
