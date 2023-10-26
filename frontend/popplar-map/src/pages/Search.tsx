@@ -5,25 +5,30 @@ import { Place } from '../types/place'
 
 type Props = {
   result: Place[] | null
+  placeSelectClick: () => void
 }
 
-export default function Search ({ result }: Props) {
+export default function Search ({ result, placeSelectClick }: Props) {
+
+  function placeSelectHandler () {
+    placeSelectClick()
+  }
   
   return (
     <div className={`container`}>
       {result && result.map((place) => 
         (
-        <>
+        <button className={styles.seachbox} onClick={placeSelectHandler}>
           <div className={styles.name}>{place.place_name}</div>
           <div className={styles.name}>{place.road_address_name}</div>
-          <div>{place.category_group_code}</div>
-          <div>{place.category_group_name}</div>
-          <div>{place.category_name}</div>
-          <div>{place.phone}</div>
-          <div>{place.road_address_name}</div>
-          <div>{place.x}</div>
-          <div>{place.y}</div>
-        </>
+          <div className={styles.name}>{place.category_group_code}</div>
+          <div className={styles.name}>{place.category_group_name}</div>
+          <div className={styles.name}>{place.category_name}</div>
+          <div className={styles.name}>{place.phone}</div>
+          <div className={styles.name}>{place.road_address_name}</div>
+          <div className={styles.name}>{place.x}</div>
+          <div className={styles.name}>{place.y}</div>
+        </button>
       ))}
     </div>
   )

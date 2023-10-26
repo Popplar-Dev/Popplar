@@ -6,6 +6,12 @@
   height: calc(var(--vh, 1vh) * 100);
 }
 
+.seachbox {
+  border: 1px dashed white;
+  background-color: transparent;
+  width: 100%;
+}
+
 .name { 
   color: white;
 }
