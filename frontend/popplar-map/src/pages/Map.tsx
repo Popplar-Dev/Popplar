@@ -15,6 +15,19 @@ export default function Map () {
   const [hotPlaceLatLng, sethotPlaceLatLng] = useRecoilState<LatLng>(HotLatLngState);
   console.log(hotPlaceLatLng.y.slice(0, -8), hotPlaceLatLng.x.slice(0, -8))
 
+  const requestPermission = () => {
+    if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+      // 모바일이라면 모바일의 카메라 권한을 물어보는 액션을 전달합니다.
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({ type: "REQ_CAMERA_PERMISSION" })
+      );
+    } else {
+      // 모바일이 아니라면 모바일 아님을 alert로 띄웁니다.
+      // alert({ message: ERROR_TYPES.notMobile });
+      alert( '모바일 환경에서 실행해주세요' );
+    }
+  };
+
   // 내 위치로 돌아가기
   const moveToMypos = () => {
     var moveLatLon = new kakao.maps.LatLng(37.50134, 127.0397);
@@ -54,6 +67,11 @@ export default function Map () {
 
     // 마커가 지도 위에 표시되도록 설정합니다
     marker.setMap(map);
+
+    kakao.maps.event.addListener(marker, 'click', function() {
+      // 클릭한 위도, 경도 정보를 가져옵니다 
+      requestPermission()
+    })
 
 
     // 핫플 마커 띄우기
