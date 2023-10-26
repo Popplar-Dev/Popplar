@@ -15,6 +15,9 @@ class MessageController (
     // TODO
     //  게이트웨이에서 받은 헤더로 받은 사람이 본인인지 확인 로직 필요
 
+    // TODO
+    //  messageResDto profileImg 추가 필요
+
     @GetMapping("/{messageId}")
     fun getMessage(@PathVariable messageId: Long): MessageResDto {
         return messageService.getMessage(messageId)

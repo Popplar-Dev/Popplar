@@ -1,4 +1,4 @@
-package com.popplar.qna.entity
+package com.hotspot.member.entity
 
 import jakarta.persistence.*
 
@@ -12,6 +12,8 @@ class Question(
 
     val memberId: Long,
 
+    val hotPlaceId: Long,
+
     var content: String,
 
     @OneToMany
@@ -24,8 +26,8 @@ class Question(
     }
 
     companion object {
-        fun create(memberId: Long, content: String): Question {
-            return Question(memberId = memberId, content = content)
+        fun create(memberId: Long, hotPlaceId: Long, content: String): Question {
+            return Question(memberId = memberId, hotPlaceId = hotPlaceId, content = content)
         }
     }
 }

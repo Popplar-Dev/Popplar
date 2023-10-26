@@ -1,4 +1,4 @@
-package com.popplar.qna.entity
+package com.hotspot.member.entity
 
 import jakarta.persistence.*
 
