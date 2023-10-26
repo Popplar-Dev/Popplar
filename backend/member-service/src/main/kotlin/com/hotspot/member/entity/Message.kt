@@ -18,8 +18,13 @@ class Message(
 
     var checked: Boolean
 ) : BaseEntity() {
-    
+
+    fun check() {
+        this.checked = true
+    }
+
     companion object {
+
         fun create(sentMemberId: Long, receivedMemberId: Long, content: String): Message {
             return Message(
                 sentMemberId = sentMemberId,
