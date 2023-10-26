@@ -64,9 +64,12 @@ function App() {
   // 키워드 검색을 요청하는 함수입니다
   function searchPlaces() {
 
+    console.log('search!!')
+
     const keywordInput: HTMLInputElement | null = document.getElementById('keyword') as HTMLInputElement
     if (keywordInput) {
       const keyword: string = keywordInput.value.trim();
+      console.log(keyword)
     
       // if (!keyword.replace(/^\s+|\s+$/g, '')) {
       //   alert('키워드를 입력해주세요!');
@@ -89,11 +92,12 @@ function App() {
     <div className={styles.container}>
       <div className={styles.map}>
         <div className={styles.searchInput}>
-          <input type="text" placeholder="search..." onChange={
+          <input type="text" id='keyword' placeholder="search..." onChange={
             e => {
               setPlaceKeyword(e.target.value);
+              console.log(e.target.value)
               setTimeout(() => {
-                searchPlaces();
+                searchPlaces()
               }, 300) 
               }
             }/>
