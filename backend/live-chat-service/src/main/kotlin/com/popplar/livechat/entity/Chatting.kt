@@ -1,6 +1,5 @@
 package com.popplar.livechat.entity
 
-import com.popplar.livechat.dto.ChattingReqDto
 import jakarta.persistence.*
 
 @Entity
@@ -16,4 +15,8 @@ class Chatting(
     val memberId: Long,
 
     val content: String,
+
+    // TODO
+    //  createAt 추가 필요
+
 )

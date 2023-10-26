@@ -4,18 +4,18 @@ import com.hotspot.member.assembler.MemberProfileResDtoRA
 import com.hotspot.member.dto.MemberCategoryCountResDto
 import com.hotspot.member.dto.MemberProfileResDto
 import com.hotspot.member.dto.MemberUpdateReqDto
+import com.hotspot.member.dto.MessageReqDto
 import com.hotspot.member.entity.SocialType
 import com.hotspot.member.oauth.OAuthLoginReqDto
 import com.hotspot.member.oauth.service.OAuthServiceFactory
 import com.hotspot.member.service.AchievementService
 import com.hotspot.member.service.CryptService
 import com.hotspot.member.service.MemberService
-import lombok.RequiredArgsConstructor
+import com.hotspot.member.service.MessageService
 import org.springframework.hateoas.EntityModel
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/member")
 class MemberController(
     private val memberService: MemberService,
@@ -23,6 +23,7 @@ class MemberController(
     private val oAuthServiceFactory: OAuthServiceFactory,
     private val cryptService: CryptService,
     private val memberProfileResDtoRA: MemberProfileResDtoRA,
+    private val messageService: MessageService,
 ) {
 
     // 테스트용 코드
@@ -95,4 +96,17 @@ class MemberController(
     fun getMemberCategoryCountList(@PathVariable memberId: Long): MutableList<MemberCategoryCountResDto> {
         return achievementService.getMemberCategoryCountList(memberId)
     }
+
+    // TODO
+    //  스탬프 추가 로직 필요 (스탬프 추가 시 핫플레이스 서버에 방문자 추가 요청)
+
+    @PostMapping("/message/{sentMemberId}/{receivedMemberId}")
+    fun postMessage(
+        @PathVariable sentMemberId: Long,
+        @PathVariable receivedMemberId: Long,
+        @RequestBody messageReqDto: MessageReqDto,
+    ) {
+        messageService.postMessage(sentMemberId, receivedMemberId, messageReqDto.content)
+    }
+
 }
