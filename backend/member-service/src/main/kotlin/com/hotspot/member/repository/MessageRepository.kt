@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface MessageRepository : JpaRepository<Message, Long> {
 
-    fun findByReceivedMemberIdAndId(receivedMemberId: Long, messageId: Long): Message?
+    fun findAllByReceivedMemberId(receivedMemberId: Long): ArrayList<Message>
 }

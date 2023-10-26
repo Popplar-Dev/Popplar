@@ -27,4 +27,14 @@ class MessageController (
     ) {
         messageService.postMessage(sentMemberId, receivedMemberId, messageReqDto.content)
     }
+
+    @GetMapping("/find-all")
+    fun getMyMessageList(): MutableList<MessageResDto> {
+        // TODO
+        //  헤더 처리 전 테스트용 멤버 아이디
+        val testMemberId = 356931964684L
+
+        return messageService.getMyMessageList(testMemberId)
+
+    }
 }
