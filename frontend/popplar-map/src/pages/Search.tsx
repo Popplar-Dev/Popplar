@@ -15,7 +15,7 @@ export default function Search ({ result, placeSelectClick }: Props) {
   }
   
   return (
-    <div className={`container`}>
+    <div className={styles.container}>
       {result && result.map((place) => 
         (
         <button className={styles.seachbox} onClick={placeSelectHandler}>
