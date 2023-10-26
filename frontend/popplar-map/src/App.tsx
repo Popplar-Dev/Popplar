@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react';
 import styles from './app.module.css'
 import './App.css';
 
+import { useRecoilState } from 'recoil';
+import { HotLatLngState } from "./recoil/hotLatLng/index";
+import { LatLng } from './types/LatLng'
+
 import Map from './pages/Map'
 import Search from './pages/Search'
 
@@ -13,10 +17,17 @@ function App() {
   const [placeKeyword, setPlaceKeyword] = useState<string>("")
   const [searchPlaceObj, setSearchPlacObj] = useState<any | null>(null)
   const [searchResult, setSearchResult] = useState<Place[] | null>(null);
+  // 검색시 선택된 hotplace의 위도 경도 정보 recoil로 저장
+  const [hotPlaceLatLng, sethotPlaceLatLng] = useRecoilState<LatLng>(HotLatLngState);
 
-  function placeSelectClick () {
+
+  function placeSelectClick (x: string, y: string) {
     setPlaceKeyword("")
+    const LatLngInfo = {x: x, y: y}
+    sethotPlaceLatLng(LatLngInfo)
 
+    console.log(LatLngInfo)
+    console.log('hot', hotPlaceLatLng)
   }
   
   function setScreenSize() {

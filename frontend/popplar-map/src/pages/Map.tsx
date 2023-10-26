@@ -4,10 +4,16 @@ import './styles/frame.css'
 
 import { BiSolidRocket } from 'react-icons/bi';
 
+import { useRecoilState } from 'recoil';
+import { HotLatLngState } from "../recoil/hotLatLng/index";
+import { LatLng } from '../types/LatLng'
+
 const { kakao } = window;
 
 export default function Map () {
   const [visibleMap, setVisibleMap] = useState<any | null>(null)
+  const [hotPlaceLatLng, sethotPlaceLatLng] = useRecoilState<LatLng>(HotLatLngState);
+  console.log(hotPlaceLatLng.y.slice(0, -8), hotPlaceLatLng.x.slice(0, -8))
 
   // 내 위치로 돌아가기
   const moveToMypos = () => {
@@ -24,7 +30,16 @@ export default function Map () {
       center: new kakao.maps.LatLng(37.50134, 127.0397), //지도의 중심좌표.
       level: 4 //지도의 레벨(확대, 축소 정도)
     };
-  
+    if (hotPlaceLatLng.x) {
+      const Lat = hotPlaceLatLng.y.slice(0, -8)
+      const Lng = hotPlaceLatLng.x.slice(0, -8)
+      console.log(Lat, Lng)
+      mapOptions = { //지도를 생성할 때 필요한 기본 옵션
+        center: new kakao.maps.LatLng(Lat, Lng), //지도의 중심좌표.
+        level: 4 //지도의 레벨(확대, 축소 정도)
+      };
+    }
+
     var map = new kakao.maps.Map(mapContainer, mapOptions); //지도 생성 및 객체 리턴
     setVisibleMap(map) 
 
