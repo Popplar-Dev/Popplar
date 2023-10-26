@@ -1,10 +1,22 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import styles from './styles/map.module.css'
 import './styles/frame.css'
+
+import { BiSolidRocket } from 'react-icons/bi';
 
 const { kakao } = window;
 
 export default function Map () {
+  const [visibleMap, setVisibleMap] = useState<any | null>(null)
+
+  // 내 위치로 돌아가기
+  const moveToMypos = () => {
+    var moveLatLon = new kakao.maps.LatLng(37.50134, 127.0397);
+    visibleMap.panTo(moveLatLon); 
+    setTimeout(() => {
+      visibleMap.setLevel(4); 
+    }, 400)    
+  }
 
   useEffect(() => {
     var mapContainer = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
@@ -14,10 +26,11 @@ export default function Map () {
     };
   
     var map = new kakao.maps.Map(mapContainer, mapOptions); //지도 생성 및 객체 리턴
+    setVisibleMap(map) 
 
     // 내 위치 마커
     // 마커가 표시될 위치입니다 
-    var markerPosition = new kakao.maps.LatLng(37.50134, 127.0397); 
+    var markerPosition = new kakao.maps.LatLng(37.50134, 127.0397);
 
     // 마커를 생성합니다
     var marker = new kakao.maps.Marker({
@@ -88,21 +101,6 @@ export default function Map () {
       // marker.setMap(map);
     }
   
-    // // 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
-    // function makeOverListener(map, marker, infowindow) {
-    //     return function() {
-    //         infowindow.open(map, marker);
-    //     };
-    // }
-
-    // // 인포윈도우를 닫는 클로저를 만드는 함수입니다 
-    // function makeOutListener(infowindow) {
-    //     return function() {
-    //         infowindow.close();
-    //     };
-    // }
-
-
     // 핫플 마커 클릭시 중심으로 이동
     function panToHandler(La: number, Ma: number) {
       // 이동할 위도 경도 위치를 생성합니다 \
@@ -110,7 +108,10 @@ export default function Map () {
       
       // 지도 중심을 부드럽게 이동시킵니다
       // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
-      map.panTo(moveLatLon);            
+      map.panTo(moveLatLon);
+      setTimeout(() => {
+        map.setLevel(2); 
+      }, 400)             
     }        
 
 }, [])
@@ -123,6 +124,12 @@ export default function Map () {
     <div className={`Box`} id={`bottom`}></div>
 
     <div id="map" className={styles.container}></div>
+
+    <button className={styles.mypos} onClick={() => {
+      moveToMypos();
+    }}>
+      <BiSolidRocket size={25} color={'#8B90F7'}/>
+    </button>
   </div>
   )
 }

@@ -5,3 +5,18 @@
   width: 100%;
   height: calc(var(--vh, 1vh) * 100);
 }
+
+.mypos {
+  z-index: 999;
+  position: absolute;
+  bottom: 14.3%;
+  right: 10%;
+  
+  width: 53px;
+  height: 55px;
+
+  border: 0;
+  background-color: #051423;
+  border-radius: 100%;
+  box-shadow: 0px 0px 10px #8B90F7;
+}

@@ -7,6 +7,8 @@ import Search from './pages/Search'
 
 import { Place } from './types/place'
 
+const { kakao } = window;
+
 function App() {
   const [placeKeyword, setPlaceKeyword] = useState("")
   const [searchPlaceObj, setSearchPlacObj] = useState<any | null>(null)
@@ -99,7 +101,7 @@ function App() {
 
         {!placeKeyword ?
         <Map />
-        : <Search />
+        : <Search result={searchResult}/>
         }
       </div>
     </div>
