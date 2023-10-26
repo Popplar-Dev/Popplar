@@ -1,7 +1,9 @@
-import {View, Text, Pressable, TextInput, StyleSheet} from 'react-native';
+import {View, Text, Pressable, FlatList, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import ReceivedChatMessage from './ReceivedChatMesasge';
+import SentChatMessage from './SentChatMessage';
 import ChatInput from './ChatInput';
 
 function ChatRoom() {
@@ -25,6 +27,10 @@ function ChatRoom() {
       </View>
       <View style={styles.chatBubblesContainer}>
 
+        <ReceivedChatMessage msgStart={true} />
+        <ReceivedChatMessage />
+        <SentChatMessage msgStart={true} />
+        
       </View>
 
       <ChatInput />
@@ -38,8 +44,8 @@ export default ChatRoom;
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    borderColor: 'white',
-    borderWidth: 1,
+    // borderColor: 'white',
+    // borderWidth: 1,
     justifyContent: 'space-between',
   },
   headerContainer: {
@@ -47,8 +53,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: 'white',
+    // borderWidth: 1,
+    // borderColor: 'white',
     height: 50,
   },
   goBackButtonOuter: {
@@ -61,9 +67,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   chatBubblesContainer: {
-    flex: 1, 
-    borderWidth: 1, 
-    borderColor: 'white'
-
+    flex: 1,
+    // borderWidth:1, 
+    // borderColor: 'white', 
+    paddingVertical: 12,
+    paddingHorizontal: 12,  
   }
 });

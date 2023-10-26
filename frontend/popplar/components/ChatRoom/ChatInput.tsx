@@ -6,8 +6,6 @@ export default function ChatInput() {
 
   const [inputText, setInputText] = useState("");
 
-  console.log(inputText)
-  
   return (
     <View style={styles.inputContainer}>
       <View style={styles.inputBox}>
