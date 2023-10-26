@@ -15,6 +15,8 @@ import AlarmSetting from '../Settings/AlarmSetting';
 import Terms from '../Settings/Terms';
 import Inquire from '../Settings/Inquire';
 import SpeedTouch from '../Games/SpeedTouch';
+import QnaList from '../QnA/QnaList';
+import QnaDetail from '../QnA/QnaDetail';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -30,7 +32,10 @@ const MyPageStack = () => {
       <Stack.Screen name="AlarmSetting" component={AlarmSetting} options={{headerTitle: '알림 설정'}}/>
       <Stack.Screen name="Inquire" component={Inquire} options={{headerTitle: '문의하기'}}/>
       <Stack.Screen name="Terms" component={Terms} options={{headerTitle: '이용약관'}}/>
+
       <Stack.Screen name="SpeedTouch" component={SpeedTouch} options={{headerTitle: 'SpeedTouchGame'}}/>
+      <Stack.Screen name="QnaList" component={QnaList} options={{headerTitle: 'QnaList'}}/>
+      <Stack.Screen name="QnaDetail" component={QnaDetail} options={{headerTitle: 'QnaDetail'}}/>
     </Stack.Navigator>
   );
 }

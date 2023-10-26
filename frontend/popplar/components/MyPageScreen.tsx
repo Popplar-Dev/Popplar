@@ -8,6 +8,8 @@ import { useNavigation } from '@react-navigation/native';
 import SettingScreen from './Settings/SettingScreen';
 import PlanetModal from '../components/Modals/PlanetModal'
 
+import { useRecoilState } from 'recoil';
+import { nicknameState } from '../recoil/userState';
 
 function MyPageScreen() {
 	const [nickname, setNickname] = useState('') 
@@ -39,17 +41,14 @@ function MyPageScreen() {
 	useEffect(() => {
     axios.get(`http://10.0.2.2:8080/member/stamp/356931964684`)
       .then((response) => {
-        console.log(response.data);
         setStamp(response.data);
-        setLoading(false); // 데이터 로딩이 끝났음을 표시
+        setLoading(false); 
       })
       .catch((err) => {
         console.log("에러 메시지 ::", err);
-        setLoading(false); // 에러가 발생한 경우에도 로딩이 끝났음을 표시
+        setLoading(false); 
       });
   }, []);
-
-  console.log(stamp)
 
   const navigation = useNavigation();
   const handleSettingPress = () => {

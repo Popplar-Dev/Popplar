@@ -19,8 +19,13 @@ function SettingScreen() {
   const navigateToInquire = () => {
     navigation.navigate('Inquire' as never); 
   };
+
+
   const navigateToSpeedTouch = () => {
     navigation.navigate('SpeedTouch' as never); 
+  };
+  const navigateToQnaList = () => {
+    navigation.navigate('QnaList' as never); 
   };
 
 
@@ -60,9 +65,15 @@ function SettingScreen() {
                 <Text style={styles.text}>이용약관 및 개인정보 정책</Text>
               </View>
             </Pressable>
+
             <Pressable onPress={navigateToSpeedTouch}>
               <View style={styles.menu}>
                 <Text style={styles.text}>반응 속도 게임</Text>
+              </View>
+            </Pressable>
+            <Pressable onPress={navigateToQnaList}>
+              <View style={styles.menu}>
+                <Text style={styles.text}>Q&A</Text>
               </View>
             </Pressable>
           </View>
