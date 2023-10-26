@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, TouchableWithoutFeedback,Image } from 'react-native';
+import { Modal, View, Text, Pressable, StyleSheet, TouchableWithoutFeedback,Image } from 'react-native';
 
 interface PlanetModalProps {
   visible: boolean;
@@ -20,12 +20,12 @@ function PlanetModal({ visible, onClose, planetName, planetImage, visit }:Planet
 			<TouchableWithoutFeedback onPress={onClose}>
 				<View style={styles.modalContainer}>
 					<View style={styles.modalContent}>
-						<TouchableOpacity
+						<Pressable
 							onPress={onClose}
 							style={styles.closeButton}
 						>
 							<Text style={styles.closeButtonText}>X</Text>
-						</TouchableOpacity>
+						</Pressable>
 						<View style={styles.modalInfo}>
 							<Text style={styles.modalText}>{planetName} 방문 현황</Text>
 							<Image
