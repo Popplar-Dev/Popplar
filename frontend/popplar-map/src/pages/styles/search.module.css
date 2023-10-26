@@ -1,0 +1,18 @@
+.container {
+  position: relative;
+
+  /* width: calc(var(--vw, 1vw) * 100);; */
+  width: 100%;
+  height: calc(var(--vh, 1vh) * 100);
+  overflow-y: scroll;
+}
+
+.seachbox {
+  border: 1px dashed white;
+  background-color: transparent;
+  width: 100%;
+}
+
+.name { 
+  color: white;
+}
