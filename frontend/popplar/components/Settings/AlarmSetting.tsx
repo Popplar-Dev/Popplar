@@ -9,16 +9,7 @@ function AlarmSetting() {
 
   return (
     <View style={styles.container}>
-      <ImageBackground
-        source={require('popplar/assets/stars.png')}
-        style={styles.backgroundImage}
-      >
-				<View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+				<View>
           <Text style={styles.text}>알림 {isEnabled ? '끄기' : '켜기'}</Text>
           <Switch
             trackColor={{false: '#767577', true: '#8B90F7'}}
@@ -28,7 +19,6 @@ function AlarmSetting() {
             value={isEnabled}
           />
         </View>
-      </ImageBackground>
     </View>
   );
 };

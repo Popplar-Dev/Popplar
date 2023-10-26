@@ -19,6 +19,9 @@ function SettingScreen() {
   const navigateToInquire = () => {
     navigation.navigate('Inquire' as never); 
   };
+  const navigateToSpeedTouch = () => {
+    navigation.navigate('SpeedTouch' as never); 
+  };
 
 
   return (
@@ -55,6 +58,11 @@ function SettingScreen() {
                 <Icon style={styles.icons} name='information-circle-outline' size={25} color='#ffffff'
                 />
                 <Text style={styles.text}>이용약관 및 개인정보 정책</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={navigateToSpeedTouch}>
+              <View style={styles.menu}>
+                <Text style={styles.text}>반응 속도 게임</Text>
               </View>
             </TouchableOpacity>
           </View>

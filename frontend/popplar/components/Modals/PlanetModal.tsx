@@ -5,13 +5,14 @@ interface PlanetModalProps {
   visible: boolean;
   onClose: () => void;
   planetName: string;
+  visit: string
   planetImage: any; 
 }
 
-function PlanetModal({ visible, onClose, planetName, planetImage }:PlanetModalProps) {
+function PlanetModal({ visible, onClose, planetName, planetImage, visit }:PlanetModalProps) {
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={visible}
       onRequestClose={onClose}
@@ -26,13 +27,14 @@ function PlanetModal({ visible, onClose, planetName, planetImage }:PlanetModalPr
 							<Text style={styles.closeButtonText}>X</Text>
 						</TouchableOpacity>
 						<View style={styles.modalInfo}>
-							<Text style={styles.modalText}>{planetName} 현황</Text>
+							<Text style={styles.modalText}>{planetName} 방문 현황</Text>
 							<Image
 								source={planetImage}
 								style={styles.planetImage}
 							/>
-							<Text style={styles.modalText}>뭐라고 써야지???????????</Text>
-							<Text style={styles.modalText}>내용내용</Text>
+							<Text style={styles.modalText}>설레는 마음으로 여행을 떠난 당신!
+              </Text>
+              <Text style={styles.modalText}>{visit} 곳의 {planetName}에 첫 발을 디뎠습니다</Text>
 						</View>
 					</View>
 				</View>
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    // backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   modalContent: {
     backgroundColor: 'rgba(161, 161, 161, 0.8)',
