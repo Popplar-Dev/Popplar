@@ -15,18 +15,19 @@ function MyPageScreen() {
   const [newNickname, setNewNickname] = useState('');
   const [userinfo, setUserInfo] = useState({ id: '', name: '', exp: '' });
   const [modalVisible, setModalVisible] = useState(false);
+  const [stamp, setStamp] = useState([{ category:'', visitedSet:'' }])
   const [selectedPlanet, setSelectedPlanet] = useState({
     name: '',
-    image: require('../assets/planet/planet-01.png'), // 기본 이미지
+    image: require('../assets/planet/planet-01.png'),
+    visit: ''
   });
-
+  const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
     axios.get(
-        `http://10.0.2.2:8080/member/356931964684`,
+        `http://10.0.2.2:8080/member/356931964684`, 
       )
 			.then((response) => {
-				console.log(response.data)
 				setUserInfo(response.data)
 				setNickname(response.data.name)
 			})
@@ -34,7 +35,19 @@ function MyPageScreen() {
         console.log("에러 메시지 ::", err)
       });
   }, []);
-  
+
+	useEffect(() => {
+    axios.get(`http://10.0.2.2:8080/member/stamp/356931964684`)
+      .then((response) => {
+        console.log(response.data);
+        setStamp(response.data);
+        setLoading(false); // 데이터 로딩이 끝났음을 표시
+      })
+      .catch((err) => {
+        console.log("에러 메시지 ::", err);
+        setLoading(false); // 에러가 발생한 경우에도 로딩이 끝났음을 표시
+      });
+  }, []);
 
   const navigation = useNavigation();
   const handleSettingPress = () => {
@@ -77,23 +90,25 @@ function MyPageScreen() {
             style={styles.buttonImage}
           />
           <View style={styles.planetcontainer}>
-
             <View style={styles.planet}>
               <TouchableOpacity
                 onPress={() => {
                   setSelectedPlanet({
-                    name: '업적 1',
+                    name: `${stamp[0].category}`,
                     image: require('../assets/planet/planet-01.png'),
+                    visit:`${stamp[0].visitedSet}`
+                    // visit:`0`
                   });
                   setModalVisible(true);
                 }}
                 style={styles.planet}
               >
+                <Text style={styles.t}>{stamp[0].category}</Text>
                 <Image
                   source={require('../assets/planet/planet-01.png')}
                   style={styles.planetimage}
                 />
-                <Text style={styles.t}>0/0</Text>
+                <Text style={styles.t}>{stamp[0].visitedSet}/10</Text>
               </TouchableOpacity>
             </View>
 
@@ -101,18 +116,21 @@ function MyPageScreen() {
               <TouchableOpacity
                   onPress={() => {
                     setSelectedPlanet({
-                      name: '업적 2',
-                      image: require('../assets/planet/planet-11.png'),
+                      name: `${stamp[1].category}`,
+                      image: require('../assets/planet/planet-02.png'),
+                      visit:`${stamp[1].visitedSet}`
+                      // visit:`0`
                     });
                     setModalVisible(true);
                   }}
                   style={styles.planet}
                 >
+                  <Text style={styles.t}>{stamp[1].category}</Text>
                   <Image
-                    source={require('../assets/planet/planet-11.png')}
+                    source={require('../assets/planet/planet-02.png')}
                     style={styles.planetimage}
                   />
-                  <Text style={styles.t}>0/0</Text>
+                  <Text style={styles.t}>{stamp[1].visitedSet}/10</Text>
                 </TouchableOpacity>
             </View>
 
@@ -122,11 +140,13 @@ function MyPageScreen() {
                   setSelectedPlanet({
                     name: '업적 3',
                     image: require('../assets/planet/planet-12.png'),
+                    visit:'0'
                   });
                   setModalVisible(true);
                 }}
                 style={styles.planet}
               >
+                <Text style={styles.t}>업적3</Text>
                 <Image
                   source={require('../assets/planet/planet-12.png')}
                   style={styles.planetimage}
@@ -142,14 +162,16 @@ function MyPageScreen() {
                 onPress={() => {
                   setSelectedPlanet({
                     name: '업적 4',
-                    image: require('../assets/planet/planet-07.png'),
+                    image: require('../assets/planet/planet-03.png'),
+                    visit:'0'
                   });
                   setModalVisible(true);
                 }}
                 style={styles.planet}
               >
+                <Text style={styles.t}>업적4</Text>
                 <Image
-                  source={require('../assets/planet/planet-07.png')}
+                  source={require('../assets/planet/planet-03.png')}
                   style={styles.planetimage}
                 />
                 <Text style={styles.t}>0/0</Text>
@@ -160,15 +182,17 @@ function MyPageScreen() {
               <TouchableOpacity
                 onPress={() => {
                   setSelectedPlanet({
-                    name: '업적 1',
-                    image: require('../assets/planet/planet-02.png'),
+                    name: '업적 5',
+                    image: require('../assets/planet/planet-05.png'),
+                    visit:'0'
                   });
                   setModalVisible(true);
                 }}
                 style={styles.planet}
               >
+                <Text style={styles.t}>업적5</Text>
                 <Image
-                  source={require('../assets/planet/planet-02.png')}
+                  source={require('../assets/planet/planet-05.png')}
                   style={styles.planetimage}
                 />
                 <Text style={styles.t}>0/0</Text>
@@ -179,13 +203,15 @@ function MyPageScreen() {
               <TouchableOpacity
                 onPress={() => {
                   setSelectedPlanet({
-                    name: '업적 1',
+                    name: '업적 6',
                     image: require('../assets/planet/planet-06.png'),
+                    visit:'0'
                   });
                   setModalVisible(true);
                 }}
                 style={styles.planet}
               >
+                <Text style={styles.t}>업적6</Text>
                 <Image
                   source={require('../assets/planet/planet-06.png')}
                   style={styles.planetimage}
@@ -199,6 +225,7 @@ function MyPageScreen() {
             onClose={() => setModalVisible(false)}
             planetName={selectedPlanet.name}
             planetImage={selectedPlanet.image}
+            visit={selectedPlanet.visit}
           />
         </View>
 			</ImageBackground>
@@ -295,7 +322,8 @@ const styles = StyleSheet.create({
     margin:10
   },
   planetimage: {
-    marginBottom: 5
+    marginBottom: 5,
+    marginTop:5
   }
 });
 

@@ -57,7 +57,7 @@ function SpeedTouch() {
       )}
       {reactionTime !== null && (
         <View>
-          <Text style={styles.text}>반응 속도: {reactionTime.toFixed(2)} 초</Text>
+          <Text style={styles.text}>반응 속도: {reactionTime.toFixed(3)} 초</Text>
           <TouchableOpacity onPress={resetGame} style={styles.button}>
             <Text style={styles.buttonText}>게임 재시작</Text>
           </TouchableOpacity>
