@@ -6,8 +6,6 @@ import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 
 import BottomTab from './components/BottomTab/BottomTab';
 import FirstLanding from './components/Landing/FirstLanding';
-import SecondLanding from './components/Landing/SecondLanding';
-import ThirdLanding from './components/Landing/ThirdLanding';
 
 function App() {
   const navTheme = {
@@ -36,9 +34,7 @@ function App() {
             screenOptions={{headerShown: false}}
             >
               <Stack.Screen name="FirstLanding" component={FirstLanding} />
-              <Stack.Screen name="SecondLanding" component={SecondLanding} />
               <Stack.Screen name="BottomTab" component={BottomTab} />
-              <Stack.Screen name="ThirdLanding" component={ThirdLanding} />
               {/* <Stack.Screen name="Main" component={Main} /> */}
             </Stack.Navigator>
             {/* <BottomTab /> */}

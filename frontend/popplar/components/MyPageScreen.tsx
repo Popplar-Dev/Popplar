@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button, ActivityIndicator ,ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button, ActivityIndicator ,ScrollView, Pressable } from 'react-native';
 import { useState, useEffect } from 'react';
 import axios from "axios";
 // import { getuserinfo } from '../utills/https'
@@ -97,7 +97,7 @@ function MyPageScreen() {
             <View>
               <View style={styles.planetcontainer}>
                 <View style={styles.planet}>
-                  <TouchableOpacity
+                  <Pressable
                     onPress={() => {
                       setSelectedPlanet({
                         name: `${stamp[0].category}`,
@@ -115,11 +115,11 @@ function MyPageScreen() {
                       style={styles.planetimage}
                     />
                     <Text style={styles.t}>{stamp[0].visitedSet}/10</Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
 
                 <View style={styles.planet}>
-                  <TouchableOpacity
+                  <Pressable
                       onPress={() => {
                         setSelectedPlanet({
                           name: `${stamp[1].category}`,
@@ -137,11 +137,11 @@ function MyPageScreen() {
                         style={styles.planetimage}
                       />
                       <Text style={styles.t}>{stamp[1].visitedSet}/10</Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
 
                 <View style={styles.planet}>
-                  <TouchableOpacity
+                  <Pressable
                     onPress={() => {
                       setSelectedPlanet({
                         name: '업적 3',
@@ -158,13 +158,13 @@ function MyPageScreen() {
                       style={styles.planetimage}
                     />
                     <Text style={styles.t}>0/0</Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               </View>
 
               <View style={styles.planetcontainer}>
                 <View style={styles.planet}>
-                <TouchableOpacity
+                <Pressable
                     onPress={() => {
                       setSelectedPlanet({
                         name: '업적 4',
@@ -181,11 +181,11 @@ function MyPageScreen() {
                       style={styles.planetimage}
                     />
                     <Text style={styles.t}>0/0</Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
 
                 <View style={styles.planet}>
-                  <TouchableOpacity
+                  <Pressable
                     onPress={() => {
                       setSelectedPlanet({
                         name: '업적 5',
@@ -202,11 +202,11 @@ function MyPageScreen() {
                       style={styles.planetimage}
                     />
                     <Text style={styles.t}>0/0</Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
 
                 <View style={styles.planet}>
-                  <TouchableOpacity
+                  <Pressable
                     onPress={() => {
                       setSelectedPlanet({
                         name: '업적 6',
@@ -223,7 +223,7 @@ function MyPageScreen() {
                       style={styles.planetimage}
                     />
                     <Text style={styles.t}>0/0</Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
               </View>
             </View>        

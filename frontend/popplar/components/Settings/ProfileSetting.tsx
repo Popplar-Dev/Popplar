@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button,TouchableOpacity,Switch } from 'react-native';
+import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button,Pressable,Switch } from 'react-native';
 import { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 // import { getuserinfo } from '../utills/https'
@@ -71,20 +71,20 @@ function MyPageScreen() {
                 onChangeText={(text) => setNewNickname(text)}
                 onSubmitEditing={saveNickname}
               />
-              <TouchableOpacity onPress={saveNickname}>
+              <Pressable onPress={saveNickname}>
                 <View style={styles.edit}>
                   <Text style={styles.text}>저장</Text>
                 </View>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           ) : (
             <>
               <Text style={styles.name}>{userinfo.name}</Text>
-              <TouchableOpacity onPress={startEditing}>
+              <Pressable onPress={startEditing}>
                 <View style={styles.edit}>
                   <Text style={styles.text}>닉네임 수정</Text>
                 </View>
-              </TouchableOpacity>
+              </Pressable>
             </>
           )}
           <View style={styles.profileImageContainer}>
