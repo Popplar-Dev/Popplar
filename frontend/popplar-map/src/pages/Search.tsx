@@ -1,12 +1,20 @@
 import './styles/frame.css'
 
-export default function Search () {
+import { Place } from '../types/place'
+
+type Props = {
+  result: Place[] | null
+}
+
+export default function Search ({ result }: Props) {
   return (
     <div className={`container`}>
-      <div className={`Box`} id={`top`}></div>
-      <div className={`Box`} id={`left`}></div>
-      <div className={`Box`} id={`right`}></div>
-      <div className={`Box`} id={`bottom`}></div>
+      {result && result.map((place) => (
+        <>
+          <div>{place.place_name}</div>
+          <div>{place.road_address_name}</div>
+        </>
+      ))}
     </div>
   )
 }
