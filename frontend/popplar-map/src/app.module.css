@@ -1,5 +1,7 @@
 .container {
   position: relative;
+  height: calc(var(--vh, 1vh) * 100);
+  background-color: #2C2C2C;
 }
 
 .searchInput {
@@ -18,7 +20,7 @@
   border: 0;
   border-radius: 14px;
   background-color: #4941bb4a;
-  color: black;
+  color: white;
   padding-left: 20px;
 }
 
