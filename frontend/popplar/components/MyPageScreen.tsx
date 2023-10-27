@@ -54,7 +54,9 @@ function MyPageScreen() {
   const handleSettingPress = () => {
     navigation.navigate('Settings' as never);
   };
-
+  const goBack = () => {
+    navigation.goBack();
+  };
 
   return (
     <ScrollView 
@@ -64,6 +66,18 @@ function MyPageScreen() {
         source={require('../assets/stars.png')}
         style={styles.backgroundImage}
       >
+        <View style={styles.headerContainer}>
+      <View style={styles.leftContainer}>
+        <View style={styles.goBackButtonOuter}>
+          <Pressable onPress={goBack} android_ripple={{color: '#464646'}}>
+            <Icon name="chevron-back" color="#8B90F7" size={25} />
+          </Pressable>
+        </View>
+        <View>
+          <Text style={styles.title}>Profile</Text>
+        </View>
+      </View>
+    </View>
           <Icon
             style={styles.setting}
             name='settings-outline'
@@ -241,12 +255,6 @@ function MyPageScreen() {
 };
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   backgroundColor: '#2C2C2C',
-  // },
   container: {
     flex: 1,
     backgroundColor: '#2C2C2C',
@@ -277,7 +285,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
 	},
 	profileContainer: {
-		top:'8%',
+		top:'6%',
 		justifyContent: 'center',
     alignItems: 'center',
   },
@@ -331,7 +339,46 @@ const styles = StyleSheet.create({
   planetimage: {
     marginBottom: 5,
     marginTop:5
-  }
+  },
+
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+    height: 50,
+  },
+  leftContainer: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+  },
+  goBackButtonOuter: {
+    marginEnd: 12,
+    width: 32, 
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center', 
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  ellipsisButtonOuter: {
+    width: 32, 
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center', 
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  buttonInner: {
+    borderRadius: 16, 
+
+  },
+  title: {
+    color: 'white',
+    fontSize: 20,
+    textAlign: 'center',
+  },
 });
 
 export default MyPageScreen;

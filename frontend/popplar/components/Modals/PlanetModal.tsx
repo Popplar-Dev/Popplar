@@ -32,7 +32,9 @@ function PlanetModal({ visible, onClose, planetName, planetImage, visit }:Planet
               >
               </Pressable>
               <View style={styles.modalInfo}>
-                <Text style={styles.modalText}>HotPlace 방문 현황</Text>
+                <View style={styles.title}>
+                  <Text style={styles.titleText}>HotPlace 방문 현황</Text>
+                </View>
                 <Image
                   source={planetImage}
                   style={styles.planetImage}
@@ -79,7 +81,7 @@ const styles = StyleSheet.create({
   planetImage: {
     width: 100,
     height: 100,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   closeButton: {
     backgroundColor: 'black',
@@ -96,6 +98,14 @@ const styles = StyleSheet.create({
   },
   focusText: {
     color:'#8B90F7'
+  },
+  title:{
+    marginBottom:20,
+  },
+  titleText: {
+    fontSize:22,
+    color:'white',
+    fontWeight:'bold'
   }
 });
 
