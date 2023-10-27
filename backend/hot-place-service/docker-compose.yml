@@ -4,15 +4,23 @@ services:
   database:
     image: mysql:8.0
     container_name: mysql-container-hot-place
-    restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PWD}
     ports:
-      - 3306:3306
+      - 3316:3306
+    volumes:
+      - mysql-db:/var/lib/mysql
 
   backend:
-    image: popplar/hot-place:latest
+    image: ohseongrak/hot-place:latest
     container_name: hot-place
     hostname: hot-place
-    expose:
-      - "8200"
+    env_file:
+      - .env
+    ports:
+      - "8200:8200"
+
+volumes:
+  mysql-db:
+
+
