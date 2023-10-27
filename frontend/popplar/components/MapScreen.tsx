@@ -1,13 +1,42 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { View, Text, Button, StyleSheet, Dimensions, Alert } from 'react-native';
 import { PermissionsAndroid } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import WebView from 'react-native-webview';
 
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetBackdrop
+} from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const MapScreen: React.FC = () => {
+
+  // bottom-sheet
+  // ref
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  // variables
+  const snapPoints = useMemo(() => ['35%', '65%'], []);
+
+  // callbacks
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
+  // backdrop close by pressing background
+  const renderBackdrop = useCallback(
+    (props: any) => <BottomSheetBackdrop {...props} pressBehavior="close" />,
+    [],
+  );
+
+
   let webRef = useRef<WebView | null>(null);
 
   /* native -> web */
@@ -57,22 +86,44 @@ const MapScreen: React.FC = () => {
   })
 
   return (
-    <View style={styles.container}>
-      <Button title={'postMessage'} onPress={native_to_web}></Button>
-      {/* <Button title="Get GeoLocation" onPress={() => geoLocation()}/> */}
-      <Text style={{ color: "white" }}> latitude: {latitude} </Text>
-      <Text style={{ color: "white" }}> longitude: {longitude} </Text>
-      <WebView 
-        ref={webRef}
-        style={styles.webview}
-        source={{uri: 'https://jiwoopaeng.github.io/popmmm/'}}
-        javaScriptEnabled={true}
-        onLoad={native_to_web}
-        onMessage={(event) => {
-          console.log("받은 데이터(React) : " + event.nativeEvent.data);
-        }}
-      />
-    </View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomSheetModalProvider>
+      <View style={styles.container}>
+        <Button
+          onPress={handlePresentModalPress}
+          title="Present Modal"
+          color="black"
+        />
+
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={0}
+          snapPoints={snapPoints}
+          onChange={handleSheetChanges}
+          backdropComponent={renderBackdrop}
+        >
+          <View>
+            <Text>Awesome 🎉</Text>
+          </View>
+        </BottomSheetModal>
+
+        <Button title={'postMessage'} onPress={native_to_web}></Button>
+        {/* <Button title="Get GeoLocation" onPress={() => geoLocation()}/> */}
+        <Text style={{ color: "white" }}> latitude: {latitude} </Text>
+        <Text style={{ color: "white" }}> longitude: {longitude} </Text>
+        <WebView 
+          ref={webRef}
+          style={styles.webview}
+          source={{uri: 'https://jiwoopaeng.github.io/popmmm/'}}
+          javaScriptEnabled={true}
+          onLoad={native_to_web}
+          onMessage={(event) => {
+            console.log("받은 데이터(React) : " + event.nativeEvent.data);
+          }}
+        />
+      </View>
+    </BottomSheetModalProvider>
+  </GestureHandlerRootView>
   );
 };
 
