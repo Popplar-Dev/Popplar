@@ -14,7 +14,13 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+type SpaceInfo = {
+  name: string
+  address: string
+}
+
 const MapScreen: React.FC = () => {
+  const [spaceInfo, setSpaceInfo] = useState<SpaceInfo>({})
 
   // bottom-sheet
   // ref
@@ -97,8 +103,10 @@ const MapScreen: React.FC = () => {
           backdropComponent={renderBackdrop}
           backgroundStyle={{ backgroundColor: '#2C2C2C' }}
         >
+          
           <View>
-            <Text style={styles.bottomSheetText}>Awesome 🎉</Text>
+            {spaceInfo.name && <Text style={styles.bottomSheetText}>{spaceInfo.name}</Text>}
+            <Text style={styles.bottomSheetText}>{spaceInfo.address}</Text>
           </View>
         </BottomSheetModal>
 
@@ -114,7 +122,9 @@ const MapScreen: React.FC = () => {
           onLoad={native_to_web}
           onMessage={(event) => {
             handlePresentModalPress();
-            console.log("받은 데이터(React) : " + event.nativeEvent.data);
+            const data = JSON.parse(event.nativeEvent.data)
+            setSpaceInfo(data.data)
+            // console.log("받은 데이터(React) : " + data.data);
           }}
         />
       </View>
