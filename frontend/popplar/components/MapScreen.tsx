@@ -7,7 +7,7 @@ import WebView from 'react-native-webview';
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
-  BottomSheetBackdrop
+  BottomSheetBackdrop,
 } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -21,7 +21,7 @@ const MapScreen: React.FC = () => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   // variables
-  const snapPoints = useMemo(() => ['35%', '65%'], []);
+  const snapPoints = useMemo(() => ['35%', '95%'], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
@@ -86,31 +86,26 @@ const MapScreen: React.FC = () => {
   })
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1}}>
       <BottomSheetModalProvider>
       <View style={styles.container}>
-        <Button
-          onPress={handlePresentModalPress}
-          title="Present Modal"
-          color="black"
-        />
-
         <BottomSheetModal
           ref={bottomSheetModalRef}
           index={0}
           snapPoints={snapPoints}
           onChange={handleSheetChanges}
           backdropComponent={renderBackdrop}
+          backgroundStyle={{ backgroundColor: '#2C2C2C' }}
         >
           <View>
-            <Text>Awesome 🎉</Text>
+            <Text style={styles.bottomSheetText}>Awesome 🎉</Text>
           </View>
         </BottomSheetModal>
 
-        <Button title={'postMessage'} onPress={native_to_web}></Button>
-        {/* <Button title="Get GeoLocation" onPress={() => geoLocation()}/> */}
-        <Text style={{ color: "white" }}> latitude: {latitude} </Text>
-        <Text style={{ color: "white" }}> longitude: {longitude} </Text>
+        {/* <Button title={'postMessage'} onPress={native_to_web}></Button>
+        <Button title="Get GeoLocation" onPress={() => geoLocation()}/> */}
+        {/* <Text style={{ color: "white" }}> latitude: {latitude} </Text>
+        <Text style={{ color: "white" }}> longitude: {longitude} </Text> */}
         <WebView 
           ref={webRef}
           style={styles.webview}
@@ -118,6 +113,7 @@ const MapScreen: React.FC = () => {
           javaScriptEnabled={true}
           onLoad={native_to_web}
           onMessage={(event) => {
+            handlePresentModalPress();
             console.log("받은 데이터(React) : " + event.nativeEvent.data);
           }}
         />
@@ -139,5 +135,9 @@ const styles = StyleSheet.create({
     flex: 1,
     width: windowWidth,
     height: windowHeight,
-  }
+  },
+  bottomSheetText: {
+    backgroundColor: '#2C2C2C',
+    color: 'white',
+  },
 })
