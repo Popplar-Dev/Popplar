@@ -14,6 +14,5 @@ const styles = StyleSheet.create({
     height: 200,
     backgroundColor: 'grey', 
     elevation: 2, 
-
   },
 });

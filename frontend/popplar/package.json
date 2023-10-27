@@ -13,6 +13,7 @@
     "@react-navigation/bottom-tabs": "^6.5.10",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.15",
+    "@stomp/stompjs": "^7.0.0",
     "axios": "^1.5.1",
     "expo-status-bar": "^1.7.1",
     "react": "18.2.0",
@@ -22,7 +23,8 @@
     "react-native-swiper": "^1.6.0",
     "react-native-vector-icons": "^10.0.0",
     "react-native-webview": "^13.6.2",
-    "recoil": "^0.7.7"
+    "recoil": "^0.7.7",
+    "text-encoding": "^0.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
