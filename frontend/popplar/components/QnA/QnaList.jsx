@@ -1,18 +1,28 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import QnaCreateModal from '../Modals/QnaCreateModal'
 
 export default function QnaList() {
 
   const navigation = useNavigation();
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const handleItemPress = (qna) => {
     navigation.navigate('QnaDetail', { qnaData: qna });
   };
 
-	const qnaData = [
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleCreateQuestion = (newQuestion) => {
+    setQnaData([...qnaData, newQuestion]);
+    setModalVisible(false);
+  };
+  const [qnaData, setQnaData] = useState([
     {
       username: '오성락',
       date: '2023-10-26',
@@ -41,11 +51,16 @@ export default function QnaList() {
       answerCount: 3,
       answers: ['탄이요','용용선생','술 그만 드세요']
     },
-  ];
+  ]);
 
   return (
     <View style={styles.container}>
 			<Text style={styles.hotplace}>MultiCampus</Text>
+      <Pressable style={styles.createqna} onPress={() => openModal()}>
+        <Text style={styles.text}>
+          질문하기
+        </Text>
+      </Pressable>
 			<View style={styles.qnacontainer}>
       {qnaData.map((qna, index) => (
         <Pressable style={styles.qnabox} key={index} onPress={() => handleItemPress(qna)}>
@@ -71,6 +86,11 @@ export default function QnaList() {
       ))}
 			</View>
       <Text style={styles.text}>QnA 리스트??</Text>
+      <QnaCreateModal 
+        visible={isModalVisible} 
+        onClose={() => setModalVisible(false)}
+        onSubmit={handleCreateQuestion}
+        />
     </View>
   );
 };
@@ -90,7 +110,7 @@ const styles = StyleSheet.create({
 	},
   text: {
     color:'white',
-    fontSize:15
+    fontSize:15,
   },
 	backgroundImage: {
     flex: 1,
@@ -130,6 +150,17 @@ const styles = StyleSheet.create({
 	answericon: {
 		paddingHorizontal:4,
     paddingTop:3
-	}
+	},
+  createqna: {
+    marginTop:10,
+    borderColor:'blue',
+    borderStyle:'solid',
+    backgroundColor:'#8B90F7',
+    paddingBottom:8,
+    paddingTop:3,
+    paddingLeft:8,
+    paddingRight:8,
+    borderRadius:10
+  }
 });
 
