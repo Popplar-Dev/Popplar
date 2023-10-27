@@ -21,7 +21,7 @@ const MapScreen: React.FC = () => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   // variables
-  const snapPoints = useMemo(() => ['35%', '95%'], []);
+  const snapPoints = useMemo(() => ['35%', '90%'], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
