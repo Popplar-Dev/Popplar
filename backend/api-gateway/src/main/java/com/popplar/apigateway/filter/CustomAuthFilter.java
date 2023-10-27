@@ -53,7 +53,6 @@ public class CustomAuthFilter extends AbstractGatewayFilterFactory<CustomAuthFil
             String tokenString = Objects.requireNonNull(token).get(0);
             System.out.println(tokenString);
 
-            //TODO: jwt 파싱 로직으로 변환해야함.
             if (!jwtService.checkToken(tokenString)) {
                 System.out.println("jwt exception");
                 return handleUnAuthorized(exchange); // 토큰이 일치하지 않을 때
