@@ -1,4 +1,5 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {View, StyleSheet} from 'react-native';
 
@@ -8,8 +9,36 @@ import ChatScreen from '../ChatScreen';
 import MyPageScreen from '../MyPageScreen';
 import AllPlacesScreen from '../AllPlacesScreen';
 import NotificationsScreen from '../NotificationsScreen';
+import SettingScreen from '../Settings/SettingScreen';
+import ProfileSetting from '../Settings/ProfileSetting';
+import AlarmSetting from '../Settings/AlarmSetting';
+import Terms from '../Settings/Terms';
+import Inquire from '../Settings/Inquire';
+import SpeedTouch from '../Games/SpeedTouch';
+import QnaList from '../QnA/QnaList';
+import QnaDetail from '../QnA/QnaDetail';
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+const MyPageStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{headerTintColor:'#8B90F7'}}
+    >
+      <Stack.Screen name="Mypage" component={MyPageScreen} options={{headerShown: false}}/>
+      <Stack.Screen name="Settings" component={SettingScreen} options={{headerTitle: 'SETTINGS'}}/>
+      <Stack.Screen name="ProfileSetting" component={ProfileSetting} options={{headerTitle: '프로필 수정'}}/>
+      <Stack.Screen name="AlarmSetting" component={AlarmSetting} options={{headerTitle: '알림 설정'}}/>
+      <Stack.Screen name="Inquire" component={Inquire} options={{headerTitle: '문의하기'}}/>
+      <Stack.Screen name="Terms" component={Terms} options={{headerTitle: '이용약관'}}/>
+
+      <Stack.Screen name="SpeedTouch" component={SpeedTouch} options={{headerTitle: 'SpeedTouchGame'}}/>
+      <Stack.Screen name="QnaList" component={QnaList} options={{headerTitle: 'QnaList'}}/>
+      <Stack.Screen name="QnaDetail" component={QnaDetail} options={{headerTitle: 'QnaDetail'}}/>
+    </Stack.Navigator>
+  );
+}
 
 export default function BottomTab() {
   return (
@@ -76,7 +105,7 @@ export default function BottomTab() {
       />
       <Tab.Screen
         name="MyPage"
-        component={MyPageScreen}
+        component={MyPageStack}
         options={{
           tabBarIcon: ({focused}) => (
             <Icon

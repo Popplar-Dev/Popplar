@@ -1,0 +1,34 @@
+.container {
+  position: relative;
+  height: calc(var(--vh, 1vh) * 100);
+  background-color: #2C2C2C;
+}
+
+.searchInput {
+  position: absolute;
+  width: 70%;
+
+  top: 14%;
+  left: 13%;
+  z-index: 999;
+}
+
+.searchInput input {
+  width: 97%;
+  height: 35px;
+
+  border: 0;
+  border-radius: 14px;
+  background-color: #4941bb4a;
+  color: white;
+  padding-left: 20px;
+}
+
+.searchInput input::placeholder {
+  color: white;
+}
+
+.map {
+  position: relative;
+  /* height: 100vh; */
+}
