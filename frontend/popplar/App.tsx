@@ -23,7 +23,7 @@ function App() {
   const Stack = createNativeStackNavigator();
 
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider> 
       <SafeAreaView style={styles.container}>
         {/* <StatusBar style="light" /> */}
         <ImageBackground
