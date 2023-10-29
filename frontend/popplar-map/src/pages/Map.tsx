@@ -14,7 +14,6 @@ export default function Map () {
   const [searchPlaceObj, setSearchPlacObj] = useState<any | null>(null)
   const [visibleMap, setVisibleMap] = useState<any | null>(null)
   const [hotPlaceLatLng, sethotPlaceLatLng] = useRecoilState<LatLng>(HotLatLngState);
-  console.log(hotPlaceLatLng.y.slice(0, -8), hotPlaceLatLng.x.slice(0, -8))
 
   useEffect(() => {
     // 장소 검색 객체를 생성합니다
@@ -34,7 +33,6 @@ export default function Map () {
 
   // 핫플 마커 선택시, web->native 데이터 전송
   const requestPermission = (data: any) => {
-    console.log(data)
   
     if (typeof window !== 'undefined' && window.ReactNativeWebView) {
       window.ReactNativeWebView.postMessage(

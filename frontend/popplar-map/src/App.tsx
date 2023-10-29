@@ -12,6 +12,7 @@ import NeonFrame from './components/NeonFrame';
 import earthRocket from './assets/images/earth-rocket.png'
 
 import { IoTelescopeSharp } from 'react-icons/io5'
+import { RiCloseCircleFill } from 'react-icons/ri'
 import { Place } from './types/place'
 
 const { kakao } = window;
@@ -116,6 +117,16 @@ function App() {
               }, 300) 
               }
             }/>
+            {placeKeyword &&
+            <>
+              <button className={styles["del-button"]} onClick={() => {
+                setPlaceKeyword("");
+              }}>
+                <RiCloseCircleFill className={styles["del-input"]}/>
+              </button>
+              <div className={styles["del-background"]}></div>
+            </>
+            }
         </div>
 
         {!placeKeyword ?

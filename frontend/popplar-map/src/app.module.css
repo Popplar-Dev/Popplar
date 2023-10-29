@@ -64,3 +64,29 @@
 
   margin: 0 0 5px 7px;
 }
+
+.del-button {
+  position: absolute;
+  top: 20%;
+  right: 0;
+  background-color: transparent;
+  border: 0;
+  z-index: 1000;
+}
+
+.del-input {
+  color: #E21416;
+  width: 23px;
+  height: 23px;
+}
+
+.del-background {
+  position: absolute;
+  top: 30%;
+  right: 4%;
+  width: 13px;
+  height: 13px;
+  border-radius: 100%;
+  background-color: white;
+  z-index: 999;
+}
