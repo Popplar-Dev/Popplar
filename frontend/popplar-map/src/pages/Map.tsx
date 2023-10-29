@@ -164,7 +164,6 @@ export default function Map () {
       kakao.maps.event.addListener(hotMarker, 'click', function() {
         // 클릭한 위도, 경도 정보를 가져옵니다 
         panToHandler(La, Ma);
-        console.log(`${name} ${address}`)
         requestPermission({
           name, address
         });

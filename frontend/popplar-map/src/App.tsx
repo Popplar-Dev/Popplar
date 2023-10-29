@@ -25,9 +25,6 @@ function App() {
     setPlaceKeyword("")
     const LatLngInfo = {x: x, y: y}
     sethotPlaceLatLng(LatLngInfo)
-
-    console.log(LatLngInfo)
-    console.log('hot', hotPlaceLatLng)
   }
   
   function setScreenSize() {
@@ -105,7 +102,6 @@ function App() {
           <input type="text" id='keyword' value={placeKeyword} placeholder="search..." onChange={
             e => {
               setPlaceKeyword(e.target.value);
-              console.log(e.target.value)
               setTimeout(() => {
                 searchPlaces()
               }, 300) 
