@@ -72,6 +72,7 @@ export default function Map () {
   }
 
   useEffect(() => {
+    setTimeout(() => {
     var mapContainer = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
     // var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
     //   center: new kakao.maps.LatLng(37.50134, 127.0397), //지도의 중심좌표.
@@ -194,7 +195,7 @@ export default function Map () {
         map.setLevel(2); 
       }, 400)             
     }        
-
+  }, 100)  
 }, [centerLat, centerLng])
 
   return (
