@@ -31,7 +31,7 @@
 .top-linear-left {
   position: absolute;
   width: 6.6%;
-  height: 2.5px;
+  height: 2.8px;
   margin-top: 40px;
   background-color: #8B90F7;
   transform: rotate(-55deg);
@@ -45,7 +45,7 @@
 .top-linear-left-right {
   position: absolute;
   width: 6.6%;
-  height: 2.5px;
+  height: 2.8px;
   margin-top: 40px;
   background-color: #8B90F7;
   transform: rotate(55deg);
@@ -59,7 +59,7 @@
 .top-linear-right {
   position: absolute;
   width: 9.5%;
-  height: 2.5px;
+  height: 2.8px;
   margin-top: 40px;
   background-color: #8B90F7;
   transform: rotate(55deg);

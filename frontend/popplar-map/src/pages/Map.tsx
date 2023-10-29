@@ -6,6 +6,9 @@ import { BiSolidRocket } from 'react-icons/bi';
 
 import { useRecoilState } from 'recoil';
 import { HotLatLngState } from "../recoil/hotLatLng/index";
+import { CenterLatState } from "../recoil/centerLat/index"
+import { CenterLngState } from "../recoil/centerLng/index"
+
 import { LatLng } from '../types/LatLng'
 
 const { kakao } = window;
@@ -13,7 +16,11 @@ const { kakao } = window;
 export default function Map () {
   const [searchPlaceObj, setSearchPlacObj] = useState<any | null>(null)
   const [visibleMap, setVisibleMap] = useState<any | null>(null)
+  
   const [hotPlaceLatLng, sethotPlaceLatLng] = useRecoilState<LatLng>(HotLatLngState);
+  const [centerLat, setCenterLat] = useRecoilState<string>(CenterLatState);
+  const [centerLng, setCenterLng] = useRecoilState<string>(CenterLngState);
+
 
   useEffect(() => {
     // 장소 검색 객체를 생성합니다
@@ -66,26 +73,32 @@ export default function Map () {
 
   useEffect(() => {
     var mapContainer = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
-    var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
-      center: new kakao.maps.LatLng(37.50134, 127.0397), //지도의 중심좌표.
-      level: 4 //지도의 레벨(확대, 축소 정도)
-    };
+    // var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
+    //   center: new kakao.maps.LatLng(37.50134, 127.0397), //지도의 중심좌표.
+    //   level: 4 //지도의 레벨(확대, 축소 정도)
+    // };
     if (hotPlaceLatLng.x) {
       const Lat = hotPlaceLatLng.y.slice(0, -8)
       const Lng = hotPlaceLatLng.x.slice(0, -8)
+      setCenterLat(Lat)
+      setCenterLng(Lng)
       console.log(Lat, Lng)
-      mapOptions = { //지도를 생성할 때 필요한 기본 옵션
-        center: new kakao.maps.LatLng(Lat, Lng), //지도의 중심좌표.
-        level: 4 //지도의 레벨(확대, 축소 정도)
-      };
+    } else {
+      setCenterLat("37.50134")
+      setCenterLng("127.0397")
     }
 
-    var map = new kakao.maps.Map(mapContainer, mapOptions); //지도 생성 및 객체 리턴
-    setVisibleMap(map) 
+    var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
+      center: new kakao.maps.LatLng(centerLat, centerLng), //지도의 중심좌표.
+      level: 4 //지도의 레벨(확대, 축소 정도)
+    };
 
     // 내 위치 마커
     // 마커가 표시될 위치입니다 
-    var markerPosition = new kakao.maps.LatLng(37.50134, 127.0397);
+    var markerPosition = new kakao.maps.LatLng(centerLat, centerLng);
+
+    var map = new kakao.maps.Map(mapContainer, mapOptions); //지도 생성 및 객체 리턴
+    setVisibleMap(map) 
 
     // 마커를 생성합니다
     var marker = new kakao.maps.Marker({
@@ -182,7 +195,7 @@ export default function Map () {
       }, 400)             
     }        
 
-}, [])
+}, [centerLat, centerLng])
 
   return (
   <div className={`container`}>
@@ -201,6 +214,8 @@ export default function Map () {
     <button className={styles.mypos} onClick={() => {
       moveToMypos();
       sethotPlaceLatLng({x: "", y: ""});
+      setCenterLat("37.50134");
+      setCenterLng("127.0397");
     }}>
       <BiSolidRocket size={25} color={'#8B90F7'}/>
     </button>

@@ -109,7 +109,7 @@ function App() {
     <div className={styles.search}>Search...</div>
       <div className={styles.map}>
         <div className={styles.searchInput}>
-          <input type="text" id='keyword' value={placeKeyword} placeholder="search..." onChange={
+          <input type="text" id='keyword' value={placeKeyword} placeholder="장소 검색..." onChange={
             e => {
               setPlaceKeyword(e.target.value);
               setTimeout(() => {
