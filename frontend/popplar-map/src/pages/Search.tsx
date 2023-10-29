@@ -2,6 +2,7 @@ import './styles/frame.css'
 import styles from './styles/search.module.css'
 
 import { Place } from '../types/place'
+import SearchContentBox from '../components/SearchContentBox'
 
 type Props = {
   result: Place[] | null
@@ -16,19 +17,11 @@ export default function Search ({ result, placeSelectClick }: Props) {
   
   return (
     <div className={styles.container}>
+      <div className={styles.message}>search mode connected...</div>
+
       {result && result.map((place) => 
-        (
-        <button className={styles.seachbox} onClick={() => placeSelectHandler(place.x, place.y)}>
-          <div className={styles.name}>{place.place_name}</div>
-          <div className={styles.name}>{place.road_address_name}</div>
-          <div className={styles.name}>{place.category_group_code}</div>
-          <div className={styles.name}>{place.category_group_name}</div>
-          <div className={styles.name}>{place.category_name}</div>
-          <div className={styles.name}>{place.phone}</div>
-          <div className={styles.name}>{place.road_address_name}</div>
-          <div className={styles.name}>{place.x}</div>
-          <div className={styles.name}>{place.y}</div>
-        </button>
+        ( 
+        <SearchContentBox place={place} placeSelectHandler={placeSelectHandler}/>
       ))}
     </div>
   )

@@ -9,7 +9,9 @@ import { LatLng } from './types/LatLng'
 import Map from './pages/Map'
 import Search from './pages/Search'
 import NeonFrame from './components/NeonFrame';
+import earthRocket from './assets/images/earth-rocket.png'
 
+import { IoTelescopeSharp } from 'react-icons/io5'
 import { Place } from './types/place'
 
 const { kakao } = window;
@@ -99,6 +101,11 @@ function App() {
   return (
     <div className={styles.container}>
       <NeonFrame />
+      <IoTelescopeSharp size="28" className={styles.telescope}/>
+      {/* <div className={styles["telescope-background"]}></div> */}
+      <img src={earthRocket} className={styles["earth-icon"]} alt="Earth Icon"/>
+
+    <div className={styles.search}>Search...</div>
       <div className={styles.map}>
         <div className={styles.searchInput}>
           <input type="text" id='keyword' value={placeKeyword} placeholder="search..." onChange={

@@ -3,13 +3,10 @@ import styles from './styles/map.module.css'
 import './styles/frame.css'
 
 import { BiSolidRocket } from 'react-icons/bi';
-import { IoTelescopeSharp } from 'react-icons/io5'
 
 import { useRecoilState } from 'recoil';
 import { HotLatLngState } from "../recoil/hotLatLng/index";
 import { LatLng } from '../types/LatLng'
-
-import earthRocket from '../assets/images/earth-rocket.png'
 
 const { kakao } = window;
 
@@ -192,9 +189,6 @@ export default function Map () {
   return (
   <div className={`container`}>
     <div className={styles.message}>4 spaces detected...</div>
-    <IoTelescopeSharp size="28" className={styles.telescope}/>
-    {/* <div className={styles["telescope-background"]}></div> */}
-    <img src={earthRocket} className={styles["earth-icon"]} alt="Earth Icon"/>
 
     <div className={styles.search}>Search...</div>
 
