@@ -7,16 +7,6 @@
   overflow-y: scroll;
 }
 
-.seachbox {
-  border: 1px dashed white;
-  background-color: transparent;
-  width: 100%;
-}
-
-.name { 
-  color: white;
-}
-
 .message {
   z-index: 1000;
   position: absolute;
@@ -29,4 +19,8 @@
   font-size: 16px;
 
   margin: 0 0 5px 7px;
+}
+
+.result-container {
+  padding: 150px 20px 55px 20px;
 }

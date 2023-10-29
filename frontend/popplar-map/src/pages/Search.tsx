@@ -19,10 +19,12 @@ export default function Search ({ result, placeSelectClick }: Props) {
     <div className={styles.container}>
       <div className={styles.message}>search mode connected...</div>
 
+      <div className={styles["result-container"]}>
       {result && result.map((place) => 
         ( 
         <SearchContentBox place={place} placeSelectHandler={placeSelectHandler}/>
-      ))}
+        ))}
+      </div>
     </div>
   )
 }
