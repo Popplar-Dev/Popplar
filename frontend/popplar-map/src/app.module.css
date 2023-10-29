@@ -90,3 +90,23 @@
   background-color: white;
   z-index: 999;
 }
+
+.bg-top {
+  position: absolute;
+  top: 0;
+
+  height: 18%;
+  width: 100%;
+  background-color: #2C2C2C;
+  z-index: 999;
+}
+
+.bg-bottom {
+  position: absolute;
+  bottom: 0;
+
+  height: 5.5%;
+  width: 100%;
+  background-color: #2C2C2C;
+  z-index: 999;
+}

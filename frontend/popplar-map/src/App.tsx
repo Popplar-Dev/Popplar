@@ -106,10 +106,17 @@ function App() {
       {/* <div className={styles["telescope-background"]}></div> */}
       <img src={earthRocket} className={styles["earth-icon"]} alt="Earth Icon"/>
 
-    <div className={styles.search}>Search...</div>
-      <div className={styles.map}>
-        <div className={styles.searchInput}>
-          <input type="text" id='keyword' value={placeKeyword} placeholder="장소 검색..." onChange={
+      {placeKeyword &&
+      (<>
+          <div className={styles["bg-top"]}></div>
+          <div className={styles["bg-bottom"]}></div>
+      </>)
+      }
+
+      <div className={styles.search}>Search...</div>
+        <div className={styles.map}>
+          <div className={styles.searchInput}>
+            <input type="text" id='keyword' value={placeKeyword} placeholder="장소 검색..." onChange={
             e => {
               setPlaceKeyword(e.target.value);
               setTimeout(() => {
@@ -131,8 +138,12 @@ function App() {
 
         {!placeKeyword ?
         <Map />
-        : <Search result={searchResult} placeSelectClick={placeSelectClick}/>
-        }
+        : 
+        (
+        <>
+        <Search result={searchResult} placeSelectClick={placeSelectClick}/>
+        </>
+        )}
       </div>
     </div>
   );
