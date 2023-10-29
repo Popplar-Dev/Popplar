@@ -202,6 +202,7 @@ export default function Map () {
 
     <button className={styles.mypos} onClick={() => {
       moveToMypos();
+      sethotPlaceLatLng({x: "", y: ""});
     }}>
       <BiSolidRocket size={25} color={'#8B90F7'}/>
     </button>
