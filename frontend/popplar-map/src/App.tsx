@@ -8,6 +8,7 @@ import { LatLng } from './types/LatLng'
 
 import Map from './pages/Map'
 import Search from './pages/Search'
+import NeonFrame from './components/NeonFrame';
 
 import { Place } from './types/place'
 
@@ -97,6 +98,7 @@ function App() {
 
   return (
     <div className={styles.container}>
+      <NeonFrame />
       <div className={styles.map}>
         <div className={styles.searchInput}>
           <input type="text" id='keyword' value={placeKeyword} placeholder="search..." onChange={
