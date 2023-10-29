@@ -1,6 +1,7 @@
 import './styles/frame.css'
 import styles from './styles/search.module.css'
 
+import { useEffect } from 'react'
 import { Place } from '../types/place'
 import SearchContentBox from '../components/SearchContentBox'
 
@@ -14,11 +15,17 @@ export default function Search ({ result, placeSelectClick }: Props) {
   function placeSelectHandler (x: string, y: string) {
     placeSelectClick(x, y)
   }
+
+  useEffect(() => {
+    window.addEventListener('resize', function() {
+      let vh = window.innerHeight * 0.01;
+      // let vw = window.innerWidth * 0.01
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    });
+  }, [])
   
   return (
     <div className={styles.container}>
-      <div className={styles.message}>search mode connected...</div>
-      <div></div>
 
       <div className={styles["result-container"]}>
       {result && result.map((place) => 

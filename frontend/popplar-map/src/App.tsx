@@ -101,10 +101,15 @@ function App() {
 
   return (
     <div className={styles.container}>
-      <NeonFrame />
+      {/* <NeonFrame /> */}
       <IoTelescopeSharp size="28" className={styles.telescope}/>
       {/* <div className={styles["telescope-background"]}></div> */}
       <img src={earthRocket} className={styles["earth-icon"]} alt="Earth Icon"/>
+
+      {!placeKeyword ?
+      (<div className={styles.message}>4 spaces detected...</div>)
+      :(<div className={styles.message}>search mode connected...</div>)
+      }
 
       {placeKeyword &&
       (<>
