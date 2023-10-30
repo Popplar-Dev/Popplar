@@ -35,7 +35,7 @@ pipeline {
                 // 실행 중인 'hotPlace' 컨테이너 제거
 //                sh 'docker rm -f hot-place'
                 // 도커 컴포즈 업
-                sh "docker-compose -f docker-compose.yml up -d"
+                sh "docker-compose -f /jenkins/workspace/pipeline/backend/hot-place-service/docker-compose.yml up -d"
                 // 새로운 이미지로 'hot-place' 컨테이너를 백그라운드에서 실행
 //                sh 'docker run -d --name hot-place -p 8200:8200 -u root popplar-hot-place:latest'
             }
