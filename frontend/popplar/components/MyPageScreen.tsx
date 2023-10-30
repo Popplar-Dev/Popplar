@@ -17,13 +17,18 @@ function MyPageScreen() {
   const [newNickname, setNewNickname] = useState('');
   const [userinfo, setUserInfo] = useState({ id: '', name: '', exp: '' });
   const [modalVisible, setModalVisible] = useState(false);
-  const [stamp, setStamp] = useState([{ category:'', visitedSet:'' }])
+  const [stamp, setStamp] = useState<Array<{ category: string, visitedSet: number }>>([]);
   const [selectedPlanet, setSelectedPlanet] = useState({
     name: '',
-    image: require('../assets/planet/planet-01.png'),
+    image: require('../assets/planet/1.png'),
     visit: ''
   });
   const [loading, setLoading] = useState(true);
+  const images = [
+    { name: "cafe", uri: require("../assets/planet/1.png") },
+    { name: "restarant", uri: require("../assets/planet/2.png") },
+  ];
+  // const [stampDetail, setStampDetail] = useState('')
 
 	useEffect(() => {
     axios.get(
@@ -41,7 +46,7 @@ function MyPageScreen() {
 	useEffect(() => {
     axios.get(`http://10.0.2.2:8080/member/stamp/356931964684`)
       .then((response) => {
-        setStamp(response.data);
+        setStamp(response.data.memberCategoryResDtoList);
         setLoading(false); 
       })
       .catch((err) => {
@@ -67,17 +72,17 @@ function MyPageScreen() {
         style={styles.backgroundImage}
       >
         <View style={styles.headerContainer}>
-      <View style={styles.leftContainer}>
-        <View style={styles.goBackButtonOuter}>
-          <Pressable onPress={goBack} android_ripple={{color: '#464646'}}>
-            <Icon name="chevron-back" color="#8B90F7" size={25} />
-          </Pressable>
+          <View style={styles.leftContainer}>
+            <View style={styles.goBackButtonOuter}>
+              <Pressable onPress={goBack} android_ripple={{color: '#464646'}}>
+                <Icon name="chevron-back" color="#8B90F7" size={25} />
+              </Pressable>
+            </View>
+            <View>
+              <Text style={styles.title}>Profile</Text>
+            </View>
+          </View>
         </View>
-        <View>
-          <Text style={styles.title}>Profile</Text>
-        </View>
-      </View>
-    </View>
           <Icon
             style={styles.setting}
             name='settings-outline'
@@ -104,143 +109,36 @@ function MyPageScreen() {
             source={require('../assets/업적버튼.png')}
             style={styles.buttonImage}
           />
-          {loading  ? (
-              <ActivityIndicator size="large" color="#ffffff" />
-            ) : (
+          {loading ? (
+            <ActivityIndicator size="large" color="#ffffff" />
+          ) : (
             <View>
               <View style={styles.planetcontainer}>
-                <View style={styles.planet}>
-                  <Pressable
-                    onPress={() => {
-                      setSelectedPlanet({
-                        name: `${stamp[0].category}`,
-                        image: require('../assets/planet/planet-01.png'),
-                        visit:`${stamp[0].visitedSet}`
-                        // visit:`0`
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={styles.planet}
-                  >
-                    <Text style={styles.t}>{stamp[0].category}</Text>
-                    <Image
-                      source={require('../assets/planet/planet-01.png')}
-                      style={styles.planetimage}
-                    />
-                    <Text style={styles.t}>{stamp[0].visitedSet}/10</Text>
-                  </Pressable>
-                </View>
-
-                <View style={styles.planet}>
-                  <Pressable
+                {stamp.map((item, index) => (
+                  <View style={styles.planet} key={index}>
+                    <Pressable
                       onPress={() => {
                         setSelectedPlanet({
-                          name: `${stamp[1].category}`,
-                          image: require('../assets/planet/planet-02.png'),
-                          visit:`${stamp[1].visitedSet}`
-                          // visit:`0`
+                          name: item.category,
+                          image: images[index].uri,
+                          visit: `${item.visitedSet}`
                         });
                         setModalVisible(true);
                       }}
                       style={styles.planet}
                     >
-                      <Text style={styles.t}>{stamp[1].category}</Text>
+                      <Text style={styles.t}>{item.category}</Text>
                       <Image
-                        source={require('../assets/planet/planet-02.png')}
+                        source={images[index].uri}
                         style={styles.planetimage}
                       />
-                      <Text style={styles.t}>{stamp[1].visitedSet}/10</Text>
+                      <Text style={styles.t}>{item.visitedSet}/10</Text>
                     </Pressable>
-                </View>
-
-                <View style={styles.planet}>
-                  <Pressable
-                    onPress={() => {
-                      setSelectedPlanet({
-                        name: '업적 3',
-                        image: require('../assets/planet/planet-12.png'),
-                        visit:'0'
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={styles.planet}
-                  >
-                    <Text style={styles.t}>업적3</Text>
-                    <Image
-                      source={require('../assets/planet/planet-12.png')}
-                      style={styles.planetimage}
-                    />
-                    <Text style={styles.t}>0/0</Text>
-                  </Pressable>
-                </View>
+                  </View>
+                ))}
               </View>
-
-              <View style={styles.planetcontainer}>
-                <View style={styles.planet}>
-                <Pressable
-                    onPress={() => {
-                      setSelectedPlanet({
-                        name: '업적 4',
-                        image: require('../assets/planet/planet-03.png'),
-                        visit:'0'
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={styles.planet}
-                  >
-                    <Text style={styles.t}>업적4</Text>
-                    <Image
-                      source={require('../assets/planet/planet-03.png')}
-                      style={styles.planetimage}
-                    />
-                    <Text style={styles.t}>0/0</Text>
-                  </Pressable>
-                </View>
-
-                <View style={styles.planet}>
-                  <Pressable
-                    onPress={() => {
-                      setSelectedPlanet({
-                        name: '업적 5',
-                        image: require('../assets/planet/planet-05.png'),
-                        visit:'0'
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={styles.planet}
-                  >
-                    <Text style={styles.t}>업적5</Text>
-                    <Image
-                      source={require('../assets/planet/planet-05.png')}
-                      style={styles.planetimage}
-                    />
-                    <Text style={styles.t}>0/0</Text>
-                  </Pressable>
-                </View>
-
-                <View style={styles.planet}>
-                  <Pressable
-                    onPress={() => {
-                      setSelectedPlanet({
-                        name: '업적 6',
-                        image: require('../assets/planet/planet-06.png'),
-                        visit:'0'
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={styles.planet}
-                  >
-                    <Text style={styles.t}>업적6</Text>
-                    <Image
-                      source={require('../assets/planet/planet-06.png')}
-                      style={styles.planetimage}
-                    />
-                    <Text style={styles.t}>0/0</Text>
-                  </Pressable>
-                </View>
-              </View>
-            </View>        
-            )}
+            </View>
+          )}
           </View>
           <PlanetModal
             visible={modalVisible}

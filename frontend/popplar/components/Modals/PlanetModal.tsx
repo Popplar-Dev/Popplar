@@ -1,6 +1,8 @@
 import React from 'react';
 import { Modal, View, Text, Pressable, StyleSheet, TouchableWithoutFeedback,Image } from 'react-native';
 import { BlurView } from "@react-native-community/blur";
+import { useState, useEffect } from 'react';
+import axios from "axios";
 
 interface PlanetModalProps {
   visible: boolean;
@@ -11,6 +13,23 @@ interface PlanetModalProps {
 }
 
 function PlanetModal({ visible, onClose, planetName, planetImage, visit }:PlanetModalProps) {
+  
+  const [stamp, setStamp] = useState<Array<{ category: string, hotPlaceId: number, visitedCount: number }>>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios.get(`http://10.0.2.2:8080/member/stamp/356931964684`)
+      .then((response) => {
+        setStamp(response.data.stampResDtoList);
+        setLoading(false); 
+        console.log(response.data.stampResDtoList)
+      })
+      .catch((err) => {
+        console.log("에러 메시지 ::", err);
+        setLoading(false); 
+      });
+  }, []);
+  
   return (
     <Modal
       animationType="fade"
@@ -42,6 +61,11 @@ function PlanetModal({ visible, onClose, planetName, planetImage, visit }:Planet
                 <Text style={styles.modalText}>설레는 마음으로 여행을 떠난 당신!
                 </Text>
                 <Text style={styles.modalText}>{visit} 곳의 <Text style={styles.focusText}>{planetName}</Text>에 첫 발을 디뎠습니다</Text>
+                <View>
+                  <Text style={styles.modalText}>
+                    
+                  </Text>
+                </View>
               </View>
             </View>
           </BlurView>

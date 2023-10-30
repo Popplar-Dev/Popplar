@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal, View, Text, Pressable, StyleSheet, TextInput,TouchableWithoutFeedback } from 'react-native';
 
 interface QnaCreateModalProps {
