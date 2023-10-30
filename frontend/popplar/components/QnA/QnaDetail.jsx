@@ -68,26 +68,32 @@ export default function QnaDetail({ route }) {
           </View>
           <View style={styles.answerbox}>
             <Text style={styles.text}>A.</Text>
-            <FlatList
-              data={answerDetail}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item, index }) => (
-                <View style={styles.qnabox} key={index}>
-                  <View style={styles.answerdetail}>
-                    <Text style={styles.smalltext}>{item.memberName}</Text>
-                    <Text style={styles.text}>{item.content}</Text>
+            {answerDetail.length === 0 ? (
+              <View style={styles.noanswer}>
+                <Text style={styles.text}>아직 답변이 없습니다ㅜ</Text>
+              </View>
+            ) : (
+              <FlatList
+                data={answerDetail}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item, index }) => (
+                  <View style={styles.qnabox} key={index}>
+                    <View style={styles.answerdetail}>
+                      <Text style={styles.smalltext}>{item.memberName}</Text>
+                      <Text style={styles.text}>{item.content}</Text>
+                    </View>
+                    <Pressable
+                      style={selectedAnswer === index ? styles.selectButton : styles.nonselectButton}
+                      onPress={() => handleSelectAnswer(index)}
+                    >
+                      <Text style={styles.selectButtonText}>
+                        {selectedAnswer === index ? '채택됨' : '채택하기'}
+                      </Text>
+                    </Pressable>
                   </View>
-                  <Pressable
-                    style={selectedAnswer === index ? styles.selectButton : styles.nonselectButton}
-                    onPress={() => handleSelectAnswer(index)}
-                  >
-                    <Text style={styles.selectButtonText}>
-                      {selectedAnswer === index ? '채택됨' : '채택하기'}
-                    </Text>
-                  </Pressable>
-                </View>
-              )}
-            />
+                )}
+              />
+            )}
           </View>
           <View style={styles.newAnswerBox}>
             <TextInput
@@ -197,7 +203,8 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: 'white',
   },
-  // answerbox: {
-  //   flex: 1,
-  // },
+  noanswer: {
+    justifyContent:'center',
+    alignItems:'center'
+  }
 });

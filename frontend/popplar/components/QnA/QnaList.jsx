@@ -31,7 +31,6 @@ export default function QnaList() {
         `http://10.0.2.2:8080/qna/2`, 
       )
 			.then((response) => {
-				console.log(response.data[1].answerResDtoList.length)
         setQnaData(response.data)
 			})
 			.catch((err) => {
@@ -39,7 +38,6 @@ export default function QnaList() {
       });
   }, []);
 
-  // console.log(qnaData)
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.hotplace}>MultiCampus</Text>
