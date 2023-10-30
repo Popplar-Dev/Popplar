@@ -8,6 +8,9 @@ import com.hotspot.hotplace.entity.Like;
 import com.hotspot.hotplace.mapper.HotPlaceMapper;
 import com.hotspot.hotplace.repository.HotPlaceRepository;
 import com.hotspot.hotplace.repository.LikeRepository;
+import com.hotspot.visitor.repository.VisitorRepository;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class HotPlaceService {
 
+    private final VisitorRepository visitorRepository;
+
     private final HotPlaceRepository hotPlaceRepository;
     private final LikeRepository likeRepository;
 
@@ -30,6 +35,9 @@ public class HotPlaceService {
         for (HotPlace hotPlace : hotPlaceList) {
             HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(
                 hotPlace);
+            hotPlaceResDto.setVisitorCount(
+                visitorRepository.countByVisitedDateAfterAndHotPlaceId(LocalDateTime.now().minus(
+                    Duration.ofDays(14)), hotPlaceResDto.getId()));
             hotPlaceResDtoList.add(hotPlaceResDto);
         }
 
@@ -38,8 +46,12 @@ public class HotPlaceService {
 
     public HotPlaceResDto findHotPlace(Long hotPlaceId) {
         HotPlace hotPlace = findHotPlaceById(hotPlaceId);
+        HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
+        hotPlaceResDto.setVisitorCount(
+            visitorRepository.countByVisitedDateAfterAndHotPlaceId(LocalDateTime.now().minus(
+                Duration.ofDays(14)), hotPlaceId));
 
-        return HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
+        return hotPlaceResDto;
     }
 
     @Transactional
@@ -50,7 +62,12 @@ public class HotPlaceService {
         HotPlace hotPlace = HotPlaceMapper.INSTANCE.hotPlaceReqDtoToEntity(hotPlaceReqDto);
         hotPlaceRepository.save(hotPlace);
 
-        return HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
+        HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
+        hotPlaceResDto.setVisitorCount(
+            visitorRepository.countByVisitedDateAfterAndHotPlaceId(LocalDateTime.now().minus(
+                Duration.ofDays(14)), hotPlace.getId()));
+
+        return hotPlaceResDto;
     }
 
     @Transactional

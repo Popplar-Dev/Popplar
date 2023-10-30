@@ -4,7 +4,6 @@ import com.hotspot.member.dto.MemberProfileResDto
 import com.hotspot.member.dto.MemberUpdateReqDto
 import com.hotspot.member.entity.BlockedMember
 import com.hotspot.member.entity.Member
-import com.hotspot.member.mapper.MemberMapper
 import com.hotspot.member.repository.BlockedMemberRepository
 import com.hotspot.member.repository.MemberRepository
 import org.springframework.stereotype.Service
@@ -19,9 +18,8 @@ class MemberService(
     private val blockedMemberRepository: BlockedMemberRepository,
 ) {
 
-    fun getMemberProfile(id: Long): MemberProfileResDto {
-        val decryptedId = cryptService.decrypt(id)
-        return MemberMapper.INSTANCE.entityToMemberProfileDto(findMemberById(decryptedId))
+    fun getMemberProfile(memberId: Long): MemberProfileResDto {
+        return MemberProfileResDto.create(cryptService, findMemberByEncryptedId(memberId))
     }
 
     @Transactional
@@ -29,16 +27,14 @@ class MemberService(
         memberId: Long,
         memberUpdateReqDto: MemberUpdateReqDto
     ): MemberProfileResDto {
-        val decryptedId = cryptService.decrypt(memberId)
-        val member = findMemberById(decryptedId)
+        val member = findMemberByEncryptedId(memberId)
         member.update(memberUpdateReqDto)
-        return MemberMapper.INSTANCE.entityToMemberProfileDto(member)
+        return MemberProfileResDto.create(cryptService, member)
     }
 
     @Transactional
-    fun deleteMember(id: Long) {
-        val decryptedId = cryptService.decrypt(id)
-        val member = findMemberById(decryptedId)
+    fun deleteMember(memberId: Long) {
+        val member = findMemberByEncryptedId(memberId)
         member.delete()
     }
 
@@ -74,8 +70,8 @@ class MemberService(
         blockedMemberRepository.delete(blockedMember)
     }
 
-    fun findMemberById(id: Long): Member {
-        return memberRepository.findById(id)
+    fun findMemberByEncryptedId(encryptedId: Long): Member {
+        return memberRepository.findById(cryptService.decrypt(encryptedId))
             .orElseThrow { throw ArithmeticException("사용자 정보가 없습니다.") }
     }
 }

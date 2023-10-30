@@ -19,4 +19,6 @@ public class HotPlaceResDto {
     private HotPlaceType category;
 
     private int likeCount;
+
+    private int visitorCount;
 }
