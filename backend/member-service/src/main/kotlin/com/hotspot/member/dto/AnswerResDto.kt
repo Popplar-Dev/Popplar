@@ -2,7 +2,7 @@ package com.hotspot.member.dto
 
 import java.time.LocalDateTime
 
-class QuestionDto(
+class AnswerResDto (
 
     val id: Long,
 
@@ -11,6 +11,8 @@ class QuestionDto(
     val memberId: Long,
 
     val memberName: String,
+
+    val memberProfileImage: String,
 
     val createdAt: LocalDateTime,
 

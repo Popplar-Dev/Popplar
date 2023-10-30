@@ -16,6 +16,7 @@ class Answer(
 
     var content: String,
 ) : BaseEntity() {
+
     companion object {
         fun create(questionId: Long, memberId: Long, content: String): Answer {
             return Answer(
