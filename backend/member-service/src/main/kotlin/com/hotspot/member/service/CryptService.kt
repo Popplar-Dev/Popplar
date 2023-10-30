@@ -17,10 +17,6 @@ class CryptService (
     private val saltC: Long,
 ){
 
-    fun encryptMemberProfile(memberProfileResDto: MemberProfileResDto): MemberProfileResDto {
-        return memberProfileResDto.encrypt(saltA, saltB, saltC)
-    }
-
     fun encrypt(id: Long): Long {
         return id * saltA * saltB * saltC
     }

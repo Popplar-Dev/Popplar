@@ -1,5 +1,6 @@
 package com.hotspot.member.entity
 
+import com.hotspot.global.entity.BaseEntity
 import jakarta.persistence.*
 
 @Entity
