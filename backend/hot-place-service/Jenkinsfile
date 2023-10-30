@@ -33,7 +33,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 // 실행 중인 'hotPlace' 컨테이너 제거
-                sh 'docker rm -f hot-place'
+//                sh 'docker rm -f hot-place'
                 // 도커 컴포즈 업
                 sh "docker-compose -f docker-compose.yml up -d"
                 // 새로운 이미지로 'hot-place' 컨테이너를 백그라운드에서 실행
