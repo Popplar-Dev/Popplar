@@ -31,10 +31,10 @@ class Question(
     }
 
     companion object {
-        fun create(cryptService: CryptService, questionReqDto: QuestionReqDto): Question {
+        fun create(cryptService: CryptService, hotPlaceId: Long, questionReqDto: QuestionReqDto): Question {
             return Question(
                 memberId = cryptService.decrypt(questionReqDto.memberId),
-                hotPlaceId = questionReqDto.hotPlaceId,
+                hotPlaceId = hotPlaceId,
                 content = questionReqDto.content
             )
         }
