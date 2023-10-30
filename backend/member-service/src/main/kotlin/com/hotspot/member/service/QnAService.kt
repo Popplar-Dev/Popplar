@@ -61,7 +61,7 @@ class QnAService(
 
         question.answerList.forEach {
             val answerMember = findMemberById(it.memberId)
-            qnaResDto.answerResListDto.add(
+            qnaResDto.answerResDtoList.add(
                 AnswerResDto.create(
                     cryptService = cryptService,
                     answer = it,
