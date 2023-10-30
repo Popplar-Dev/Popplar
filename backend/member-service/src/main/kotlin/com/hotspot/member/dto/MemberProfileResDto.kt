@@ -1,6 +1,8 @@
 package com.hotspot.member.dto
 
+import com.hotspot.member.entity.Member
 import com.hotspot.member.entity.SocialType
+import com.hotspot.member.service.CryptService
 
 class MemberProfileResDto(
     var id: Long,
@@ -10,9 +12,16 @@ class MemberProfileResDto(
     var exp: Int,
 ) {
 
-    // TODO 변경할 방법 찾아보기
-    fun encrypt(saltA: Long, saltB: Long, saltC: Long): MemberProfileResDto {
-        this.id *= saltA * saltB * saltC
-        return this
+    companion object {
+        fun create(cryptService: CryptService, member: Member): MemberProfileResDto {
+            return MemberProfileResDto(
+                id = cryptService.encrypt(member.id!!),
+                name = member.name,
+                socialType = member.socialType,
+                profileImage = member.profileImage,
+                exp = member.exp
+            )
+        }
     }
+
 }

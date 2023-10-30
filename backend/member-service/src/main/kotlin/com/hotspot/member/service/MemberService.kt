@@ -4,7 +4,6 @@ import com.hotspot.member.dto.MemberProfileResDto
 import com.hotspot.member.dto.MemberUpdateReqDto
 import com.hotspot.member.entity.BlockedMember
 import com.hotspot.member.entity.Member
-import com.hotspot.member.mapper.MemberMapper
 import com.hotspot.member.repository.BlockedMemberRepository
 import com.hotspot.member.repository.MemberRepository
 import org.springframework.stereotype.Service
@@ -20,7 +19,7 @@ class MemberService(
 ) {
 
     fun getMemberProfile(memberId: Long): MemberProfileResDto {
-        return MemberMapper.INSTANCE.entityToMemberProfileDto(findMemberByEncryptedId(memberId))
+        return MemberProfileResDto.create(cryptService, findMemberByEncryptedId(memberId))
     }
 
     @Transactional
@@ -30,7 +29,7 @@ class MemberService(
     ): MemberProfileResDto {
         val member = findMemberByEncryptedId(memberId)
         member.update(memberUpdateReqDto)
-        return MemberMapper.INSTANCE.entityToMemberProfileDto(member)
+        return MemberProfileResDto.create(cryptService, member)
     }
 
     @Transactional

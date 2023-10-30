@@ -3,12 +3,11 @@ package com.hotspot.member.controller
 import com.hotspot.member.assembler.MemberProfileResDtoRA
 import com.hotspot.member.dto.*
 import com.hotspot.member.entity.SocialType
-import com.hotspot.member.oauth.OAuthLoginReqDto
-import com.hotspot.member.oauth.service.OAuthServiceFactory
-import com.hotspot.member.service.AchievementService
+import com.hotspot.global.oauth.OAuthLoginReqDto
+import com.hotspot.global.oauth.service.OAuthServiceFactory
+import com.hotspot.achievement.service.AchievementService
 import com.hotspot.member.service.CryptService
 import com.hotspot.member.service.MemberService
-import com.hotspot.member.service.MessageService
 import org.springframework.hateoas.EntityModel
 import org.springframework.web.bind.annotation.*
 
@@ -16,19 +15,16 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/member")
 class MemberController(
     private val memberService: MemberService,
-    private val achievementService: AchievementService,
     private val oAuthServiceFactory: OAuthServiceFactory,
-    private val cryptService: CryptService,
     private val memberProfileResDtoRA: MemberProfileResDtoRA,
+    private val cryptService: CryptService,
 ) {
 
     // 테스트용 코드
     @GetMapping("/login")
     fun loginTest(@RequestParam code: String): EntityModel<MemberProfileResDto> {
         return memberProfileResDtoRA.toModel(
-            cryptService.encryptMemberProfile(
-                oAuthServiceFactory.getOauthService(SocialType.GOOGLE).process(code)
-            )
+            oAuthServiceFactory.getOauthService(SocialType.GOOGLE).process(cryptService, code)
         )
     }
 
@@ -36,17 +32,15 @@ class MemberController(
     fun login(@RequestBody oAuthLoginReqDto: OAuthLoginReqDto): EntityModel<MemberProfileResDto> {
         // TODO JWT 생성 로직 추가 필요
         return memberProfileResDtoRA.toModel(
-            cryptService.encryptMemberProfile(
-                oAuthServiceFactory.getOauthService(oAuthLoginReqDto.loginType)
-                    .process(oAuthLoginReqDto.code)
-            )
+            oAuthServiceFactory.getOauthService(oAuthLoginReqDto.loginType)
+                .process(cryptService, oAuthLoginReqDto.code)
         )
     }
 
     @GetMapping("/{memberId}")
     fun getMemberProfile(@PathVariable memberId: Long): EntityModel<MemberProfileResDto> {
         return memberProfileResDtoRA.toModel(
-            cryptService.encryptMemberProfile(memberService.getMemberProfile(memberId))
+            memberService.getMemberProfile(memberId)
         )
     }
 
@@ -58,11 +52,9 @@ class MemberController(
         @RequestBody memberUpdateReqDto: MemberUpdateReqDto
     ): EntityModel<MemberProfileResDto> {
         return memberProfileResDtoRA.toModel(
-            cryptService.encryptMemberProfile(
-                memberService.updateMemberProfile(
-                    memberId,
-                    memberUpdateReqDto
-                )
+            memberService.updateMemberProfile(
+                memberId,
+                memberUpdateReqDto
             )
         )
     }
@@ -86,11 +78,6 @@ class MemberController(
     @DeleteMapping("/block/{memberId}/{blockedMemberId}")
     fun unBlockMember(@PathVariable memberId: Long, @PathVariable blockedMemberId: Long) {
         memberService.unBlockMember(memberId, blockedMemberId)
-    }
-
-    @GetMapping("/stamp/{memberId}")
-    fun getMemberCategoryCountList(@PathVariable memberId: Long): AchievementResDto {
-        return achievementService.getMemberStampAndCategoryCountList(memberId)
     }
 
     // TODO

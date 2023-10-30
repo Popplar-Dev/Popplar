@@ -1,7 +1,8 @@
 package com.hotspot.member.entity
 
+import com.hotspot.global.entity.BaseEntity
 import com.hotspot.member.dto.MemberUpdateReqDto
-import com.hotspot.member.oauth.OAuthMember
+import com.hotspot.global.oauth.OAuthMember
 import jakarta.persistence.*
 
 @Entity
