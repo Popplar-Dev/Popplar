@@ -15,7 +15,7 @@ pipeline {
             }
         }
 
-        // Docker 이미지 빌드 스테이지: Dockerfile을 기반으로 이미지를 빌드합니다.
+        // docker-compose 기반 빌드
         stage('Docker Build') {
             steps {
                 dir('backend/hot-place-service') {
