@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.NotNull;
@@ -14,18 +15,25 @@ import jakarta.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "conquerors")
-public class Conqueror extends BaseEntity{
+public class Conqueror extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
-    private Long conquerorId;
+    private Long memberId;
 
     @NotNull
     private Long hotPlaceId;
 
     @NotNull
     private int point;
+
+    @Builder
+    public Conqueror(Long memberId, Long hotPlaceId, int point) {
+        this.memberId = memberId;
+        this.hotPlaceId = hotPlaceId;
+        this.point = point;
+    }
 }
