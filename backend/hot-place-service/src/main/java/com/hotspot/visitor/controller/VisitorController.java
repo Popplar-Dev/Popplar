@@ -11,6 +11,8 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,5 +37,11 @@ public class VisitorController {
         return CollectionModel.of(visitorModelList);
     }
 
+    @PostMapping
+    public EntityModel<VisitorResDto> insertVisitor(@RequestBody VisitorReqDto visitorReqDto) {
+        VisitorResDto visitorResDto = visitorService.insertVisitor(visitorReqDto);
+
+        return EntityModel.of(visitorResDto);
+    }
 
 }

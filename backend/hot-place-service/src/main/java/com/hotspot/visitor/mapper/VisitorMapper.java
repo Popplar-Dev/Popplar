@@ -1,5 +1,6 @@
 package com.hotspot.visitor.mapper;
 
+import com.hotspot.visitor.dto.VisitorReqDto;
 import com.hotspot.visitor.dto.VisitorResDto;
 import com.hotspot.visitor.entity.Visitor;
 import org.mapstruct.Mapper;
@@ -13,4 +14,6 @@ public interface VisitorMapper {
 
     @Mapping(target = "hotPlaceId", source = "hotPlace.id")
     VisitorResDto entityToVisitorResDto(Visitor visitor);
+
+    Visitor VisitorReqDtoToEntity(VisitorReqDto visitorReqDto);
 }

@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,5 +42,9 @@ public class Visitor {
         this.hotPlace = hotPlace;
         this.memberId = memberId;
         this.visitedDate = visitedDate;
+    }
+
+    public void updateHotPlace(HotPlace hotPlace) {
+        this.hotPlace = hotPlace;
     }
 }
