@@ -15,13 +15,17 @@ public class HotPlaceAssembler {
 
     public EntityModel<HotPlaceResDto> findHotPlaceToModel(HotPlaceResDto hotPlaceResDto) {
         return EntityModel.of(hotPlaceResDto, linkTo(
-            methodOn(HotPlaceController.class).findHotPlace(hotPlaceResDto.getId())).withSelfRel());
+                methodOn(HotPlaceController.class).findHotPlace(hotPlaceResDto.getId())).withSelfRel()
+            , linkTo(
+                methodOn(HotPlaceController.class).findHotPlace(
+                    hotPlaceResDto.getId())).withSelfRel());
     }
 
     public EntityModel<?> likeHotPlaceToModel(Long hotPlaceId) {
         return EntityModel.of(
             new ResponseEntity<Void>(HttpStatus.OK),
             linkTo(methodOn(HotPlaceController.class).likeHotPlace(hotPlaceId)).withRel("like"),
-            linkTo(methodOn(HotPlaceController.class).deleteLikeHotPlace(hotPlaceId)).withRel("deleteLike"));
+            linkTo(methodOn(HotPlaceController.class).deleteLikeHotPlace(hotPlaceId)).withRel(
+                "deleteLike"));
     }
 }
