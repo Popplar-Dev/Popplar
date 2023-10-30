@@ -1,6 +1,5 @@
 package com.hotspot.visitor.repository;
 
-import com.hotspot.hotplace.entity.HotPlace;
 import com.hotspot.visitor.entity.Visitor;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,4 +14,6 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
 
     Optional<Visitor> findVistorsByMemberIdAndHotPlaceIdAndVisitedDate(Long memberId,
         Long hotPlaceId, LocalDateTime visitedDate);
+
+    int countByVisitedDateAfterAndHotPlaceId(LocalDateTime twoWeeksAgo, Long hotPlaceId);
 }

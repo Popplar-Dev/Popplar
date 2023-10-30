@@ -1,6 +1,5 @@
 package com.hotspot.visitor.controller;
 
-import com.hotspot.visitor.assembler.VisitorAssembler;
 import com.hotspot.visitor.dto.VisitorReqDto;
 import com.hotspot.visitor.dto.VisitorResDto;
 import com.hotspot.visitor.service.VisitorService;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class VisitorController {
 
     private final VisitorService visitorService;
-    private final VisitorAssembler visitorAssembler;
 
     @GetMapping("/{hotPlaceId}")
     public CollectionModel<EntityModel<VisitorResDto>> findAllVisitor(
@@ -43,5 +41,4 @@ public class VisitorController {
 
         return EntityModel.of(visitorResDto);
     }
-
 }
