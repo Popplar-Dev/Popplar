@@ -1,5 +1,6 @@
 package com.hotspot.member.controller
 
+import com.hotspot.member.dto.AnswerReqDto
 import com.hotspot.member.dto.QnAResDto
 import com.hotspot.member.dto.QuestionReqDto
 import com.hotspot.member.dto.QuestionResDto
@@ -15,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/qna")
-class QnAController (
+class QnAController(
 
     private val memberService: MemberService,
     private val qnaService: QnAService,
     private val cryptService: CryptService,
-){
+) {
 
     @GetMapping("/{questionId}")
     fun getQuestion(@PathVariable questionId: Long): QnAResDto {
@@ -30,6 +31,14 @@ class QnAController (
     @PostMapping
     fun createQuestion(@RequestBody questionReqDto: QuestionReqDto): QuestionResDto {
         return qnaService.createQuestion(questionReqDto)
+    }
+
+    @PostMapping("/{questionId}")
+    fun createAnswer(
+        @PathVariable questionId: Long,
+        @RequestBody answerReqDto: AnswerReqDto
+    ): QnAResDto {
+        return qnaService.createAnswer(questionId, answerReqDto)
     }
 
 }

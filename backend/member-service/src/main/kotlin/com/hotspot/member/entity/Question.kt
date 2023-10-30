@@ -22,7 +22,7 @@ class Question(
     val adoptedAnswer: Answer? = null,
 
     @OneToMany
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "questionId")
     val answerList: MutableList<Answer> = arrayListOf()
 ) : BaseEntity() {
 
