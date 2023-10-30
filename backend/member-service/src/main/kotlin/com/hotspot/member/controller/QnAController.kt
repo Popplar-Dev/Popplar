@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/qna")
 class QnAController(
 
-    private val memberService: MemberService,
     private val qnaService: QnAService,
-    private val cryptService: CryptService,
 ) {
 
     @GetMapping("/{questionId}")
@@ -29,7 +27,7 @@ class QnAController(
     }
 
     @PostMapping
-    fun createQuestion(@RequestBody questionReqDto: QuestionReqDto): QuestionResDto {
+    fun createQuestion(@RequestBody questionReqDto: QuestionReqDto): QnAResDto {
         return qnaService.createQuestion(questionReqDto)
     }
 

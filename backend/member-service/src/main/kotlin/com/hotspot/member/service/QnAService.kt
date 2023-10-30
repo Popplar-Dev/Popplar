@@ -22,22 +22,20 @@ class QnAService(
 
     fun getQuestion(questionId: Long): QnAResDto {
         val question = findQuestionById(questionId)
-        val questionResDto = questionToQuestionResDto(question)
-        val qnaResDto = QnAResDto.create(questionResDto)
 
-        return qnaResDto
+        return questionToQnAResDto(question)
     }
 
     @Transactional
-    fun createQuestion(questionReqDto: QuestionReqDto): QuestionResDto {
+    fun createQuestion(questionReqDto: QuestionReqDto): QnAResDto {
         val question = questionRepository.save(Question.create(cryptService, questionReqDto))
-        return questionToQuestionResDto(question)
+        return questionToQnAResDto(question)
     }
 
     @Transactional
     fun createAnswer(questionId: Long, answerReqDto: AnswerReqDto): QnAResDto {
         val question = findQuestionById(questionId)
-        val answer = answerRepository.save(
+        answerRepository.save(
             Answer.create(
                 cryptService,
                 question.hotPlaceId,
@@ -45,17 +43,12 @@ class QnAService(
                 answerReqDto
             )
         )
-        question.insertAnswer(answer)
-        val member = findMemberById(answer.memberId)
 
+        return questionToQnAResDto(question)
+    }
+
+    fun questionToQnAResDto(question: Question): QnAResDto {
         val questionResDto = questionToQuestionResDto(question)
-        val answerResDto = AnswerResDto.create(
-            cryptService = cryptService,
-            answer = answer,
-            memberName = member.name,
-            memberProfileImage = member.profileImage
-        )
-
         val qnaResDto = QnAResDto.create(questionResDto)
 
         question.answerList.forEach {
