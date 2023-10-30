@@ -14,6 +14,7 @@ class Stamp(
 
     val hotPlaceId: Long,
 
+    @Enumerated(EnumType.STRING)
     val category: Category,
 
     var visitedCount: Int,

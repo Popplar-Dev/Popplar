@@ -8,14 +8,14 @@ class QnAResDto (
 
     val questionResDto: QuestionResDto,
 
-    val answerResListDto: ArrayList<AnswerResDto>,
+    val answerResDtoList: ArrayList<AnswerResDto>,
 ) {
 
     companion object {
         fun create(questionResDto: QuestionResDto): QnAResDto {
             return QnAResDto(hotPlaceId = questionResDto.hotPlaceId,
                 questionResDto = questionResDto,
-                answerResListDto = ArrayList<AnswerResDto>()
+                answerResDtoList = ArrayList<AnswerResDto>()
             )
         }
     }

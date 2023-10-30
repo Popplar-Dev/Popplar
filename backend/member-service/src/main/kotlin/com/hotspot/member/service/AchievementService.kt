@@ -1,6 +1,8 @@
 package com.hotspot.member.service
 
+import com.hotspot.member.dto.AchievementResDto
 import com.hotspot.member.dto.MemberCategoryCountResDto
+import com.hotspot.member.dto.StampResDto
 import com.hotspot.member.entity.Category
 import com.hotspot.member.entity.MemberCategoryCount
 import com.hotspot.member.entity.Stamp
@@ -49,12 +51,26 @@ class AchievementService(
 //        TODO()
 //    }
 
-    fun getMemberCategoryCountList(memberId: Long): MutableList<MemberCategoryCountResDto> {
+    fun getMemberStampAndCategoryCountList(memberId: Long): AchievementResDto {
         val decryptedId = cryptService.decrypt(memberId)
-        return memberCategoryCountRepository.findByMemberId(decryptedId)
-            .stream()
-            .map { MemberCategoryCountMapper.INSTANCE.entityToMemberCategoryCountResDto(it) }
-            .toList()!!
+
+        val achievementResDto = AchievementResDto.create()
+
+        stampRepository.findAllByMemberId(decryptedId)
+            .map {
+                achievementResDto.stampResDtoList.add(StampResDto.create(it))
+            }
+
+        memberCategoryCountRepository.findByMemberId(decryptedId)
+            .map {
+                achievementResDto.memberCategoryResDtoList.add(
+                    MemberCategoryCountMapper.INSTANCE.entityToMemberCategoryCountResDto(
+                        it
+                    )
+                )
+            }
+
+        return achievementResDto
     }
 
 }

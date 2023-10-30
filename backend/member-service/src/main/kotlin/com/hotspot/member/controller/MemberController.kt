@@ -89,8 +89,8 @@ class MemberController(
     }
 
     @GetMapping("/stamp/{memberId}")
-    fun getMemberCategoryCountList(@PathVariable memberId: Long): MutableList<MemberCategoryCountResDto> {
-        return achievementService.getMemberCategoryCountList(memberId)
+    fun getMemberCategoryCountList(@PathVariable memberId: Long): AchievementResDto {
+        return achievementService.getMemberStampAndCategoryCountList(memberId)
     }
 
     // TODO
