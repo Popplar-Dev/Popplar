@@ -36,7 +36,7 @@ class ChattingController (
 
     // TODO
     //  ChattingRoomId 처리할 것
-    @MessageMapping("/chatting")
+    @MessageMapping("/hello")
     @SendTo("/topic/greetings")
     fun chat(chattingReqDto: ChattingReqDto): ChattingResDto {
         val insertChatting = chattingService.insertChatting(chattingReqDto)
