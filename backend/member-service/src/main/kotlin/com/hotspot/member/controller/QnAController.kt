@@ -21,18 +21,27 @@ class QnAController(
     private val qnaService: QnAService,
 ) {
 
-    @GetMapping("/{questionId}")
-    fun getQuestion(@PathVariable questionId: Long): QnAResDto {
+    @GetMapping("/{hotPlaceId}")
+    fun getHotPlaceQuestion(@PathVariable hotPlaceId: Long): ArrayList<QnAResDto> {
+        return qnaService.getHotPlaceQuestion(hotPlaceId)
+    }
+
+    @GetMapping("/{hotPlaceId}/{questionId}")
+    fun getQuestion(@PathVariable hotPlaceId: Long, @PathVariable questionId: Long): QnAResDto {
         return qnaService.getQuestion(questionId)
     }
 
-    @PostMapping
-    fun createQuestion(@RequestBody questionReqDto: QuestionReqDto): QnAResDto {
-        return qnaService.createQuestion(questionReqDto)
+    @PostMapping("/{hotPlaceId}")
+    fun createQuestion(
+        @PathVariable hotPlaceId: Long,
+        @RequestBody questionReqDto: QuestionReqDto
+    ): QnAResDto {
+        return qnaService.createQuestion(hotPlaceId, questionReqDto)
     }
 
-    @PostMapping("/{questionId}")
+    @PostMapping("/{hotPlaceId}/{questionId}")
     fun createAnswer(
+        @PathVariable hotPlaceId: Long,
         @PathVariable questionId: Long,
         @RequestBody answerReqDto: AnswerReqDto
     ): QnAResDto {

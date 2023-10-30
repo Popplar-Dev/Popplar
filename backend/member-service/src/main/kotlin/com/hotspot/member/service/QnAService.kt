@@ -9,6 +9,7 @@ import com.hotspot.member.repository.MemberRepository
 import com.hotspot.member.repository.QuestionRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.streams.toList
 
 @Service
 @Transactional(readOnly = true)
@@ -20,6 +21,13 @@ class QnAService(
     private val cryptService: CryptService,
 ) {
 
+    fun getHotPlaceQuestion(hotPlaceId: Long): ArrayList<QnAResDto> {
+        return questionRepository.findAllByHotPlaceIdAndDeletedFalse(hotPlaceId)
+            .asSequence()
+            .map { questionToQnAResDto(it) }
+            .toCollection(ArrayList())
+    }
+
     fun getQuestion(questionId: Long): QnAResDto {
         val question = findQuestionById(questionId)
 
@@ -27,8 +35,8 @@ class QnAService(
     }
 
     @Transactional
-    fun createQuestion(questionReqDto: QuestionReqDto): QnAResDto {
-        val question = questionRepository.save(Question.create(cryptService, questionReqDto))
+    fun createQuestion(hotPlaceId: Long, questionReqDto: QuestionReqDto): QnAResDto {
+        val question = questionRepository.save(Question.create(cryptService, hotPlaceId, questionReqDto))
         return questionToQnAResDto(question)
     }
 

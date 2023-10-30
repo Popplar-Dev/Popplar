@@ -7,4 +7,6 @@ interface QuestionRepository : JpaRepository<Question, Long> {
 
     fun findByIdAndDeletedFalse(questionId: Long): Question?
 
+    fun findAllByHotPlaceIdAndDeletedFalse(hotPlaceId: Long): ArrayList<Question>
+
 }
