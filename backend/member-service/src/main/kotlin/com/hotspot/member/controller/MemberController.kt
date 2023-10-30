@@ -26,7 +26,7 @@ class MemberController(
     @GetMapping("/login")
     fun loginTest(@RequestParam code: String): EntityModel<MemberProfileResDto> {
         return memberProfileResDtoRA.toModel(
-            cryptService.encrypt(
+            cryptService.encryptMemberProfile(
                 oAuthServiceFactory.getOauthService(SocialType.GOOGLE).process(code)
             )
         )
@@ -36,7 +36,7 @@ class MemberController(
     fun login(@RequestBody oAuthLoginReqDto: OAuthLoginReqDto): EntityModel<MemberProfileResDto> {
         // TODO JWT 생성 로직 추가 필요
         return memberProfileResDtoRA.toModel(
-            cryptService.encrypt(
+            cryptService.encryptMemberProfile(
                 oAuthServiceFactory.getOauthService(oAuthLoginReqDto.loginType)
                     .process(oAuthLoginReqDto.code)
             )
@@ -46,7 +46,7 @@ class MemberController(
     @GetMapping("/{memberId}")
     fun getMemberProfile(@PathVariable memberId: Long): EntityModel<MemberProfileResDto> {
         return memberProfileResDtoRA.toModel(
-            cryptService.encrypt(memberService.getMemberProfile(memberId))
+            cryptService.encryptMemberProfile(memberService.getMemberProfile(memberId))
         )
     }
 
@@ -58,7 +58,7 @@ class MemberController(
         @RequestBody memberUpdateReqDto: MemberUpdateReqDto
     ): EntityModel<MemberProfileResDto> {
         return memberProfileResDtoRA.toModel(
-            cryptService.encrypt(
+            cryptService.encryptMemberProfile(
                 memberService.updateMemberProfile(
                     memberId,
                     memberUpdateReqDto

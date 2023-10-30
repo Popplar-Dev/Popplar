@@ -1,5 +1,7 @@
 package com.hotspot.member.entity
 
+import com.hotspot.member.dto.QuestionReqDto
+import com.hotspot.member.service.CryptService
 import jakarta.persistence.*
 
 @Entity
@@ -16,8 +18,11 @@ class Question(
 
     var content: String,
 
+    @OneToOne
+    val adoptedAnswer: Answer? = null,
+
     @OneToMany
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "questionId")
     val answerList: MutableList<Answer> = arrayListOf()
 ) : BaseEntity() {
 
@@ -26,8 +31,12 @@ class Question(
     }
 
     companion object {
-        fun create(memberId: Long, hotPlaceId: Long, content: String): Question {
-            return Question(memberId = memberId, hotPlaceId = hotPlaceId, content = content)
+        fun create(cryptService: CryptService, questionReqDto: QuestionReqDto): Question {
+            return Question(
+                memberId = cryptService.decrypt(questionReqDto.memberId),
+                hotPlaceId = questionReqDto.hotPlaceId,
+                content = questionReqDto.content
+            )
         }
     }
 }
