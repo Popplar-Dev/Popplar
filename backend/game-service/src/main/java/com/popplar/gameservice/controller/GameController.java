@@ -1,9 +1,12 @@
 package com.popplar.gameservice.controller;
 
+import com.popplar.gameservice.dto.GameBoardDto;
 import com.popplar.gameservice.dto.GameDto;
 import com.popplar.gameservice.dto.GameResultDto;
 import com.popplar.gameservice.service.GameService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +28,10 @@ public class GameController {
         return gameService.insertGameService(gameDto);
     }
     //점수판을 보고싶을때 게임 결과를 순서대로 보여주는 메서드
+    @GetMapping("/get-game-board/{hotPlaceId}")
+    public GameBoardDto getGameBoard(@PathVariable Long hotPlaceId){
+        return gameService.getGameBoard(hotPlaceId);
+    }
     //사용자의 기록 모아보기
     //사용자의 점수가 최고 점수를 넘겼을때 정복자로 반환해주기
 }

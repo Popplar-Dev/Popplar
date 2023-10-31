@@ -20,13 +20,13 @@ public class GameDto {
     private Long hotPlaceId;
 
     @NotNull
-    private int point;
+    private int points;
 
     @Builder
-    public GameDto(GameType type, Long memberId, Long hotPlaceId, int point) {
+    public GameDto(GameType type, Long memberId, Long hotPlaceId, int points) {
         this.type = type;
         this.memberId = memberId;
         this.hotPlaceId = hotPlaceId;
-        this.point = point;
+        this.points = points;
     }
 }
