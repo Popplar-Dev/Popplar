@@ -22,6 +22,12 @@ spring:
             - Path=/chat/**
           filters:
             - CustomAuthFilter
+        - id: hot-place-service
+          uri: lb://HOT-PLACE-SERVICE
+          predicates:
+            - Path=/hot-place/**
+          filters:
+            - CustomAuthFilter
       globalcors:
         cors-configurations:
           '[/**]':
