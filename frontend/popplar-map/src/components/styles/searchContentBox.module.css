@@ -30,21 +30,20 @@
   font-size: 12px;
 }
 
-.address-name {
-  color: gray;
+.infos-category {
+  color: rgb(182, 182, 182);
   text-align: start;
 
-  padding: 2px 0 10px 35px;
+  padding: 2px 0 8px 35px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 10.5px;
 }
 
-.phone-number {
+.infos {
   color: gray;
   text-align: start;
-  height: 15px;
 
-  padding: 0 0 5px 35px;
+  padding: 2px 0 8px 35px;
   font-weight: 600;
   font-size: 14px;
 }
