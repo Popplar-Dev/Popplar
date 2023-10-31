@@ -20,13 +20,13 @@ pipeline {
         stage('Docker Build') {
             steps {
                 dir('backend/api-gateway') {
-                    echo "docker compose build"
                     sh "docker-compose -f docker-compose.yml build --no-cache"
 //                    sh 'docker build -t api-gateway:latest .'
                 }
-//                dir('backend/service_discovery') {
-//                    sh 'docker build -t service-discovery:latest .'
-//                }
+                dir('/jenkins/workspace/api-gateway/backend/api-gateway') {
+//                    sh "docker-compose -f docker-compose.yml build --no-cache"
+                    sh 'docker build -t service-discovery:latest .'
+                }
             }
         }
 
@@ -37,10 +37,11 @@ pipeline {
 //                    sh 'docker rm -f api-gateway'
 //                    sh 'docker run -d --env-file .env -e TZ=Asia/Seoul --name api-gateway -p 8000:8000 -u root api-gateway:latest'
                 }
-//                dir('backend/service_discovery') {
-//                    sh 'docker rm -f service-discovery'
-//                    sh 'docker run -d -e TZ=Asia/Seoul --name service-discovery -p 8761:8761 -u root service-discovery:latest'
-//                }
+                dir('/jenkins/workspace/api-gateway/backend/api-gateway') {
+//                    sh "docker-compose -f docker-compose.yml up -d"
+                    sh 'docker rm -f service-discovery'
+                    sh 'docker run -d -e TZ=Asia/Seoul --name service-discovery -p 8761:8761 -u root service-discovery:latest'
+                }
             }
         }
 
