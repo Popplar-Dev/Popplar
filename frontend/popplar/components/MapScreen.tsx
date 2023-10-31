@@ -19,8 +19,8 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 type SpaceInfo = {
-  name: string
-  address: string
+  place_name: string
+  road_address_name: string
 }
 
 const MapScreen: React.FC = () => {
@@ -112,7 +112,7 @@ const MapScreen: React.FC = () => {
           
           <View style={styles.bottomsheetContainer}>
             <View style={styles.spaceName}>
-              <NameBox w={200} h={38} text={spaceInfo.name} />
+              <NameBox w={200} h={38} text={spaceInfo.place_name} />
               <View style={styles.buttons}>
                 <Icon name="comments" size={20} color={'white'} style={styles.Icon}/>
                 <Icon name="gamepad" size={20} color={'white'} style={styles.Icon}/>
@@ -122,7 +122,7 @@ const MapScreen: React.FC = () => {
 
             <View style={styles.address}>
               <Icon name="map-pin" size={11} color={'white'} style={styles.mapIcon}/>
-              <Text style={styles.bottomSheetText}>{spaceInfo.address}</Text>
+              <Text style={styles.bottomSheetText}>{spaceInfo.road_address_name}</Text>
             </View>
           </View>
         </BottomSheetModal>
@@ -140,7 +140,7 @@ const MapScreen: React.FC = () => {
           onMessage={(event) => {
             handlePresentModalPress();
             const data = JSON.parse(event.nativeEvent.data)
-            console.log(data.data)
+            // console.log(data?.type)
             setSpaceInfo(data.data)
             // console.log("받은 데이터(React) : " + data.data);
           }}
