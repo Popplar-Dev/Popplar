@@ -1,7 +1,10 @@
+server:
+  port: 8200
+
 # Spring Boot 설정
 spring:
   application:
-    name: hotspot  # 애플리케이션의 이름
+    name: hot-place-service  # 애플리케이션의 이름
 
   config:
     import: optional:file:.env[.properties]
@@ -30,5 +33,13 @@ spring:
         format_sql: true
         default_batch_fetch_size: 1000
 
-server:
-  port: 8200
+## eureka 설정
+eureka:
+  instance:
+    instance-id: hot-place-microservice-instance
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka

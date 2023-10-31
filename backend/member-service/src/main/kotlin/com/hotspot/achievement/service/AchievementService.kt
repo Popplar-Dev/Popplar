@@ -2,6 +2,7 @@ package com.hotspot.achievement.service
 
 import com.hotspot.achievement.dto.AchievementResDto
 import com.hotspot.achievement.dto.MemberCategoryCountResDto
+import com.hotspot.achievement.dto.StampReqDto
 import com.hotspot.achievement.dto.StampResDto
 import com.hotspot.achievement.entity.Category
 import com.hotspot.achievement.entity.MemberCategoryCount
@@ -22,34 +23,29 @@ class AchievementService(
 ) {
 
     @Transactional
-    fun updateStamp(memberId: Long, hotPlaceId: Long, category: Category) {
+    fun createStamp(memberId: Long, stampReqDto: StampReqDto): AchievementResDto {
         val decryptedMemberId = cryptService.decrypt(memberId)
-        val decryptedHotPlaceId = cryptService.decrypt(hotPlaceId)
         var stamp =
-            stampRepository.findByMemberIdAndHotPlaceId(decryptedMemberId, decryptedHotPlaceId)
-        if (stamp == null) {
-            stamp = Stamp.create(memberId, hotPlaceId, category)
-            increaseCategoryCount(stamp)
-//            checkAchievement()
-        }
-        stamp.increaseVisitCount()
-    }
+            stampRepository.findByMemberIdAndHotPlaceId(decryptedMemberId, stampReqDto.hotPlaceId)
 
-    @Transactional
-    fun increaseCategoryCount(stamp: Stamp): MemberCategoryCount {
-        if (stamp.updatedAt.toLocalDate() < LocalDate.now()) {
-            throw RuntimeException("오늘 이미 스탬프를 찍었습니다.")
+        stamp?.let {
+            if (it.updatedAt.toLocalDate() == LocalDate.now()) {
+                throw RuntimeException("오늘 이미 스탬프를 획득했습니다.")
+            }
         }
+        stamp = stamp ?: stampRepository.save(Stamp.create(decryptedMemberId, stampReqDto))
+
         val memberCategoryCount =
             memberCategoryCountRepository.findByMemberIdAndCategory(stamp.memberId, stamp.category)
-                ?: MemberCategoryCount.create(stamp)
+                ?: memberCategoryCountRepository.save(MemberCategoryCount.create(stamp))
         memberCategoryCount.increaseVisitedSet()
-        return memberCategoryCount
-    }
 
-//    fun checkAchievement() {
-//        TODO()
-//    }
+        stamp.increaseVisitCount()
+
+        // TODO
+        //  @Transactional 사용하지 않는 로직이라 분리 예정
+        return getMemberStampAndCategoryCountList(memberId)
+    }
 
     fun getMemberStampAndCategoryCountList(memberId: Long): AchievementResDto {
         val decryptedId = cryptService.decrypt(memberId)
@@ -70,5 +66,4 @@ class AchievementService(
 
         return achievementResDto
     }
-
 }
