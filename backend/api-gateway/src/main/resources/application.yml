@@ -35,7 +35,3 @@ spring:
             allowedMethods: GET, POST
             allowedHeaders: "*"
             maxAge: 3600
-#        - id: order-service
-#          uri: lb://ORDER-SERVICE
-#          predicates:
-#            - Path=/order/**
