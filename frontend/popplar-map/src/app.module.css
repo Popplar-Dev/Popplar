@@ -33,19 +33,28 @@
   /* height: 100vh; */
 }
 
+.image-container {
+  position: absolute;
+  top: 38px;
+  left: 59px;
+  width: 50px;
+  z-index: 1003;
+}
+
 .telescope {
   z-index: 1002;
-  position: absolute;
+  /* position: absolute;
   top: 5.5%;
-  left: 10%;
+  left: 10%; */
   color: #ffffff;
+  border: 1px dotted red;
 }
 
 .earth-icon {
   z-index: 1000;
-  position: absolute;
+  /* position: absolute;
   top: 4.4%;
-  left: 13%;
+  left: 13%; */
 
   width: 38px;
   height: 38px;
@@ -54,8 +63,8 @@
 .search {
   z-index: 1000;
   position: absolute;
-  top: 6.4%;
-  left: 21%;
+  top: 56px;
+  left: 94px;
 
   background-color: transparent;
   color: #8B90F7;
@@ -95,10 +104,12 @@
   position: absolute;
   top: 0;
 
-  height: 20%;
+  height: 140px;
   width: 100%;
   background-color: #2C2C2C;
   z-index: 999;
+
+  border: 1px dotted red;
 }
 
 .bg-bottom {
@@ -114,8 +125,8 @@
 .message {
   z-index: 1000;
   position: absolute;
-  top: 3%;
-  left: 40%;
+  top: 25px;
+  left: 177px;
 
   background-color: transparent;
   color: #8B90F7;
