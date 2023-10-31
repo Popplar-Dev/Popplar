@@ -22,6 +22,12 @@ spring:
             - Path=/chat/**
           filters:
             - CustomAuthFilter
+        - id: hot-place-service
+          uri: lb://HOT-PLACE-SERVICE
+          predicates:
+            - Path=/hot-place/**
+          filters:
+            - CustomAuthFilter
       globalcors:
         cors-configurations:
           '[/**]':
@@ -29,7 +35,3 @@ spring:
             allowedMethods: GET, POST
             allowedHeaders: "*"
             maxAge: 3600
-#        - id: order-service
-#          uri: lb://ORDER-SERVICE
-#          predicates:
-#            - Path=/order/**
