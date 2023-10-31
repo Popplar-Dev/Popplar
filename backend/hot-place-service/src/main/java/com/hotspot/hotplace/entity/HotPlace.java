@@ -1,6 +1,8 @@
 package com.hotspot.hotplace.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -20,31 +22,46 @@ public class HotPlace {
     private Long id;
 
     @NotNull
-    private String name;
+    private String placeName;
 
     @NotNull
-    private String address;
+    private String addressName;
 
     @NotNull
-    private double posX;
+    private String roadAddressName;
 
     @NotNull
-    private double posY;
+    private String phone;
 
     @NotNull
-    private HotPlaceType category;
+    private double x;
+
+    @NotNull
+    private double y;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private HotPlaceType placeType;
+
+    @NotNull
+    private String category;
 
     @NotNull
     private int likeCount;
 
     @Builder
-    public HotPlace(Long id, String name, String address, double posX, double posY) {
+    public HotPlace(Long id, String placeName, String addressName, String phone,
+        String roadAddressName,
+        double x, double y, String category) {
         this.id = id;
-        this.name = name;
-        this.address = address;
-        this.posX = posX;
-        this.posY = posY;
-        this.category = HotPlaceType.FLAG;
+        this.placeName = placeName;
+        this.addressName = addressName;
+        this.phone = phone;
+        this.roadAddressName = roadAddressName;
+        this.x = x;
+        this.y = y;
+        this.category = category;
+        this.placeType = HotPlaceType.FLAG;
         this.likeCount = 0;
     }
 
@@ -56,7 +73,7 @@ public class HotPlace {
         this.likeCount--;
     }
 
-    public void upgrade(HotPlaceType hotPlaceType) {
-        this.category = hotPlaceType;
+    public void updatePlaceType(HotPlaceType hotPlaceType) {
+        this.placeType = hotPlaceType;
     }
 }

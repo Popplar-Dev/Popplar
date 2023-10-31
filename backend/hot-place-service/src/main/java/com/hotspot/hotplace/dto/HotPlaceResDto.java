@@ -8,15 +8,21 @@ public class HotPlaceResDto {
 
     private Long id;
 
-    private String name;
+    private String placeName;
 
-    private String address;
+    private String addressName;
 
-    private double posX;
+    private String roadAddressName;
 
-    private double posY;
+    private String phone;
 
-    private HotPlaceType category;
+    private double x;
+
+    private double y;
+
+    private String category;
+
+    private HotPlaceType placeType;
 
     private int likeCount;
 
