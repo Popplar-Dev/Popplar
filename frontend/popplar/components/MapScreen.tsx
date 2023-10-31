@@ -3,6 +3,7 @@ import { View, Text, Button, StyleSheet, Dimensions, Alert } from 'react-native'
 import { PermissionsAndroid } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import WebView from 'react-native-webview';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import {
   BottomSheetModal,
@@ -12,6 +13,7 @@ import {
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import NameBox from './NameBox/NameBox'
+import { FlipInEasyX } from 'react-native-reanimated';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -29,13 +31,15 @@ const MapScreen: React.FC = () => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   // variables
-  const snapPoints = useMemo(() => ['35%', '90%'], []);
+  const snapPoints = useMemo(() => ['30%', '95%'], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
-  }, []);
+    console.log('pop!!')
+  }, [spaceInfo]);
   const handleSheetChanges = useCallback((index: number) => {
+    // bottomSheetModalRef.current?.present();
     console.log('handleSheetChanges', index);
   }, []);
   // backdrop close by pressing background
@@ -107,10 +111,19 @@ const MapScreen: React.FC = () => {
         >
           
           <View style={styles.bottomsheetContainer}>
-            <NameBox w={200} h={50} text={spaceInfo.name} />
-            <Text style={styles.spaceName}>{spaceInfo.name}</Text>
+            <View style={styles.spaceName}>
+              <NameBox w={200} h={38} text={spaceInfo.name} />
+              <View style={styles.buttons}>
+                <Icon name="comments" size={20} color={'white'} style={styles.Icon}/>
+                <Icon name="gamepad" size={20} color={'white'} style={styles.Icon}/>
+                <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/>
+              </View>
+            </View>
 
-            <Text style={styles.bottomSheetText}>{spaceInfo.address}</Text>
+            <View style={styles.address}>
+              <Icon name="map-pin" size={11} color={'white'} style={styles.mapIcon}/>
+              <Text style={styles.bottomSheetText}>{spaceInfo.address}</Text>
+            </View>
           </View>
         </BottomSheetModal>
 
@@ -127,6 +140,7 @@ const MapScreen: React.FC = () => {
           onMessage={(event) => {
             handlePresentModalPress();
             const data = JSON.parse(event.nativeEvent.data)
+            console.log(data.data)
             setSpaceInfo(data.data)
             // console.log("받은 데이터(React) : " + data.data);
           }}
@@ -153,20 +167,47 @@ const styles = StyleSheet.create({
   bottomSheetText: {
     backgroundColor: '#2C2C2C',
     color: 'white',
+    marginTop: 10,
   },
-
   bottomsheetContainer: {
     flex: 1,
-    padding: 15,
+    padding: 5,
+    paddingLeft: 20,
+
+    // borderWidth: 1, 
+    // borderColor: 'red', 
   },
   spaceName: {
-    // width: 200,
-    // height: 30,
-    // textAlign: 'center',
-    color: 'white',
-    // borderColor: 'blue',
-    // backgroundColor: 'blue',
-    // borderRadius: '14',
-    // fontWeight: '700'
+    flex: 0.06, 
+    flexDirection: 'row', 
+    height: 40, 
+    justifyContent: "space-between"
+  },
+  address: {
+    flex: 0.1,
+    flexDirection: 'row',
+    marginTop: 6,
+    lineHeight: 40,
+    width: 185, 
+    // borderWidth: 1, 
+    // borderColor: 'red', 
+  },
+  mapIcon: {
+    margin: 8,
+    marginTop: 13,
+    marginLeft: 11,
+  },
+  Icon: {
+    marginLeft: 13,
+    marginTop: 10,
+  },
+  buttons: {
+    flex: 1, 
+    flexDirection: 'row', 
+    paddingRight: 20, 
+    justifyContent: "flex-end", 
+    height: 40, 
+    // borderWidth: 1, 
+    // borderColor: 'red',
   }
 })

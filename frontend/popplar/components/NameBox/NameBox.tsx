@@ -8,40 +8,42 @@ type Props = {
 }
 
 export default function NameBox({h, text}: Props) {
-  const w = text.length * 14 + 40
-  console.log(w)
+  const w = text.length * 14 + 70
 
   let dynamicStyles = {
     container: {
       width: w, 
-      height: h, 
+      height: h,
     },
-    textinfo: {
-      // Your text styles here
-    },
+    image: {
+      marginLeft: 14,
+      marginTop: 5
+    }
   }
 
 return (
     <View style={dynamicStyles.container}>
-      <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.linearGradient}>
+      <View style={styles.linearGradient}>
+        <Image
+          source={require('popplar/assets/mark/flag-iso-color.png')}
+          style={dynamicStyles.image}
+          resizeMode="contain"
+        />
         <Text style={styles.buttonText}>
           {text}
         </Text>
-      </LinearGradient>
+      </View>
     </View>
   );
 };
 
 
 const styles = StyleSheet.create({                           
-	image: {
-		// height:'100%'
-	},
 	text: {
 		color:'white',
 		fontWeight:'bold',
 		fontSize:30,
-		margin:20
+		margin: 20
 	},
 	textinfo: {
 		color:'white',
@@ -52,15 +54,18 @@ const styles = StyleSheet.create({
 	},
   linearGradient: {
     flex: 1,
+    flexDirection: 'row',
     // paddingLeft: 15,
     // paddingRight: 15,
-    borderRadius: 5
+    backgroundColor: "#4C43CD",
+    borderRadius: 20,
+
   },
   buttonText: {
     fontSize: 16,
     fontFamily: 'Gill Sans',
     textAlign: 'center',
-    margin: 10,
+    margin: 8,
     color: '#ffffff',
     backgroundColor: 'transparent',
   },
