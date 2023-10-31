@@ -1,6 +1,8 @@
 package com.popplar.gameservice.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,6 +26,7 @@ public class Game extends BaseEntity {
     private Long Id;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private GameType type;
 
     @NotNull
