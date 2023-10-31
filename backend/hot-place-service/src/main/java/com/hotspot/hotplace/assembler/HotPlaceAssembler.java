@@ -15,10 +15,8 @@ public class HotPlaceAssembler {
 
     public EntityModel<HotPlaceResDto> findHotPlaceToModel(HotPlaceResDto hotPlaceResDto) {
         return EntityModel.of(hotPlaceResDto, linkTo(
-                methodOn(HotPlaceController.class).findHotPlace(hotPlaceResDto.getId())).withSelfRel()
-            , linkTo(
-                methodOn(HotPlaceController.class).findHotPlace(
-                    hotPlaceResDto.getId())).withSelfRel());
+            methodOn(HotPlaceController.class).findHotPlace(hotPlaceResDto.getId())).withRel(
+            "findById"));
     }
 
     public EntityModel<?> likeHotPlaceToModel(Long hotPlaceId) {

@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class HotPlaceService {
 
     private final VisitorRepository visitorRepository;
-
     private final HotPlaceRepository hotPlaceRepository;
     private final LikeRepository likeRepository;
 
@@ -59,7 +58,13 @@ public class HotPlaceService {
         if (hotPlaceRepository.findById(hotPlaceReqDto.getId()).isPresent()) {
             throw new ArithmeticException("이미 핫플레이스로 등록되어있습니다.");
         }
+
+        // 카테고리 기타 처리
+        String category = hotPlaceReqDto.getCategory();
+        hotPlaceReqDto.setCategory(checkCategory(category));
+
         HotPlace hotPlace = HotPlaceMapper.INSTANCE.hotPlaceReqDtoToEntity(hotPlaceReqDto);
+        hotPlace.updatePlaceType(HotPlaceType.FLAG);
         hotPlaceRepository.save(hotPlace);
 
         HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
@@ -76,11 +81,11 @@ public class HotPlaceService {
         if (likeRepository.findByHotPlaceAndMemberId(hotPlace, memberId).isPresent()) {
             throw new RuntimeException("이미 좋아요 누른 핫플레이스입니다.");
         }
-        likeRepository.save(Like.builder().memberId(memberId).hotPlace(hotPlace).build());
         hotPlace.increaseLikeCount();
         if (hotPlace.getLikeCount() >= 5) {
-            hotPlace.upgrade(HotPlaceType.HOT_PLACE);
+            hotPlace.updatePlaceType(HotPlaceType.HOT_PLACE);
         }
+        likeRepository.save(Like.builder().memberId(memberId).hotPlace(hotPlace).build());
     }
 
     @Transactional
@@ -98,5 +103,16 @@ public class HotPlaceService {
             .orElseThrow(() -> new ArithmeticException("핫플레이스가 존재하지 않습니다"));
     }
 
+    // -- 기타 카테고리 처리용 코드 -- //
+    public String checkCategory(String category) {
+        ArrayList<String> categoryList = new ArrayList<>(
+            List.of("학교", "문화시설", "관광명소", "음식점", "카페"));
+
+        if (categoryList.contains(category)) {
+            return category;
+        } else {
+            return "기타";
+        }
+    }
 }
 
