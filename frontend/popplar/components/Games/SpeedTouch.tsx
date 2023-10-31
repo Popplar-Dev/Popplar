@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Switch } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Pressable, Switch } from 'react-native';
 import { useState, useEffect } from 'react';
 
 function SpeedTouch() {
@@ -47,20 +47,20 @@ function SpeedTouch() {
   return (
     <View style={[styles.container, { backgroundColor: gameColor }]}>
       {gameStarted ? (
-        <TouchableOpacity onPress={measureReactionTime} style={styles.button}>
+        <Pressable onPress={measureReactionTime} style={styles.button}>
           <Text style={styles.buttonText}>클릭!</Text>
-        </TouchableOpacity>
+        </Pressable>
       ) : (
-        <TouchableOpacity onPress={startGame} style={styles.button}>
+        <Pressable onPress={startGame} style={styles.button}>
           <Text style={styles.buttonText}>게임 시작</Text>
-        </TouchableOpacity>
+        </Pressable>
       )}
       {reactionTime !== null && (
         <View>
           <Text style={styles.text}>반응 속도: {reactionTime.toFixed(3)} 초</Text>
-          <TouchableOpacity onPress={resetGame} style={styles.button}>
+          <Pressable onPress={resetGame} style={styles.button}>
             <Text style={styles.buttonText}>게임 재시작</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       )}
     </View>

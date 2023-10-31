@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button, ActivityIndicator ,ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button, ActivityIndicator ,ScrollView, Pressable } from 'react-native';
 import { useState, useEffect } from 'react';
 import axios from "axios";
 // import { getuserinfo } from '../utills/https'
@@ -8,6 +8,8 @@ import { useNavigation } from '@react-navigation/native';
 import SettingScreen from './Settings/SettingScreen';
 import PlanetModal from '../components/Modals/PlanetModal'
 
+import { useRecoilState } from 'recoil';
+import { nicknameState } from '../recoil/userState';
 
 function MyPageScreen() {
 	const [nickname, setNickname] = useState('') 
@@ -15,13 +17,18 @@ function MyPageScreen() {
   const [newNickname, setNewNickname] = useState('');
   const [userinfo, setUserInfo] = useState({ id: '', name: '', exp: '' });
   const [modalVisible, setModalVisible] = useState(false);
-  const [stamp, setStamp] = useState([{ category:'', visitedSet:'' }])
+  const [stamp, setStamp] = useState<Array<{ category: string, visitedSet: number }>>([]);
   const [selectedPlanet, setSelectedPlanet] = useState({
     name: '',
-    image: require('../assets/planet/planet-01.png'),
+    image: require('../assets/planet/1.png'),
     visit: ''
   });
   const [loading, setLoading] = useState(true);
+  const images = [
+    { name: "cafe", uri: require("../assets/planet/1.png") },
+    { name: "restarant", uri: require("../assets/planet/2.png") },
+  ];
+  // const [stampDetail, setStampDetail] = useState('')
 
 	useEffect(() => {
     axios.get(
@@ -39,23 +46,22 @@ function MyPageScreen() {
 	useEffect(() => {
     axios.get(`http://10.0.2.2:8080/member/stamp/356931964684`)
       .then((response) => {
-        console.log(response.data);
-        setStamp(response.data);
-        setLoading(false); // 데이터 로딩이 끝났음을 표시
+        setStamp(response.data.memberCategoryResDtoList);
+        setLoading(false); 
       })
       .catch((err) => {
         console.log("에러 메시지 ::", err);
-        setLoading(false); // 에러가 발생한 경우에도 로딩이 끝났음을 표시
+        setLoading(false); 
       });
   }, []);
-
-  console.log(stamp)
 
   const navigation = useNavigation();
   const handleSettingPress = () => {
     navigation.navigate('Settings' as never);
   };
-
+  const goBack = () => {
+    navigation.goBack();
+  };
 
   return (
     <ScrollView 
@@ -65,6 +71,18 @@ function MyPageScreen() {
         source={require('../assets/stars.png')}
         style={styles.backgroundImage}
       >
+        <View style={styles.headerContainer}>
+          <View style={styles.leftContainer}>
+            <View style={styles.goBackButtonOuter}>
+              <Pressable onPress={goBack} android_ripple={{color: '#464646'}}>
+                <Icon name="chevron-back" color="#8B90F7" size={25} />
+              </Pressable>
+            </View>
+            <View>
+              <Text style={styles.title}>Profile</Text>
+            </View>
+          </View>
+        </View>
           <Icon
             style={styles.setting}
             name='settings-outline'
@@ -91,143 +109,36 @@ function MyPageScreen() {
             source={require('../assets/업적버튼.png')}
             style={styles.buttonImage}
           />
-          {loading  ? (
-              <ActivityIndicator size="large" color="#ffffff" />
-            ) : (
+          {loading ? (
+            <ActivityIndicator size="large" color="#ffffff" />
+          ) : (
             <View>
               <View style={styles.planetcontainer}>
-                <View style={styles.planet}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSelectedPlanet({
-                        name: `${stamp[0].category}`,
-                        image: require('../assets/planet/planet-01.png'),
-                        visit:`${stamp[0].visitedSet}`
-                        // visit:`0`
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={styles.planet}
-                  >
-                    <Text style={styles.t}>{stamp[0].category}</Text>
-                    <Image
-                      source={require('../assets/planet/planet-01.png')}
-                      style={styles.planetimage}
-                    />
-                    <Text style={styles.t}>{stamp[0].visitedSet}/10</Text>
-                  </TouchableOpacity>
-                </View>
-
-                <View style={styles.planet}>
-                  <TouchableOpacity
+                {stamp.map((item, index) => (
+                  <View style={styles.planet} key={index}>
+                    <Pressable
                       onPress={() => {
                         setSelectedPlanet({
-                          name: `${stamp[1].category}`,
-                          image: require('../assets/planet/planet-02.png'),
-                          visit:`${stamp[1].visitedSet}`
-                          // visit:`0`
+                          name: item.category,
+                          image: images[index].uri,
+                          visit: `${item.visitedSet}`
                         });
                         setModalVisible(true);
                       }}
                       style={styles.planet}
                     >
-                      <Text style={styles.t}>{stamp[1].category}</Text>
+                      <Text style={styles.t}>{item.category}</Text>
                       <Image
-                        source={require('../assets/planet/planet-02.png')}
+                        source={images[index].uri}
                         style={styles.planetimage}
                       />
-                      <Text style={styles.t}>{stamp[1].visitedSet}/10</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.planet}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSelectedPlanet({
-                        name: '업적 3',
-                        image: require('../assets/planet/planet-12.png'),
-                        visit:'0'
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={styles.planet}
-                  >
-                    <Text style={styles.t}>업적3</Text>
-                    <Image
-                      source={require('../assets/planet/planet-12.png')}
-                      style={styles.planetimage}
-                    />
-                    <Text style={styles.t}>0/0</Text>
-                  </TouchableOpacity>
-                </View>
+                      <Text style={styles.t}>{item.visitedSet}/10</Text>
+                    </Pressable>
+                  </View>
+                ))}
               </View>
-
-              <View style={styles.planetcontainer}>
-                <View style={styles.planet}>
-                <TouchableOpacity
-                    onPress={() => {
-                      setSelectedPlanet({
-                        name: '업적 4',
-                        image: require('../assets/planet/planet-03.png'),
-                        visit:'0'
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={styles.planet}
-                  >
-                    <Text style={styles.t}>업적4</Text>
-                    <Image
-                      source={require('../assets/planet/planet-03.png')}
-                      style={styles.planetimage}
-                    />
-                    <Text style={styles.t}>0/0</Text>
-                  </TouchableOpacity>
-                </View>
-
-                <View style={styles.planet}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSelectedPlanet({
-                        name: '업적 5',
-                        image: require('../assets/planet/planet-05.png'),
-                        visit:'0'
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={styles.planet}
-                  >
-                    <Text style={styles.t}>업적5</Text>
-                    <Image
-                      source={require('../assets/planet/planet-05.png')}
-                      style={styles.planetimage}
-                    />
-                    <Text style={styles.t}>0/0</Text>
-                  </TouchableOpacity>
-                </View>
-
-                <View style={styles.planet}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSelectedPlanet({
-                        name: '업적 6',
-                        image: require('../assets/planet/planet-06.png'),
-                        visit:'0'
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={styles.planet}
-                  >
-                    <Text style={styles.t}>업적6</Text>
-                    <Image
-                      source={require('../assets/planet/planet-06.png')}
-                      style={styles.planetimage}
-                    />
-                    <Text style={styles.t}>0/0</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>        
-            )}
+            </View>
+          )}
           </View>
           <PlanetModal
             visible={modalVisible}
@@ -242,12 +153,6 @@ function MyPageScreen() {
 };
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   backgroundColor: '#2C2C2C',
-  // },
   container: {
     flex: 1,
     backgroundColor: '#2C2C2C',
@@ -278,7 +183,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
 	},
 	profileContainer: {
-		top:'8%',
+		top:'6%',
 		justifyContent: 'center',
     alignItems: 'center',
   },
@@ -332,7 +237,46 @@ const styles = StyleSheet.create({
   planetimage: {
     marginBottom: 5,
     marginTop:5
-  }
+  },
+
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+    height: 50,
+  },
+  leftContainer: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+  },
+  goBackButtonOuter: {
+    marginEnd: 12,
+    width: 32, 
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center', 
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  ellipsisButtonOuter: {
+    width: 32, 
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center', 
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  buttonInner: {
+    borderRadius: 16, 
+
+  },
+  title: {
+    color: 'white',
+    fontSize: 20,
+    textAlign: 'center',
+  },
 });
 
 export default MyPageScreen;

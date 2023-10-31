@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button,TouchableOpacity,Switch } from 'react-native';
+import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button,Pressable,Switch } from 'react-native';
 import { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 // import { getuserinfo } from '../utills/https'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
-function MyPageScreen() {
+function ProfileSetting() {
 	const [nickname, setNickname] = useState('') 
 	const [isEditing, setIsEditing] = useState(false);
   const [newNickname, setNewNickname] = useState('');
@@ -46,7 +46,6 @@ function MyPageScreen() {
 
     axios.patch(`http://10.0.2.2:8080/member/356931964684`, updatedInfo)
       .then((response) => {
-        console.log("멤버 정보 업데이트 성공!!:", response.data);
 				 setUserInfo({ ...userinfo, name: newNickname });
 				setIsEditing(false);
       })
@@ -71,20 +70,20 @@ function MyPageScreen() {
                 onChangeText={(text) => setNewNickname(text)}
                 onSubmitEditing={saveNickname}
               />
-              <TouchableOpacity onPress={saveNickname}>
+              <Pressable onPress={saveNickname}>
                 <View style={styles.edit}>
                   <Text style={styles.text}>저장</Text>
                 </View>
-              </TouchableOpacity>
+              </Pressable>
             </View>
           ) : (
             <>
               <Text style={styles.name}>{userinfo.name}</Text>
-              <TouchableOpacity onPress={startEditing}>
+              <Pressable onPress={startEditing}>
                 <View style={styles.edit}>
                   <Text style={styles.text}>닉네임 수정</Text>
                 </View>
-              </TouchableOpacity>
+              </Pressable>
             </>
           )}
           <View style={styles.profileImageContainer}>
@@ -217,4 +216,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default MyPageScreen;
+export default ProfileSetting;

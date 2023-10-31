@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Switch } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Switch } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useState, useEffect } from 'react';
 
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#2C2C2C',
+    backgroundColor: 'transparent',
   },
   text: {
     color:'white',

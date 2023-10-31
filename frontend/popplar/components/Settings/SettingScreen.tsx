@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -19,8 +19,13 @@ function SettingScreen() {
   const navigateToInquire = () => {
     navigation.navigate('Inquire' as never); 
   };
+
+
   const navigateToSpeedTouch = () => {
     navigation.navigate('SpeedTouch' as never); 
+  };
+  const navigateToQnaList = () => {
+    navigation.navigate('QnaList' as never); 
   };
 
 
@@ -32,39 +37,45 @@ function SettingScreen() {
       >
         <View style={styles.menucontainer}>
           <View>
-            <TouchableOpacity onPress={navigateToProfile}>
+            <Pressable onPress={navigateToProfile}>
               <View style={styles.menu}>
                 <Icon style={styles.icons} name='person-outline' size={25} color='#ffffff'
                 />
                 <Text style={styles.text}>프로필 수정</Text>
               </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={navigateToAlarm}>
+            </Pressable>
+            <Pressable onPress={navigateToAlarm}>
               <View style={styles.menu}>
                 <Icon style={styles.icons} name='notifications-outline' size={25} color='#ffffff'
                 />
                 <Text style={styles.text}>알림</Text>
               </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={navigateToInquire}>
+            </Pressable>
+            <Pressable onPress={navigateToInquire}>
               <View style={styles.menu}>
                 <Icon style={styles.icons} name='help-circle-outline' size={25} color='#ffffff'
                 />
                 <Text style={styles.text}>문의하기</Text>
               </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={navigateToTerm}>
+            </Pressable>
+            <Pressable onPress={navigateToTerm}>
               <View style={styles.menu}>
                 <Icon style={styles.icons} name='information-circle-outline' size={25} color='#ffffff'
                 />
                 <Text style={styles.text}>이용약관 및 개인정보 정책</Text>
               </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={navigateToSpeedTouch}>
+            </Pressable>
+
+            <Pressable onPress={navigateToSpeedTouch}>
               <View style={styles.menu}>
                 <Text style={styles.text}>반응 속도 게임</Text>
               </View>
-            </TouchableOpacity>
+            </Pressable>
+            <Pressable onPress={navigateToQnaList}>
+              <View style={styles.menu}>
+                <Text style={styles.text}>Q&A</Text>
+              </View>
+            </Pressable>
           </View>
           <Text style={styles.logout}>로그아웃</Text>
         </View>

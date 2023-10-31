@@ -15,6 +15,8 @@ import AlarmSetting from '../Settings/AlarmSetting';
 import Terms from '../Settings/Terms';
 import Inquire from '../Settings/Inquire';
 import SpeedTouch from '../Games/SpeedTouch';
+import QnaList from '../QnA/QnaList';
+import QnaDetail from '../QnA/QnaDetail';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -22,7 +24,11 @@ const Stack = createNativeStackNavigator();
 const MyPageStack = () => {
   return (
     <Stack.Navigator
-      screenOptions={{headerTintColor:'#8B90F7'}}
+      screenOptions={{
+        headerTintColor:'#8B90F7',
+        headerStyle:{backgroundColor:'transparent'},
+        headerShadowVisible:false
+      }}
     >
       <Stack.Screen name="Mypage" component={MyPageScreen} options={{headerShown: false}}/>
       <Stack.Screen name="Settings" component={SettingScreen} options={{headerTitle: 'SETTINGS'}}/>
@@ -30,7 +36,10 @@ const MyPageStack = () => {
       <Stack.Screen name="AlarmSetting" component={AlarmSetting} options={{headerTitle: '알림 설정'}}/>
       <Stack.Screen name="Inquire" component={Inquire} options={{headerTitle: '문의하기'}}/>
       <Stack.Screen name="Terms" component={Terms} options={{headerTitle: '이용약관'}}/>
+
       <Stack.Screen name="SpeedTouch" component={SpeedTouch} options={{headerTitle: 'SpeedTouchGame'}}/>
+      <Stack.Screen name="QnaList" component={QnaList} options={{headerTitle: 'QnaList'}}/>
+      <Stack.Screen name="QnaDetail" component={QnaDetail} options={{headerTitle: 'QnaDetail'}}/>
     </Stack.Navigator>
   );
 }
@@ -39,6 +48,7 @@ export default function BottomTab() {
   return (
     <Tab.Navigator
       initialRouteName="Map"
+      backBehavior='history'
       screenOptions={{
         headerShown: false,
         tabBarHideOnKeyboard: true,
@@ -50,7 +60,7 @@ export default function BottomTab() {
         },
       }}>
       <Tab.Screen
-        name="AllPlacesScreen"
+        name="AllPlaces"
         component={AllPlacesScreen}
         options={{
           tabBarIcon: ({focused}) => (
