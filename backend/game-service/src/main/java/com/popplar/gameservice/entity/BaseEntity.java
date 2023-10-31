@@ -16,4 +16,8 @@ public class BaseEntity {
 
     @CreatedDate
     private LocalDateTime createdDate;
+
+    public void setDeleted() {
+        this.deleted = true;
+    }
 }

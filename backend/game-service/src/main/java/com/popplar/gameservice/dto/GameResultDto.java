@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class GameResultDto {
+
     //정복자가 되었는지 안되었는지
     @NotNull
     private boolean isConqueror;
