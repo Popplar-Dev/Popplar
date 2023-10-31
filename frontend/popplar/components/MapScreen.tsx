@@ -11,6 +11,8 @@ import {
 } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import NameBox from './NameBox/NameBox'
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -104,8 +106,10 @@ const MapScreen: React.FC = () => {
           backgroundStyle={{ backgroundColor: '#2C2C2C' }}
         >
           
-          <View>
-            {spaceInfo.name && <Text style={styles.bottomSheetText}>{spaceInfo.name}</Text>}
+          <View style={styles.bottomsheetContainer}>
+            <NameBox w={200} h={50} text={spaceInfo.name} />
+            <Text style={styles.spaceName}>{spaceInfo.name}</Text>
+
             <Text style={styles.bottomSheetText}>{spaceInfo.address}</Text>
           </View>
         </BottomSheetModal>
@@ -139,7 +143,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   webview: {
     flex: 1,
@@ -150,4 +154,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#2C2C2C',
     color: 'white',
   },
+
+  bottomsheetContainer: {
+    flex: 1,
+    padding: 15,
+  },
+  spaceName: {
+    // width: 200,
+    // height: 30,
+    // textAlign: 'center',
+    color: 'white',
+    // borderColor: 'blue',
+    // backgroundColor: 'blue',
+    // borderRadius: '14',
+    // fontWeight: '700'
+  }
 })
