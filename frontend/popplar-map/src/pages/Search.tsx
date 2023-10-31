@@ -30,7 +30,7 @@ export default function Search ({ result, placeSelectClick }: Props) {
       <div className={styles["result-container"]}>
       {result && result.map((place) => 
         ( 
-        <SearchContentBox place={place} placeSelectHandler={placeSelectHandler}/>
+        <SearchContentBox place={place} placePosHandler={placeSelectHandler}/>
         ))}
       </div>
     </div>

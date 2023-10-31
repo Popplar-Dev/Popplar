@@ -5,12 +5,32 @@ import flag from '../assets/images/flag-iso-color.png'
 
 type Props = {
   place: Place
-  placeSelectHandler: (x: string, y: string) => void
+  placePosHandler: (x: string, y: string) => void
 }
 
-export default function SearchContentBox({ place, placeSelectHandler }: Props) {
+export default function SearchContentBox({ place, placePosHandler }: Props) {
+
+  const requestPermission = (data: any) => {
+  
+    if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({ 
+          type: 'place',
+          data: data
+        })
+      );
+    }
+  }
+
+  function placeSelectHandler() {
+    placePosHandler(place.x, place.y)
+    console.log(place)
+    requestPermission(place)
+    // setHotPlaceInfo(place)
+  }
+  
   return(
-  <button className={styles.seachbox} onClick={() => placeSelectHandler(place.x, place.y)}>
+  <button className={styles.seachbox} onClick={() => placeSelectHandler()}>
     <div style={{display: "flex"}}>
       <img src={flag} alt="flag" style={{ width: "35px", height: "35px" }}/>
       <div className={styles["place"]}>

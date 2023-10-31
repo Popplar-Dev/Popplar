@@ -4,6 +4,7 @@ import './App.css';
 
 import { useRecoilState } from 'recoil';
 import { HotLatLngState } from "./recoil/hotLatLng/index";
+import { HotPlaceInfo } from "./recoil/hotPlaceInfo/index";
 import { LatLng } from './types/LatLng'
 
 import Map from './pages/Map'
@@ -23,7 +24,6 @@ function App() {
   const [searchResult, setSearchResult] = useState<Place[] | null>(null);
   // 검색시 선택된 hotplace의 위도 경도 정보 recoil로 저장
   const [hotPlaceLatLng, sethotPlaceLatLng] = useRecoilState<LatLng>(HotLatLngState);
-
 
   function placeSelectClick (x: string, y: string) {
     setPlaceKeyword("")
@@ -143,11 +143,8 @@ function App() {
 
         {!placeKeyword ?
         <Map />
-        : 
-        (
-        <>
+        : (
         <Search result={searchResult} placeSelectClick={placeSelectClick}/>
-        </>
         )}
       </div>
     </div>

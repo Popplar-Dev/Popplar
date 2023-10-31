@@ -51,7 +51,10 @@ export default function Map () {
   
     if (typeof window !== 'undefined' && window.ReactNativeWebView) {
       window.ReactNativeWebView.postMessage(
-        JSON.stringify({ data })
+        JSON.stringify({ 
+          type: 'place',
+          data: data
+        })
       );
     }
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
