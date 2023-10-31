@@ -19,6 +19,8 @@ services:
       - .env
     ports:
       - "8200:8200"
+    build:
+      dockerfile: Dockerfile
 
 volumes:
   mysql-db:
