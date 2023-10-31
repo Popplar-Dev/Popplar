@@ -6,14 +6,72 @@ import { BiSolidRocket } from 'react-icons/bi';
 
 import { useRecoilState } from 'recoil';
 import { HotLatLngState } from "../recoil/hotLatLng/index";
+import { CenterLatState } from "../recoil/centerLat/index"
+import { CenterLngState } from "../recoil/centerLng/index"
+
 import { LatLng } from '../types/LatLng'
 
 const { kakao } = window;
 
 export default function Map () {
+  const [searchPlaceObj, setSearchPlacObj] = useState<any | null>(null)
   const [visibleMap, setVisibleMap] = useState<any | null>(null)
+  
   const [hotPlaceLatLng, sethotPlaceLatLng] = useRecoilState<LatLng>(HotLatLngState);
-  console.log(hotPlaceLatLng.y.slice(0, -8), hotPlaceLatLng.x.slice(0, -8))
+  const [centerLat, setCenterLat] = useRecoilState<string>(CenterLatState);
+  const [centerLng, setCenterLng] = useRecoilState<string>(CenterLngState);
+
+
+  useEffect(() => {
+    // 장소 검색 객체를 생성합니다
+    var ps = new kakao.maps.services.Places();  
+    setSearchPlacObj(ps)
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('resize', function() {
+      let vh = window.innerHeight * 0.01;
+      // let vw = window.innerWidth * 0.01
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    });
+  }, [])
+
+  // function placesSearchCB(data: any, status: any, pagination: any) {
+  //   if (status === kakao.maps.services.Status.OK) {
+  //     console.log(data)
+  //     if (window.ReactNativeWebView) {
+  //       window.ReactNativeWebView.postMessage(
+  //         JSON.stringify({ data })
+  //       );
+  //   }}
+  // }
+
+  // 핫플 마커 선택시, web->native 데이터 전송
+  const requestPermission = (data: any) => {
+  
+    if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({ 
+          type: 'place',
+          data: data
+        })
+      );
+    }
+    // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+    // if (searchPlaceObj && data) {
+    //   searchPlaceObj.keywordSearch(data, placesSearchCB)
+    // }
+  }
+
+    // if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+    //   window.ReactNativeWebView.postMessage(
+    //     JSON.stringify({ data })
+    //   );
+    // } else {
+    //   // 모바일이 아니라면 모바일 아님을 alert로 띄웁니다.
+    //   // alert({ message: ERROR_TYPES.notMobile });
+    //   alert( '모바일 환경에서 실행해주세요' );
+    // }
 
   // 내 위치로 돌아가기
   const moveToMypos = () => {
@@ -25,27 +83,34 @@ export default function Map () {
   }
 
   useEffect(() => {
+    setTimeout(() => {
     var mapContainer = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
-    var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
-      center: new kakao.maps.LatLng(37.50134, 127.0397), //지도의 중심좌표.
-      level: 4 //지도의 레벨(확대, 축소 정도)
-    };
+    // var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
+    //   center: new kakao.maps.LatLng(37.50134, 127.0397), //지도의 중심좌표.
+    //   level: 4 //지도의 레벨(확대, 축소 정도)
+    // };
     if (hotPlaceLatLng.x) {
       const Lat = hotPlaceLatLng.y.slice(0, -8)
       const Lng = hotPlaceLatLng.x.slice(0, -8)
+      setCenterLat(Lat)
+      setCenterLng(Lng)
       console.log(Lat, Lng)
-      mapOptions = { //지도를 생성할 때 필요한 기본 옵션
-        center: new kakao.maps.LatLng(Lat, Lng), //지도의 중심좌표.
-        level: 4 //지도의 레벨(확대, 축소 정도)
-      };
+    } else {
+      setCenterLat("37.50134")
+      setCenterLng("127.0397")
     }
 
-    var map = new kakao.maps.Map(mapContainer, mapOptions); //지도 생성 및 객체 리턴
-    setVisibleMap(map) 
+    var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
+      center: new kakao.maps.LatLng(centerLat, centerLng), //지도의 중심좌표.
+      level: 4 //지도의 레벨(확대, 축소 정도)
+    };
 
     // 내 위치 마커
     // 마커가 표시될 위치입니다 
-    var markerPosition = new kakao.maps.LatLng(37.50134, 127.0397);
+    var markerPosition = new kakao.maps.LatLng(centerLat, centerLng);
+
+    var map = new kakao.maps.Map(mapContainer, mapOptions); //지도 생성 및 객체 리턴
+    setVisibleMap(map) 
 
     // 마커를 생성합니다
     var marker = new kakao.maps.Marker({
@@ -59,21 +124,30 @@ export default function Map () {
     // 핫플 마커 띄우기
     var positions = [
       {
-          content: '<div>카카오</div>', 
-          latlng: new kakao.maps.LatLng(37.4994, 127.0397)
+          name: '스타벅스 역삼대로점',
+          address: '서울 강남구 테헤란로 211 한국고등교육재단빌딩1층', 
+          latlng: new kakao.maps.LatLng(37.50189, 127.0393)
       },
       {
-          content: '<div>생태연못</div>', 
-          latlng: new kakao.maps.LatLng(37.50334, 127.0397)
+          name: '역삼역 2호선', 
+          address: '서울 강남구 테헤란로 지하 156', 
+          latlng: new kakao.maps.LatLng(37.50067, 127.0364)
       },
       {
-          content: '<div>텃밭</div>', 
-          latlng: new kakao.maps.LatLng(37.50134, 127.0437)
+          name: '양자강', 
+          address: '서울 강남구 테헤란로34길 7',
+          latlng: new kakao.maps.LatLng(37.50112, 127.0403)
       },
       {
-          content: '<div>근린공원</div>',
-          latlng: new kakao.maps.LatLng(37.50124, 127.0407)
-      }
+          name: '공차 역삼GFC점',
+          address: '서울 강남구 논현로85길 13',
+          latlng: new kakao.maps.LatLng(37.49909, 127.0362)
+      },
+      {
+          name: '지아니스나폴리 역삼점',
+          address: '서울 강남구 논현로94길 15',
+          latlng: new kakao.maps.LatLng(37.50267, 127.0375)
+      },
   ];
 
   var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
@@ -89,7 +163,7 @@ export default function Map () {
       var hotMarker = new kakao.maps.Marker({
           map: map, // 마커를 표시할 지도
           position: positions[i].latlng, // 마커의 위치
-          title : positions[i].content,
+          title : positions[i].name,
           image : markerImage // 마커 이미지 
       });
 
@@ -108,11 +182,15 @@ export default function Map () {
       // kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
       const La = positions[i].latlng.La
       const Ma = positions[i].latlng.Ma
+      const name = positions[i].name
+      const address = positions[i].address
       kakao.maps.event.addListener(hotMarker, 'click', function() {
         // 클릭한 위도, 경도 정보를 가져옵니다 
-        panToHandler(La, Ma)
+        panToHandler(La, Ma);
+        requestPermission({
+          name, address
+        });
       })
-
       // marker.setMap(map);
     }
   
@@ -128,20 +206,26 @@ export default function Map () {
         map.setLevel(2); 
       }, 400)             
     }        
-
-}, [])
+  }, 100)  
+}, [centerLat, centerLng])
 
   return (
   <div className={`container`}>
+    {/* <div className={styles.search}>Search...</div> */}
+
     <div className={`Box`} id={`top`}></div>
     <div className={`Box`} id={`left`}></div>
     <div className={`Box`} id={`right`}></div>
     <div className={`Box`} id={`bottom`}></div>
 
+
     <div id="map" className={styles.container}></div>
 
     <button className={styles.mypos} onClick={() => {
       moveToMypos();
+      sethotPlaceLatLng({x: "", y: ""});
+      setCenterLat("37.50134");
+      setCenterLng("127.0397");
     }}>
       <BiSolidRocket size={25} color={'#8B90F7'}/>
     </button>

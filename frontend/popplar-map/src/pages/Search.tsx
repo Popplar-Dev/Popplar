@@ -1,7 +1,9 @@
 import './styles/frame.css'
 import styles from './styles/search.module.css'
 
+import { useEffect } from 'react'
 import { Place } from '../types/place'
+import SearchContentBox from '../components/SearchContentBox'
 
 type Props = {
   result: Place[] | null
@@ -13,23 +15,24 @@ export default function Search ({ result, placeSelectClick }: Props) {
   function placeSelectHandler (x: string, y: string) {
     placeSelectClick(x, y)
   }
+
+  useEffect(() => {
+    window.addEventListener('resize', function() {
+      let vh = window.innerHeight * 0.01;
+      // let vw = window.innerWidth * 0.01
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    });
+  }, [])
   
   return (
     <div className={styles.container}>
+
+      <div className={styles["result-container"]}>
       {result && result.map((place) => 
-        (
-        <button className={styles.seachbox} onClick={() => placeSelectHandler(place.x, place.y)}>
-          <div className={styles.name}>{place.place_name}</div>
-          <div className={styles.name}>{place.road_address_name}</div>
-          <div className={styles.name}>{place.category_group_code}</div>
-          <div className={styles.name}>{place.category_group_name}</div>
-          <div className={styles.name}>{place.category_name}</div>
-          <div className={styles.name}>{place.phone}</div>
-          <div className={styles.name}>{place.road_address_name}</div>
-          <div className={styles.name}>{place.x}</div>
-          <div className={styles.name}>{place.y}</div>
-        </button>
-      ))}
+        ( 
+        <SearchContentBox place={place} placePosHandler={placeSelectHandler}/>
+        ))}
+      </div>
     </div>
   )
 }
