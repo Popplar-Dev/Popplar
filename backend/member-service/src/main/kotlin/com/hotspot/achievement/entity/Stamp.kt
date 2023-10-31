@@ -31,7 +31,7 @@ class Stamp(
             return Stamp(
                 memberId = memberId,
                 hotPlaceId = stampReqDto.hotPlaceId,
-                category = stampReqDto.category,
+                category = Category.parse(stampReqDto.categoryName),
                 visitedCount = 0
             )
         }

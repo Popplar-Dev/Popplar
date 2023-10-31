@@ -5,7 +5,7 @@ import com.hotspot.achievement.entity.MemberCategoryCount
 
 class MemberCategoryCountResDto (
 
-    val category: Category,
+    val categoryName: String,
 
     val visitedSet: Int,
 ) {
@@ -13,7 +13,7 @@ class MemberCategoryCountResDto (
     companion object {
         fun create(memberCategoryCount: MemberCategoryCount): MemberCategoryCountResDto {
             return MemberCategoryCountResDto(
-                category = memberCategoryCount.category,
+                categoryName = memberCategoryCount.category.toKor(),
                 visitedSet = memberCategoryCount.visitedSet
             )
         }
