@@ -20,10 +20,10 @@ pipeline {
         stage('Docker Build') {
             steps {
                 dir('backend/api-gateway') {
-                    sh 'sudo docker build -t api-gateway:latest .'
+                    sh 'docker build -t api-gateway:latest .'
                 }
                 dir('backend/service_discovery') {
-                    sh 'sudo docker build -t service-discovery:latest .'
+                    sh 'docker build -t service-discovery:latest .'
                 }
             }
         }
