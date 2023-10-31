@@ -67,7 +67,7 @@ function PlanetModal({ visible, onClose, planetName, planetImage, visit }:Planet
                     {item.category === planetName ? (
                       <View>
                         <Text style={styles.modalTextsmall}>핫플 id: {item.hotPlaceId}</Text>
-                        <Text style={styles.modalTextsmall}>핫플 방문 횟수: {item.visitedCount}</Text>
+                        <Text style={styles.modalTextsmall}>방문 횟수: {item.visitedCount}</Text>
                       </View>
                     ) : null}
                   </View>
@@ -86,7 +86,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    // backgroundColor: 'rgba(255, 255, 255, 0.)',
   },
   blurContent: {
     width: '100%',

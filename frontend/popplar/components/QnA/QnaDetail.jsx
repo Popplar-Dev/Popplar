@@ -58,16 +58,20 @@ export default function QnaDetail({ route }) {
       ) : (
         <View style={styles.qnacontainer}>
           <View style={styles.questionboxtop}>
-            <Text style={styles.text}>
-              <Text style={styles.smalltext}>작성자</Text> {questionDetail.memberName}
-            </Text>
+            <View>
+              <Text style={styles.smalltext}>작성자</Text>
+              <Text style={styles.text}>
+                {questionDetail.memberName}
+              </Text>
+            </View>
             <Text style={styles.text}>{questionDetail.createdAt.slice(0, 10)}</Text>
           </View>
           <View style={styles.questionboxbottom}>
-            <Text style={styles.text}>Q. {questionDetail.content}</Text>
+            <Text style={styles.smalltext}>질문</Text>
+            <Text style={styles.text}>{questionDetail.content}</Text>
           </View>
           <View style={styles.answerbox}>
-            <Text style={styles.text}>A.</Text>
+            <Text style={styles.smalltext}>답변</Text>
             {answerDetail.length === 0 ? (
               <View style={styles.noanswer}>
                 <Text style={styles.text}>아직 답변이 없습니다ㅜ</Text>
@@ -118,12 +122,10 @@ export default function QnaDetail({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',
   },
   qnacontainer: {
-    // backgroundColor: 'rgba(139, 144, 247, 0.3)',
     borderWidth:1,
     borderColor:'#8B90F7',
     padding: 20,
@@ -144,12 +146,11 @@ const styles = StyleSheet.create({
   questionboxtop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // marginVertical: 10,
     marginBottom:20
   },
   questionboxbottom: {
     marginTop: 10,
-    marginBottom: 50
+    marginBottom: 30
   },
   answerbox: {
     marginVertical: 10,
@@ -162,8 +163,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 10,
-    borderLeftWidth:1,
-    paddingLeft:10,
+    // borderLeftWidth:1,
+    // paddingLeft:10,
     borderColor:'#8B90F7',
     alignItems:'center'
   },
@@ -193,6 +194,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 5,
     padding: 10,
+    height: 40
   },
   submitButton: {
     backgroundColor: '#8B90F7',

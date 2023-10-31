@@ -9,7 +9,7 @@ import axios from "axios";
 export default function QnaList() {
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
-
+  const [qnaData, setQnaData] = useState('');
 
   const handleItemPress = (qna) => {
     navigation.navigate('QnaDetail', { qnaId: qna });
@@ -20,11 +20,26 @@ export default function QnaList() {
   };
 
   const handleCreateQuestion = (newQuestion) => {
-    setQnaData([...qnaData, newQuestion]);
-    setModalVisible(false);
+    const requestData = {
+      memberId: 356931964684, 
+      content: newQuestion, 
+    };
+    axios.post(`http://10.0.2.2:8080/qna/2`, requestData)
+      .then((response) => {
+        setModalVisible(false);
+        axios.get(`http://10.0.2.2:8080/qna/2`)
+          .then((response) => {
+            setQnaData(response.data);
+          })
+          .catch((err) => {
+            console.log("에러 메시지 :", err);
+          });
+      })
+      .catch((err) => {
+        console.log("에러 메시지 :", err);
+      });
   };
 
-  const [qnaData, setQnaData] = useState('');
 
   useEffect(() => {
     axios.get(
@@ -34,7 +49,7 @@ export default function QnaList() {
         setQnaData(response.data)
 			})
 			.catch((err) => {
-        console.log("에러 메시지 ::", err)
+        console.log("에러 메시지 :", err)
       });
   }, []);
 

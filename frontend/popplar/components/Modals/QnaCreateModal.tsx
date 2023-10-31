@@ -26,15 +26,20 @@ export default function QnaCreateModal({ visible, onClose, onSubmit }: QnaCreate
 		<TouchableWithoutFeedback onPress={onClose}>
 			<View style={styles.modalContainer}>
 				<View style={styles.modalContent}>
-					<Text style={styles.modalText}>질문 작성하기</Text>
+          <View style={styles.modalContentheader}>
+            <Text style={styles.modalText}>다양한 질문을 해보세요!</Text>
+            <Pressable onPress={onClose}>
+              <Text style={styles.modalText}>x</Text>
+            </Pressable>
+          </View>
 					<TextInput
 						style={styles.input}
-						placeholder="질문을 입력하세요"
+						placeholder="ex) 거기 지금 웨이팅 많나요?"
 						value={newQuestion}
 						onChangeText={setNewQuestion}
 					/>
 					<Pressable style={styles.submitButton} onPress={handleCreateQuestion}>
-						<Text style={styles.submitButtonText}>등록</Text>
+						<Text style={styles.submitButtonText}>질문 등록</Text>
 					</Pressable>
 				</View>
 			</View>
@@ -48,26 +53,32 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-		 backgroundColor: 'rgba(0, 0, 0, 0.5)'
+		 backgroundColor: 'rgba(0, 0, 0, 0.3)'
   },
   modalContent: {
-    backgroundColor: 'rgba(161, 161, 161, 1)',
+    backgroundColor: 'rgba(191, 191, 191, 1)',
+    // backgroundColor: 'white',
     padding: 20,
     borderRadius: 20,
     width: '90%',
   },
+  modalContentheader: {
+    flexDirection:'row',
+    justifyContent:'space-between'
+  },
   modalText: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
-		color:'white'
+    marginBottom: 20,
+		color:'black'
   },
   input: {
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
-    marginBottom: 10,
+    marginBottom: 20,
+    height:100
   },
   submitButton: {
     backgroundColor: '#8B90F7',

@@ -1,10 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button,Pressable,Switch } from 'react-native';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import axios from "axios";
-// import { getuserinfo } from '../utills/https'
+import * as ImagePicker from 'react-native-image-picker';
+import PermissionUtil from '../utils/permissions'; 
+import { APP_PERMISSION_CODE } from '../utils/CommonCode'; 
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+// import { ImagePickerModal } from '../Modals/ImagePickerModal'
+import {Alert} from 'react-native';
 
 function ProfileSetting() {
 	const [nickname, setNickname] = useState('') 
@@ -12,16 +16,20 @@ function ProfileSetting() {
   const [newNickname, setNewNickname] = useState('');
   const [userinfo, setUserInfo] = useState({ id: '', name: '', exp: '',socialType:'' });
   const textInputRef = useRef<TextInput | null>(null);
-
   const [isEnabled, setIsEnabled] = useState(true);
   const toggleSwitch = (value: boolean) => setIsEnabled(value);
+  const [photo ,setPhoto] = useState('')
+  
+
+  // useEffect(() => {
+  //   PermissionUtil.cmmReqPermis([...APP_PERMISSION_CODE.camera, ...APP_PERMISSION_CODE.calendar, ...APP_PERMISSION_CODE.mediaLibaray]);
+  // }, []);
 
 	useEffect(() => {
     axios.get(
         `http://10.0.2.2:8080/member/356931964684`,
       )
 			.then((response) => {
-				console.log(response.data)
 				setUserInfo(response.data)
 				setNickname(response.data.name)
 			})
@@ -53,6 +61,8 @@ function ProfileSetting() {
         console.error("실패...", err);
       });
   };
+
+  const [visible, setVisible] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -92,6 +102,24 @@ function ProfileSetting() {
               style={styles.profileImage}
             />
           </View>
+          <Pressable onPress={() =>
+            ImagePicker.launchImageLibrary({
+                mediaType: 'photo',
+                includeBase64: false,
+                maxHeight: 200,
+                maxWidth: 200,
+              },
+              (response) => {
+                console.log(response);
+                // this.setState({
+                //   resourcePath: response
+                // });
+              },
+            )}>
+            <View style={styles.edit}>
+              <Text style={styles.text}>프로필 사진 수정</Text>
+            </View>
+          </Pressable>
         <View>
           <View style={styles.info}>
             <Text style={styles.t}>
