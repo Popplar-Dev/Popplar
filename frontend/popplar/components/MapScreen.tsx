@@ -21,6 +21,10 @@ const windowHeight = Dimensions.get('window').height;
 type SpaceInfo = {
   place_name: string
   road_address_name: string
+  category_name: string
+  id: string
+  phone: string
+  place_url: string
 }
 
 const MapScreen: React.FC = () => {
@@ -31,7 +35,7 @@ const MapScreen: React.FC = () => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   // variables
-  const snapPoints = useMemo(() => ['30%', '95%'], []);
+  const snapPoints = useMemo(() => ['27.6%', '95%'], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
@@ -120,9 +124,20 @@ const MapScreen: React.FC = () => {
               </View>
             </View>
 
+          <View style={styles.previewContainer}>
             <View style={styles.address}>
               <Icon name="map-pin" size={11} color={'white'} style={styles.mapIcon}/>
-              <Text style={styles.bottomSheetText}>{spaceInfo.road_address_name}</Text>
+              <Text style={styles.bottomSheetAddress}>{spaceInfo.road_address_name}</Text>
+            </View>
+            <View style={styles.address}>
+              <Icon name="map-pin" size={11} color={'white'} style={styles.mapIcon}/>
+              <Text style={styles.bottomSheetPhone}>{spaceInfo.phone}</Text>
+            </View>
+          </View>
+           
+
+            <View style={styles.placeDetail}>
+
             </View>
           </View>
         </BottomSheetModal>
@@ -141,6 +156,7 @@ const MapScreen: React.FC = () => {
             handlePresentModalPress();
             const data = JSON.parse(event.nativeEvent.data)
             // console.log(data?.type)
+            console.log(data.data)
             setSpaceInfo(data.data)
             // console.log("받은 데이터(React) : " + data.data);
           }}
@@ -164,7 +180,12 @@ const styles = StyleSheet.create({
     width: windowWidth,
     height: windowHeight,
   },
-  bottomSheetText: {
+  bottomSheetAddress: {
+    backgroundColor: '#2C2C2C',
+    color: 'white',
+    marginTop: 10,
+  },
+  bottomSheetPhone: {
     backgroundColor: '#2C2C2C',
     color: 'white',
     marginTop: 10,
@@ -183,10 +204,15 @@ const styles = StyleSheet.create({
     height: 40, 
     justifyContent: "space-between"
   },
-  address: {
+  previewContainer: {
     flex: 0.1,
+    marginTop: 10,
+    marginBottom: 12,
+    lineHeight: 40,
+  },
+  address: {
+    flex: 1,
     flexDirection: 'row',
-    marginTop: 6,
     lineHeight: 40,
     width: 185, 
     // borderWidth: 1, 
@@ -209,5 +235,10 @@ const styles = StyleSheet.create({
     height: 40, 
     // borderWidth: 1, 
     // borderColor: 'red',
+  },
+  placeDetail: {
+    flex: 0.2,
+    borderWidth: 1, 
+    borderColor: 'red',
   }
 })
