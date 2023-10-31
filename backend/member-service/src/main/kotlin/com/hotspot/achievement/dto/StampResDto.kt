@@ -7,7 +7,7 @@ class StampResDto (
 
     val hotPlaceId: Long,
 
-    val category: Category,
+    val categoryName: String,
 
     val visitedCount: Int,
 ){
@@ -16,7 +16,7 @@ class StampResDto (
         fun create(stamp: Stamp): StampResDto {
             return StampResDto(
                 hotPlaceId = stamp.hotPlaceId,
-                category = stamp.category,
+                categoryName = stamp.category.toKor(),
                 visitedCount = stamp.visitedCount
             )
         }
