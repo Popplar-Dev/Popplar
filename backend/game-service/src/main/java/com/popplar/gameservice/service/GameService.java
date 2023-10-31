@@ -1,12 +1,15 @@
 package com.popplar.gameservice.service;
 
+import com.popplar.gameservice.dto.GameBoardDto;
 import com.popplar.gameservice.dto.GameDto;
 import com.popplar.gameservice.dto.GameResultDto;
 import com.popplar.gameservice.entity.Conqueror;
 import com.popplar.gameservice.entity.Game;
 import com.popplar.gameservice.mapper.GameMapper;
 import com.popplar.gameservice.repository.ConquerorRepository;
+import com.popplar.gameservice.repository.GameQueryDSLRepository;
 import com.popplar.gameservice.repository.GameRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class GameService {
 
     private final GameRepository gameRepository;
+    private final GameQueryDSLRepository gameQueryDSLRepository;
     private final ConquerorRepository conquerorRepository;
 
 
@@ -32,13 +36,20 @@ public class GameService {
             //내가 무조건 정복자
             conqueror = GameMapper.INSTANCE.gameToConqueror(game);
             conquerorRepository.save(conqueror);
-            return GameResultDto.builder().isConqueror(true).point(conqueror.getPoint()).build();
+            return GameResultDto.builder().isConqueror(true).points(conqueror.getPoints()).build();
         }
         //정복자가 있고 정복자보다 내가 더 높으면 정복자로 등록하고 정복자 등록 이벤트를 발동
-        if (game.getPoint() > conqueror.getPoint()) {
+        if (game.getPoints() > conqueror.getPoints()) {
             conqueror = GameMapper.INSTANCE.gameToConqueror(game);
-            return GameResultDto.builder().isConqueror(true).point(conqueror.getPoint()).build();
+            conquerorRepository.save(conqueror);
+            return GameResultDto.builder().isConqueror(true).points(conqueror.getPoints()).build();
         }
-        return GameResultDto.builder().isConqueror(false).point(game.getPoint()).build();
+        return GameResultDto.builder().isConqueror(false).points(game.getPoints()).build();
+    }
+
+    public GameBoardDto getGameBoard(Long hotPlaceId) {
+        // hotPlaceId에 해당하는 게임 정보를 조회
+        List<GameDto> gameList = gameQueryDSLRepository.findMaxPointsByHotPlaceIdAndType(hotPlaceId, "FIGHTING");
+        return GameBoardDto.builder().gameDtoList(gameList).build();
     }
 }

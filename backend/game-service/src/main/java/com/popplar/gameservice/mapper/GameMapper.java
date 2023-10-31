@@ -14,5 +14,4 @@ public interface GameMapper {
     Game gameDtoToGame(GameDto gameDto);
 
     Conqueror gameToConqueror(Game game);
-
 }
