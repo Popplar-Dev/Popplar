@@ -1,5 +1,6 @@
 package com.hotspot.achievement.entity
 
+import com.hotspot.achievement.dto.StampReqDto
 import com.hotspot.global.entity.BaseEntity
 import jakarta.persistence.*
 
@@ -26,12 +27,12 @@ class Stamp(
     }
 
     companion object {
-        fun create(memberId: Long, hotPlaceId: Long, category: Category): Stamp {
+        fun create(memberId: Long, stampReqDto: StampReqDto): Stamp {
             return Stamp(
                 memberId = memberId,
-                hotPlaceId = hotPlaceId,
-                category = category,
-                visitedCount = 1
+                hotPlaceId = stampReqDto.hotPlaceId,
+                category = stampReqDto.category,
+                visitedCount = 0
             )
         }
     }
