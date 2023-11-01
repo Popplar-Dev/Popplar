@@ -5,6 +5,8 @@ import Geolocation from '@react-native-community/geolocation';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
+import { getAllHotplace } from './services/getHotplace'
+
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -105,7 +107,12 @@ const MapScreen: React.FC = () => {
 
   useEffect(() => {
     geoLocation();
-  })
+  }, [])
+
+  useEffect(() => {
+    getAllHotplace()
+    .then((res) => (res))
+  }, [])
 
   return (
     <GestureHandlerRootView style={{ flex: 1}}>
