@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function FirstLanding() {
   const goToNextPage = () => {
-    navigation.navigate('BottomTab' as never);
+    navigation.navigate('UserSetting' as never);
   };
 
 	const navigation = useNavigation();

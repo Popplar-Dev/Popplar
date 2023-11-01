@@ -15,7 +15,7 @@ function MyPageScreen() {
 	const [token, setToken] = useState('')
   const userinfo = useRecoilValue(userInfoState);
   const [modalVisible, setModalVisible] = useState(false);
-  const [stamp, setStamp] = useState<Array<{ category: string, visitedSet: number }>>([]);
+  const [stamp, setStamp] = useState<Array<{ categoryName: string, visitedSet: number }>>([]);
   const [selectedPlanet, setSelectedPlanet] = useState({
     name: '',
     image: require('../assets/planet/1.png'),
@@ -28,8 +28,8 @@ function MyPageScreen() {
     { name: "STORE", uri: require("../assets/planet/3.png") },
     { name: "4", uri: require("../assets/planet/4.png") },
     { name: "5", uri: require("../assets/planet/5.png") },
+    { name: "6", uri: require("../assets/planet/6.png") },
   ];
-  // const [stampDetail, setStampDetail] = useState('')
 
 	useEffect(() => {
     axios.get(`http://10.0.2.2:8201/achievement/${userinfo.id}`)
@@ -97,33 +97,33 @@ function MyPageScreen() {
           {/* <Pressable onPress={loadToDos} android_ripple={{color: '#464646'}}>
             <Text>ㅇㅇㅇ</Text>
           </Pressable> */}
-          <Image
-            source={require('../assets/업적버튼.png')}
-            style={styles.buttonImage}
-          />
           {loading ? (
             <ActivityIndicator size="large" color="#ffffff" />
-          ) : (
-            <View>
+            ) : (
+            <View style={styles.stampcontainer}>
+              <Image
+                source={require('../assets/업적버튼.png')}
+                style={styles.buttonImage}
+              />
               <View style={styles.planetcontainer}>
                 {stamp.map((item, index) => (
                   <View style={styles.planet} key={index}>
                     <Pressable
                       onPress={() => {
                         setSelectedPlanet({
-                          name: item.category,
+                          name: item.categoryName,
                           image: images[index].uri,
                           visit: `${item.visitedSet}`
                         });
                         setModalVisible(true);
                       }}
-                      style={styles.planet}
+                      style={styles.planetItem} 
                     >
-                      <Text style={styles.t}>{item.category}</Text>
                       <Image
                         source={images[index].uri}
                         style={styles.planetimage}
                       />
+                      <Text style={styles.t}>{item.categoryName}</Text>
                       <Text style={styles.t}>{item.visitedSet}/10</Text>
                     </Pressable>
                   </View>
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     borderRadius: 75, 
   },
 	buttonImage: {
-    marginBottom:10
+    marginTop:20
 	},
 	editingContainer: {
     justifyContent: 'center',
@@ -216,15 +216,32 @@ const styles = StyleSheet.create({
     top: 20, 
     right: 10, 
   },
+  stampcontainer: {
+    alignItems:'center',
+    borderWidth:1,
+    borderColor: '#8B90F7',
+    borderRadius:20,
+    width:'96%'
+  },
   planetcontainer: {
     flexDirection:'row',
-    marginTop:10
+    alignItems:'center',
+    // marginTop:10,
+    flexWrap: 'wrap', 
+    justifyContent: 'space-between', 
+    paddingHorizontal: 10,
   },
   planet: {
     // flexDirection:'column',
     justifyContent:'center',
     alignItems:'center',
     margin:10
+  },
+  planetItem: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
   },
   planetimage: {
     marginBottom: 5,

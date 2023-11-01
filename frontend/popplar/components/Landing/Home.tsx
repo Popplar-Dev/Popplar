@@ -1,13 +1,49 @@
 import React, {useState} from "react";
-import { View, Text, StyleSheet, Button, Pressable, Image } from "react-native";
+import { View, Text, StyleSheet, Button, Pressable, Image, Alert  } from "react-native";
 import { WebView } from 'react-native-webview';
 import axios from 'axios';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
+import { useRecoilState } from 'recoil';
+import { userInfoState } from '../recoil/userState';
 
 export default function Home() {
 
 	const navigation = useNavigation();
+	const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+
+	const isLogin = async () => {
+		const result = await AsyncStorage.getItem('userInfo');
+		if (result !== null) {
+			const userinfo = JSON.parse(result);
+			console.log(userinfo.name)
+			if (userinfo.name==='새 유저') {
+				Alert.alert(
+					'로그인 먼저 해주세요'
+				)
+			} else {
+				setUserInfo(userinfo)
+				navigation.navigate("BottomTab" as never)
+			}
+		}
+		return null;
+	}
+
+	const newLogin = async () => {
+		const result = await AsyncStorage.getItem('userInfo');
+		if (result !== null) {
+			const userinfo = JSON.parse(result);
+			console.log(userinfo.name)
+			if (userinfo.name==='새 유저') {
+				navigation.navigate("LoginPage" as never)
+			} else {
+				setUserInfo(userinfo)
+				navigation.navigate("LoginPage" as never)
+				// navigation.navigate("BottomTab" as never)
+			}
+		}
+		return null;
+	}
 
     return(
       <View style={Styles.container}> 
@@ -17,13 +53,18 @@ export default function Home() {
 					</Text>	
 				</View>     
 				<Pressable
-					onPress={() => navigation.navigate("LoginPage" as never)}
-					style={Styles.kakaologin}
-				>
-					<Image
-            source={require('popplar/assets/kakao_login.png')}
-            />
+					onPress={newLogin}
+					style={Styles.kakaologin}>
+					<Image source={require('popplar/assets/kakao_login.png')}/>
 				</Pressable>
+
+				<Pressable
+					onPress={isLogin}
+					// onPress={() => navigation.navigate("BottomTab" as never)}
+					style={Styles.start}>
+					<Text style={Styles.text}>시작하기</Text>
+				</Pressable>
+
 			</View>
     )
 
@@ -34,8 +75,9 @@ const Styles = StyleSheet.create({
 		justifyContent:'center',
 		alignItems:'center'
   }, 
-	Text: {
-		color:'black'
+	text: {
+		color:'white',
+		fontSize:15
 	},
 	main:{
 		marginBottom:100
@@ -46,6 +88,15 @@ const Styles = StyleSheet.create({
 		fontSize:60
 	},
 	kakaologin: {
-		// backgroundColor:'yellow'
+		margin:20
+	},
+	start: {
+		backgroundColor:'#8B90F7',
+		borderRadius:10,
+		width:300,
+		justifyContent:'center',
+		alignItems:'center',
+		height:45,
+		margin:20
 	}   
 });
