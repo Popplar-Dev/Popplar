@@ -4,11 +4,13 @@ import com.hotspot.achievement.dto.AchievementResDto
 import com.hotspot.achievement.dto.MemberCategoryCountResDto
 import com.hotspot.achievement.dto.StampReqDto
 import com.hotspot.achievement.dto.StampResDto
+import com.hotspot.achievement.entity.Category
 import com.hotspot.achievement.entity.MemberCategoryCount
 import com.hotspot.achievement.entity.Stamp
 import com.hotspot.achievement.repository.MemberCategoryCountRepository
 import com.hotspot.achievement.repository.StampRepository
 import com.hotspot.global.eureka.dto.HotPlaceResDto
+import com.hotspot.global.eureka.dto.VisitorReqDto
 import com.hotspot.member.service.CryptService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -34,13 +36,6 @@ class AchievementService(
 
         val hotPlaceId = stampReqDto.hotPlaceId
 
-        val hotPlaceResDto = webClient.get()
-            .uri("$gateWayURL/hot-place/$hotPlaceId")
-//            .header()
-            .retrieve()
-            .bodyToMono(HotPlaceResDto::class.java)
-            .block() ?: throw RuntimeException("해당하는 핫플레이스가 없습니다")
-
         var stamp =
             stampRepository.findByMemberIdAndHotPlaceId(decryptedMemberId, stampReqDto.hotPlaceId)
 
@@ -49,7 +44,17 @@ class AchievementService(
                 throw RuntimeException("오늘 이미 스탬프를 획득했습니다.")
             }
         }
-        stamp = stamp ?: stampRepository.save(Stamp.create(decryptedMemberId, hotPlaceResDto))
+        stamp = stamp ?: stampRepository.save(Stamp.create(decryptedMemberId, hotPlaceId))
+
+
+        val hotPlaceResDto = webClient.post()
+            .uri("$gateWayURL/hot-place/$hotPlaceId")
+            .bodyValue(VisitorReqDto.create(stamp))
+            .retrieve()
+            .bodyToMono(HotPlaceResDto::class.java)
+            .block() ?: throw RuntimeException("해당하는 핫플레이스가 없습니다")
+
+        stamp.update(hotPlaceResDto)
 
         val memberCategoryCount =
             memberCategoryCountRepository.findByMemberIdAndCategory(stamp.memberId, stamp.category)
@@ -66,17 +71,18 @@ class AchievementService(
 
         val achievementResDto = AchievementResDto.create()
 
-        stampRepository.findAllByMemberId(decryptedId)
-            .map {
-                achievementResDto.stampResDtoList.add(StampResDto.create(it))
-            }
-
-        memberCategoryCountRepository.findByMemberId(decryptedId)
-            .map {
-                achievementResDto.memberCategoryResDtoList.add(
-                    MemberCategoryCountResDto.create(it)
-                )
-            }
+        achievementResDto.memberCategoryResDtoList.addAll(
+            Category.values()
+                .filter { it != Category.NOT_YET }
+                .map {
+                    MemberCategoryCountResDto.create(
+                        it,
+                        memberCategoryCountRepository.findByMemberIdAndCategory(
+                            decryptedId,
+                            it
+                        )?.visitedSet ?: 0
+                    )
+                })
 
         return achievementResDto
     }

@@ -11,10 +11,10 @@ class MemberCategoryCountResDto (
 ) {
 
     companion object {
-        fun create(memberCategoryCount: MemberCategoryCount): MemberCategoryCountResDto {
+        fun create(category: Category, visitedSet: Int): MemberCategoryCountResDto {
             return MemberCategoryCountResDto(
-                categoryName = memberCategoryCount.category.toKor(),
-                visitedSet = memberCategoryCount.visitedSet
+                categoryName = category.toKor(),
+                visitedSet = visitedSet
             )
         }
     }
