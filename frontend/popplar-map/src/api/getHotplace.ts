@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Place } from '../types/place'
 import {BASE_URL} from './baseUrl'
+import {AsyncStorage} from 'react-native';
 const accessToken = process.env.REACT_APP_ACCESS_TOKEN;
 
 // 전체 핫플레이스 조회
