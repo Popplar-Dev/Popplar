@@ -1,0 +1,50 @@
+.seachbox {
+  background-color: transparent;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #8B90F7;
+  padding: 15px 30px 10px 30px;
+}
+
+.name { 
+  color: white;
+}
+
+.place {
+  width: 95%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.place-name {
+  color: white;
+  font-size: 16px;
+  padding: 3px 0 0 3px;
+  font-weight: 700;
+}
+
+.place-category {
+  color: gray;
+  padding: 6px 9px 0 0;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.address-name {
+  color: gray;
+  text-align: start;
+
+  padding: 2px 0 10px 35px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.phone-number {
+  color: gray;
+  text-align: start;
+  height: 15px;
+
+  padding: 0 0 5px 35px;
+  font-weight: 600;
+  font-size: 14px;
+}
