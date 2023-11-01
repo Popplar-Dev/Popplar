@@ -5,6 +5,7 @@ import com.hotspot.qna.dto.QnAResDto
 import com.hotspot.qna.dto.QuestionReqDto
 import com.hotspot.qna.service.QnAService
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -45,4 +46,11 @@ class QnAController(
         return qnaService.createAnswer(questionId, answerReqDto)
     }
 
+    @PatchMapping("/adopt/{questionId}/{answerId}")
+    fun adoptAnswer(
+        @PathVariable questionId: Long,
+        @PathVariable answerId: Long,
+    ): QnAResDto {
+        return qnaService.adoptAnswer(questionId, answerId)
+    }
 }

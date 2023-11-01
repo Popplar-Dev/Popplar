@@ -20,15 +20,15 @@ class Question(
     var content: String,
 
     @OneToOne
-    val adoptedAnswer: Answer? = null,
+    var adoptedAnswer: Answer? = null,
 
     @OneToMany
     @JoinColumn(name = "questionId")
     val answerList: MutableList<Answer> = arrayListOf()
 ) : BaseEntity() {
 
-    fun insertAnswer(answer: Answer) {
-        this.answerList.add(answer)
+    fun adopt(answer: Answer) {
+        this.adoptedAnswer = answer
     }
 
     companion object {
