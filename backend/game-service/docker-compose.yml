@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+  database:
+    image: mysql:8.0
+    container_name: mysql-container-game
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PWD}
+    ports:
+      - 3318:3306
+    volumes:
+      - mysql-db:/var/lib/mysql
+
+  backend:
+    image: popplar-game:latest
+    container_name: game
+    hostname: game
+    env_file:
+      - .env
+    ports:
+      - "8202:8202"
+    build:
+      dockerfile: Dockerfile
+
+volumes:
+  mysql-db:
