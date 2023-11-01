@@ -26,8 +26,6 @@ public class GameController {
     //일단 게임이 종료되었을 때 결과를 저장하는 메서드
     @PostMapping("/insert-result")
     public GameResultDto insertGameResult(@RequestBody GameDto gameDto) {
-        System.out.println(gameDto.toString());
-        System.out.println("execute result");
         return gameService.insertGameService(gameDto);
     }
     //점수판을 보고싶을때 게임 결과를 순서대로 보여주는 메서드

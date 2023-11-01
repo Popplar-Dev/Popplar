@@ -42,13 +42,12 @@ public class GameService {
         LocalDate currentDate = currentDateTime.toLocalDate();
         LocalDateTime startOfDay = currentDate.atStartOfDay();
         LocalDateTime endOfDay = currentDate.atTime(LocalTime.MAX);
-
         Optional<Conqueror> conqueror = conquerorRepository.findTopByHotPlaceIdAndDeletedFalseAndCreatedDateBetweenOrderByPointsDesc(
             game.getHotPlaceId(), startOfDay, endOfDay);
         if (conqueror.isEmpty()) {
             //내가 무조건 정복자
-            Conqueror newConqueror = GameMapper.INSTANCE.gameToConqueror(game);
-            conquerorRepository.save(newConqueror);
+            Conqueror newConqueror = conquerorRepository.save(
+                GameMapper.INSTANCE.gameToConqueror(game));
             newConqueror.setPoints(sumAllGamePoint(game));
             return GameResultDto.builder().isConqueror(true)
                 .points(newConqueror.getPoints()).createdTime(newConqueror.getCreatedDate())
@@ -57,9 +56,9 @@ public class GameService {
         //정복자가 있고 정복자보다 내가 더 높으면 정복자로 등록하고 정복자 등록 이벤트를 발동
         //게임모드 종합해서
         if (sumAllGamePoint(game) > conqueror.orElseThrow().getPoints()) {
-            Conqueror newConqueror = GameMapper.INSTANCE.gameToConqueror(game);
+            Conqueror newConqueror = conquerorRepository.save(
+                GameMapper.INSTANCE.gameToConqueror(game));
             newConqueror.setPoints(sumAllGamePoint(game));
-            conquerorRepository.save(newConqueror);
             //기존 정복자 정보는 삭제
             conqueror.orElseThrow().setDeleted();
             return GameResultDto.builder().isConqueror(true).points(newConqueror.getPoints())
@@ -80,9 +79,16 @@ public class GameService {
 
         //전체 게임리스트에 대해서 삭제되지 않은 기록중 나의 최고 기록들을 더해 반환하게끔한다.
         for (GameType type : typeList) {
-            sum += gameRepository.findTopByMemberIdAndTypeAndDeletedFalseAndCreatedDateBetween(
+
+            int temp = gameRepository.findTopByMemberIdAndTypeAndDeletedFalseAndCreatedDateBetween(
                     game.getMemberId(), type, startOfDay, endOfDay)
                 .orElse(Game.builder().points(0).build()).getPoints();
+
+            if (type.equals(game.getType()) && temp < game.getPoints()) {
+                sum += game.getPoints();
+                continue;
+            }
+            sum += temp;
         }
         return sum;
     }
