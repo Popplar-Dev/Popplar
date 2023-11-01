@@ -1,6 +1,5 @@
 package com.hotspot.achievement.dto
 
-import com.hotspot.achievement.entity.Category
 import com.hotspot.achievement.entity.Stamp
 
 class StampResDto (
