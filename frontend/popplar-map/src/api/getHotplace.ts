@@ -17,7 +17,7 @@ export async function getIdHotplace(id: string) {
   return await axios({
     method: 'get',
     url: `${BASE_URL}/hot-place/${id}`,
-    // headers: addAccessTokenToHeaders(),
+    headers: { "access-token" : accessToken }
    }).then((res) => res)
 }
 

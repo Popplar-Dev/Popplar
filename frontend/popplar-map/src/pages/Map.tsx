@@ -12,7 +12,7 @@ import { CenterLngState } from "../recoil/centerLng/index"
 
 import { LatLng } from '../types/LatLng'
 
-import { getAllHotplace } from '../api/getHotplace'
+import { getAllHotplace, getIdHotplace } from '../api/getHotplace'
 
 const { kakao } = window;
 
@@ -165,14 +165,27 @@ export default function Map () {
         // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
         // kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
         // kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
-        const name = positions[i].placeName
-        const address = positions[i].roadAddressName
+        const place_name = positions[i].placeName
+        const road_address_name = positions[i].roadAddressName
+        const category_group_name = positions[i].category
+        const id = positions[i].id
         kakao.maps.event.addListener(hotMarker, 'click', function() {
           // 클릭한 위도, 경도 정보를 가져옵니다 
           panToHandler(La, Ma);
-          requestPermission({
-            name, address
-          });
+          getIdHotplace(id)
+          .then((res) => res.data)
+          .then((res) => requestPermission({
+            id, 
+            place_name, 
+            road_address_name, 
+            category_group_name, 
+            likeCount: res.likeCount,
+            phone: res.phone,
+            placeType: res.placeType,
+            visitorCount: res.visitorCount,
+            y: res.y,
+            x: res.x
+          }))
         })
         // marker.setMap(map);
       }
