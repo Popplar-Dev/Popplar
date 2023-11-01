@@ -35,14 +35,14 @@ export default function SearchContentBox({ place, placePosHandler }: Props) {
       <img src={flag} alt="flag" style={{ width: "35px", height: "35px" }}/>
       <div className={styles["place"]}>
         <div className={styles["place-name"]}>{place.place_name}</div>
+        <div className={styles["place-category"]}>{place.category_group_name}</div>
       </div>
     </div>
-    <div className={styles["infos-category"]}>{place.category_name}</div>
 
     {/* <div className={styles.name}>{place.category_name}</div> */}
-    <div className={styles["infos"]}>{place.road_address_name}</div>
+    <div className={styles["address-name"]}>{place.road_address_name}</div>
     {/* <div className={styles.name}>{place.address_name}</div> */}
-    <div className={styles["infos"]}>{place.phone}</div>
+    <div className={styles["phone-number"]}>{place.phone}</div>
   </button>
   )
 }
