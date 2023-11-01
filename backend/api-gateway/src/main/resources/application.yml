@@ -32,6 +32,9 @@ spring:
           uri: lb://MEMBER-SERVICE
           predicates:
             - Path=/member/**
+            - Path=/qna/**
+            - Path=/message/**
+            - Path=/achievement/**
           filters:
             - CustomAuthFilter
       globalcors:
