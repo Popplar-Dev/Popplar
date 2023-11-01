@@ -4,6 +4,8 @@ import { WebView } from 'react-native-webview';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
+import { useRecoilState } from 'recoil';
+import { userInfoState } from '../recoil/userState';
 
 const REST_API_KEY = '0da056655f3ed1ec3ebd8325d19ac9f6';
 const REDIRECT_URI = 'http://10.0.2.2:8081/member/login';
@@ -11,13 +13,13 @@ const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage('message from
 
 export default function Login() {
   const navigation = useNavigation();
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   function KakaoLoginWebView (data: string) {
     const exp = "code=";
     var condition = data.indexOf(exp);    
     if (condition != -1) {
       var authorize_code = data.substring(condition + exp.length);
-      // console.log(authorize_code);
       requestToken(authorize_code);
     };
   }
@@ -30,6 +32,7 @@ export default function Login() {
   }
   const storeUserInfo = async (returnValue:any) => {
     try {
+      setUserInfo(returnValue)
       await AsyncStorage.setItem('userInfo', JSON.stringify(returnValue));
     } catch (error) {
     }

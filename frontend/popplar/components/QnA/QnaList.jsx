@@ -6,12 +6,14 @@ import { useNavigation } from '@react-navigation/native';
 import QnaCreateModal from '../Modals/QnaCreateModal';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { userInfoState } from '../recoil/userState';
+import { useRecoilState } from 'recoil';
 
 export default function QnaList() {
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
   const [qnaData, setQnaData] = useState('');
-  const [userinfo, setUserInfo] = useState({})
+  const [userinfo, setUserInfo] = useRecoilState(userInfoState);
 
   const handleItemPress = (qna) => {
     navigation.navigate('QnaDetail', { qnaId: qna, userid: userinfo.id, username: userinfo.name });
@@ -32,7 +34,7 @@ export default function QnaList() {
         setModalVisible(false);
         axios.get(`http://10.0.2.2:8201/qna/2`)
           .then((response) => {
-            setQnaData(response.data);
+            setQnaData(response.data.reverse());
           })
           .catch((err) => {
             console.log("에러 메시지 :", err);
@@ -45,18 +47,6 @@ export default function QnaList() {
 
 
   useEffect(() => {
-    const loadToDos = async () => {
-      try {
-        const userinfoString = await AsyncStorage.getItem('userInfo')
-        if (userinfoString !== null) {
-          const userinfo = JSON.parse(userinfoString);
-          setUserInfo(userinfo)
-            }
-          } catch (e) {
-            console.log(e)
-          }
-        }
-        loadToDos()
     axios.get(
         `http://10.0.2.2:8201/qna/2`, 
       )
