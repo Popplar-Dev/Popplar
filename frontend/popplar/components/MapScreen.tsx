@@ -13,6 +13,7 @@ import {
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import NameBox from './NameBox/NameBox'
+import PlaceOptionBox from './PlaceOptionBox/PlaceOptionBox'
 import { FlipInEasyX } from 'react-native-reanimated';
 
 const windowWidth = Dimensions.get('window').width;
@@ -33,18 +34,7 @@ type SpaceInfo = {
 }
 
 const MapScreen: React.FC = () => {
-  const { width } = Dimensions.get('window');
-  const halfScreenWidth = width / 2.3;
-  console.log(halfScreenWidth)
-  
-  let dynamicStyles = {
-    placeOptionBox: {
-      width: halfScreenWidth, // 화면의 절반에 해당하는 너비 설정
-      // borderWidth: 1,
-      // borderColor: 'red',
-    }
-  }
-  
+
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo>({})
   // bottom-sheet
   // ref
@@ -177,35 +167,8 @@ const MapScreen: React.FC = () => {
           </View>
 
           <View style={styles.placeBottomContainer}>
-
-            <View style={dynamicStyles.placeOptionBox}>
-              <View style={styles.placeOptionTitle}>
-                <Icon name="comments" size={22} color={'white'} style={styles.qnaIcon}/>
-                <Text style={styles.placeOptionName}>CHAT</Text>
-              </View>
-              <View style={styles.placeOptionContent}>
-                <Text style={styles.placeFirstContent}>Let's start!</Text>
-                <Text style={styles.placeContent}>Popplar의 사람들과 채팅을 시작하세요</Text>
-                <TouchableOpacity onPress={() => {}} style={styles.placeOptionButton}>
-                  <Text style={{ color: 'white', textAlign: 'center'}}>채팅방 입장</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <View style={dynamicStyles.placeOptionBox}>
-              <View style={styles.placeOptionTitle}>
-                <Icon name="gamepad" size={22} color={'white'} style={styles.qnaIcon}/>
-                <Text style={styles.placeOptionName}>GAME</Text>
-              </View>
-              <View style={styles.placeOptionContent}>
-                <Text style={styles.placeFirstContent}>Let's start!</Text>
-                <Text style={styles.placeContent}>Popplar의 사람들과 게임을 통해 경쟁하세요</Text>
-                <TouchableOpacity onPress={() => {}} style={styles.placeOptionButton}>
-                  <Text style={{ color: 'white', textAlign: 'center'}}>게임 시작하기</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
+            <PlaceOptionBox type="chat"/>
+            <PlaceOptionBox type="game"/>
           </View>
         </View>
 
@@ -388,43 +351,4 @@ const styles = StyleSheet.create({
     // borderWidth: 1, 
     // borderColor: 'red',
   },
-  placeOptionTitle: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 13,
-  },
-  placeOptionName: {
-    color: 'white',
-    fontSize: 18,
-    marginTop: 8,
-    fontWeight: 'bold',
-  },
-  placeOptionContent: {
-    marginTop: 10,
-    backgroundColor: '#8B90F733',
-    borderRadius: 14,
-    // borderWidth: 1, 
-    // borderColor: 'red',
-  },
-  placeFirstContent: {
-    color: 'white',
-    textAlign: 'center',
-    marginTop: 10,
-    marginBottom: 10,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  placeContent: {
-    color: 'white',
-    opacity: 0.5,
-    textAlign: 'center',
-    marginBottom: 13,
-    lineHeight: 22,
-  },
-  placeOptionButton: {
-    height: 30,
-    paddingTop: 4,
-    backgroundColor: '#8B90F7',
-    borderRadius: 14,
-  }
 })
