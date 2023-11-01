@@ -1,5 +1,6 @@
 package com.hotspot.visitor.controller;
 
+import com.hotspot.hotplace.dto.HotPlaceResDto;
 import com.hotspot.visitor.dto.VisitorReqDto;
 import com.hotspot.visitor.dto.VisitorResDto;
 import com.hotspot.visitor.service.VisitorService;
@@ -36,9 +37,9 @@ public class VisitorController {
     }
 
     @PostMapping
-    public EntityModel<VisitorResDto> insertVisitor(@RequestBody VisitorReqDto visitorReqDto) {
-        VisitorResDto visitorResDto = visitorService.insertVisitor(visitorReqDto);
+    public EntityModel<HotPlaceResDto> insertVisitor(@RequestBody VisitorReqDto visitorReqDto) {
+        HotPlaceResDto hotPlaceResDto = visitorService.insertVisitor(visitorReqDto);
 
-        return EntityModel.of(visitorResDto);
+        return EntityModel.of(hotPlaceResDto);
     }
 }
