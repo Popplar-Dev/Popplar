@@ -11,11 +11,11 @@ public class GameResultDto {
     private boolean isConqueror;
     //본인의 최종 점수
     @NotNull
-    private int point;
+    private int points;
 
     @Builder
-    public GameResultDto(boolean isConqueror, int point) {
+    public GameResultDto(boolean isConqueror, int points) {
         this.isConqueror = isConqueror;
-        this.point = point;
+        this.points = points;
     }
 }
