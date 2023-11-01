@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'; 
+import { useState, useEffect, useRef } from 'react'; 
 import {View, FlatList, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-import { Client, Message, IMessage, IFrame } from '@stomp/stompjs';
+import { Client, Message, IMessage, IFrame, wsErrorCallbackType } from '@stomp/stompjs';
 
 import ChatHeader from './ChatHeader';
 import ReceivedChatMessage from './ReceivedChatMesasge';
@@ -10,18 +10,23 @@ import SentChatMessage from './SentChatMessage';
 import ChatInput from './ChatInput';
 
 const stompConfig = {
-  connectHeaders: {}, 
-  brokerURL: 'ws://localhost:8080/gs-guide-websocket', 
+  connectHeaders: {
+  }, 
+  brokerURL: 'ws://10.0.2.2:8080/gs-guide-websocket/websocket', 
   debug: (str: string) => {console.log("STOMP: " + str)}, 
   reconnectDelay: 2000, 
+  forceBinaryWSFrames: true,
+  appendMissingNULLonIncoming: true
 }
 
 export default function ChatRoom() {
   const navigation = useNavigation();
   const [client, setClient] = useState<Client|null>(null); 
-  const [isConnected, setIsConnected] = useState(false); 
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
+
+    
 
     const stompClient = new Client(stompConfig); 
 
@@ -45,6 +50,15 @@ export default function ChatRoom() {
       })
     }
 
+    stompClient.onStompError = (frame: IFrame) => {
+      console.log('Broker reported error:' + frame.headers['message']); 
+      console.log('Additional details: ' + frame.body);
+    }
+
+    stompClient.onWebSocketError = (error: wsErrorCallbackType) => {
+      console.log(error)
+    }
+
     stompClient.onDisconnect = () => {
       console.log('STOMP WebSocket disconnected'); 
       setIsConnected(false);
@@ -54,19 +68,21 @@ export default function ChatRoom() {
     setClient(stompClient);
 
     return () => {
-      if (client) {
-        client.deactivate(); 
+      if (stompClient) {
+        stompClient.deactivate(); 
       }
     }
   }, [])
 
   const sendMessage = (messageBody: string) => {
     if (client && client.connected ) {
-      const destination = "/app/chatting"; 
+      const destination = "/app/hello"; 
+
+      const message = JSON.stringify({'chattingRoomId': 1, 'memberId': 446164955855, 'chattingContent': messageBody})
       
       client.publish({
         destination: destination,
-        body: messageBody,  
+        body: message,  
       }); 
     }
   } 

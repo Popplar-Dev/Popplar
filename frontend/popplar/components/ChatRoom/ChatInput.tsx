@@ -6,7 +6,7 @@ type ChatInputProps = {
   onSend: Function;
 }
 
-export default function ChatInput({ onSend }: ChatInputProps) {
+export default function ChatInput({onSend}: ChatInputProps) {
 
   const [inputText, setInputText] = useState("");
 
