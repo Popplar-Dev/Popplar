@@ -1,15 +1,15 @@
 import axios from 'axios';
 import { Place } from '../types/place'
-
-const BASE_URL = 'http://k9a705.p.ssafy.io:8200'
+import {BASE_URL} from './baseUrl'
+const accessToken = process.env.REACT_APP_ACCESS_TOKEN;
 
 // 핫플레이스 등록
 export async function postHotplace(data: Place) {
   return await axios({
     method: 'post',
     url: `${BASE_URL}/hot-place`,
-    data: { data }
-    // headers: addAccessTokenToHeaders(),
+    data: { data },
+    headers: { Authorization: `Bearer ${accessToken}` }
    }).then((res) => res)
 }
 
