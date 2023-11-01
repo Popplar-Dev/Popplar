@@ -22,6 +22,10 @@ class Answer(
     var content: String,
 ) : BaseEntity() {
 
+    fun update(content: String) {
+        this.content = content
+    }
+
     companion object {
         fun create(cryptService: CryptService, hotPlaceId: Long, questionId: Long, answerReqDto: AnswerReqDto): Answer {
             return Answer(
