@@ -7,7 +7,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PWD}
     ports:
-      - 3317:3307
+      - 3317:3306
     volumes:
       - mysql-db:/var/lib/mysql
 
