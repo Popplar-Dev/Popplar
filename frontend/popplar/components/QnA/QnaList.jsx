@@ -5,14 +5,16 @@ import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import QnaCreateModal from '../Modals/QnaCreateModal';
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function QnaList() {
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
   const [qnaData, setQnaData] = useState('');
+  const [userinfo, setUserInfo] = useState({})
 
   const handleItemPress = (qna) => {
-    navigation.navigate('QnaDetail', { qnaId: qna });
+    navigation.navigate('QnaDetail', { qnaId: qna, userid: userinfo.id, username: userinfo.name });
   };
 
   const openModal = () => {
@@ -20,8 +22,9 @@ export default function QnaList() {
   };
 
   const handleCreateQuestion = (newQuestion) => {
+    
     const requestData = {
-      memberId: 356931964684, 
+      memberId: userinfo.id, 
       content: newQuestion, 
     };
     axios.post(`http://10.0.2.2:8201/qna/2`, requestData)
@@ -42,11 +45,23 @@ export default function QnaList() {
 
 
   useEffect(() => {
+    const loadToDos = async () => {
+      try {
+        const userinfoString = await AsyncStorage.getItem('userInfo')
+        if (userinfoString !== null) {
+          const userinfo = JSON.parse(userinfoString);
+          setUserInfo(userinfo)
+            }
+          } catch (e) {
+            console.log(e)
+          }
+        }
+        loadToDos()
     axios.get(
         `http://10.0.2.2:8201/qna/2`, 
       )
 			.then((response) => {
-        setQnaData(response.data)
+        setQnaData(response.data.reverse())
 			})
 			.catch((err) => {
         console.log("에러 메시지 :", err)

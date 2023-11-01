@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ImageBackground, Pressable, TextInput, FlatList
 import axios from "axios";
 
 export default function QnaDetail({ route }) {
-  const qnaId = route.params;
+  const {qnaId, userid, username} = route.params;
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [newAnswer, setNewAnswer] = useState('');
   const [questionDetail, setQuestionDetail] = useState('');
@@ -16,17 +16,17 @@ export default function QnaDetail({ route }) {
 
   const handleSubmitAnswer = () => {
     const newAnswerText = newAnswer;
-    const postUrl = `http://10.0.2.2:8201/qna/2/${qnaId.qnaId}`;
+    const postUrl = `http://10.0.2.2:8201/qna/2/${qnaId}`;
 
     const requestBody = {
-      memberId: 356931964684,
+      memberId: userid,
       content: newAnswerText, 
     };
 
     axios.post(postUrl, requestBody)
       .then((response) => {
         const newAnswerItem = {
-          memberName: "본인 닉네임", 
+          memberName: username, 
           content: newAnswerText,
         };
         setAnswerDetail([...answerDetail, newAnswerItem]);
@@ -39,7 +39,7 @@ export default function QnaDetail({ route }) {
   };
 
   useEffect(() => {
-    axios.get(`http://10.0.2.2:8201/qna/2/${qnaId.qnaId}`)
+    axios.get(`http://10.0.2.2:8201/qna/2/${qnaId}`)
       .then((response) => {
         setQuestionDetail(response.data.questionResDto);
         setAnswerDetail(response.data.answerResDtoList);
