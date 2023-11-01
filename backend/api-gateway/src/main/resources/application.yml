@@ -43,6 +43,13 @@ spring:
             - Path=/game/**
           filters:
             - CustomAuthFilter
+
+        - id: chat-service
+          uri: lb://CHAT-SERVICE
+          predicates:
+            - Path=/chat/**
+          filters:
+            - CustomAuthFilter
       globalcors:
         cors-configurations:
           '[/**]':
