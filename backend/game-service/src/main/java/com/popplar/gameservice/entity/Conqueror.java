@@ -30,6 +30,10 @@ public class Conqueror extends BaseEntity {
     @NotNull
     private int points;
 
+    public void setPoints(int point) {
+        this.points = point;
+    }
+
     @Builder
     public Conqueror(Long memberId, Long hotPlaceId, int points) {
         this.memberId = memberId;

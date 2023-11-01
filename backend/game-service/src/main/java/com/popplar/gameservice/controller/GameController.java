@@ -4,6 +4,7 @@ import com.popplar.gameservice.dto.ConquerorInfoDto;
 import com.popplar.gameservice.dto.GameBoardDto;
 import com.popplar.gameservice.dto.GameDto;
 import com.popplar.gameservice.dto.GameResultDto;
+import com.popplar.gameservice.dto.MyBoardDto;
 import com.popplar.gameservice.service.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +37,7 @@ public class GameController {
     }
     //사용자의 기록 모아보기
     @GetMapping("/get-my-stat/{hotPlaceId}/{type}")
-    public GameBoardDto getMyGameBoard(@RequestHeader("Member-Id") Long memberId,@PathVariable Long hotPlaceId, @PathVariable String type){
+    public MyBoardDto getMyGameBoard(@RequestHeader("Member-Id") Long memberId,@PathVariable Long hotPlaceId, @PathVariable String type){
         return gameService.getMyGameBoard(memberId, hotPlaceId, type);
     }
 

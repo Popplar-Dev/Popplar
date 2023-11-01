@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,10 +40,11 @@ public class Game extends BaseEntity {
     private int points;
 
     @Builder
-    public Game(GameType type, Long memberId, Long hotPlaceId, int points) {
+    public Game(GameType type, Long memberId, Long hotPlaceId, int points, LocalDateTime createdDate) {
         this.type = type;
         this.memberId = memberId;
         this.hotPlaceId = hotPlaceId;
         this.points = points;
+        this.setCreatedDate(createdDate);
     }
 }

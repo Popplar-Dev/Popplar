@@ -1,6 +1,7 @@
 package com.popplar.gameservice.dto;
 
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,9 +15,13 @@ public class GameResultDto {
     @NotNull
     private int points;
 
+    @NotNull
+    private LocalDateTime createdTime;
+
     @Builder
-    public GameResultDto(boolean isConqueror, int points) {
+    public GameResultDto(boolean isConqueror, int points, LocalDateTime createdTime) {
         this.isConqueror = isConqueror;
         this.points = points;
+        this.createdTime = createdTime;
     }
 }
