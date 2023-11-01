@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, Pressable, StyleSheet, TouchableWithoutFeedback,Image } from 'react-native';
+import { Modal, View, Text, Pressable, StyleSheet, TouchableWithoutFeedback,Image, ScrollView  } from 'react-native';
 import { BlurView } from "@react-native-community/blur";
 import { useState, useEffect } from 'react';
 import axios from "axios";
@@ -18,7 +18,7 @@ function PlanetModal({ visible, onClose, planetName, planetImage, visit }:Planet
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(`http://10.0.2.2:8080/member/stamp/356931964684`)
+    axios.get(`http://10.0.2.2:8201/member/stamp/356931964684`)
       .then((response) => {
         setStamp(response.data.stampResDtoList);
         setLoading(false); 
@@ -61,18 +61,20 @@ function PlanetModal({ visible, onClose, planetName, planetImage, visit }:Planet
                 </Text>
                 <Text style={styles.modalText}>{visit} 곳의 <Text style={styles.focusText}>{planetName}</Text>에 첫 발을 디뎠습니다</Text>
               </View>
-              <View style={styles.stampinfo}>
-                {stamp.map((item, index) => (
-                  <View style={styles.stampinfodetail} key={index}>
-                    {item.category === planetName ? (
-                      <View>
-                        <Text style={styles.modalTextsmall}>핫플 id: {item.hotPlaceId}</Text>
-                        <Text style={styles.modalTextsmall}>방문 횟수: {item.visitedCount}</Text>
-                      </View>
-                    ) : null}
-                  </View>
-                ))}
-              </View>
+                <View style={styles.stampinfo}>
+              <ScrollView horizontal={true}>
+                  {stamp.map((item, index) => (
+                    <View style={styles.stampinfodetail} key={index}>
+                      {item.category === planetName ? (
+                        <View>
+                          <Text style={styles.modalTextsmall}>핫플 id: {item.hotPlaceId}</Text>
+                          <Text style={styles.modalTextsmall}>방문 횟수: {item.visitedCount}</Text>
+                        </View>
+                      ) : null}
+                    </View>
+                  ))}
+              </ScrollView>
+                </View>
             </View>
           </BlurView>
 				</View>

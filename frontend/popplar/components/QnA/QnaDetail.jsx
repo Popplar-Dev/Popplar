@@ -16,7 +16,7 @@ export default function QnaDetail({ route }) {
 
   const handleSubmitAnswer = () => {
     const newAnswerText = newAnswer;
-    const postUrl = `http://10.0.2.2:8080/qna/2/${qnaId.qnaId}`;
+    const postUrl = `http://10.0.2.2:8201/qna/2/${qnaId.qnaId}`;
 
     const requestBody = {
       memberId: 356931964684,
@@ -39,7 +39,7 @@ export default function QnaDetail({ route }) {
   };
 
   useEffect(() => {
-    axios.get(`http://10.0.2.2:8080/qna/2/${qnaId.qnaId}`)
+    axios.get(`http://10.0.2.2:8201/qna/2/${qnaId.qnaId}`)
       .then((response) => {
         setQuestionDetail(response.data.questionResDto);
         setAnswerDetail(response.data.answerResDtoList);

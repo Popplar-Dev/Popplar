@@ -24,10 +24,10 @@ export default function QnaList() {
       memberId: 356931964684, 
       content: newQuestion, 
     };
-    axios.post(`http://10.0.2.2:8080/qna/2`, requestData)
+    axios.post(`http://10.0.2.2:8201/qna/2`, requestData)
       .then((response) => {
         setModalVisible(false);
-        axios.get(`http://10.0.2.2:8080/qna/2`)
+        axios.get(`http://10.0.2.2:8201/qna/2`)
           .then((response) => {
             setQnaData(response.data);
           })
@@ -43,7 +43,7 @@ export default function QnaList() {
 
   useEffect(() => {
     axios.get(
-        `http://10.0.2.2:8080/qna/2`, 
+        `http://10.0.2.2:8201/qna/2`, 
       )
 			.then((response) => {
         setQnaData(response.data)

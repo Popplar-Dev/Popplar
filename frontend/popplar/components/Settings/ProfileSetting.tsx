@@ -3,22 +3,35 @@ import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button,Pressa
 import { useState, useEffect, useRef, useCallback } from 'react';
 import axios from "axios";
 import * as ImagePicker from 'react-native-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import PermissionUtil from '../utils/permissions'; 
 import { APP_PERMISSION_CODE } from '../utils/CommonCode'; 
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 // import { ImagePickerModal } from '../Modals/ImagePickerModal'
 import {Alert} from 'react-native';
+interface UserInfo {
+  name: string;
+  exp: number;
+  id: number;
+  socialType: string;
+  profileImage: string;
+}
 
 function ProfileSetting() {
 	const [nickname, setNickname] = useState('') 
 	const [isEditing, setIsEditing] = useState(false);
   const [newNickname, setNewNickname] = useState('');
-  const [userinfo, setUserInfo] = useState({ id: '', name: '', exp: '',socialType:'' });
   const textInputRef = useRef<TextInput | null>(null);
   const [isEnabled, setIsEnabled] = useState(true);
   const toggleSwitch = (value: boolean) => setIsEnabled(value);
   const [photo ,setPhoto] = useState('')
+  const [userinfo, setUserInfo] = useState<UserInfo>({
+    name: '',
+    exp: 0,
+    id: 0,
+    socialType: '',
+    profileImage: ''});
   
 
   // useEffect(() => {
@@ -26,16 +39,29 @@ function ProfileSetting() {
   // }, []);
 
 	useEffect(() => {
-    axios.get(
-        `http://10.0.2.2:8080/member/356931964684`,
-      )
-			.then((response) => {
-				setUserInfo(response.data)
-				setNickname(response.data.name)
-			})
-			.catch((err) => {
-        console.log("에러 메시지 ::", err)
-      });
+    const loadUserInfo = async () => {
+      try {
+        const userinfoString = await AsyncStorage.getItem('userInfo');
+        if (userinfoString !== null) {
+          const userinfo = JSON.parse(userinfoString);
+          setUserInfo(userinfo);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    loadUserInfo();
+
+    // axios.get(
+    //     `http://10.0.2.2:8201/member/${userinfo.id}`,
+    //   )
+		// 	.then((response) => {
+		// 		setUserInfo(response.data)
+		// 		setNickname(response.data.name)
+		// 	})
+		// 	.catch((err) => {
+    //     console.log("에러 메시지 ::", err)
+    //   });
   }, []);
 
 	const startEditing = () => {
@@ -49,13 +75,14 @@ function ProfileSetting() {
 		const updatedInfo = {
 			name: newNickname,
 			profileImage: "url",
-      socialType: userinfo.socialType
+      // socialType: userinfo.socialType
 		};
 
-    axios.patch(`http://10.0.2.2:8080/member/356931964684`, updatedInfo)
+    axios.patch(`http://10.0.2.2:8201/member/${userinfo.id}`, updatedInfo)
       .then((response) => {
 				 setUserInfo({ ...userinfo, name: newNickname });
 				setIsEditing(false);
+        console.log(response.data)
       })
       .catch((err) => {
         console.error("실패...", err);
