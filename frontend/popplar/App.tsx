@@ -6,6 +6,8 @@ import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 
 import BottomTab from './components/BottomTab/BottomTab';
 import FirstLanding from './components/Landing/FirstLanding';
+import LoginPage from './components/Landing/LoginPage';
+import Home from './components/Landing/Home';
 
 function App() {
   const navTheme = {
@@ -30,11 +32,13 @@ function App() {
           source={require('./assets/stars.png')}
           style={styles.backgroundImage}>
           <NavigationContainer theme={navTheme}>
-            <Stack.Navigator initialRouteName="FirstLanding" 
+            <Stack.Navigator initialRouteName="Home" 
             screenOptions={{headerShown: false}}
             >
               <Stack.Screen name="FirstLanding" component={FirstLanding} />
+              <Stack.Screen name="LoginPage" component={LoginPage} />
               <Stack.Screen name="BottomTab" component={BottomTab} />
+              <Stack.Screen name="Home" component={Home} />
               {/* <Stack.Screen name="Main" component={Main} /> */}
             </Stack.Navigator>
             {/* <BottomTab /> */}

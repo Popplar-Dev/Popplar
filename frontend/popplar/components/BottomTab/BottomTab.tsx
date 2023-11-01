@@ -22,6 +22,7 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const MyPageStack = () => {
+
   return (
     <Stack.Navigator
       screenOptions={{

@@ -7,15 +7,27 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import SettingScreen from './Settings/SettingScreen';
 import PlanetModal from '../components/Modals/PlanetModal'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useRecoilState } from 'recoil';
 import { nicknameState } from '../recoil/userState';
 
+interface UserInfo {
+  name: string;
+  exp: number;
+  id: number;
+  socialType: string;
+  profileImage: string;
+}
+
 function MyPageScreen() {
-	const [nickname, setNickname] = useState('') 
-	const [isEditing, setIsEditing] = useState(false);
-  const [newNickname, setNewNickname] = useState('');
-  const [userinfo, setUserInfo] = useState({ id: '', name: '', exp: '' });
+	const [token, setToken] = useState('')
+  const [userinfo, setUserInfo] = useState<UserInfo>({
+    name: '',
+    exp: 0,
+    id: 0,
+    socialType: '',
+    profileImage: ''});
   const [modalVisible, setModalVisible] = useState(false);
   const [stamp, setStamp] = useState<Array<{ category: string, visitedSet: number }>>([]);
   const [selectedPlanet, setSelectedPlanet] = useState({
@@ -25,35 +37,64 @@ function MyPageScreen() {
   });
   const [loading, setLoading] = useState(true);
   const images = [
-    { name: "cafe", uri: require("../assets/planet/1.png") },
-    { name: "restarant", uri: require("../assets/planet/2.png") },
+    { name: "CAFE", uri: require("../assets/planet/1.png") },
+    { name: "RESTAURANT", uri: require("../assets/planet/2.png") },
+    { name: "STORE", uri: require("../assets/planet/3.png") },
+    { name: "4", uri: require("../assets/planet/4.png") },
+    { name: "5", uri: require("../assets/planet/5.png") },
   ];
   // const [stampDetail, setStampDetail] = useState('')
 
 	useEffect(() => {
-    axios.get(
-        `http://10.0.2.2:8080/member/356931964684`, 
-      )
-			.then((response) => {
-				setUserInfo(response.data)
-				setNickname(response.data.name)
-			})
-			.catch((err) => {
-        console.log("에러 메시지 ::", err)
-      });
-  }, []);
+    const loadToDos = async () => {
+      try {
+        const userinfoString = await AsyncStorage.getItem('userInfo')
+        if (userinfoString !== null) {
+          const userinfo = JSON.parse(userinfoString);
+          // console.log(userinfo)
+          setUserInfo(userinfo)
+          axios.get(`http://10.0.2.2:8201/achievement/${userinfo.id}`)
+          .then((response) => {
+            console.log(response.data)
+            setStamp(response.data.memberCategoryResDtoList);
+            setLoading(false); 
+          })
+          .catch((err) => {
+            console.log("에러 메시지 ::", err);
+            setLoading(false); 
+          });
+            }
+          } catch (e) {
+            console.log(e)
+          }
+        }
+        loadToDos()
+      }, []);
 
-	useEffect(() => {
-    axios.get(`http://10.0.2.2:8080/member/stamp/356931964684`)
-      .then((response) => {
-        setStamp(response.data.memberCategoryResDtoList);
-        setLoading(false); 
-      })
-      .catch((err) => {
-        console.log("에러 메시지 ::", err);
-        setLoading(false); 
-      });
-  }, []);
+	// useEffect(() => {
+    
+  //   axios.get(
+  //       `http://10.0.2.2:8201/member/${token}`, 
+  //     )
+	// 		.then((response) => {
+	// 			setUserInfo(response.data)
+	// 		})
+	// 		.catch((err) => {
+  //       console.log("에러 메시지 ::", err)
+  //     });
+  // }, []);
+
+	// useEffect(() => {
+  //   axios.get(`http://10.0.2.2:8201/member/stamp/356931964684`)
+  //     .then((response) => {
+  //       setStamp(response.data.memberCategoryResDtoList);
+  //       setLoading(false); 
+  //     })
+  //     .catch((err) => {
+  //       console.log("에러 메시지 ::", err);
+  //       setLoading(false); 
+  //     });
+  // }, []);
 
   const navigation = useNavigation();
   const handleSettingPress = () => {
@@ -105,6 +146,9 @@ function MyPageScreen() {
               {userinfo.exp} xp
             </Text>
 					</View>
+          {/* <Pressable onPress={loadToDos} android_ripple={{color: '#464646'}}>
+            <Text>ㅇㅇㅇ</Text>
+          </Pressable> */}
           <Image
             source={require('../assets/업적버튼.png')}
             style={styles.buttonImage}
