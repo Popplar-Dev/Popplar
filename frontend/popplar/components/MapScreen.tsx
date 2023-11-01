@@ -19,8 +19,13 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 type SpaceInfo = {
-  name: string
-  address: string
+  place_name: string
+  road_address_name: string
+  category_name: string
+  category_group_name: string
+  id: string
+  phone: string
+  place_url: string
 }
 
 const MapScreen: React.FC = () => {
@@ -31,7 +36,7 @@ const MapScreen: React.FC = () => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   // variables
-  const snapPoints = useMemo(() => ['30%', '95%'], []);
+  const snapPoints = useMemo(() => ['27.6%', '95%'], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
@@ -112,7 +117,7 @@ const MapScreen: React.FC = () => {
           
           <View style={styles.bottomsheetContainer}>
             <View style={styles.spaceName}>
-              <NameBox w={200} h={38} text={spaceInfo.name} />
+              <NameBox w={200} h={38} text={spaceInfo.place_name} />
               <View style={styles.buttons}>
                 <Icon name="comments" size={20} color={'white'} style={styles.Icon}/>
                 <Icon name="gamepad" size={20} color={'white'} style={styles.Icon}/>
@@ -120,11 +125,27 @@ const MapScreen: React.FC = () => {
               </View>
             </View>
 
+          <View style={styles.previewContainer}>
+            <View style={styles.previewTopContainer}>
+              <View style={styles.address}>
+                <Icon name="map-pin" size={11} color={'white'} style={styles.mapIcon}/>
+                <Text style={styles.bottomSheetAddress}>{spaceInfo.road_address_name}</Text>
+              </View>
+              <Text style={styles.bottomSheetCategory}>{spaceInfo.category_group_name}</Text>
+            </View>
             <View style={styles.address}>
-              <Icon name="map-pin" size={11} color={'white'} style={styles.mapIcon}/>
-              <Text style={styles.bottomSheetText}>{spaceInfo.address}</Text>
+              <Icon name="phone" size={11} color={'white'} style={styles.phoneIcon}/>
+              <Text style={styles.bottomSheetPhone}>{spaceInfo.phone}</Text>
             </View>
           </View>
+
+          <View style={styles.placeDetail}>
+            <View style={styles.info}>
+              <Icon name="map-pin" size={11} color={'white'} style={styles.mapIcon}/>
+              <Text style={styles.bottomSheetPhone}>{spaceInfo.place_url}</Text>
+            </View>
+          </View>
+        </View>
         </BottomSheetModal>
 
         {/* <Button title={'postMessage'} onPress={native_to_web}></Button>
@@ -140,6 +161,7 @@ const MapScreen: React.FC = () => {
           onMessage={(event) => {
             handlePresentModalPress();
             const data = JSON.parse(event.nativeEvent.data)
+            // console.log(data?.type)
             console.log(data.data)
             setSpaceInfo(data.data)
             // console.log("받은 데이터(React) : " + data.data);
@@ -164,10 +186,21 @@ const styles = StyleSheet.create({
     width: windowWidth,
     height: windowHeight,
   },
-  bottomSheetText: {
+  bottomSheetAddress: {
     backgroundColor: '#2C2C2C',
     color: 'white',
-    marginTop: 10,
+    marginTop: 4,
+  },
+  bottomSheetCategory: {
+    color: 'white',
+    marginTop: 4,
+    // borderWidth: 1, 
+    // borderColor: 'red', 
+  },
+  bottomSheetPhone: {
+    backgroundColor: '#2C2C2C',
+    color: 'white',
+    // marginTop: 10,
   },
   bottomsheetContainer: {
     flex: 1,
@@ -180,22 +213,47 @@ const styles = StyleSheet.create({
   spaceName: {
     flex: 0.06, 
     flexDirection: 'row', 
-    height: 40, 
+    height: 30, 
     justifyContent: "space-between"
   },
-  address: {
+  previewContainer: {
     flex: 0.1,
+    marginTop: 10,
+    marginBottom: 12,
+    lineHeight: 40,
+  },
+  previewTopContainer: {
+    flex: 1,
     flexDirection: 'row',
-    marginTop: 6,
+    justifyContent: 'space-between',
+    lineHeight: 40,
+    paddingRight: 20,
+    // width: 185, 
+    // borderWidth: 1, 
+    // borderColor: 'red', 
+  },
+  address: {
+    flex: 1,
+    flexDirection: 'row',
     lineHeight: 40,
     width: 185, 
     // borderWidth: 1, 
     // borderColor: 'red', 
   },
+  info: {
+    flex: 1,
+    flexDirection: 'row',
+    lineHeight: 40,
+  },
   mapIcon: {
     margin: 8,
-    marginTop: 13,
+    marginTop: 8,
     marginLeft: 11,
+  },
+  phoneIcon: {
+    margin: 8,
+    marginTop: 5,
+    marginLeft: 10,
   },
   Icon: {
     marginLeft: 13,
@@ -207,6 +265,11 @@ const styles = StyleSheet.create({
     paddingRight: 20, 
     justifyContent: "flex-end", 
     height: 40, 
+    // borderWidth: 1, 
+    // borderColor: 'red',
+  },
+  placeDetail: {
+    flex: 0.1,
     // borderWidth: 1, 
     // borderColor: 'red',
   }
