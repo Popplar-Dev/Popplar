@@ -2,9 +2,9 @@ package com.hotspot.global.oauth.service.impl
 
 import com.hotspot.member.entity.Member
 import com.hotspot.member.entity.SocialType
-import com.hotspot.global.oauth.OAuthCodeDto
-import com.hotspot.global.oauth.OAuthMember
-import com.hotspot.global.oauth.OAuthTokenDto
+import com.hotspot.global.oauth.dto.OAuthCodeDto
+import com.hotspot.global.oauth.dto.OAuthMemberDto
+import com.hotspot.global.oauth.dto.OAuthTokenDto
 import com.hotspot.global.oauth.service.OAuthService
 import com.hotspot.member.repository.MemberRepository
 import org.springframework.beans.factory.annotation.Value
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 class KakaoOAuthService(
     private val webClient: WebClient,
     private val memberRepository: MemberRepository,
@@ -38,7 +38,7 @@ class KakaoOAuthService(
             ?: throw RuntimeException("카카오 억세스 토큰 접근 실패")
     }
 
-    override fun getUser(accessToken: String): OAuthMember {
+    override fun getUser(accessToken: String): OAuthMemberDto {
         val getUserURL = "https://kapi.kakao.com/v2/user/me"
 
         val oAuthCodeDto = webClient.post()
@@ -47,14 +47,13 @@ class KakaoOAuthService(
             .retrieve()
             .bodyToMono(OAuthCodeDto::class.java)
             .block() ?: throw RuntimeException("카카오 유저 정보 접근 실패")
-        return OAuthMember(
+        return OAuthMemberDto(
             socialType = getSocialType(),
             socialId = oAuthCodeDto.authenticationCode,
         )
     }
 
-    @Transactional
-    override fun login(oAuthMember: OAuthMember): Member {
-        return memberRepository.findBySocialIdAndDeletedFalse(oAuthMember.socialId) ?: memberRepository.save(Member.create(oAuthMember))
+    override fun login(oAuthMemberDto: OAuthMemberDto): Member {
+        return memberRepository.findBySocialIdAndDeletedFalse(oAuthMemberDto.socialId) ?: memberRepository.save(Member.create(oAuthMemberDto))
     }
 }
