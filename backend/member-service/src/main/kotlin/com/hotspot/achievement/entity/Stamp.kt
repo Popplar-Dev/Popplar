@@ -2,6 +2,7 @@ package com.hotspot.achievement.entity
 
 import com.hotspot.achievement.dto.StampReqDto
 import com.hotspot.global.entity.BaseEntity
+import com.hotspot.global.eureka.dto.HotPlaceResDto
 import jakarta.persistence.*
 
 @Entity
@@ -16,6 +17,8 @@ class Stamp(
 
     val hotPlaceId: Long,
 
+    val hotPlaceName: String,
+
     @Enumerated(EnumType.STRING)
     val category: Category,
 
@@ -27,11 +30,12 @@ class Stamp(
     }
 
     companion object {
-        fun create(memberId: Long, stampReqDto: StampReqDto): Stamp {
+        fun create(memberId: Long, hotPlaceResDto: HotPlaceResDto): Stamp {
             return Stamp(
                 memberId = memberId,
-                hotPlaceId = stampReqDto.hotPlaceId,
-                category = Category.parse(stampReqDto.categoryName),
+                hotPlaceId = hotPlaceResDto.id,
+                hotPlaceName = hotPlaceResDto.placeName,
+                category = Category.parse(hotPlaceResDto.category),
                 visitedCount = 0
             )
         }

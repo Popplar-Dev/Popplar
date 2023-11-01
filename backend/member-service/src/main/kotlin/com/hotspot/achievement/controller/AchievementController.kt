@@ -2,6 +2,7 @@ package com.hotspot.achievement.controller
 
 import com.hotspot.achievement.dto.AchievementResDto
 import com.hotspot.achievement.dto.StampReqDto
+import com.hotspot.achievement.dto.StampResDto
 import com.hotspot.achievement.service.AchievementService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -12,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/achievement")
-class AchievementController (
+class AchievementController(
 
     private val achievementService: AchievementService,
-){
+) {
 
     @GetMapping("/{memberId}")
     fun getMemberCategoryCountList(@PathVariable memberId: Long): AchievementResDto {
@@ -23,7 +24,10 @@ class AchievementController (
     }
 
     @PostMapping("/{memberId}")
-    fun createStamp(@PathVariable memberId: Long, @RequestBody stampReqDto: StampReqDto): AchievementResDto {
+    fun createStamp(
+        @PathVariable memberId: Long,
+        @RequestBody stampReqDto: StampReqDto
+    ): StampResDto {
         return achievementService.createStamp(memberId, stampReqDto)
     }
 }
