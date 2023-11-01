@@ -4,7 +4,6 @@ import { getToken } from './getAccessToken'
 import {BASE_URL} from './baseUrl'
 const accessToken = process.env.REACT_APP_ACCESS_TOKEN;
 
-
 // 전체 핫플레이스 조회
 export async function getAllHotplace() {
   const token = await getToken();
@@ -12,7 +11,7 @@ export async function getAllHotplace() {
     method: 'get',
     url: `${BASE_URL}/hot-place`,
     headers: { "access-token" : token }
-   }).then((res) => res.data._embedded.hotPlaceResDtoList)
+   }).then((res) => res)
 }
 
 // id로 핫플레이스 조회

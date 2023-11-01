@@ -111,7 +111,7 @@ const MapScreen: React.FC = () => {
 
   useEffect(() => {
     getAllHotplace()
-    .then((res) => (res))
+    .then((res) => console.log(res))
   }, [])
 
   return (
