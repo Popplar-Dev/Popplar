@@ -36,6 +36,7 @@ spring:
 ## eureka 설정
 eureka:
   instance:
+    hostname: k9a705.p.ssafy.io
     instance-id: hot-place-microservice-instance
 
   client:

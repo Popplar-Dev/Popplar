@@ -28,6 +28,12 @@ spring:
             - Path=/hot-place/**
           filters:
             - CustomAuthFilter
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/member/**
+          filters:
+            - CustomAuthFilter
       globalcors:
         cors-configurations:
           '[/**]':

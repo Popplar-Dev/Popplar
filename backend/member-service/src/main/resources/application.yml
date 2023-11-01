@@ -1,3 +1,6 @@
+server:
+  port: 8201
+
 spring:
   application:
     name: member-service
@@ -29,13 +32,14 @@ spring:
 
 eureka:
   instance:
+    hostname: k9a705.p.ssafy.io
     instance-id: member-microservice-instance
 
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://k9a705.p.ssafy.io:8761/eureka
 
 
 logging:
