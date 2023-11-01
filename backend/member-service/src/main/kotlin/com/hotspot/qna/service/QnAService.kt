@@ -55,6 +55,20 @@ class QnAService(
         return questionToQnAResDto(question)
     }
 
+    @Transactional
+    fun adoptAnswer(questionId: Long, answerId: Long): QnAResDto {
+        val question = findQuestionById(questionId)
+
+        if (question.adoptedAnswer != null) {
+            throw RuntimeException("이미 채택 하였습니다.")
+        }
+
+        val answer = findAnswerById(answerId)
+
+        question.adopt(answer)
+        return questionToQnAResDto(question)
+    }
+
     fun questionToQnAResDto(question: Question): QnAResDto {
         val questionResDto = questionToQuestionResDto(question)
         val qnaResDto = QnAResDto.create(questionResDto)
@@ -88,6 +102,11 @@ class QnAService(
     fun findQuestionById(questionId: Long): Question {
         return questionRepository.findByIdAndDeletedFalse(questionId)
             ?: throw RuntimeException("해당하는 질문이 없습니다.")
+    }
+
+    fun findAnswerById(answerId: Long): Answer {
+        return answerRepository.findByIdAndDeletedFalse(answerId)
+            ?: throw RuntimeException("해당하는 답변이 없습니다.")
     }
 
     fun findMemberById(memberId: Long): Member {
