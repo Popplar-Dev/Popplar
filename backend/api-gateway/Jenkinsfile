@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    stages {
+        // Gradle 빌드 스테이지: Spring Boot 프로젝트를 빌드합니다.
+        stage('Gradle Build') {
+            steps {
+                dir('backend/api-gateway') {
+                    sh 'chmod +x gradlew'
+                    sh './gradlew clean build -x test'
+                }
+                dir('backend/service_discovery') {
+                    sh 'chmod +x gradlew'
+                    sh './gradlew clean build -x test'
+                }
+            }
+        }
+
+        // docker-compose 기반 빌드
+        stage('Docker Build') {
+            steps {
+                dir('backend/api-gateway') {
+                    sh 'docker build -t api-gateway:latest .'
+                }
+                dir('backend/service_discovery') {
+                    sh 'docker build -t service-discovery:latest .'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir('backend/api-gateway') {
+                    sh 'docker rm -f api-gateway'
+                    sh 'docker run -d --env-file .env -e TZ=Asia/Seoul --name api-gateway -p 8000:8000 -u root api-gateway:latest'
+                }
+                dir('backend/service_discovery') {
+                    sh 'docker rm -f service-discovery'
+                    sh 'docker run -d -e TZ=Asia/Seoul --name service-discovery -p 8761:8761 -u root service-discovery:latest'
+                }
+            }
+        }
+
+        // 완료 스테이지: 더이상 사용되지 않는 Docker 이미지를 제거합니다.
+        stage('Finish') {
+            steps {
+                // 사용되지 않는 (dangling) 이미지를 찾아 제거합니다.
+                sh 'docker images -qf dangling=true | xargs -I{} docker rmi {}'
+            }
+        }
+    }
+}

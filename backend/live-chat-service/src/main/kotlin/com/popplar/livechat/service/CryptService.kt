@@ -1,0 +1,22 @@
+package com.popplar.livechat.service
+
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
+@Service
+@Transactional(readOnly = true)
+class CryptService (
+
+    @Value("\${SALT_A}")
+    private val saltA: Long,
+    @Value("\${SALT_B}")
+    private val saltB: Long,
+    @Value("\${SALT_C}")
+    private val saltC: Long,
+){
+
+    fun decrypt(id: Long): Long {
+        return id / (saltA * saltB * saltC)
+    }
+}
