@@ -4,7 +4,8 @@ import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
-
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from './components/recoil/userState';
 
 import BottomTab from './components/BottomTab/BottomTab';
 import FirstLanding from './components/Landing/FirstLanding';
@@ -25,6 +26,12 @@ function App() {
   };
 
   const Stack = createNativeStackNavigator();
+
+  // const userinfo = useRecoilValue(userInfoState);
+  // let initialRouteName = "BottomTab"; 
+  // if (userinfo.name === '새유저') {
+  //   initialRouteName = "Home"; 
+  // }
 
   return (
     <RecoilRoot>
