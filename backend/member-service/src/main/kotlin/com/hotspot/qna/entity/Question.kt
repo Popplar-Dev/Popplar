@@ -31,11 +31,15 @@ class Question(
         this.adoptedAnswer = answer
     }
 
+    fun update(content: String) {
+        this.content = content
+    }
+
     companion object {
-        fun create(cryptService: CryptService, hotPlaceId: Long, questionReqDto: QuestionReqDto): Question {
+        fun create(cryptService: CryptService, questionReqDto: QuestionReqDto): Question {
             return Question(
                 memberId = cryptService.decrypt(questionReqDto.memberId),
-                hotPlaceId = hotPlaceId,
+                hotPlaceId = questionReqDto.hotPlaceId,
                 content = questionReqDto.content
             )
         }
