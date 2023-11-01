@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { View, Text, Button, StyleSheet, Dimensions, Alert } from 'react-native';
+import { View, Text, Button, StyleSheet, Dimensions, Alert, TouchableOpacity } from 'react-native';
 import { PermissionsAndroid } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import WebView from 'react-native-webview';
@@ -29,14 +29,25 @@ type SpaceInfo = {
 }
 
 const MapScreen: React.FC = () => {
+  const { width } = Dimensions.get('window');
+  const halfScreenWidth = width / 2.3;
+  console.log(halfScreenWidth)
+  
+  let dynamicStyles = {
+    placeOptionBox: {
+      width: halfScreenWidth, // 화면의 절반에 해당하는 너비 설정
+      // borderWidth: 1,
+      // borderColor: 'red',
+    }
+  }
+  
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo>({})
-
   // bottom-sheet
   // ref
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   // variables
-  const snapPoints = useMemo(() => ['27.6%', '95%'], []);
+  const snapPoints = useMemo(() => ['26.95%', '95%'], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
@@ -115,15 +126,15 @@ const MapScreen: React.FC = () => {
           backgroundStyle={{ backgroundColor: '#2C2C2C' }}
         >
           
-          <View style={styles.bottomsheetContainer}>
-            <View style={styles.spaceName}>
-              <NameBox w={200} h={38} text={spaceInfo.place_name} />
-              <View style={styles.buttons}>
-                <Icon name="comments" size={20} color={'white'} style={styles.Icon}/>
-                <Icon name="gamepad" size={20} color={'white'} style={styles.Icon}/>
-                <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/>
-              </View>
+          <View style={styles.spaceName}>
+            <NameBox w={200} h={38} text={spaceInfo.place_name} />
+            <View style={styles.buttons}>
+              <Icon name="comments" size={20} color={'white'} style={styles.Icon}/>
+              <Icon name="gamepad" size={20} color={'white'} style={styles.Icon}/>
+              <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/>
             </View>
+          </View>
+          <View style={styles.bottomsheetContainer}>
 
           <View style={styles.previewContainer}>
             <View style={styles.previewTopContainer}>
@@ -135,17 +146,65 @@ const MapScreen: React.FC = () => {
             </View>
             <View style={styles.address}>
               <Icon name="phone" size={11} color={'white'} style={styles.phoneIcon}/>
-              <Text style={styles.bottomSheetPhone}>{spaceInfo.phone}</Text>
+              {spaceInfo.phone ? 
+              (<Text style={styles.bottomSheetPhone}>{spaceInfo.phone}</Text>)
+              :(<Text style={styles.bottomSheetPhone}>번호가 없습니다</Text>)}
             </View>
           </View>
 
           <View style={styles.placeDetail}>
             <View style={styles.info}>
-              <Icon name="map-pin" size={11} color={'white'} style={styles.mapIcon}/>
-              <Text style={styles.bottomSheetPhone}>{spaceInfo.place_url}</Text>
+              <Icon name="globe" size={11} color={'white'} style={styles.globeIcon}/>
+              {spaceInfo.place_url ? 
+              (<Text style={styles.bottomSheetPhone}>{spaceInfo.place_url}</Text>)
+              : (<Text style={styles.bottomSheetPhone}>페이지 주소가 없습니다</Text>)
+              }
             </View>
           </View>
+        
+          <View style={styles.qnaContainer}>
+            <View style={styles.qnaTitle}>
+              <Icon name="question" size={16} color={'white'} style={styles.qnaIcon}/>
+              <Text style={styles.optionName}>Q & A</Text>
+            </View>
+            <View style={styles.answerContainer}>
+              <Text>여기 답변 출력될거예요</Text>
+            </View>
+          </View>
+
+          <View style={styles.placeBottomContainer}>
+
+            <View style={dynamicStyles.placeOptionBox}>
+              <View style={styles.placeOptionTitle}>
+                <Icon name="comments" size={22} color={'white'} style={styles.qnaIcon}/>
+                <Text style={styles.placeOptionName}>CHAT</Text>
+              </View>
+              <View style={styles.placeOptionContent}>
+                <Text style={styles.placeFirstContent}>Let's start!</Text>
+                <Text style={styles.placeContent}>Popplar의 사람들과 채팅을 시작하세요</Text>
+                <TouchableOpacity onPress={() => {}} style={styles.placeOptionButton}>
+                  <Text style={{ color: 'white', textAlign: 'center'}}>채팅방 입장</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={dynamicStyles.placeOptionBox}>
+              <View style={styles.placeOptionTitle}>
+                <Icon name="gamepad" size={22} color={'white'} style={styles.qnaIcon}/>
+                <Text style={styles.placeOptionName}>GAME</Text>
+              </View>
+              <View style={styles.placeOptionContent}>
+                <Text style={styles.placeFirstContent}>Let's start!</Text>
+                <Text style={styles.placeContent}>Popplar의 사람들과 게임을 통해 경쟁하세요</Text>
+                <TouchableOpacity onPress={() => {}} style={styles.placeOptionButton}>
+                  <Text style={{ color: 'white', textAlign: 'center'}}>게임 시작하기</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+          </View>
         </View>
+
         </BottomSheetModal>
 
         {/* <Button title={'postMessage'} onPress={native_to_web}></Button>
@@ -206,20 +265,22 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 5,
     paddingLeft: 20,
+    paddingRight: 20,
 
     // borderWidth: 1, 
     // borderColor: 'red', 
   },
   spaceName: {
     flex: 0.06, 
-    flexDirection: 'row', 
+    flexDirection: 'row',
+    marginLeft: 20, 
     height: 30, 
     justifyContent: "space-between"
   },
   previewContainer: {
     flex: 0.1,
     marginTop: 10,
-    marginBottom: 12,
+    marginBottom: 8,
     lineHeight: 40,
   },
   previewTopContainer: {
@@ -228,6 +289,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     lineHeight: 40,
     paddingRight: 20,
+    marginBottom: 10,
     // width: 185, 
     // borderWidth: 1, 
     // borderColor: 'red', 
@@ -246,14 +308,14 @@ const styles = StyleSheet.create({
     lineHeight: 40,
   },
   mapIcon: {
-    margin: 8,
     marginTop: 8,
     marginLeft: 11,
+    marginRight: 9,
   },
   phoneIcon: {
     margin: 8,
     marginTop: 5,
-    marginLeft: 10,
+    marginLeft: 9,
   },
   Icon: {
     marginLeft: 13,
@@ -269,8 +331,96 @@ const styles = StyleSheet.create({
     // borderColor: 'red',
   },
   placeDetail: {
-    flex: 0.1,
+    flex: 0.06,
     // borderWidth: 1, 
     // borderColor: 'red',
+  },
+  globeIcon: {
+    margin: 5,
+    marginRight: 8,
+    marginLeft: 9,
+  },
+  qnaContainer: {
+    flex: 0.36,
+    marginTop: 5,
+    // borderWidth: 1, 
+    // borderColor: 'red',
+  },
+  qnaIcon: {
+    margin: 9,
+  },
+  qnaTitle: {
+    flex: 0.2,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    // borderWidth: 1, 
+    // borderColor: 'red',
+  },
+  optionName: {
+    color: 'white',
+    fontSize: 25,
+    width: 70,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    // marginLeft: 5,
+    // borderWidth: 1, 
+    // borderColor: 'red',
+  },
+  answerContainer: {
+    flex: 0.8,
+    marginTop: 9,
+    backgroundColor: '#8B90F7',
+    borderRadius: 20,
+    opacity: 0.5,
+    height: 2,
+    // borderWidth: 1, 
+    // borderColor: 'red',
+  },
+  placeBottomContainer: {
+    flex: 0.35,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    // borderWidth: 1, 
+    // borderColor: 'red',
+  },
+  placeOptionTitle: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 13,
+  },
+  placeOptionName: {
+    color: 'white',
+    fontSize: 18,
+    marginTop: 8,
+    fontWeight: 'bold',
+  },
+  placeOptionContent: {
+    marginTop: 10,
+    backgroundColor: '#8B90F733',
+    borderRadius: 14,
+    // borderWidth: 1, 
+    // borderColor: 'red',
+  },
+  placeFirstContent: {
+    color: 'white',
+    textAlign: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  placeContent: {
+    color: 'white',
+    opacity: 0.5,
+    textAlign: 'center',
+    marginBottom: 13,
+    lineHeight: 22,
+  },
+  placeOptionButton: {
+    height: 30,
+    paddingTop: 4,
+    backgroundColor: '#8B90F7',
+    borderRadius: 14,
   }
 })
