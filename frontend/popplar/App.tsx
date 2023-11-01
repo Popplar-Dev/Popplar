@@ -3,6 +3,8 @@ import {StatusBar} from 'expo-status-bar';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import { RecoilRoot } from 'recoil';
+
 
 import BottomTab from './components/BottomTab/BottomTab';
 import FirstLanding from './components/Landing/FirstLanding';
@@ -25,27 +27,29 @@ function App() {
   const Stack = createNativeStackNavigator();
 
   return (
-    <SafeAreaProvider> 
-      <SafeAreaView style={styles.container}>
-        {/* <StatusBar style="light" /> */}
-        <ImageBackground
-          source={require('./assets/stars.png')}
-          style={styles.backgroundImage}>
-          <NavigationContainer theme={navTheme}>
-            <Stack.Navigator initialRouteName="Home" 
-            screenOptions={{headerShown: false}}
-            >
-              <Stack.Screen name="FirstLanding" component={FirstLanding} />
-              <Stack.Screen name="LoginPage" component={LoginPage} />
-              <Stack.Screen name="BottomTab" component={BottomTab} />
-              <Stack.Screen name="Home" component={Home} />
-              {/* <Stack.Screen name="Main" component={Main} /> */}
-            </Stack.Navigator>
-            {/* <BottomTab /> */}
-          </NavigationContainer>
-        </ImageBackground>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <RecoilRoot>
+      <SafeAreaProvider> 
+        <SafeAreaView style={styles.container}>
+          {/* <StatusBar style="light" /> */}
+          <ImageBackground
+            source={require('./assets/stars.png')}
+            style={styles.backgroundImage}>
+            <NavigationContainer theme={navTheme}>
+              <Stack.Navigator initialRouteName="Home" 
+              screenOptions={{headerShown: false}}
+              >
+                <Stack.Screen name="FirstLanding" component={FirstLanding} />
+                <Stack.Screen name="LoginPage" component={LoginPage} />
+                <Stack.Screen name="BottomTab" component={BottomTab} />
+                <Stack.Screen name="Home" component={Home} />
+                {/* <Stack.Screen name="Main" component={Main} /> */}
+              </Stack.Navigator>
+              {/* <BottomTab /> */}
+            </NavigationContainer>
+          </ImageBackground>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </RecoilRoot>
   );
 }
 

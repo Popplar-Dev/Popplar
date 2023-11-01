@@ -4,19 +4,9 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import axios from "axios";
 import * as ImagePicker from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import PermissionUtil from '../utils/permissions'; 
-import { APP_PERMISSION_CODE } from '../utils/CommonCode'; 
-import Icon from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
-// import { ImagePickerModal } from '../Modals/ImagePickerModal'
-import {Alert} from 'react-native';
-interface UserInfo {
-  name: string;
-  exp: number;
-  id: number;
-  socialType: string;
-  profileImage: string;
-}
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../recoil/userState';
+import { useRecoilState } from 'recoil';
 
 function ProfileSetting() {
 	const [nickname, setNickname] = useState('') 
@@ -26,43 +16,11 @@ function ProfileSetting() {
   const [isEnabled, setIsEnabled] = useState(true);
   const toggleSwitch = (value: boolean) => setIsEnabled(value);
   const [photo ,setPhoto] = useState('')
-  const [userinfo, setUserInfo] = useState<UserInfo>({
-    name: '',
-    exp: 0,
-    id: 0,
-    socialType: '',
-    profileImage: ''});
-  
+  const [userinfo, setUserInfo] = useRecoilState(userInfoState);
 
   // useEffect(() => {
   //   PermissionUtil.cmmReqPermis([...APP_PERMISSION_CODE.camera, ...APP_PERMISSION_CODE.calendar, ...APP_PERMISSION_CODE.mediaLibaray]);
   // }, []);
-
-	useEffect(() => {
-    const loadUserInfo = async () => {
-      try {
-        const userinfoString = await AsyncStorage.getItem('userInfo');
-        if (userinfoString !== null) {
-          const userinfo = JSON.parse(userinfoString);
-          setUserInfo(userinfo);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    loadUserInfo();
-
-    // axios.get(
-    //     `http://10.0.2.2:8201/member/${userinfo.id}`,
-    //   )
-		// 	.then((response) => {
-		// 		setUserInfo(response.data)
-		// 		setNickname(response.data.name)
-		// 	})
-		// 	.catch((err) => {
-    //     console.log("에러 메시지 ::", err)
-    //   });
-  }, []);
 
 	const startEditing = () => {
     setIsEditing(true);
