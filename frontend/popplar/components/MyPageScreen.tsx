@@ -30,7 +30,6 @@ function MyPageScreen() {
     { name: "5", uri: require("../assets/planet/5.png") },
     { name: "6", uri: require("../assets/planet/6.png") },
   ];
-  // const [stampDetail, setStampDetail] = useState('')
 
 	useEffect(() => {
     axios.get(`http://10.0.2.2:8201/achievement/${userinfo.id}`)

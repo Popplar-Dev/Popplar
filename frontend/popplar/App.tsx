@@ -4,13 +4,12 @@ import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
-import { useRecoilValue } from 'recoil';
-import { userInfoState } from './components/recoil/userState';
 
 import BottomTab from './components/BottomTab/BottomTab';
 import FirstLanding from './components/Landing/FirstLanding';
 import LoginPage from './components/Landing/LoginPage';
 import Home from './components/Landing/Home';
+import UserSetting from './components/Landing/UserSetting';
 
 function App() {
   const navTheme = {
@@ -26,12 +25,6 @@ function App() {
   };
 
   const Stack = createNativeStackNavigator();
-
-  // const userinfo = useRecoilValue(userInfoState);
-  // let initialRouteName = "BottomTab"; 
-  // if (userinfo.name === '새유저') {
-  //   initialRouteName = "Home"; 
-  // }
 
   return (
     <RecoilRoot>
@@ -49,6 +42,7 @@ function App() {
                 <Stack.Screen name="LoginPage" component={LoginPage} />
                 <Stack.Screen name="BottomTab" component={BottomTab} />
                 <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen name="UserSetting" component={UserSetting} />
                 {/* <Stack.Screen name="Main" component={Main} /> */}
               </Stack.Navigator>
               {/* <BottomTab /> */}

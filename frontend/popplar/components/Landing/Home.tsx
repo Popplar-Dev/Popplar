@@ -12,7 +12,7 @@ export default function Home() {
 	const navigation = useNavigation();
 	const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
-	const getUserInfo = async () => {
+	const isLogin = async () => {
 		const result = await AsyncStorage.getItem('userInfo');
 		if (result !== null) {
 			const userinfo = JSON.parse(result);
@@ -29,13 +29,21 @@ export default function Home() {
 		return null;
 	}
 
-	const storeUserInfo = async (returnValue:any) => {
-    try {
-      setUserInfo(returnValue)
-      await AsyncStorage.setItem('userInfo', JSON.stringify(returnValue));
-    } catch (error) {
-    }
-  }
+	const newLogin = async () => {
+		const result = await AsyncStorage.getItem('userInfo');
+		if (result !== null) {
+			const userinfo = JSON.parse(result);
+			console.log(userinfo.name)
+			if (userinfo.name==='새 유저') {
+				navigation.navigate("LoginPage" as never)
+			} else {
+				setUserInfo(userinfo)
+				navigation.navigate("LoginPage" as never)
+				// navigation.navigate("BottomTab" as never)
+			}
+		}
+		return null;
+	}
 
     return(
       <View style={Styles.container}> 
@@ -45,13 +53,13 @@ export default function Home() {
 					</Text>	
 				</View>     
 				<Pressable
-					onPress={() => navigation.navigate("LoginPage" as never)}
+					onPress={newLogin}
 					style={Styles.kakaologin}>
 					<Image source={require('popplar/assets/kakao_login.png')}/>
 				</Pressable>
 
 				<Pressable
-					onPress={getUserInfo}
+					onPress={isLogin}
 					// onPress={() => navigation.navigate("BottomTab" as never)}
 					style={Styles.start}>
 					<Text style={Styles.text}>시작하기</Text>
