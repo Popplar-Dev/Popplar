@@ -3,6 +3,7 @@ import styles from './styles/map.module.css'
 import './styles/frame.css'
 
 import { BiSolidRocket } from 'react-icons/bi';
+import { Place, hotPlaceResDto } from '../types/place'
 
 import { useRecoilState } from 'recoil';
 import { HotLatLngState } from "../recoil/hotLatLng/index";
@@ -11,21 +12,25 @@ import { CenterLngState } from "../recoil/centerLng/index"
 
 import { LatLng } from '../types/LatLng'
 
+import { getAllHotplace, getIdHotplace } from '../api/getHotplace'
+
 const { kakao } = window;
 
 export default function Map () {
   const [searchPlaceObj, setSearchPlacObj] = useState<any | null>(null)
   const [visibleMap, setVisibleMap] = useState<any | null>(null)
+  const [hotplaceList, setHotplaceList] = useState<hotPlaceResDto[]>([])
   
   const [hotPlaceLatLng, sethotPlaceLatLng] = useRecoilState<LatLng>(HotLatLngState);
   const [centerLat, setCenterLat] = useRecoilState<string>(CenterLatState);
   const [centerLng, setCenterLng] = useRecoilState<string>(CenterLngState);
 
-
   useEffect(() => {
     // 장소 검색 객체를 생성합니다
     var ps = new kakao.maps.services.Places();  
     setSearchPlacObj(ps)
+    getAllHotplace()
+    .then((res) => setHotplaceList(res))
   }, [])
 
   useEffect(() => {
@@ -92,6 +97,7 @@ export default function Map () {
     if (hotPlaceLatLng.x) {
       const Lat = hotPlaceLatLng.y.slice(0, -8)
       const Lng = hotPlaceLatLng.x.slice(0, -8)
+      console.log('이건 제대로 돼?', Lat, Lng)
       setCenterLat(Lat)
       setCenterLng(Lng)
       console.log(Lat, Lng)
@@ -120,84 +126,75 @@ export default function Map () {
     // 마커가 지도 위에 표시되도록 설정합니다
     marker.setMap(map);
 
-
     // 핫플 마커 띄우기
-    var positions = [
-      {
-          name: '스타벅스 역삼대로점',
-          address: '서울 강남구 테헤란로 211 한국고등교육재단빌딩1층', 
-          latlng: new kakao.maps.LatLng(37.50189, 127.0393)
-      },
-      {
-          name: '역삼역 2호선', 
-          address: '서울 강남구 테헤란로 지하 156', 
-          latlng: new kakao.maps.LatLng(37.50067, 127.0364)
-      },
-      {
-          name: '양자강', 
-          address: '서울 강남구 테헤란로34길 7',
-          latlng: new kakao.maps.LatLng(37.50112, 127.0403)
-      },
-      {
-          name: '공차 역삼GFC점',
-          address: '서울 강남구 논현로85길 13',
-          latlng: new kakao.maps.LatLng(37.49909, 127.0362)
-      },
-      {
-          name: '지아니스나폴리 역삼점',
-          address: '서울 강남구 논현로94길 15',
-          latlng: new kakao.maps.LatLng(37.50267, 127.0375)
-      },
-  ];
+    var positions = hotplaceList
 
   var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
   
-  for (var i = 0; i < positions.length; i ++) {
-      // 마커 이미지의 이미지 크기 입니다
-      var imageSize = new kakao.maps.Size(24, 35); 
+  if (positions) {
 
-      // 마커 이미지를 생성합니다    
-      var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
-
-      // 마커를 생성합니다
-      var hotMarker = new kakao.maps.Marker({
-          map: map, // 마커를 표시할 지도
-          position: positions[i].latlng, // 마커의 위치
-          title : positions[i].name,
-          image : markerImage // 마커 이미지 
-      });
-
-      // 마커가 지도 위에 표시되도록 설정합니다
-      // hotMarker.setMap(map);
+    for (var i = 0; i < positions.length; i ++) {
+        console.log('position', positions[i])
+        // 마커 이미지의 이미지 크기 입니다
+        var imageSize = new kakao.maps.Size(24, 35); 
   
-      // 마커에 표시할 인포윈도우를 생성합니다 
-      // var infowindow = new kakao.maps.InfoWindow({
-      //     content: positions[i].content // 인포윈도우에 표시할 내용
-      // });
+        // 마커 이미지를 생성합니다    
+        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
   
-      // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
-      // 이벤트 리스너로는 클로저를 만들어 등록합니다 
-      // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-      // kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
-      // kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
-      const La = positions[i].latlng.La
-      const Ma = positions[i].latlng.Ma
-      const name = positions[i].name
-      const address = positions[i].address
-      kakao.maps.event.addListener(hotMarker, 'click', function() {
-        // 클릭한 위도, 경도 정보를 가져옵니다 
-        panToHandler(La, Ma);
-        requestPermission({
-          name, address
+        const La = positions[i].y.toString().slice(0, -8)
+        const Ma = positions[i].x.toString().slice(0, -8)
+  
+        // 마커를 생성합니다
+        var hotMarker = new kakao.maps.Marker({
+            map: map, // 마커를 표시할 지도
+            position: new kakao.maps.LatLng(La, Ma),
+            title : positions[i].placeName,
+            image : markerImage // 마커 이미지 
         });
-      })
-      // marker.setMap(map);
-    }
+  
+        // 마커가 지도 위에 표시되도록 설정합니다
+        // hotMarker.setMap(map);
+    
+        // 마커에 표시할 인포윈도우를 생성합니다 
+        // var infowindow = new kakao.maps.InfoWindow({
+        //     content: positions[i].content // 인포윈도우에 표시할 내용
+        // });
+    
+        // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
+        // 이벤트 리스너로는 클로저를 만들어 등록합니다 
+        // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+        // kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+        // kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+        const place_name = positions[i].placeName
+        const road_address_name = positions[i].roadAddressName
+        const category_group_name = positions[i].category
+        const id = positions[i].id
+        kakao.maps.event.addListener(hotMarker, 'click', function() {
+          // 클릭한 위도, 경도 정보를 가져옵니다 
+          panToHandler(La, Ma);
+          getIdHotplace(id)
+          .then((res) => res.data)
+          .then((res) => requestPermission({
+            id, 
+            place_name, 
+            road_address_name, 
+            category_group_name, 
+            likeCount: res.likeCount,
+            phone: res.phone,
+            placeType: res.placeType,
+            visitorCount: res.visitorCount,
+            y: res.y,
+            x: res.x
+          }))
+        })
+        // marker.setMap(map);
+      }
+  }
   
     // 핫플 마커 클릭시 중심으로 이동
-    function panToHandler(La: number, Ma: number) {
+    function panToHandler(La: string, Ma: string) {
       // 이동할 위도 경도 위치를 생성합니다 \
-      var moveLatLon = new kakao.maps.LatLng(Ma, La);
+      var moveLatLon = new kakao.maps.LatLng(La, Ma);
       
       // 지도 중심을 부드럽게 이동시킵니다
       // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
@@ -207,7 +204,7 @@ export default function Map () {
       }, 400)             
     }        
   }, 100)  
-}, [centerLat, centerLng])
+}, [centerLat, centerLng, hotplaceList])
 
   return (
   <div className={`container`}>
