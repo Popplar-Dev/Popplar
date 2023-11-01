@@ -36,7 +36,7 @@ spring:
 ## eureka 설정
 eureka:
   instance:
-    hostname: localhost
+    hostname: hot-place
     instance-id: hot-place-microservice-instance
 
   client:
