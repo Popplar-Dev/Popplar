@@ -6,6 +6,7 @@ enum class Category {
     SCHOOL,
     CULTURAL,
     ATTRACTION,
+    NOT_YET,
     ETC;
 
     fun toKor(): String {
@@ -15,6 +16,7 @@ enum class Category {
             SCHOOL -> "학교"
             CULTURAL -> "문화시설"
             ATTRACTION -> "관광명소"
+            NOT_YET -> "오류"
             ETC -> "기타"
         }
     }

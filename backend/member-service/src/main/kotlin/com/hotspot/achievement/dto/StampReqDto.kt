@@ -4,5 +4,5 @@ class StampReqDto (
 
     val hotPlaceId: Long,
 
-    val categoryName: String,
+//    val categoryName: String,
 )

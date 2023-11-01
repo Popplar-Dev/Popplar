@@ -1,6 +1,8 @@
 package com.hotspot.visitor.service;
 
+import com.hotspot.hotplace.dto.HotPlaceResDto;
 import com.hotspot.hotplace.entity.HotPlace;
+import com.hotspot.hotplace.mapper.HotPlaceMapper;
 import com.hotspot.hotplace.repository.HotPlaceRepository;
 import com.hotspot.visitor.dto.VisitorReqDto;
 import com.hotspot.visitor.dto.VisitorResDto;
@@ -36,14 +38,13 @@ public class VisitorService {
     }
 
     @Transactional
-    public VisitorResDto insertVisitor(VisitorReqDto visitorReqDto) {
+    public HotPlaceResDto insertVisitor(VisitorReqDto visitorReqDto) {
         Long memberId = visitorReqDto.getMemberId();
         Long hotPlaceId = visitorReqDto.getHotPlaceId();
         LocalDateTime visitedDate = visitorReqDto.getVisitedDate();
 
         if (visitorRepository.findVistorsByMemberIdAndHotPlaceIdAndVisitedDate(memberId, hotPlaceId,
             visitedDate).isPresent()) {
-            System.out.println("visitedDate = " + visitedDate);
             throw new RuntimeException("이미 오늘 핫플레이스에 방문한 방문객입니다.");
         }
 
@@ -54,6 +55,6 @@ public class VisitorService {
 
         visitorRepository.save(visitor);
 
-        return VisitorMapper.INSTANCE.entityToVisitorResDto(visitor);
+        return HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
     }
 }
