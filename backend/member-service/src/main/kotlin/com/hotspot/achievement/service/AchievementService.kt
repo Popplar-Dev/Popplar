@@ -4,6 +4,7 @@ import com.hotspot.achievement.dto.AchievementResDto
 import com.hotspot.achievement.dto.MemberCategoryCountResDto
 import com.hotspot.achievement.dto.StampReqDto
 import com.hotspot.achievement.dto.StampResDto
+import com.hotspot.achievement.entity.Category
 import com.hotspot.achievement.entity.MemberCategoryCount
 import com.hotspot.achievement.entity.Stamp
 import com.hotspot.achievement.repository.MemberCategoryCountRepository
@@ -70,17 +71,18 @@ class AchievementService(
 
         val achievementResDto = AchievementResDto.create()
 
-        stampRepository.findAllByMemberId(decryptedId)
-            .map {
-                achievementResDto.stampResDtoList.add(StampResDto.create(it))
-            }
-
-        memberCategoryCountRepository.findByMemberId(decryptedId)
-            .map {
-                achievementResDto.memberCategoryResDtoList.add(
-                    MemberCategoryCountResDto.create(it)
-                )
-            }
+        achievementResDto.memberCategoryResDtoList.addAll(
+            Category.values()
+                .filter { it != Category.NOT_YET }
+                .map {
+                    MemberCategoryCountResDto.create(
+                        it,
+                        memberCategoryCountRepository.findByMemberIdAndCategory(
+                            decryptedId,
+                            it
+                        )?.visitedSet ?: 0
+                    )
+                })
 
         return achievementResDto
     }

@@ -1,6 +1,5 @@
 package com.hotspot.achievement.entity
 
-import com.hotspot.achievement.dto.StampReqDto
 import com.hotspot.global.entity.BaseEntity
 import com.hotspot.global.eureka.dto.HotPlaceResDto
 import jakarta.persistence.*
