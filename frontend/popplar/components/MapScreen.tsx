@@ -19,13 +19,17 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 type SpaceInfo = {
+  id: string
   place_name: string
   road_address_name: string
-  category_name: string
   category_group_name: string
-  id: string
+  likeCount: number
   phone: string
-  place_url: string
+  placeType: string
+  visitorCount: number
+  y: string
+  x: string
+  // place_url: string
 }
 
 const MapScreen: React.FC = () => {
@@ -152,7 +156,7 @@ const MapScreen: React.FC = () => {
             </View>
           </View>
 
-          <View style={styles.placeDetail}>
+          {/* <View style={styles.placeDetail}>
             <View style={styles.info}>
               <Icon name="globe" size={11} color={'white'} style={styles.globeIcon}/>
               {spaceInfo.place_url ? 
@@ -160,7 +164,7 @@ const MapScreen: React.FC = () => {
               : (<Text style={styles.bottomSheetPhone}>페이지 주소가 없습니다</Text>)
               }
             </View>
-          </View>
+          </View> */}
         
           <View style={styles.qnaContainer}>
             <View style={styles.qnaTitle}>
@@ -341,7 +345,7 @@ const styles = StyleSheet.create({
     marginLeft: 9,
   },
   qnaContainer: {
-    flex: 0.36,
+    flex: 0.4,
     marginTop: 5,
     // borderWidth: 1, 
     // borderColor: 'red',
