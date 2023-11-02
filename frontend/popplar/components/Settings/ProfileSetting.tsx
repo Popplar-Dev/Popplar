@@ -33,7 +33,6 @@ function ProfileSetting() {
 				name: newNickname,
 				profileImage: "url",
 			};
-			console.log(userinfo)
 			const isLogin = async () => {
         const AccessToken = await AsyncStorage.getItem('userAccessToken');
         if (AccessToken !== null) {
@@ -47,12 +46,15 @@ function ProfileSetting() {
 					)
 					.then((response) => {
 						setUserInfo({ ...userinfo, name: newNickname });
-            AsyncStorage.setItem('userInfo', JSON.stringify(userinfo));
 						setIsEditing(false);
           })
 					.catch((err) => {
 						console.error("실패...", err);
-					});
+					}); 
+          await AsyncStorage.setItem('userInfo', JSON.stringify(userinfo));
+          const a = await AsyncStorage.getItem('userAccessToken')
+          // console.log(userinfo)
+          // console.log(a)
 				}
 			}
 			isLogin()
