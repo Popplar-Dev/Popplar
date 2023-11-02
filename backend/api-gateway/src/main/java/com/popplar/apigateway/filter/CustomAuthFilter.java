@@ -3,6 +3,7 @@ package com.popplar.apigateway.filter;
 import com.popplar.apigateway.jwt.service.JwtService;
 import java.util.List;
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-
+@Slf4j
 @Component
 public class CustomAuthFilter extends AbstractGatewayFilterFactory<CustomAuthFilter.Config> {
 
@@ -42,6 +43,7 @@ public class CustomAuthFilter extends AbstractGatewayFilterFactory<CustomAuthFil
 
         return ((exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
+            log.info(":::::::::::::::::::::::::;;filter in:::::::::::::::::::::::::;;");
             System.out.println("filter in");
 
             if (!request.getHeaders().containsKey("Access-Token")) {

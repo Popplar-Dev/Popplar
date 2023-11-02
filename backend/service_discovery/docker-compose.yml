@@ -1,0 +1,11 @@
+version: '3.1'
+
+services:
+  backend:
+    image: service-discovery:latest
+    container_name: service-discovery
+    hostname: service-discovery
+    ports:
+      - "8761:8761"
+    build:
+      dockerfile: Dockerfile
