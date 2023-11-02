@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { View, Text, Button, StyleSheet, Dimensions, Alert, TouchableOpacity } from 'react-native';
-import { PermissionsAndroid } from 'react-native';
+import { Platform, PermissionsAndroid } from "react-native";
 import Geolocation from '@react-native-community/geolocation';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-
 import { getAllHotplace } from './services/getHotplace'
 
 import {
@@ -16,6 +15,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import NameBox from './NameBox/NameBox'
 import PlaceOptionBox from './PlaceOptionBox/PlaceOptionBox'
+import GeolocationPermission from './GeolocationPermission/GeolocationPermission'
 import { FlipInEasyX } from 'react-native-reanimated';
 
 const windowWidth = Dimensions.get('window').width;
@@ -116,6 +116,7 @@ const MapScreen: React.FC = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1}}>
+      <GeolocationPermission />
       <BottomSheetModalProvider>
       <View style={styles.container}>
         <BottomSheetModal
