@@ -3,7 +3,7 @@ server:
   ssl:
     enabled: true
     key-store: classpath:keystore.p12 # 키 스토어 파일의 경로
-    key-store-password: your_keystore_password # 키 스토어 비밀번호
+    key-store-password: dhwnstjr12! # 키 스토어 비밀번호
     key-store-type: PKCS12
     key-alias: tomcat
 
