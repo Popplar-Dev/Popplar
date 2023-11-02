@@ -1,5 +1,6 @@
 package com.hotspot.visitor.service;
 
+import com.hotspot.global.exception.exceptions.BadRequestException;
 import com.hotspot.hotplace.dto.HotPlaceResDto;
 import com.hotspot.hotplace.entity.HotPlace;
 import com.hotspot.hotplace.mapper.HotPlaceMapper;
@@ -45,12 +46,12 @@ public class VisitorService {
 
         if (visitorRepository.findVistorsByMemberIdAndHotPlaceIdAndVisitedDate(memberId, hotPlaceId,
             visitedDate).isPresent()) {
-            throw new RuntimeException("이미 오늘 핫플레이스에 방문한 방문객입니다.");
+            throw new BadRequestException("이미 오늘 핫플레이스에 방문한 방문객입니다.");
         }
 
         Visitor visitor = VisitorMapper.INSTANCE.VisitorReqDtoToEntity(visitorReqDto);
         HotPlace hotPlace = hotPlaceRepository.findById(hotPlaceId)
-            .orElseThrow(() -> new RuntimeException("핫플레이스가 존재하지 않습니다."));
+            .orElseThrow(() -> new BadRequestException("핫플레이스가 존재하지 않습니다."));
         visitor.updateHotPlace(hotPlace);
 
         visitorRepository.save(visitor);

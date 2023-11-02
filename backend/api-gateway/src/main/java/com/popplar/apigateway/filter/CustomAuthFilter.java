@@ -23,7 +23,7 @@ public class CustomAuthFilter extends AbstractGatewayFilterFactory<CustomAuthFil
     private Long saltA;
     @Value("${SALT_B}")
     private Long saltB;
-    @Value("${SALT_A}")
+    @Value("${SALT_C}")
     private Long saltC;
 
     private JwtService jwtService;
