@@ -1,16 +1,17 @@
 import axios from 'axios';
 import { Place } from '../types/place'
+import { getToken } from './getAccessToken'
 import {BASE_URL} from './baseUrl'
-import {AsyncStorage} from 'react-native';
 const accessToken = process.env.REACT_APP_ACCESS_TOKEN;
 
 // 전체 핫플레이스 조회
 export async function getAllHotplace() {
+  const token = await getToken();
   return await axios({
     method: 'get',
     url: `${BASE_URL}/hot-place`,
-    headers: { "access-token" : accessToken }
-   }).then((res) => res.data._embedded.hotPlaceResDtoList)
+    headers: { "access-token" : token }
+   }).then((res) => res)
 }
 
 // id로 핫플레이스 조회
