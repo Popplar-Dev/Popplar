@@ -1,10 +1,29 @@
 import { useState } from 'react';
-import {View, Pressable, TextInput, StyleSheet} from 'react-native';
+import {View, Pressable, TextInput, Keyboard, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function ChatInput() {
+type ChatInputProps = {
+  onSend: Function; 
+}
+type ChatMessage = {
+  messageType: 'me' | 'others';
+  memberId: number;  
+  nickname: string; 
+  profilePic?: string;  
+  content: string; 
+  date?: string;
+  time?: string; 
+}
+
+export default function ChatInput({onSend}: ChatInputProps) {
 
   const [inputText, setInputText] = useState("");
+
+  const handleSend = () => {
+    onSend(inputText);
+    setInputText(""); 
+    Keyboard.dismiss();
+  }
 
   return (
     <View style={styles.inputContainer}>
@@ -23,6 +42,7 @@ export default function ChatInput() {
       </View>
       <View style={styles.sendButtonContainerOuter}>
         <Pressable
+          onPress={handleSend}
           style={styles.sendButtonContainerInner}
           android_ripple={{color: '#464646'}}>
           <Icon name="send" size={25} color="#8B90F7" />
