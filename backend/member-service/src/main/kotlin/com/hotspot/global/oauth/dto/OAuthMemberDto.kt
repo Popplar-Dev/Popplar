@@ -1,8 +1,8 @@
-package com.hotspot.global.oauth
+package com.hotspot.global.oauth.dto
 
 import com.hotspot.member.entity.SocialType
 
-class OAuthMember(
+class OAuthMemberDto(
     val socialType: SocialType,
     val socialId: String,
 )

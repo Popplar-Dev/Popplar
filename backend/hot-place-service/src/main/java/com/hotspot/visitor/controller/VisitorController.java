@@ -1,5 +1,6 @@
 package com.hotspot.visitor.controller;
 
+import com.hotspot.hotplace.dto.HotPlaceResDto;
 import com.hotspot.visitor.dto.VisitorReqDto;
 import com.hotspot.visitor.dto.VisitorResDto;
 import com.hotspot.visitor.service.VisitorService;
@@ -17,13 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/visitor")
+@RequestMapping("/hot-place")
 @Slf4j
 public class VisitorController {
 
     private final VisitorService visitorService;
 
-    @GetMapping("/{hotPlaceId}")
+    @GetMapping("/visitor/{hotPlaceId}")
     public CollectionModel<EntityModel<VisitorResDto>> findAllVisitor(
         @PathVariable Long hotPlaceId) {
         List<EntityModel<VisitorResDto>> visitorModelList = visitorService.findAllVisitor(
@@ -35,10 +36,10 @@ public class VisitorController {
         return CollectionModel.of(visitorModelList);
     }
 
-    @PostMapping
-    public EntityModel<VisitorResDto> insertVisitor(@RequestBody VisitorReqDto visitorReqDto) {
-        VisitorResDto visitorResDto = visitorService.insertVisitor(visitorReqDto);
+    @PostMapping("/visitor")
+    public EntityModel<HotPlaceResDto> insertVisitor(@RequestBody VisitorReqDto visitorReqDto) {
+        HotPlaceResDto hotPlaceResDto = visitorService.insertVisitor(visitorReqDto);
 
-        return EntityModel.of(visitorResDto);
+        return EntityModel.of(hotPlaceResDto);
     }
 }

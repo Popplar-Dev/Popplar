@@ -22,12 +22,40 @@ spring:
             - Path=/chat/**
           filters:
             - CustomAuthFilter
+
         - id: hot-place-service
           uri: lb://HOT-PLACE-SERVICE
           predicates:
             - Path=/hot-place/**
+            - Path=/visitor/**
           filters:
             - CustomAuthFilter
+
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/member/**
+            - Path=/qna/**
+            - Path=/message/**
+            - Path=/achievement/**
+          filters:
+            - CustomAuthFilter
+
+        - id: game-service
+          uri: lb://GAME-SERVICE
+          predicates:
+            - Path=/game/**
+          filters:
+            - CustomAuthFilter
+
+        - id: live-chat-service
+          uri: lb://LIVE-CHAT-SERVICE
+          predicates:
+            - Path=/**
+            - Path=/chatting-member/**
+          filters:
+            - CustomAuthFilter
+
       globalcors:
         cors-configurations:
           '[/**]':

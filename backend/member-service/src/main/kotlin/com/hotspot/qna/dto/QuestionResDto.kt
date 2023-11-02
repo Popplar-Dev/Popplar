@@ -20,7 +20,9 @@ class QuestionResDto(
 
     val createdAt: LocalDateTime,
 
-    val updatedAt: LocalDateTime
+    val updatedAt: LocalDateTime,
+
+    val adoptedAnswerId: Long?,
 ) {
 
     companion object {
@@ -33,7 +35,8 @@ class QuestionResDto(
                 memberName = memberName,
                 memberProfileImage = memberProfileImage,
                 createdAt = question.createdAt,
-                updatedAt = question.updatedAt
+                updatedAt = question.updatedAt,
+                adoptedAnswerId = question.adoptedAnswer?.id
             )
         }
     }
