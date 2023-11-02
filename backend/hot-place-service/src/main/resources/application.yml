@@ -5,8 +5,8 @@ server:
 spring:
   cache:
     redis:
-      host: localhost
-#      host: k9a705.p.ssafy.io
+#      host: localhost
+      host: k9a705.p.ssafy.io
       port: 6379
     type: redis
   application:
