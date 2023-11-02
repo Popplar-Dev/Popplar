@@ -2,6 +2,9 @@ server:
   port: 8203
 
 spring:
+  application:
+    name: live-chat-service
+
   config:
     import: optional:file:.env[.properties]
   datasource:
