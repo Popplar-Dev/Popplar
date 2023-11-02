@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+  database:
+    image: mysql:8.0
+    container_name: mysql-container-live-chat
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PWD}
+    ports:
+      - 3319:3306
+    volumes:
+      - mysql-db:/var/lib/mysql
+
+  backend:
+    image: popplar-live-chat:latest
+    container_name: live-chat
+    hostname: live-chat
+    env_file:
+      - .env
+    ports:
+      - "8203:8203"
+    build:
+      dockerfile: Dockerfile
+
+volumes:
+  mysql-db:

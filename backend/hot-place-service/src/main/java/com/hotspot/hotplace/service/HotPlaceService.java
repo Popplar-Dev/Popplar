@@ -5,9 +5,11 @@ import com.hotspot.hotplace.dto.HotPlaceReqDto;
 import com.hotspot.hotplace.entity.HotPlace;
 import com.hotspot.hotplace.entity.HotPlaceType;
 import com.hotspot.hotplace.entity.Like;
+import com.hotspot.hotplace.entity.MemberPosition;
 import com.hotspot.hotplace.mapper.HotPlaceMapper;
 import com.hotspot.hotplace.repository.HotPlaceRepository;
 import com.hotspot.hotplace.repository.LikeRepository;
+import com.hotspot.hotplace.repository.MemberPositionRepository;
 import com.hotspot.visitor.repository.VisitorRepository;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -27,6 +29,7 @@ public class HotPlaceService {
     private final VisitorRepository visitorRepository;
     private final HotPlaceRepository hotPlaceRepository;
     private final LikeRepository likeRepository;
+    private final MemberPositionRepository memberPositionRepository;
 
     public List<HotPlaceResDto> findAllHotPlace() {
         List<HotPlace> hotPlaceList = hotPlaceRepository.findAll();
@@ -97,6 +100,20 @@ public class HotPlaceService {
         hotPlace.decreaseLikeCount();
     }
 
+    public void insertMemberPosition(MemberPosition memberPosition) {
+//        System.out.println("memberPosition.getMemberId() = " + memberPosition.getMemberId());
+//        if (memberPositionRepository.existsByMemberId(memberPosition.getMemberId())) {
+//            System.out.println("있다고 뜸:::::::::::::::::::::::::");
+//            memberPositionRepository.deleteAllByMemberId(memberPosition.getMemberId());
+//        }
+        memberPositionRepository.save(memberPosition);
+    }
+
+    public List<MemberPosition> findAllMemberPosition(Long hotPlaceId) {
+        return memberPositionRepository.findAllByHotPlaceId(
+            hotPlaceId);
+    }
+
     // -- 예외 처리용 코드 -- //
     public HotPlace findHotPlaceById(Long hotPlaceId) {
         return hotPlaceRepository.findById(hotPlaceId)
@@ -114,5 +131,6 @@ public class HotPlaceService {
             return "기타";
         }
     }
+
 }
 
