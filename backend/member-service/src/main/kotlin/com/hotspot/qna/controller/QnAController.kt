@@ -29,6 +29,7 @@ class QnAController(
         @RequestHeader("Member-Id") myId: String,
         @RequestBody questionReqDto: QuestionReqDto
     ): QnAResDto {
+        println("!!!!!!\n\n\n\n$myId\n\n\n\n\n!!!!!!!")
         return qnaService.createQuestion(myId.toLong(), questionReqDto)
     }
 
