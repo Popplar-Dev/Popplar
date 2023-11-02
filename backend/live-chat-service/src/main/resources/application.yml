@@ -1,0 +1,45 @@
+server:
+  port: 8203
+
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_ID}
+    password: ${DB_PWD}
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 5
+      connection-timeout: 10000
+      connection-init-sql: SELECT 1
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      auto-commit: true
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 1000
+
+
+eureka:
+  instance:
+    hostname: k9a705.p.ssafy.io
+    instance-id: live-chat-microservice-instance
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://k9a705.p.ssafy.io:8761/eureka
+
+
+logging:
+  level:
+    root: info
