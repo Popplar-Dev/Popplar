@@ -26,36 +26,67 @@ export default function QnaList() {
   const handleCreateQuestion = (newQuestion) => {
     
     const requestData = {
+      hotPlaceId: 21414107,
       memberId: userinfo.id, 
       content: newQuestion, 
     };
-    axios.post(`http://10.0.2.2:8201/qna/2`, requestData)
-      .then((response) => {
-        setModalVisible(false);
-        axios.get(`http://10.0.2.2:8201/qna/2`)
+    const isLogin = async () => {
+      const AccessToken = await AsyncStorage.getItem('userAccessToken');
+      if (AccessToken !== null) {
+        const userAccessToken = JSON.parse(AccessToken);
+        axios.post(`https://k9a705.p.ssafy.io:8000/member/qna/question`, requestData,
+          {
+            headers: {
+              'Access-Token': userAccessToken,
+            },
+          }
+        )
           .then((response) => {
-            setQnaData(response.data.reverse());
+            setModalVisible(false);
+            axios.get(`https://k9a705.p.ssafy.io:8000/member/qna/hotplace/21414107`, 
+              {
+                headers: {
+                  'Access-Token': userAccessToken,
+                },
+              }
+            )
+            .then((response) => {
+              setQnaData(response.data.reverse())
+            })
+            .catch((err) => {
+              console.log("에러 메시지 :", err)
+            });
           })
           .catch((err) => {
             console.log("에러 메시지 :", err);
           });
-      })
-      .catch((err) => {
-        console.log("에러 메시지 :", err);
-      });
+      }
+    }
+    isLogin()
   };
 
 
   useEffect(() => {
-    axios.get(
-        `http://10.0.2.2:8201/qna/2`, 
-      )
-			.then((response) => {
-        setQnaData(response.data.reverse())
-			})
-			.catch((err) => {
-        console.log("에러 메시지 :", err)
-      });
+    const isLogin = async () => {
+      const AccessToken = await AsyncStorage.getItem('userAccessToken');
+      if (AccessToken !== null) {
+        const userAccessToken = JSON.parse(AccessToken);
+        axios.get(`https://k9a705.p.ssafy.io:8000/member/qna/hotplace/21414107`, 
+          {
+            headers: {
+              'Access-Token': userAccessToken,
+            },
+          }
+        )
+          .then((response) => {
+            setQnaData(response.data.reverse())
+          })
+          .catch((err) => {
+            console.log("에러 메시지 :", err)
+          });
+        }
+      }
+    isLogin()
   }, []);
 
   return (

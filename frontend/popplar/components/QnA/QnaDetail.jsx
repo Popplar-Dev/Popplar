@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ImageBackground, Pressable, TextInput, FlatList, ActivityIndicator } from 'react-native';
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function QnaDetail({ route }) {
   const {qnaId, userid, username} = route.params;
@@ -16,39 +17,63 @@ export default function QnaDetail({ route }) {
 
   const handleSubmitAnswer = () => {
     const newAnswerText = newAnswer;
-    const postUrl = `http://10.0.2.2:8201/qna/2/${qnaId}`;
+    const postUrl = `https://k9a705.p.ssafy.io:8000/member/qna/answer/${qnaId}`;
 
     const requestBody = {
       memberId: userid,
       content: newAnswerText, 
     };
-
-    axios.post(postUrl, requestBody)
-      .then((response) => {
-        const newAnswerItem = {
-          memberName: username, 
-          content: newAnswerText,
-        };
-        setAnswerDetail([...answerDetail, newAnswerItem]);
-      })
-      .catch((err) => {
-        console.log("에러 메시지 ::", err);
-      });
-
-    setNewAnswer('');
+    const isLogin = async () => {
+      const AccessToken = await AsyncStorage.getItem('userAccessToken');
+      if (AccessToken !== null) {
+        const userAccessToken = JSON.parse(AccessToken);
+        axios.post(postUrl, requestBody,
+          {
+            headers: {
+              'Access-Token': userAccessToken,
+            },
+          }
+        )
+        .then((response) => {
+          const newAnswerItem = {
+            memberName: username, 
+            content: newAnswerText,
+          };
+          setAnswerDetail([...answerDetail, newAnswerItem]);
+        })
+        .catch((err) => {
+          console.log("에러 메시지 ::", err);
+        });
+        setNewAnswer('');
+      }
+    }
+    isLogin()  
   };
 
   useEffect(() => {
-    axios.get(`http://10.0.2.2:8201/qna/2/${qnaId}`)
-      .then((response) => {
-        setQuestionDetail(response.data.questionResDto);
-        setAnswerDetail(response.data.answerResDtoList);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log("에러 메시지 ::", err);
-        setLoading(false);
-      });
+    const isLogin = async () => {
+      const AccessToken = await AsyncStorage.getItem('userAccessToken');
+      if (AccessToken !== null) {
+        const userAccessToken = JSON.parse(AccessToken);
+        axios.get(`https://k9a705.p.ssafy.io:8000/member/qna/question/${qnaId}`,
+          {
+            headers: {
+              'Access-Token': userAccessToken,
+            },
+          }
+        )
+          .then((response) => {
+            setQuestionDetail(response.data.questionResDto);
+            setAnswerDetail(response.data.answerResDtoList);
+            setLoading(false);
+          })
+          .catch((err) => {
+            console.log("에러 메시지 ::", err);
+            setLoading(false);
+          });
+      }
+    }
+    isLogin()
   }, []);
 
   return (

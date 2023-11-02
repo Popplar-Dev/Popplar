@@ -15,9 +15,25 @@ export default function Home() {
 
 	const isLogin = async () => {
 		const result = await AsyncStorage.getItem('userInfo');
-		if (result !== null) {
+		const AccessToken = await AsyncStorage.getItem('userAccessToken');
+		if (AccessToken !== null && result !== null ) {
 			const userinfo = JSON.parse(result);
-			setUserInfo(userinfo)
+			const userAccessToken = JSON.parse(AccessToken);
+			axios.get(`https://k9a705.p.ssafy.io:8000/member/${userinfo.id}`, 
+          {
+            headers: {
+              'Access-Token': userAccessToken,
+            },
+          }
+        )
+          .then((response) => {
+						// console.log(response.data)
+            // setUserInfo(response.data)
+						setUserInfo(userinfo)
+          })
+          .catch((err) => {
+            console.log("에러 메시지 :", err)
+          });
 			navigation.navigate("BottomTab" as never)
 		} else {
 			Alert.alert(
@@ -31,8 +47,8 @@ export default function Home() {
 		// navigation.navigate("LoginPage" as never)
 		const result = await AsyncStorage.getItem('userInfo');
 		if (result !== null) {
-			const userinfo = JSON.parse(result);
-			setUserInfo(userinfo)
+			// const userinfo = JSON.parse(result);
+			// setUserInfo(userinfo)
 			navigation.navigate("BottomTab" as never)
 		} else {
 			navigation.navigate("LoginPage" as never)
