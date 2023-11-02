@@ -79,8 +79,6 @@ public class HotPlaceController {
     public ResponseEntity<Void> insertMemberPosition(
         @RequestBody MemberPosition memberPosition) {
         // TODO memberId 세팅
-        Long memberId = 1L;
-        memberPosition.updateMemberId(memberId);
         hotPlaceService.insertMemberPosition(memberPosition);
 
         return new ResponseEntity<>(HttpStatus.OK);
