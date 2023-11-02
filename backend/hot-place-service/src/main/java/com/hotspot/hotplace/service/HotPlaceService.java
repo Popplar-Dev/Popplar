@@ -100,12 +100,16 @@ public class HotPlaceService {
         hotPlace.decreaseLikeCount();
     }
 
+
+    //레디스 관련 로직
     public void insertMemberPosition(MemberPosition memberPosition) {
-//        System.out.println("memberPosition.getMemberId() = " + memberPosition.getMemberId());
-//        if (memberPositionRepository.existsByMemberId(memberPosition.getMemberId())) {
-//            System.out.println("있다고 뜸:::::::::::::::::::::::::");
-//            memberPositionRepository.deleteAllByMemberId(memberPosition.getMemberId());
-//        }
+        MemberPosition memberPos = memberPositionRepository.findByMemberId(
+            memberPosition.getMemberId());
+        if (memberPos != null) {
+            memberPos.memberUpdate(memberPosition);
+            memberPositionRepository.save(memberPos);
+            return;
+        }
         memberPositionRepository.save(memberPosition);
     }
 
