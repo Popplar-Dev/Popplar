@@ -1,7 +1,6 @@
 package com.hotspot.hotplace.controller;
 
 
-import com.hotspot.hotplace.assembler.HotPlaceAssembler;
 import com.hotspot.hotplace.dto.HotPlaceResDto;
 import com.hotspot.hotplace.dto.HotPlaceReqDto;
 import com.hotspot.hotplace.entity.MemberPosition;
@@ -9,8 +8,6 @@ import com.hotspot.hotplace.service.HotPlaceService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,48 +27,45 @@ import org.springframework.web.bind.annotation.RestController;
 public class HotPlaceController {
 
     private final HotPlaceService hotPlaceService;
-    private final HotPlaceAssembler hotPlaceAssembler;
 
 
     @GetMapping
-    public CollectionModel<EntityModel<HotPlaceResDto>> findAllHotPlace() {
-        List<EntityModel<HotPlaceResDto>> hotPlaceDtolist = hotPlaceService.findAllHotPlace()
-            .stream()
-            .map(hotPlaceAssembler::findHotPlaceToModel)
-            .toList();
+    public ResponseEntity<List<HotPlaceResDto>> findAllHotPlace() {
+        List<HotPlaceResDto> hotPlaceDtolist = hotPlaceService.findAllHotPlace();
 
-        return CollectionModel.of(hotPlaceDtolist);
+        return new ResponseEntity<>(hotPlaceDtolist, HttpStatus.OK);
     }
 
     @GetMapping("/{hotPlaceId}")
-    public EntityModel<HotPlaceResDto> findHotPlace(@PathVariable Long hotPlaceId) {
+    public ResponseEntity<HotPlaceResDto> findHotPlace(@PathVariable Long hotPlaceId) {
         HotPlaceResDto hotPlaceResDto = hotPlaceService.findHotPlace(hotPlaceId);
 
-        return hotPlaceAssembler.findHotPlaceToModel(hotPlaceResDto);
+        return new ResponseEntity<>(hotPlaceResDto, HttpStatus.OK);
     }
 
     @PostMapping
-    public EntityModel<HotPlaceResDto> insertHotPlace(@RequestBody HotPlaceReqDto hotPlaceReqDto) {
+    public ResponseEntity<HotPlaceResDto> insertHotPlace(
+        @RequestBody HotPlaceReqDto hotPlaceReqDto) {
         HotPlaceResDto hotPlaceResDto = hotPlaceService.insertHotPlace(hotPlaceReqDto);
 
-        return hotPlaceAssembler.findHotPlaceToModel(hotPlaceResDto);
+        return new ResponseEntity<>(hotPlaceResDto, HttpStatus.OK);
     }
 
 
     @PostMapping("/{hotPlaceId}/like")
-    public EntityModel<?> likeHotPlace(@RequestHeader("Member-Id") Long memberId,
+    public ResponseEntity<Void> likeHotPlace(@RequestHeader("Member-Id") Long memberId,
         @PathVariable Long hotPlaceId) {
         hotPlaceService.likeHotPlace(hotPlaceId, memberId);
 
-        return hotPlaceAssembler.likeHotPlaceToModel(memberId, hotPlaceId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{hotPlaceId}/like")
-    public EntityModel<?> deleteLikeHotPlace(@RequestHeader("Member-Id") Long memberId,
+    public ResponseEntity<Void> deleteLikeHotPlace(@RequestHeader("Member-Id") Long memberId,
         @PathVariable Long hotPlaceId) {
         hotPlaceService.deleteLikeHotPlace(hotPlaceId, memberId);
 
-        return hotPlaceAssembler.likeHotPlaceToModel(memberId, hotPlaceId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/position")
