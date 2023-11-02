@@ -8,6 +8,7 @@ class AuthService (
     private val cryptService: CryptService
 ){
     fun checkAuth(memberId: Long, myId: String) {
+        print("!!!\n\n\n$memberId $myId\n\n\n!!!")
         if (cryptService.decrypt(memberId) != myId.toLong())
             throw RuntimeException("접근 권한이 없습니다.")
     }
