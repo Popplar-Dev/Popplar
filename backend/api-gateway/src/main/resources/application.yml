@@ -27,7 +27,6 @@ spring:
           uri: lb://HOT-PLACE-SERVICE
           predicates:
             - Path=/hot-place/**
-            - Path=/visitor/**
           filters:
             - CustomAuthFilter
 
@@ -35,9 +34,6 @@ spring:
           uri: lb://MEMBER-SERVICE
           predicates:
             - Path=/member/**
-            - Path=/qna/**
-            - Path=/message/**
-            - Path=/achievement/**
           filters:
             - CustomAuthFilter
 
@@ -51,8 +47,7 @@ spring:
         - id: live-chat-service
           uri: lb://LIVE-CHAT-SERVICE
           predicates:
-            - Path=/**
-            - Path=/chatting-member/**
+            - Path=/live-chat/**
           filters:
             - CustomAuthFilter
 

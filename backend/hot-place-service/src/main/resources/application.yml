@@ -3,6 +3,11 @@ server:
 
 # Spring Boot 설정
 spring:
+  cache:
+    redis:
+      host: http://k9a705.p.ssafy.io
+      port: 6379
+    type: redis
   application:
     name: hot-place-service  # 애플리케이션의 이름
 
