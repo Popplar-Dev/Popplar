@@ -58,7 +58,7 @@ export default function Login() {
       };
       axios.post(`https://k9a705.p.ssafy.io:8000/auth/login`, requestData)
         .then((response) => {
-          console.log(response.data.jwt)
+          console.log(response.data)
           const jwt = response.data.jwt
           const userInfo = {
             exp: response.data.exp,

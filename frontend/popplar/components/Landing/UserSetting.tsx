@@ -42,7 +42,14 @@ export default function UserSetting() {
 						}
 					)
 					.then((response) => {
-						setUserInfo({ ...userinfo, name: newNickname });
+						const userInfo = {
+							exp: response.data.exp,
+							id: response.data.id,
+							name: response.data.name,
+							profileImage: response.data.profileImage,
+							socialType: response.data.socialType,
+						}
+						setUserInfo(userInfo);
 						AsyncStorage.setItem('userInfo', JSON.stringify(userinfo));
 						setIsEditing(false);
 						if (updatedInfo.name==='새 유저') {
