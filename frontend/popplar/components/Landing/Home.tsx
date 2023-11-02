@@ -16,34 +16,30 @@ export default function Home() {
 		const result = await AsyncStorage.getItem('userInfo');
 		if (result !== null) {
 			const userinfo = JSON.parse(result);
-			console.log(userinfo.name)
-			if (userinfo.name==='새 유저') {
-				Alert.alert(
-					'로그인 먼저 해주세요'
-				)
-			} else {
-				setUserInfo(userinfo)
-				navigation.navigate("BottomTab" as never)
-			}
+			setUserInfo(userinfo)
+			navigation.navigate("BottomTab" as never)
+		} else {
+			Alert.alert(
+				'로그인 먼저 해주세요'
+			)
 		}
 		return null;
 	}
 
 	const newLogin = async () => {
+		// navigation.navigate("LoginPage" as never)
 		const result = await AsyncStorage.getItem('userInfo');
 		if (result !== null) {
 			const userinfo = JSON.parse(result);
-			console.log(userinfo.name)
-			if (userinfo.name==='새 유저') {
-				navigation.navigate("LoginPage" as never)
-			} else {
-				setUserInfo(userinfo)
-				navigation.navigate("LoginPage" as never)
-				// navigation.navigate("BottomTab" as never)
-			}
+			setUserInfo(userinfo)
+			navigation.navigate("BottomTab" as never)
+		} else {
+			navigation.navigate("LoginPage" as never)
 		}
-		return null;
+			return null;
 	}
+		
+	
 
     return(
       <View style={Styles.container}> 
