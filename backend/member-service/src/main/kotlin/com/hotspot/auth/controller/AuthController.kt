@@ -1,4 +1,4 @@
-package com.hotspot.member.controller
+package com.hotspot.auth.controller
 
 import com.hotspot.member.assembler.MemberProfileResDtoRA
 import com.hotspot.member.dto.*

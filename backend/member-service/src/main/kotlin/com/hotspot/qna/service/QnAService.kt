@@ -35,18 +35,18 @@ class QnAService(
     }
 
     @Transactional
-    fun createQuestion(questionReqDto: QuestionReqDto): QnAResDto {
+    fun createQuestion(decryptedMemberId: Long, questionReqDto: QuestionReqDto): QnAResDto {
         val question =
-            questionRepository.save(Question.create(cryptService, questionReqDto))
+            questionRepository.save(Question.create(decryptedMemberId, questionReqDto))
         return questionToQnAResDto(question)
     }
 
     @Transactional
-    fun createAnswer(questionId: Long, answerReqDto: AnswerReqDto): QnAResDto {
+    fun createAnswer(decryptedMemberId: Long, questionId: Long, answerReqDto: AnswerReqDto): QnAResDto {
         val question = findQuestionById(questionId)
         answerRepository.save(
             Answer.create(
-                cryptService,
+                decryptedMemberId,
                 question.hotPlaceId,
                 questionId,
                 answerReqDto
@@ -57,8 +57,10 @@ class QnAService(
     }
 
     @Transactional
-    fun adoptAnswer(questionId: Long, answerId: Long): QnAResDto {
+    fun adoptAnswer(decryptedMemberId: Long, questionId: Long, answerId: Long): QnAResDto {
         val question = findQuestionById(questionId)
+
+        checkAuth(decryptedMemberId, question.memberId)
 
         if (question.adoptedAnswer != null) {
             throw RuntimeException("이미 채택 하였습니다.")
@@ -71,8 +73,10 @@ class QnAService(
     }
 
     @Transactional
-    fun updateQuestion(questionId: Long, content: String): QnAResDto {
+    fun updateQuestion(decryptedMemberId: Long, questionId: Long, content: String): QnAResDto {
         val question = findQuestionById(questionId)
+
+        checkAuth(decryptedMemberId, question.memberId)
 
         if (question.answerList.isNotEmpty()) {
             throw RuntimeException("답변이 있는 경우 삭제할 수 없습니다.")
@@ -84,8 +88,10 @@ class QnAService(
     }
 
     @Transactional
-    fun deleteQuestion(questionId: Long) {
+    fun deleteQuestion(decryptedMemberId: Long, questionId: Long) {
         val question = findQuestionById(questionId)
+
+        checkAuth(decryptedMemberId, question.memberId)
 
         if (question.answerList.isNotEmpty()) {
             throw RuntimeException("답변이 있는 경우 삭제할 수 없습니다.")
@@ -95,9 +101,11 @@ class QnAService(
     }
 
     @Transactional
-    fun updateAnswer(questionId: Long, answerId: Long, content: String): QnAResDto {
+    fun updateAnswer(decryptedMemberId: Long, questionId: Long, answerId: Long, content: String): QnAResDto {
         val question = findQuestionById(questionId)
         val answer = findAnswerById(answerId)
+
+        checkAuth(decryptedMemberId, answer.memberId)
 
         if (question.adoptedAnswer == answer) {
             throw RuntimeException("답변이 채택 된 경우 수정할 수 없습니다.")
@@ -109,9 +117,11 @@ class QnAService(
     }
 
     @Transactional
-    fun deleteAnswer(questionId: Long, answerId: Long) {
+    fun deleteAnswer(decryptedMemberId: Long, questionId: Long, answerId: Long) {
         val question = findQuestionById(questionId)
         val answer = findAnswerById(answerId)
+
+        checkAuth(decryptedMemberId, answer.memberId)
 
         if (question.adoptedAnswer == answer) {
             throw RuntimeException("답변이 채택 된 경우 삭제할 수 없습니다.")
@@ -151,6 +161,11 @@ class QnAService(
             memberName = member.name,
             memberProfileImage = member.profileImage
         )
+    }
+
+    fun checkAuth(myId: Long, checkId: Long) {
+        if (myId != checkId)
+            throw RuntimeException("권한이 없습니다.")
     }
 
     fun findQuestionById(questionId: Long): Question {

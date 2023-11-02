@@ -4,18 +4,15 @@ import com.hotspot.achievement.dto.AchievementResDto
 import com.hotspot.achievement.dto.StampReqDto
 import com.hotspot.achievement.dto.StampResDto
 import com.hotspot.achievement.service.AchievementService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import com.hotspot.auth.service.AuthService
+import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("member/achievement")
+@RequestMapping("/member/achievement")
 class AchievementController(
 
     private val achievementService: AchievementService,
+    private val authService: AuthService,
 ) {
 
     @GetMapping("/{memberId}")
@@ -25,9 +22,11 @@ class AchievementController(
 
     @PostMapping("/{memberId}")
     fun createStamp(
+        @RequestHeader("Member-Id") myId: String,
         @PathVariable memberId: Long,
         @RequestBody stampReqDto: StampReqDto
     ): StampResDto {
+        authService.checkAuth(memberId, myId)
         return achievementService.createStamp(memberId, stampReqDto)
     }
 }
