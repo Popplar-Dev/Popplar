@@ -19,14 +19,6 @@ class MemberController(
     private val cryptService: CryptService,
 ) {
 
-    @PostMapping("/login")
-    fun login(@RequestBody oAuthLoginReqDto: OAuthLoginReqDto): EntityModel<MemberProfileResDto> {
-        return memberProfileResDtoRA.toModel(
-            oAuthServiceFactory.getOauthService(oAuthLoginReqDto.loginType)
-                .process(oAuthLoginReqDto.accessToken)
-        )
-    }
-
     @GetMapping("/{memberId}")
     fun getMemberProfile(@PathVariable memberId: Long): EntityModel<MemberProfileResDto> {
         return memberProfileResDtoRA.toModel(
