@@ -1,6 +1,7 @@
 package com.hotspot.global.oauth.service
 
 import com.hotspot.member.entity.Member
+import com.hotspot.member.service.CryptService
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -12,6 +13,8 @@ import java.util.*
 
 @Service
 class JWTService(
+
+    private val cryptService: CryptService,
 
     @Value("\${SALT}")
     private val SALT: String,
@@ -39,8 +42,7 @@ class JWTService(
             .setSubject(subject)
             .setIssuedAt(Date())
             .setExpiration(Date(System.currentTimeMillis() + expire))
-        claims["memberId"] = member.id
-        claims["memberName"] = member.name
+        claims["id"] = cryptService.encrypt(member.id!!).toString()
         return Jwts.builder()
             .setHeaderParam("typ", "JWT")
             .setSubject(subject)
