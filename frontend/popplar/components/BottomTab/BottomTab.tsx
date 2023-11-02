@@ -22,9 +22,14 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const MyPageStack = () => {
+
   return (
     <Stack.Navigator
-      screenOptions={{headerTintColor:'#8B90F7'}}
+      screenOptions={{
+        headerTintColor:'#8B90F7',
+        headerStyle:{backgroundColor:'transparent'},
+        headerShadowVisible:false
+      }}
     >
       <Stack.Screen name="Mypage" component={MyPageScreen} options={{headerShown: false}}/>
       <Stack.Screen name="Settings" component={SettingScreen} options={{headerTitle: 'SETTINGS'}}/>

@@ -8,53 +8,49 @@ import { useNavigation } from '@react-navigation/native';
 import SettingScreen from './Settings/SettingScreen';
 import PlanetModal from '../components/Modals/PlanetModal'
 
-import { useRecoilState } from 'recoil';
-import { nicknameState } from '../recoil/userState';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from './recoil/userState';
 
 function MyPageScreen() {
-	const [nickname, setNickname] = useState('') 
-	const [isEditing, setIsEditing] = useState(false);
-  const [newNickname, setNewNickname] = useState('');
-  const [userinfo, setUserInfo] = useState({ id: '', name: '', exp: '' });
+	const [token, setToken] = useState('')
+  const userinfo = useRecoilValue(userInfoState);
   const [modalVisible, setModalVisible] = useState(false);
-  const [stamp, setStamp] = useState([{ category:'', visitedSet:'' }])
+  const [stamp, setStamp] = useState<Array<{ categoryName: string, visitedSet: number }>>([]);
   const [selectedPlanet, setSelectedPlanet] = useState({
     name: '',
-    image: require('../assets/planet/planet-01.png'),
+    image: require('../assets/planet/1.png'),
     visit: ''
   });
   const [loading, setLoading] = useState(true);
+  const images = [
+    { name: "CAFE", uri: require("../assets/planet/1.png") },
+    { name: "RESTAURANT", uri: require("../assets/planet/2.png") },
+    { name: "STORE", uri: require("../assets/planet/3.png") },
+    { name: "4", uri: require("../assets/planet/4.png") },
+    { name: "5", uri: require("../assets/planet/5.png") },
+    { name: "6", uri: require("../assets/planet/6.png") },
+  ];
 
 	useEffect(() => {
-    axios.get(
-        `http://10.0.2.2:8080/member/356931964684`, 
-      )
-			.then((response) => {
-				setUserInfo(response.data)
-				setNickname(response.data.name)
-			})
-			.catch((err) => {
-        console.log("에러 메시지 ::", err)
-      });
-  }, []);
-
-	useEffect(() => {
-    axios.get(`http://10.0.2.2:8080/member/stamp/356931964684`)
-      .then((response) => {
-        setStamp(response.data);
-        setLoading(false); 
-      })
-      .catch((err) => {
-        console.log("에러 메시지 ::", err);
-        setLoading(false); 
-      });
+    axios.get(`http://10.0.2.2:8201/achievement/${userinfo.id}`)
+    .then((response) => {
+      console.log(response.data)
+      setStamp(response.data.memberCategoryResDtoList);
+      setLoading(false); 
+    })
+    .catch((err) => {
+      console.log("에러 메시지 ::", err);
+      setLoading(false); 
+    })
   }, []);
 
   const navigation = useNavigation();
   const handleSettingPress = () => {
     navigation.navigate('Settings' as never);
   };
-
+  const goBack = () => {
+    navigation.goBack();
+  };
 
   return (
     <ScrollView 
@@ -64,6 +60,18 @@ function MyPageScreen() {
         source={require('../assets/stars.png')}
         style={styles.backgroundImage}
       >
+        <View style={styles.headerContainer}>
+          <View style={styles.leftContainer}>
+            <View style={styles.goBackButtonOuter}>
+              <Pressable onPress={goBack} android_ripple={{color: '#464646'}}>
+                <Icon name="chevron-back" color="#8B90F7" size={25} />
+              </Pressable>
+            </View>
+            <View>
+              <Text style={styles.title}>Profile</Text>
+            </View>
+          </View>
+        </View>
           <Icon
             style={styles.setting}
             name='settings-outline'
@@ -86,147 +94,43 @@ function MyPageScreen() {
               {userinfo.exp} xp
             </Text>
 					</View>
-          <Image
-            source={require('../assets/업적버튼.png')}
-            style={styles.buttonImage}
-          />
-          {loading  ? (
-              <ActivityIndicator size="large" color="#ffffff" />
+          {/* <Pressable onPress={loadToDos} android_ripple={{color: '#464646'}}>
+            <Text>ㅇㅇㅇ</Text>
+          </Pressable> */}
+          {loading ? (
+            <ActivityIndicator size="large" color="#ffffff" />
             ) : (
-            <View>
+            <View style={styles.stampcontainer}>
+              <Image
+                source={require('../assets/업적버튼.png')}
+                style={styles.buttonImage}
+              />
               <View style={styles.planetcontainer}>
-                <View style={styles.planet}>
-                  <Pressable
-                    onPress={() => {
-                      setSelectedPlanet({
-                        name: `${stamp[0].category}`,
-                        image: require('../assets/planet/planet-01.png'),
-                        visit:`${stamp[0].visitedSet}`
-                        // visit:`0`
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={styles.planet}
-                  >
-                    <Text style={styles.t}>{stamp[0].category}</Text>
-                    <Image
-                      source={require('../assets/planet/planet-01.png')}
-                      style={styles.planetimage}
-                    />
-                    <Text style={styles.t}>{stamp[0].visitedSet}/10</Text>
-                  </Pressable>
-                </View>
-
-                <View style={styles.planet}>
-                  <Pressable
+                {stamp.map((item, index) => (
+                  <View style={styles.planet} key={index}>
+                    <Pressable
                       onPress={() => {
                         setSelectedPlanet({
-                          name: `${stamp[1].category}`,
-                          image: require('../assets/planet/planet-02.png'),
-                          visit:`${stamp[1].visitedSet}`
-                          // visit:`0`
+                          name: item.categoryName,
+                          image: images[index].uri,
+                          visit: `${item.visitedSet}`
                         });
                         setModalVisible(true);
                       }}
-                      style={styles.planet}
+                      style={styles.planetItem} 
                     >
-                      <Text style={styles.t}>{stamp[1].category}</Text>
                       <Image
-                        source={require('../assets/planet/planet-02.png')}
+                        source={images[index].uri}
                         style={styles.planetimage}
                       />
-                      <Text style={styles.t}>{stamp[1].visitedSet}/10</Text>
+                      <Text style={styles.t}>{item.categoryName}</Text>
+                      <Text style={styles.t}>{item.visitedSet}/10</Text>
                     </Pressable>
-                </View>
-
-                <View style={styles.planet}>
-                  <Pressable
-                    onPress={() => {
-                      setSelectedPlanet({
-                        name: '업적 3',
-                        image: require('../assets/planet/planet-12.png'),
-                        visit:'0'
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={styles.planet}
-                  >
-                    <Text style={styles.t}>업적3</Text>
-                    <Image
-                      source={require('../assets/planet/planet-12.png')}
-                      style={styles.planetimage}
-                    />
-                    <Text style={styles.t}>0/0</Text>
-                  </Pressable>
-                </View>
+                  </View>
+                ))}
               </View>
-
-              <View style={styles.planetcontainer}>
-                <View style={styles.planet}>
-                <Pressable
-                    onPress={() => {
-                      setSelectedPlanet({
-                        name: '업적 4',
-                        image: require('../assets/planet/planet-03.png'),
-                        visit:'0'
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={styles.planet}
-                  >
-                    <Text style={styles.t}>업적4</Text>
-                    <Image
-                      source={require('../assets/planet/planet-03.png')}
-                      style={styles.planetimage}
-                    />
-                    <Text style={styles.t}>0/0</Text>
-                  </Pressable>
-                </View>
-
-                <View style={styles.planet}>
-                  <Pressable
-                    onPress={() => {
-                      setSelectedPlanet({
-                        name: '업적 5',
-                        image: require('../assets/planet/planet-05.png'),
-                        visit:'0'
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={styles.planet}
-                  >
-                    <Text style={styles.t}>업적5</Text>
-                    <Image
-                      source={require('../assets/planet/planet-05.png')}
-                      style={styles.planetimage}
-                    />
-                    <Text style={styles.t}>0/0</Text>
-                  </Pressable>
-                </View>
-
-                <View style={styles.planet}>
-                  <Pressable
-                    onPress={() => {
-                      setSelectedPlanet({
-                        name: '업적 6',
-                        image: require('../assets/planet/planet-06.png'),
-                        visit:'0'
-                      });
-                      setModalVisible(true);
-                    }}
-                    style={styles.planet}
-                  >
-                    <Text style={styles.t}>업적6</Text>
-                    <Image
-                      source={require('../assets/planet/planet-06.png')}
-                      style={styles.planetimage}
-                    />
-                    <Text style={styles.t}>0/0</Text>
-                  </Pressable>
-                </View>
-              </View>
-            </View>        
-            )}
+            </View>
+          )}
           </View>
           <PlanetModal
             visible={modalVisible}
@@ -241,12 +145,6 @@ function MyPageScreen() {
 };
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   backgroundColor: '#2C2C2C',
-  // },
   container: {
     flex: 1,
     backgroundColor: '#2C2C2C',
@@ -277,7 +175,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
 	},
 	profileContainer: {
-		top:'8%',
+		top:'6%',
 		justifyContent: 'center',
     alignItems: 'center',
   },
@@ -298,7 +196,7 @@ const styles = StyleSheet.create({
     borderRadius: 75, 
   },
 	buttonImage: {
-    marginBottom:10
+    marginTop:20
 	},
 	editingContainer: {
     justifyContent: 'center',
@@ -318,9 +216,20 @@ const styles = StyleSheet.create({
     top: 20, 
     right: 10, 
   },
+  stampcontainer: {
+    alignItems:'center',
+    borderWidth:1,
+    borderColor: '#8B90F7',
+    borderRadius:20,
+    width:'96%'
+  },
   planetcontainer: {
     flexDirection:'row',
-    marginTop:10
+    alignItems:'center',
+    // marginTop:10,
+    flexWrap: 'wrap', 
+    justifyContent: 'space-between', 
+    paddingHorizontal: 10,
   },
   planet: {
     // flexDirection:'column',
@@ -328,10 +237,55 @@ const styles = StyleSheet.create({
     alignItems:'center',
     margin:10
   },
+  planetItem: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
+  },
   planetimage: {
     marginBottom: 5,
     marginTop:5
-  }
+  },
+
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+    height: 50,
+  },
+  leftContainer: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+  },
+  goBackButtonOuter: {
+    marginEnd: 12,
+    width: 32, 
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center', 
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  ellipsisButtonOuter: {
+    width: 32, 
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center', 
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  buttonInner: {
+    borderRadius: 16, 
+
+  },
+  title: {
+    color: 'white',
+    fontSize: 20,
+    textAlign: 'center',
+  },
 });
 
 export default MyPageScreen;

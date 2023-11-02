@@ -1,12 +1,13 @@
-import React from 'react';
+import React, {useEffect}from 'react';
 import { View, Text, StyleSheet, Image, Button, Pressable  } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function FirstLanding() {
   const goToNextPage = () => {
-    navigation.navigate('BottomTab' as never);
+    navigation.navigate('UserSetting' as never);
   };
 
 	const navigation = useNavigation();

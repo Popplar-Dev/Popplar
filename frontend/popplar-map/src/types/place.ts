@@ -13,3 +13,18 @@ export type Place = {
   y: string
 }
 
+export type hotPlaceResDto = {
+  id: string,
+  placeName: string,
+  addressName: string,
+  roadAddressName: string,
+  phone: string,
+  x: string,
+  y: string,
+  category: string,
+  placeType: string,
+  likeCount: number,
+  visitorCount: number,
+  _links: any
+}
+
