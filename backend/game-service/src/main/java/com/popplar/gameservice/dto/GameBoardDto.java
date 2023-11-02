@@ -7,5 +7,6 @@ import lombok.Data;
 @Data
 @Builder
 public class GameBoardDto {
-    List<GameDto> gameDtoList;
+
+    List<BoardDto> boardDtoList;
 }

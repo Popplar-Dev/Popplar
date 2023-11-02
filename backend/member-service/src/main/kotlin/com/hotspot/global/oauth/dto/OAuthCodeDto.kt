@@ -1,4 +1,4 @@
-package com.hotspot.global.oauth
+package com.hotspot.global.oauth.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

@@ -27,6 +27,7 @@ spring:
           uri: lb://HOT-PLACE-SERVICE
           predicates:
             - Path=/hot-place/**
+            - Path=/visitor/**
           filters:
             - CustomAuthFilter
 
@@ -34,6 +35,9 @@ spring:
           uri: lb://MEMBER-SERVICE
           predicates:
             - Path=/member/**
+            - Path=/qna/**
+            - Path=/message/**
+            - Path=/achievement/**
           filters:
             - CustomAuthFilter
 
@@ -44,12 +48,14 @@ spring:
           filters:
             - CustomAuthFilter
 
-        - id: chat-service
-          uri: lb://CHAT-SERVICE
+        - id: live-chat-service
+          uri: lb://LIVE-CHAT-SERVICE
           predicates:
-            - Path=/chat/**
+            - Path=/**
+            - Path=/chatting-member/**
           filters:
             - CustomAuthFilter
+
       globalcors:
         cors-configurations:
           '[/**]':

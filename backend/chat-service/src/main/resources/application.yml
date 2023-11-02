@@ -1,16 +1,18 @@
 server:
-  port: 10000
+  port: 8203
 
 spring:
   application:
     name: chat-service
 
+## eureka 설정
 eureka:
   instance:
+    hostname: k9a705.p.ssafy.io
     instance-id: chat-microservice-instance
 
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://k9a705.p.ssafy.io:8761/eureka

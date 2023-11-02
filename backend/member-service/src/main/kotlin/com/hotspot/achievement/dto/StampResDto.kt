@@ -1,11 +1,12 @@
 package com.hotspot.achievement.dto
 
-import com.hotspot.achievement.entity.Category
 import com.hotspot.achievement.entity.Stamp
 
 class StampResDto (
 
     val hotPlaceId: Long,
+
+    val hotPlaceName: String,
 
     val categoryName: String,
 
@@ -16,6 +17,7 @@ class StampResDto (
         fun create(stamp: Stamp): StampResDto {
             return StampResDto(
                 hotPlaceId = stamp.hotPlaceId,
+                hotPlaceName = stamp.hotPlaceName,
                 categoryName = stamp.category.toKor(),
                 visitedCount = stamp.visitedCount
             )

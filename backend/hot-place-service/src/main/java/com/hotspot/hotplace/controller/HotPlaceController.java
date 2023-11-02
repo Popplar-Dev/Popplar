@@ -4,12 +4,15 @@ package com.hotspot.hotplace.controller;
 import com.hotspot.hotplace.assembler.HotPlaceAssembler;
 import com.hotspot.hotplace.dto.HotPlaceResDto;
 import com.hotspot.hotplace.dto.HotPlaceReqDto;
+import com.hotspot.hotplace.entity.MemberPosition;
 import com.hotspot.hotplace.service.HotPlaceService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +30,7 @@ public class HotPlaceController {
 
     private final HotPlaceService hotPlaceService;
     private final HotPlaceAssembler hotPlaceAssembler;
+
 
     @GetMapping
     public CollectionModel<EntityModel<HotPlaceResDto>> findAllHotPlace() {
@@ -69,5 +73,24 @@ public class HotPlaceController {
         hotPlaceService.deleteLikeHotPlace(hotPlaceId, memberId);
 
         return hotPlaceAssembler.likeHotPlaceToModel(hotPlaceId);
+    }
+
+    @PostMapping("/position")
+    public ResponseEntity<Void> insertMemberPosition(
+        @RequestBody MemberPosition memberPosition) {
+        // TODO memberId 세팅
+        Long memberId = 1L;
+        memberPosition.updateMemberId(memberId);
+        hotPlaceService.insertMemberPosition(memberPosition);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("{hotPlaceId}/position")
+    public ResponseEntity<List<MemberPosition>> findAllMemberPosition(
+        @PathVariable Long hotPlaceId) {
+
+        return new ResponseEntity<>(hotPlaceService.findAllMemberPosition(
+            hotPlaceId), HttpStatus.OK);
     }
 }

@@ -2,7 +2,7 @@ package com.hotspot.member.entity
 
 import com.hotspot.global.entity.BaseEntity
 import com.hotspot.member.dto.MemberUpdateReqDto
-import com.hotspot.global.oauth.OAuthMember
+import com.hotspot.global.oauth.dto.OAuthMemberDto
 import jakarta.persistence.*
 
 @Entity
@@ -32,13 +32,13 @@ class Member(
     }
 
     companion object {
-        fun create(oAuthMember: OAuthMember): Member {
+        fun create(oAuthMemberDto: OAuthMemberDto): Member {
             return Member(
                 name = "새 유저",
                 profileImage = "default profile",
                 exp = 0,
-                socialType = oAuthMember.socialType,
-                socialId = oAuthMember.socialId,
+                socialType = oAuthMemberDto.socialType,
+                socialId = oAuthMemberDto.socialId,
             )
         }
     }
