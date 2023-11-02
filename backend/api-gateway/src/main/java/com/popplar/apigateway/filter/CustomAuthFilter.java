@@ -43,7 +43,6 @@ public class CustomAuthFilter extends AbstractGatewayFilterFactory<CustomAuthFil
 
         return ((exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
-            log.info(":::::::::::::::::::::::::;;filter in:::::::::::::::::::::::::;;");
             System.out.println("filter in");
 
             if (!request.getHeaders().containsKey("Access-Token")) {
