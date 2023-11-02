@@ -14,7 +14,7 @@ import org.springframework.web.socket.messaging.SessionConnectEvent
 import org.springframework.web.socket.messaging.SessionDisconnectEvent
 
 
-@Controller
+@Controller("/live-chat")
 class ChattingController (
 //    private val logger: Logger = LoggerFactory.getLogger(ChattingController::class.java),
     private val chattingService: ChattingService,

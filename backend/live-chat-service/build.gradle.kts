@@ -19,6 +19,8 @@ repositories {
 	mavenCentral()
 }
 
+extra["springCloudVersion"] = "2022.0.4"
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-websocket")
@@ -28,8 +30,15 @@ dependencies {
 	implementation("org.webjars:stomp-websocket:2.3.3")
 	implementation("org.webjars:jquery:3.1.1-1")
 	implementation("org.webjars:bootstrap:3.3.7")
+	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	runtimeOnly("com.mysql:mysql-connector-j")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+	}
 }
 
 allOpen {
