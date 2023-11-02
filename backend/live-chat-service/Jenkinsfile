@@ -6,7 +6,7 @@ pipeline {
         stage('Gradle Build') {
             steps {
                 // 'Backend' 디렉터리 내에서 작업을 실행합니다.
-                dir('backend/chat-service') {
+                dir('backend/live-chat-service') {
                     // gradlew 실행 권한 부여
                     sh 'chmod +x gradlew'
                     // gradlew를 사용해 프로젝트를 빌드하며 테스트는 제외합니다.
@@ -18,7 +18,7 @@ pipeline {
         // docker-compose 기반 빌드
         stage('Docker Build') {
             steps {
-                dir('backend/chat-service') {
+                dir('backend/live-chat-service') {
                     // 도커 컴포즈 빌드
                     echo "docker compose build"
                     sh "docker-compose -f docker-compose.yml build --no-cache"
@@ -35,7 +35,7 @@ pipeline {
                 // 실행 중인 'hotPlace' 컨테이너 제거
 //                sh 'docker rm -f hot-place'
                 // 도커 컴포즈 업
-                dir('backend/chat-service') {
+                dir('backend/live-chat-service') {
                     sh "docker-compose -f docker-compose.yml up -d"
                 }
                 // 새로운 이미지로 'hot-place' 컨테이너를 백그라운드에서 실행

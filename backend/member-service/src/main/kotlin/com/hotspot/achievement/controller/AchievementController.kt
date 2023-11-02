@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/achievement")
+@RequestMapping("member/achievement")
 class AchievementController(
 
     private val achievementService: AchievementService,
