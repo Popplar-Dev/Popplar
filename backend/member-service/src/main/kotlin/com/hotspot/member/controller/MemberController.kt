@@ -19,20 +19,11 @@ class MemberController(
     private val cryptService: CryptService,
 ) {
 
-    // 테스트용 코드
-    @GetMapping("/login")
-    fun loginTest(@RequestParam code: String): EntityModel<MemberProfileResDto> {
-        return memberProfileResDtoRA.toModel(
-            oAuthServiceFactory.getOauthService(SocialType.GOOGLE).process(cryptService, code)
-        )
-    }
-
     @PostMapping("/login")
     fun login(@RequestBody oAuthLoginReqDto: OAuthLoginReqDto): EntityModel<MemberProfileResDto> {
-        // TODO JWT 생성 로직 추가 필요
         return memberProfileResDtoRA.toModel(
             oAuthServiceFactory.getOauthService(oAuthLoginReqDto.loginType)
-                .process(cryptService, oAuthLoginReqDto.accessToken)
+                .process(oAuthLoginReqDto.accessToken)
         )
     }
 
