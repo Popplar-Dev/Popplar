@@ -51,7 +51,6 @@ public class HotPlaceController {
         return new ResponseEntity<>(hotPlaceResDto, HttpStatus.OK);
     }
 
-
     @PostMapping("/{hotPlaceId}/like")
     public ResponseEntity<Void> likeHotPlace(@RequestHeader("Member-Id") Long memberId,
         @PathVariable Long hotPlaceId) {
