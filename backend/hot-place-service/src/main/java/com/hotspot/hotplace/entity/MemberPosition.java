@@ -1,25 +1,26 @@
 package com.hotspot.hotplace.entity;
 
 import jakarta.persistence.Id;
+import java.io.Serializable;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
-@Getter
+@Data
 @NoArgsConstructor
-@RedisHash(value = "userPosition", timeToLive = 10)
-public class MemberPosition {
+@RedisHash(value = "userPosition", timeToLive = 3600)
+public class MemberPosition implements Serializable {
 
     @Id
     private String id;
 
     @Indexed
-    private Long hotPlaceId;
+    private Long memberId;
 
     @Indexed
-    private Long memberId;
+    private Long hotPlaceId;
 
     private double x;
 
@@ -33,7 +34,9 @@ public class MemberPosition {
         this.y = y;
     }
 
-    public void updateMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void memberUpdate(MemberPosition memberPosition){
+        this.hotPlaceId=memberPosition.getHotPlaceId();
+        this.x=memberPosition.getX();
+        this.y=memberPosition.getY();
     }
 }

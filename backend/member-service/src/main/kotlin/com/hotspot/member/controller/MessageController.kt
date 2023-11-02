@@ -6,7 +6,7 @@ import com.hotspot.member.service.MessageService
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/message")
+@RequestMapping("/member/message")
 class MessageController (
 
     private val messageService: MessageService,
