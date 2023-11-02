@@ -5,7 +5,8 @@ server:
 spring:
   cache:
     redis:
-      host: http://k9a705.p.ssafy.io
+      host: localhost
+#      host: k9a705.p.ssafy.io
       port: 6379
     type: redis
   application:
@@ -38,11 +39,6 @@ spring:
         format_sql: true
         default_batch_fetch_size: 1000
 
-# Redis 설정
-redis:
-  host: localhost
-  port: 6379
-  password: ${DB_PWD}
 
 ## eureka 설정
 eureka:
