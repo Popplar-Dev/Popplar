@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../recoil/userState';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function Home() {
 
@@ -47,19 +48,25 @@ export default function Home() {
 					<Text style={Styles.title}>
 						POPPLAR
 					</Text>	
-				</View>     
-				<Pressable
-					onPress={newLogin}
-					style={Styles.kakaologin}>
-					<Image source={require('popplar/assets/kakao_login.png')}/>
-				</Pressable>
+				</View>    
+				<View style={Styles.buttons}>
+					<Text style={Styles.text}>카카오톡으로 회원가입</Text>
+					<Pressable
+						onPress={newLogin}
+						style={Styles.kakaologin}>
+						<Image source={require('popplar/assets/kakao_login.png')}/>
+					</Pressable>
+				</View> 
 
-				<Pressable
-					onPress={isLogin}
-					// onPress={() => navigation.navigate("BottomTab" as never)}
-					style={Styles.start}>
-					<Text style={Styles.text}>시작하기</Text>
-				</Pressable>
+				<View style={Styles.buttons}>
+					<Text style={Styles.text}>이미 로그인 하셨나요?</Text>
+					<Pressable onPress={isLogin} style={Styles.start}>
+						<View style={Styles.buttoncontent}>
+							<Icon style={Styles.icons} name='rocket' size={25} color='#ffffff'/>	
+							<Text style={Styles.buttontext}>POPPLAR 시작하기</Text>
+						</View>
+					</Pressable>
+				</View>
 
 			</View>
     )
@@ -73,7 +80,8 @@ const Styles = StyleSheet.create({
   }, 
 	text: {
 		color:'white',
-		fontSize:15
+		fontSize:15,
+		fontWeight:'bold'
 	},
 	main:{
 		marginBottom:100
@@ -88,11 +96,32 @@ const Styles = StyleSheet.create({
 	},
 	start: {
 		backgroundColor:'#8B90F7',
-		borderRadius:10,
+		borderRadius:5,
 		width:300,
-		justifyContent:'center',
+		// justifyContent:'',
 		alignItems:'center',
 		height:45,
-		margin:20
+		margin:20,
+		// flexDirection:'row'
+	},
+	buttons: {
+		margin:20,
+		alignItems:'center',
+	},
+	buttoncontent: {
+		flexDirection:'row',
+		alignItems:'center',
+		justifyContent:'center',
+		padding:10,
+		paddingHorizontal:30
+	},
+	buttontext: {
+		alignItems:'center',
+		justifyContent:'center',
+		color:'white',
+		fontWeight:'bold',
+	},
+	icons: {
+		marginRight:10
 	}   
 });

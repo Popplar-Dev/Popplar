@@ -28,24 +28,35 @@ function ProfileSetting() {
   };
 
   const saveNickname = () => {
-    setNickname(newNickname);
-
-		const updatedInfo = {
-			name: newNickname,
-			profileImage: "url",
-      // socialType: userinfo.socialType
+			setNickname(newNickname);
+			const updatedInfo = {
+				name: newNickname,
+				profileImage: "url",
+			};
+			console.log(userinfo)
+			const isLogin = async () => {
+        const AccessToken = await AsyncStorage.getItem('userAccessToken');
+        if (AccessToken !== null) {
+					const userAccessToken = JSON.parse(AccessToken);
+					axios.patch(`https://k9a705.p.ssafy.io:8000/member/${userinfo.id}`, updatedInfo, 
+						{
+							headers: {
+								'Access-Token': userAccessToken,
+							},
+						}
+					)
+					.then((response) => {
+						setUserInfo({ ...userinfo, name: newNickname });
+            AsyncStorage.setItem('userInfo', JSON.stringify(userinfo));
+						setIsEditing(false);
+          })
+					.catch((err) => {
+						console.error("실패...", err);
+					});
+				}
+			}
+			isLogin()
 		};
-
-    axios.patch(`http://10.0.2.2:8201/member/${userinfo.id}`, updatedInfo)
-      .then((response) => {
-				 setUserInfo({ ...userinfo, name: newNickname });
-				setIsEditing(false);
-        console.log(response.data)
-      })
-      .catch((err) => {
-        console.error("실패...", err);
-      });
-  };
 
   const [visible, setVisible] = useState(false);
 
@@ -64,6 +75,7 @@ function ProfileSetting() {
                 value={newNickname}
                 onChangeText={(text) => setNewNickname(text)}
                 onSubmitEditing={saveNickname}
+                autoFocus={true}
               />
               <Pressable onPress={saveNickname}>
                 <View style={styles.edit}>
