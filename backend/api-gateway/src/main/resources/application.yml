@@ -37,6 +37,11 @@ spring:
           filters:
             - CustomAuthFilter
 
+        - id: login-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/auth/**
+
         - id: game-service
           uri: lb://GAME-SERVICE
           predicates:
