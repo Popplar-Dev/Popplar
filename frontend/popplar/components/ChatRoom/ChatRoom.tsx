@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'; 
-import {View, FlatList, StyleSheet} from 'react-native';
+import {View, TouchableWithoutFeedback, FlatList, StyleSheet, Keyboard, KeyboardAvoidingView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import { Client, Message, IMessage, IFrame, wsErrorCallbackType } from '@stomp/stompjs';
@@ -19,14 +19,26 @@ const stompConfig = {
   appendMissingNULLonIncoming: true
 }
 
+type ChatMessage = {
+  messageType: 'me' | 'others';
+  memberId: number;  
+  nickname: string; 
+  profilePic?: string;  
+  content: string; 
+  date?: string;
+  time?: string; 
+}
+
 export default function ChatRoom() {
   const navigation = useNavigation();
+  const [ memberId, setMemberId ] = useState(0); 
   const [client, setClient] = useState<Client|null>(null); 
   const [isConnected, setIsConnected] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([]); 
 
   useEffect(() => {
 
-    
+    setMemberId(1);
 
     const stompClient = new Client(stompConfig); 
 
@@ -87,21 +99,44 @@ export default function ChatRoom() {
     }
   } 
 
-
-  return (
-    <View style={styles.rootContainer}>
-      <ChatHeader />
-      <View style={styles.chatBubblesContainer}>
+  type flatListItem = {item: ChatMessage}
+  const renderChatMessageItem = ({item}: flatListItem) => {
+    
+    if (item.messageType === 'me') {
+      return (
+        <SentChatMessage msgStart={true} />
+      )
+    } else {
+      return (
 
         <ReceivedChatMessage msgStart={true} />
-        <ReceivedChatMessage />
-        <SentChatMessage msgStart={true} />
-        
-      </View>
+  
+    )
+      
+    }
+    
 
-      <ChatInput onSend={sendMessage} />
+  }
 
-    </View>
+
+  return (
+    <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
+      <KeyboardAvoidingView style={styles.rootContainer}>
+        <ChatHeader />
+        <View style={styles.chatBubblesContainer}>
+
+          <FlatList data={messages} renderItem={renderChatMessageItem} keyExtractor={(item: ChatMessage)=> `${item.date}-${item.time}`}/>
+
+          {/* <ReceivedChatMessage msgStart={true} />
+          <ReceivedChatMessage />
+          <SentChatMessage msgStart={true} /> */}
+          
+        </View>
+
+        <ChatInput onSend={sendMessage} setMessages={setMessages}/>
+
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }
 
