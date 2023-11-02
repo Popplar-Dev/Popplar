@@ -1,26 +1,25 @@
 import {View, StyleSheet} from 'react-native';
 import ChatBubble from './ChatComponents/ChatBubble';
 import ChatTime from './ChatComponents/ChatTime';
+import {ChatMessageType} from '../../types/chatType';
 
 type SentChatMessageProps = {
   msgStart?: boolean;
-  chatData?: string;
+  showTime?: boolean, 
+  chatData: ChatMessageType;
 };
 
 export default function SentChatMessage({
   msgStart = false,
+  showTime = false, 
+  chatData,
 }: SentChatMessageProps) {
-  const imgUrl =
-    'https://www.dailypaws.com/thmb/d3vNqnLf6Vqjz8oz5XObGCQxms4=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/tiny-white-kitten-873941684-2000-0bac130389984aba9751de5e5e50d25f.jpg';
-
-  const chatTime = '오후 1:30';
-
   return (
     <View style={styles.rootContainer}>
       <View style={styles.chatBubbleContainer}>
-        {chatTime && <ChatTime>{chatTime}</ChatTime>}
+        {showTime && chatData.time && <ChatTime>{chatData.time}</ChatTime>}
         <ChatBubble msgStart={msgStart} myMsg={true} color="#2c1a74">
-          가나다라
+          {chatData.chattingContent}
         </ChatBubble>
       </View>
     </View>

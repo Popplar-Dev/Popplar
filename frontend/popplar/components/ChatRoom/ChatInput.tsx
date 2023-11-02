@@ -3,8 +3,7 @@ import {View, Pressable, TextInput, Keyboard, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 type ChatInputProps = {
-  onSend: Function;
-  setMessages: Function; 
+  onSend: Function; 
 }
 type ChatMessage = {
   messageType: 'me' | 'others';
@@ -16,22 +15,12 @@ type ChatMessage = {
   time?: string; 
 }
 
-export default function ChatInput({onSend, setMessages}: ChatInputProps) {
+export default function ChatInput({onSend}: ChatInputProps) {
 
   const [inputText, setInputText] = useState("");
 
   const handleSend = () => {
     onSend(inputText);
-    const today = new Date();
-    const message = {
-      messageType:'me', 
-      memberId: 446164955855, 
-      nickname: 'woodywoody',
-      content: inputText,
-      date: today.toLocaleDateString('ko-KR'), 
-      time: today.toLocaleTimeString('ko-KR')
-    }
-    setMessages((prev: ChatMessage[]) => [...prev, message])
     setInputText(""); 
     Keyboard.dismiss();
   }
