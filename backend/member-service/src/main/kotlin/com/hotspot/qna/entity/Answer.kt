@@ -27,11 +27,11 @@ class Answer(
     }
 
     companion object {
-        fun create(cryptService: CryptService, hotPlaceId: Long, questionId: Long, answerReqDto: AnswerReqDto): Answer {
+        fun create(decryptedMemberId: Long, hotPlaceId: Long, questionId: Long, answerReqDto: AnswerReqDto): Answer {
             return Answer(
                 questionId = questionId,
                 hotPlaceId = hotPlaceId,
-                memberId = cryptService.decrypt(answerReqDto.memberId),
+                memberId = decryptedMemberId,
                 content = answerReqDto.content,
             )
         }

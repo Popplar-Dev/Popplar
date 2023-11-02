@@ -4,7 +4,5 @@ class QuestionReqDto(
 
     val hotPlaceId: Long,
 
-    val memberId: Long,
-
     val content: String,
 )
