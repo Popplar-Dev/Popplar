@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -58,29 +59,25 @@ public class HotPlaceController {
 
 
     @PostMapping("/{hotPlaceId}/like")
-    public EntityModel<?> likeHotPlace(@PathVariable Long hotPlaceId) {
-        // TODO 임시 memberId
-        Long memberId = 1L;
+    public EntityModel<?> likeHotPlace(@RequestHeader("Member-Id") Long memberId,
+        @PathVariable Long hotPlaceId) {
         hotPlaceService.likeHotPlace(hotPlaceId, memberId);
 
-        return hotPlaceAssembler.likeHotPlaceToModel(hotPlaceId);
+        return hotPlaceAssembler.likeHotPlaceToModel(memberId, hotPlaceId);
     }
 
     @DeleteMapping("/{hotPlaceId}/like")
-    public EntityModel<?> deleteLikeHotPlace(@PathVariable Long hotPlaceId) {
-        // TODO 임시 memberId
-        Long memberId = 1L;
+    public EntityModel<?> deleteLikeHotPlace(@RequestHeader("Member-Id") Long memberId,
+        @PathVariable Long hotPlaceId) {
         hotPlaceService.deleteLikeHotPlace(hotPlaceId, memberId);
 
-        return hotPlaceAssembler.likeHotPlaceToModel(hotPlaceId);
+        return hotPlaceAssembler.likeHotPlaceToModel(memberId, hotPlaceId);
     }
 
     @PostMapping("/position")
-    public ResponseEntity<Void> insertMemberPosition(
+    public ResponseEntity<Void> insertMemberPosition(@RequestHeader("Member-Id") Long memberId,
         @RequestBody MemberPosition memberPosition) {
-        // TODO memberId 세팅
-        Long memberId = 1L;
-        memberPosition.updateMemberId(memberId);
+        memberPosition.setMemberId(memberId);
         hotPlaceService.insertMemberPosition(memberPosition);
 
         return new ResponseEntity<>(HttpStatus.OK);
