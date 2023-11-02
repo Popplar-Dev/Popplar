@@ -27,9 +27,16 @@ export default function Home() {
           }
         )
           .then((response) => {
-						// console.log(response.data)
-            // setUserInfo(response.data)
-						setUserInfo(userinfo)
+						console.log(userinfo)
+						console.log(response.data)
+						const user = {
+							exp: response.data.exp,
+							id: response.data.id,
+							name: response.data.name,
+							profileImage: response.data.profileImage,
+							socialType: response.data.socialType,
+						}
+						setUserInfo(user)
           })
           .catch((err) => {
             console.log("에러 메시지 :", err)
@@ -46,9 +53,24 @@ export default function Home() {
 	const newLogin = async () => {
 		// navigation.navigate("LoginPage" as never)
 		const result = await AsyncStorage.getItem('userInfo');
-		if (result !== null) {
-			// const userinfo = JSON.parse(result);
-			// setUserInfo(userinfo)
+		const AccessToken = await AsyncStorage.getItem('userAccessToken');
+		if (AccessToken !== null && result !== null) {
+			const userAccessToken = JSON.parse(AccessToken);
+			const userinfo = JSON.parse(result);
+			axios.get(`https://k9a705.p.ssafy.io:8000/member/${userinfo.id}`, 
+          {
+            headers: {
+              'Access-Token': userAccessToken,
+            },
+          }
+        )
+          .then((response) => {
+						console.log(response.data)
+						setUserInfo({ ...userInfo, name: response.data.name })
+          })
+          .catch((err) => {
+            console.log("에러 메시지 :", err)
+          });
 			navigation.navigate("BottomTab" as never)
 		} else {
 			navigation.navigate("LoginPage" as never)
