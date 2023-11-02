@@ -52,23 +52,23 @@ export default function Login() {
     }).then((response) => {
       AccessToken = response.data.access_token;
       // console.log(response.data);
-      console.log(AccessToken);
-      storeData(AccessToken);
       const requestData = {
         accessToken : AccessToken,
         loginType : "KAKAO"
       };
-      axios.post(`http://10.0.2.2:8201/member/login`, requestData)
+      axios.post(`https://k9a705.p.ssafy.io:8000/auth/login`, requestData)
         .then((response) => {
-          // console.log(response.data)
+          console.log(response.data.jwt)
+          const jwt = response.data.jwt
           const userInfo = {
             exp: response.data.exp,
             id: response.data.id,
             name: response.data.name,
             profileImage: response.data.profileImage,
-            socialType: response.data.socialType
+            socialType: response.data.socialType,
           }
           storeUserInfo(userInfo)
+          storeData(jwt);
         })
         .catch((err) => {
           console.log("에러 메시지 :", err);

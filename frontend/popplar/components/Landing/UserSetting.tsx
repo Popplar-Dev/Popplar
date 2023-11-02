@@ -24,29 +24,40 @@ export default function UserSetting() {
 
   const saveNickname = () => {
 			setNickname(newNickname);
-	
 			const updatedInfo = {
 				name: newNickname,
 				profileImage: "url",
-				// socialType: userinfo.socialType
 			};
-	
-			axios.patch(`http://10.0.2.2:8201/member/${userinfo.id}`, updatedInfo)
-				.then((response) => {
-					 setUserInfo({ ...userinfo, name: newNickname });
-					setIsEditing(false);
-					console.log(response.data)
-				})
-				.catch((err) => {
-					console.error("실패...", err);
-				});
-				if (updatedInfo.name==='새 유저') {
-					Alert.alert(
-						'닉네임을 설정해주세요!'
+			console.log(userinfo)
+			const isLogin = async () => {
+        const AccessToken = await AsyncStorage.getItem('userAccessToken');
+        if (AccessToken !== null) {
+					const userAccessToken = JSON.parse(AccessToken);
+					axios.patch(`https://k9a705.p.ssafy.io:8000/member/${userinfo.id}`, updatedInfo, 
+						{
+							headers: {
+								'Access-Token': userAccessToken,
+							},
+						}
 					)
-				} else {
-					navigation.navigate('BottomTab' as never);
+					.then((response) => {
+						setUserInfo({ ...userinfo, name: newNickname });
+						AsyncStorage.setItem('userInfo', JSON.stringify(userinfo));
+						setIsEditing(false);
+						if (updatedInfo.name==='새 유저') {
+							Alert.alert(
+								'닉네임을 설정해주세요!'
+							)
+						} else {
+							navigation.navigate('BottomTab' as never);
+						}
+					})
+					.catch((err) => {
+						console.error("실패...", err);
+					});
 				}
+			}
+			isLogin()
 		};
 
   return (
@@ -54,12 +65,16 @@ export default function UserSetting() {
 			<View>
 				{isEditing ? (
             <View style={styles.editingContainer}>
+							<View style={styles.editinfo}>
+								<Text style={styles.text}>닉네임을 설정해주세요!</Text>
+							</View>
               <TextInput
                 ref={textInputRef}
                 style={styles.input}
                 value={newNickname}
                 onChangeText={(text) => setNewNickname(text)}
                 onSubmitEditing={saveNickname}
+								autoFocus={true}
               />
               <Pressable onPress={saveNickname}>
                 <View style={styles.edit}>
@@ -70,10 +85,13 @@ export default function UserSetting() {
           ) : (
             <>
 						<View style={styles.editingContainer}>
+							<View style={styles.editinfo}>
+								<Text style={styles.text}>닉네임을 설정해주세요!</Text>
+							</View>
               <Text style={styles.name}>{userinfo.name}</Text>
               <Pressable onPress={startEditing}>
                 <View style={styles.edit}>
-                  <Text style={styles.text}>닉네임 설정</Text>
+                  <Text style={styles.text}>설정하기</Text>
                 </View>
               </Pressable>
 						</View>
@@ -93,24 +111,37 @@ const styles = StyleSheet.create({
   },
 	text: {
 		color:'white',
-		fontSize:20
+		fontSize:15,
+		fontWeight:'bold'
 	},
 	editingContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
+	editinfo: {
+		marginBottom:20
+	},
 	input: {
     fontSize: 24,
     color: 'white',
     borderBottomWidth: 1,
     borderColor: 'white',
+		width:200,
   },
 	edit:{
-		margin:100
+		margin:100,
+		backgroundColor:'#8B90F7',
+		paddingHorizontal:10,
+		paddingTop:5,
+		paddingBottom:8,
+		borderRadius:10,
+		width:200,
+		alignItems:'center'
 	},
 	name:{
 		color:'white',
-		fontSize:30
+		fontSize:30,
+		fontWeight:'bold'
 	}
 });
 

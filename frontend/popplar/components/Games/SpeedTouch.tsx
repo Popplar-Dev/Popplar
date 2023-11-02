@@ -45,24 +45,26 @@ function SpeedTouch() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: gameColor }]}>
-      {gameStarted ? (
-        <Pressable onPress={measureReactionTime} style={styles.button}>
-          <Text style={styles.buttonText}>클릭!</Text>
-        </Pressable>
-      ) : (
-        <Pressable onPress={startGame} style={styles.button}>
-          <Text style={styles.buttonText}>게임 시작</Text>
-        </Pressable>
-      )}
-      {reactionTime !== null && (
-        <View>
-          <Text style={styles.text}>반응 속도: {reactionTime.toFixed(3)} 초</Text>
-          <Pressable onPress={resetGame} style={styles.button}>
-            <Text style={styles.buttonText}>게임 재시작</Text>
+    <View style={styles.container}>
+      <View style={[styles.gamecontainer, { backgroundColor: gameColor }]}>
+        {gameStarted ? (
+          <Pressable onPress={measureReactionTime} style={styles.button}>
+            <Text style={styles.buttonText}>클릭!</Text>
           </Pressable>
-        </View>
-      )}
+        ) : (
+          <Pressable onPress={startGame} style={styles.button}>
+            <Text style={styles.buttonText}>게임 시작</Text>
+          </Pressable>
+        )}
+        {reactionTime !== null && (
+          <View>
+            <Text style={styles.text}>반응 속도: {reactionTime.toFixed(3)} 초</Text>
+            <Pressable onPress={resetGame} style={styles.button}>
+              <Text style={styles.buttonText}>게임 재시작</Text>
+            </Pressable>
+          </View>
+        )}
+      </View>
     </View>
   );
 }
@@ -73,6 +75,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  gamecontainer:{
+    width:'80%',
+    height:'50%',
+    justifyContent:'flex-end'
+  },
   text: {
     color: 'white',
     fontSize: 20,
@@ -82,6 +89,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     margin: 10,
+    alignItems:'center'
   },
   buttonText: {
     color: 'white',

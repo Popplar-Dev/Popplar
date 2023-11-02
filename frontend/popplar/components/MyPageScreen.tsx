@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import SettingScreen from './Settings/SettingScreen';
 import PlanetModal from '../components/Modals/PlanetModal'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from './recoil/userState';
@@ -32,16 +33,28 @@ function MyPageScreen() {
   ];
 
 	useEffect(() => {
-    axios.get(`http://10.0.2.2:8201/achievement/${userinfo.id}`)
-    .then((response) => {
-      console.log(response.data)
-      setStamp(response.data.memberCategoryResDtoList);
-      setLoading(false); 
-    })
-    .catch((err) => {
-      console.log("에러 메시지 ::", err);
-      setLoading(false); 
-    })
+    const isLogin = async () => {
+      const AccessToken = await AsyncStorage.getItem('userAccessToken');
+      if (AccessToken !== null) {
+        const userAccessToken = JSON.parse(AccessToken);
+        axios.get(`https://k9a705.p.ssafy.io:8000/member/achievement/${userinfo.id}`,
+          {
+            headers: {
+              'Access-Token': userAccessToken,
+            },
+          }
+        )
+        .then((response) => {
+          setStamp(response.data.memberCategoryResDtoList);
+          setLoading(false); 
+        })
+        .catch((err) => {
+          console.log("에러 메시지 ::", err);
+          setLoading(false); 
+        })
+      }
+    }
+    isLogin()
   }, []);
 
   const navigation = useNavigation();
