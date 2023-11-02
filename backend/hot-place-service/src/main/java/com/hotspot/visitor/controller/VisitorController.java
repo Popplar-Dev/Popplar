@@ -7,8 +7,8 @@ import com.hotspot.visitor.service.VisitorService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,21 +25,18 @@ public class VisitorController {
     private final VisitorService visitorService;
 
     @GetMapping("/visitor/{hotPlaceId}")
-    public CollectionModel<EntityModel<VisitorResDto>> findAllVisitor(
+    public ResponseEntity<List<VisitorResDto>> findAllVisitor(
         @PathVariable Long hotPlaceId) {
-        List<EntityModel<VisitorResDto>> visitorModelList = visitorService.findAllVisitor(
-                hotPlaceId)
-            .stream()
-            .map(EntityModel::of)
-            .toList();
+        List<VisitorResDto> visitorModelList = visitorService.findAllVisitor(
+            hotPlaceId);
 
-        return CollectionModel.of(visitorModelList);
+        return new ResponseEntity<>(visitorModelList, HttpStatus.OK);
     }
 
     @PostMapping("/visitor")
-    public EntityModel<HotPlaceResDto> insertVisitor(@RequestBody VisitorReqDto visitorReqDto) {
+    public ResponseEntity<HotPlaceResDto> insertVisitor(@RequestBody VisitorReqDto visitorReqDto) {
         HotPlaceResDto hotPlaceResDto = visitorService.insertVisitor(visitorReqDto);
 
-        return EntityModel.of(hotPlaceResDto);
+        return new ResponseEntity<>(hotPlaceResDto, HttpStatus.OK);
     }
 }
