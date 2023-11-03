@@ -8,7 +8,7 @@ import com.hotspot.global.oauth.dto.OAuthTokenDto
 
 interface OAuthService {
     fun process(accessToken: String): MemberProfileResDto {
-        return generateJWT(login(getUser(getAccessToken(accessToken).accessToken)))
+        return generateJWT(login(getUser(accessToken)))
     }
 
     fun getSocialType(): SocialType
