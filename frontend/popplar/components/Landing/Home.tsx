@@ -65,6 +65,7 @@ export default function Home() {
           }
         )
           .then((response) => {
+						// console.log()
 						console.log(response.data)
 						setUserInfo({ ...userInfo, name: response.data.name })
           })
