@@ -29,7 +29,7 @@ class MemberController(
         return ResponseEntity<MemberProfileResDto>(memberService.updateMemberProfile(
                 memberId,
                 memberUpdateReqDto
-        ), org.springframework.http.HttpStatus.OK);
+        ), org.springframework.http.HttpStatus.OK)
     }
 
     @DeleteMapping("/{memberId}")
