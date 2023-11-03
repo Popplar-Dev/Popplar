@@ -26,7 +26,7 @@ class MessageController(
             @PathVariable messageId: Long
     ): ResponseEntity<MessageResDto> {
         authService.checkAuth(memberId, myId)
-        return ResponseEntity<MessageResDto>(messageService.getMessage(messageId), HttpStatus.OK)
+        return ResponseEntity<MessageResDto>(messageService.getMessage(myId.toLong(), messageId), HttpStatus.OK)
     }
 
     @PostMapping("/{sentMemberId}/{receivedMemberId}")
@@ -47,7 +47,7 @@ class MessageController(
             @PathVariable messageId: Long
     ) {
         authService.checkAuth(memberId, myId)
-        messageService.deleteMessage(messageId)
+        messageService.deleteMessage(myId.toLong(), messageId)
     }
 
     @GetMapping("/find-all/{memberId}")

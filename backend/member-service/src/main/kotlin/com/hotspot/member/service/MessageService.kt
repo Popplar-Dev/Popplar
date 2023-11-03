@@ -19,10 +19,14 @@ class MessageService(
 ) {
 
     @Transactional
-    fun getMessage(messageId: Long): MessageResDto {
+    fun getMessage(myId: Long, messageId: Long): MessageResDto {
         val message = findMessage(messageId)
 
         message.check()
+
+        if (myId != message.receivedMemberId && myId != message.sentMemberId) {
+            throw RuntimeException("쪽지 열람 권한이 없습니다.")
+        }
 
         val sentMember = findMember(message.sentMemberId)
         val receivedMember = findMember(message.receivedMemberId)
@@ -45,8 +49,12 @@ class MessageService(
     }
 
     @Transactional
-    fun deleteMessage(messageId: Long) {
-        findMessage(messageId).delete()
+    fun deleteMessage(myId: Long, messageId: Long) {
+        val message = findMessage(messageId)
+        if (myId != message.receivedMemberId) {
+            throw RuntimeException("쪽지 삭제 권한이 없습니다")
+        }
+        message.delete()
     }
 
     fun getMyMessageList(receivedMemberId: Long): MutableList<MessageResDto> {
