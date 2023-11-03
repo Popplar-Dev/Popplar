@@ -31,6 +31,8 @@ export default function Map () {
     setSearchPlacObj(ps)
     getAllHotplace()
     .then((res) => setHotplaceList(res))
+    .then(() => console.log('get all hotplace!'))
+    .catch((err) => console.log(err))
   }, [])
 
   useEffect(() => {
