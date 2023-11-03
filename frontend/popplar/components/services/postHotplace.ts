@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Place } from '../types/place'
 import {BASE_URL} from './baseUrl'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const accessToken = process.env.REACT_APP_ACCESS_TOKEN;
 
 // 핫플레이스 등록
@@ -9,7 +10,7 @@ export async function postHotplace(data: Place) {
     method: 'post',
     url: `${BASE_URL}/hot-place`,
     data: { data },
-    headers: { "access-token" : accessToken }
+    headers: { Authorization: `Bearer ${accessToken}` }
    }).then((res) => res)
 }
 
@@ -18,7 +19,7 @@ export async function likeHotplace(id: string) {
   return await axios({
     method: 'post',
     url: `${BASE_URL}/hot-place/${id}/like`,
-    headers: { "access-token" : accessToken }
+    // headers: addAccessTokenToHeaders(),
    }).then((res) => res)
 }
 
@@ -27,6 +28,6 @@ export async function delLikeHotplace(id: string) {
   return await axios({
     method: 'delete',
     url: `${BASE_URL}/hot-place/${id}/like`,
-    headers: { "access-token" : accessToken }
+    // headers: addAccessTokenToHeaders(),
    }).then((res) => res)
 }

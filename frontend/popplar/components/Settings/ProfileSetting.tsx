@@ -18,9 +18,9 @@ function ProfileSetting() {
   const [photo ,setPhoto] = useState('')
   const [userinfo, setUserInfo] = useRecoilState(userInfoState);
 
-  // useEffect(() => {
-  //   PermissionUtil.cmmReqPermis([...APP_PERMISSION_CODE.camera, ...APP_PERMISSION_CODE.calendar, ...APP_PERMISSION_CODE.mediaLibaray]);
-  // }, []);
+  useEffect(() => {
+    console.log(userinfo.id)
+  }, []);
 
 	const startEditing = () => {
     setIsEditing(true);
@@ -33,11 +33,11 @@ function ProfileSetting() {
 				name: newNickname,
 				profileImage: "url",
 			};
-			console.log(userinfo)
 			const isLogin = async () => {
         const AccessToken = await AsyncStorage.getItem('userAccessToken');
         if (AccessToken !== null) {
 					const userAccessToken = JSON.parse(AccessToken);
+          console.log(userAccessToken)
 					axios.patch(`https://k9a705.p.ssafy.io:8000/member/${userinfo.id}`, updatedInfo, 
 						{
 							headers: {
@@ -47,12 +47,19 @@ function ProfileSetting() {
 					)
 					.then((response) => {
 						setUserInfo({ ...userinfo, name: newNickname });
-            AsyncStorage.setItem('userInfo', JSON.stringify(userinfo));
 						setIsEditing(false);
+            // AsyncStorage.setItem('userInfo', JSON.stringify(userinfo));
           })
 					.catch((err) => {
 						console.error("실패...", err);
-					});
+					}); 
+          console.log(userinfo)
+          const a = await AsyncStorage.getItem('userInfo')
+          if (a !== null) {
+            const aa = JSON.parse(a)
+            console.log(aa)
+          }
+
 				}
 			}
 			isLogin()

@@ -19,6 +19,7 @@ export default function UserSetting() {
 
 	const startEditing = () => {
     setIsEditing(true);
+		console.log(userinfo)
     setNewNickname(nickname);
   };
 
@@ -28,7 +29,7 @@ export default function UserSetting() {
 				name: newNickname,
 				profileImage: "url",
 			};
-			console.log(userinfo)
+			// console.log(userinfo)
 			const isLogin = async () => {
         const AccessToken = await AsyncStorage.getItem('userAccessToken');
         if (AccessToken !== null) {
@@ -41,7 +42,14 @@ export default function UserSetting() {
 						}
 					)
 					.then((response) => {
-						setUserInfo({ ...userinfo, name: newNickname });
+						const userInfo = {
+							exp: response.data.exp,
+							id: response.data.id,
+							name: response.data.name,
+							profileImage: response.data.profileImage,
+							socialType: response.data.socialType,
+						}
+						setUserInfo(userInfo);
 						AsyncStorage.setItem('userInfo', JSON.stringify(userinfo));
 						setIsEditing(false);
 						if (updatedInfo.name==='새 유저') {
@@ -55,6 +63,7 @@ export default function UserSetting() {
 					.catch((err) => {
 						console.error("실패...", err);
 					});
+					// console.log(AsyncStorage.getItem('userInfo'))
 				}
 			}
 			isLogin()
