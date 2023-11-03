@@ -30,9 +30,9 @@ export default function Map () {
     var ps = new kakao.maps.services.Places();  
     setSearchPlacObj(ps)
     getAllHotplace()
-    .then((res) => setHotplaceList(res))
-    .then(() => console.log('get all hotplace!'))
-    .catch((err) => console.log(err))
+    .then((res) => setHotplaceList(res.data))
+    // .then((res) => console.log('hot place', res.data))
+    .then((err) => console.log(err))
   }, [])
 
   useEffect(() => {
