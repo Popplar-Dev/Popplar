@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button, ActivityIndicator ,ScrollView, Pressable } from 'react-native';
+import { View, Text, StyleSheet,Image, ImageBackground, 
+  TextInput, Button, ActivityIndicator ,ScrollView, Pressable, SafeAreaView } from 'react-native';
 import { useState, useEffect } from 'react';
 import axios from "axios";
 // import { getuserinfo } from '../utills/https'
@@ -66,9 +67,12 @@ function MyPageScreen() {
   };
 
   return (
-    <ScrollView 
+    <SafeAreaView 
       style={styles.container}
-      contentContainerStyle={styles.scrollContent}>
+      // contentContainerStyle={styles.scrollContent}
+      >
+      {/* <ScrollView style={styles.scroll}> */}
+
 			<ImageBackground
         source={require('../assets/stars.png')}
         style={styles.backgroundImage}
@@ -153,7 +157,8 @@ function MyPageScreen() {
             visit={selectedPlanet.visit}
           />
 			</ImageBackground>
-    </ScrollView >
+      {/* </ScrollView> */}
+    </SafeAreaView >
   );
 };
 
@@ -162,8 +167,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#2C2C2C',
   },
-  scrollContent: {
-    flexGrow: 1,
+  scroll: {
+    // paddingBottom: '10%',
   },
 	backgroundImage: {
     flex: 1, 
@@ -223,6 +228,7 @@ const styles = StyleSheet.create({
   },
 	t:{
 		color:'white',
+    // fontSize:30
 	},
   setting : {
     position: 'absolute',
@@ -248,7 +254,7 @@ const styles = StyleSheet.create({
     // flexDirection:'column',
     justifyContent:'center',
     alignItems:'center',
-    margin:10
+    // margin:10
   },
   planetItem: {
     flexDirection: 'column',

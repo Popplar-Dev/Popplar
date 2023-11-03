@@ -95,7 +95,12 @@ export default function QnaList() {
       <Pressable style={styles.createqna} onPress={() => openModal()}>
         <Text style={styles.text}>질문하기</Text>
       </Pressable>
-      <FlatList
+      {qnaData.length===0 ? (
+        <View style={styles.nodata}>
+          <Text style={styles.text}>아직 질문이 없습니다</Text>
+        </View>
+      ) : (
+        <FlatList
         style={styles.qnacontainer}
         data={qnaData}
         keyExtractor={(item, index) => index.toString()}
@@ -122,6 +127,9 @@ export default function QnaList() {
           </Pressable>
         )}
       />
+
+      )}
+      
       <QnaCreateModal
         visible={isModalVisible}
         onClose={() => setModalVisible(false)}
@@ -188,4 +196,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems:'flex-end'
   },
+  nodata: {
+    flex:1,
+    justifyContent:'center',
+  }
 });

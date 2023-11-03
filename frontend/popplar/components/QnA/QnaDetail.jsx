@@ -9,10 +9,39 @@ export default function QnaDetail({ route }) {
   const [newAnswer, setNewAnswer] = useState('');
   const [questionDetail, setQuestionDetail] = useState('');
   const [answerDetail, setAnswerDetail] = useState('');
+  const [selectcomplete, setSelectcomplete] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const handleSelectAnswer = (index) => {
-    setSelectedAnswer(index);
+  const handleSelectAnswer = (answerid) => {
+    console.log(answerid)
+      const isLogin = async () => {
+        const AccessToken = await AsyncStorage.getItem('userAccessToken');
+        if (AccessToken !== null) {
+          const userAccessToken = JSON.parse(AccessToken);
+          console.log(userAccessToken)
+          axios.patch(`https://k9a705.p.ssafy.io:8000/member/qna/adopt/${qnaId}/${answerid}`,{},
+          { headers: { 'Access-Token': userAccessToken }}
+          )
+          .then((response) => {
+            setSelectedAnswer(answerid);
+            // setSelectcomplete(true)
+            axios.get(`https://k9a705.p.ssafy.io:8000/member/qna/question/${qnaId}`,
+              { headers: { 'Access-Token': userAccessToken}}
+            )
+            .then((response) => {
+              setQuestionDetail(response.data.questionResDto);
+            })
+            .catch((err) => {
+              console.log("에러 메시지 ::", err);
+            });
+            console.log(response)
+          })
+          .catch((err) => {
+            console.log("에러 메시지 ::", err);
+          });
+        }
+      }
+      isLogin()
   };
 
   const handleSubmitAnswer = () => {
@@ -28,11 +57,7 @@ export default function QnaDetail({ route }) {
       if (AccessToken !== null) {
         const userAccessToken = JSON.parse(AccessToken);
         axios.post(postUrl, requestBody,
-          {
-            headers: {
-              'Access-Token': userAccessToken,
-            },
-          }
+          { headers: { 'Access-Token': userAccessToken}}
         )
         .then((response) => {
           const newAnswerItem = {
@@ -45,8 +70,7 @@ export default function QnaDetail({ route }) {
           console.log("에러 메시지 ::", err);
         });
         setNewAnswer('');
-      }
-    }
+      }}
     isLogin()  
   };
 
@@ -56,25 +80,25 @@ export default function QnaDetail({ route }) {
       if (AccessToken !== null) {
         const userAccessToken = JSON.parse(AccessToken);
         axios.get(`https://k9a705.p.ssafy.io:8000/member/qna/question/${qnaId}`,
-          {
-            headers: {
-              'Access-Token': userAccessToken,
-            },
-          }
+          { headers: { 'Access-Token': userAccessToken}}
         )
           .then((response) => {
+            // console.log(response.data.answerResDtoList)
             setQuestionDetail(response.data.questionResDto);
             setAnswerDetail(response.data.answerResDtoList);
+            if (response.data.questionResDto.adoptedAnswerId === null) {
+              setSelectcomplete(true)
+            } 
             setLoading(false);
           })
           .catch((err) => {
             console.log("에러 메시지 ::", err);
             setLoading(false);
           });
-      }
-    }
+      }}
     isLogin()
   }, []);
+
 
   return (
     <View style={styles.container}>
@@ -89,7 +113,7 @@ export default function QnaDetail({ route }) {
                 {questionDetail.memberName}
               </Text>
             </View>
-            <Text style={styles.text}>{questionDetail.createdAt.slice(0, 10)}</Text>
+            {/* <Text style={styles.text}>{questionDetail.createdAt.slice(0, 10)}</Text> */}
           </View>
           <View style={styles.questionboxbottom}>
             <Text style={styles.smalltext}>질문</Text>
@@ -111,14 +135,24 @@ export default function QnaDetail({ route }) {
                       <Text style={styles.smalltext}>{item.memberName}</Text>
                       <Text style={styles.text}>{item.content}</Text>
                     </View>
-                    <Pressable
-                      style={selectedAnswer === index ? styles.selectButton : styles.nonselectButton}
-                      onPress={() => handleSelectAnswer(index)}
-                    >
-                      <Text style={styles.selectButtonText}>
-                        {selectedAnswer === index ? '채택됨' : '채택하기'}
-                      </Text>
-                    </Pressable>
+                    { !selectcomplete ? (
+                      <View
+                        style={item.id === questionDetail.adoptedAnswerId ? styles.selectButton : styles.cantselectButton}
+                      >
+                        <Text style={styles.selectButtonText}>
+                          {item.id === questionDetail.adoptedAnswerId ? '채택됨' : ''}
+                        </Text>
+                      </View>
+                    ) : (
+                      <Pressable
+                        style={item.id === questionDetail.adoptedAnswerId ? styles.selectButton : styles.nonselectButton}
+                        onPress={() => handleSelectAnswer(item.id)}
+                      >
+                        <Text style={styles.selectButtonText}>
+                          {item.id === questionDetail.adoptedAnswerId ? '채택됨' : '채택하기'}
+                        </Text>
+                      </Pressable>
+                    )}
                   </View>
                 )}
               />
@@ -199,6 +233,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginLeft: 10,
     
+  },
+  cantselectButton:{
+    backgroundColor: 'transperant',
+    padding: 5,
+    borderRadius: 5,
+    marginLeft: 10,
   },
   nonselectButton:{
     backgroundColor: 'grey',

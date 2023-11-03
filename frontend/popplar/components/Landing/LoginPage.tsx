@@ -51,7 +51,7 @@ export default function Login() {
       },
     }).then((response) => {
       AccessToken = response.data.access_token;
-      // console.log(response.data);
+      console.log(response.data);
       const requestData = {
         accessToken : AccessToken,
         loginType : "KAKAO"
@@ -94,6 +94,7 @@ export default function Login() {
         injectedJavaScript={INJECTED_JAVASCRIPT}
         javaScriptEnabled
         onMessage={event => { KakaoLoginWebView(event.nativeEvent["url"]); }}
+        // onShouldStartLoadWithRequest={handleOnShouldStartLoadWithRequest}
       />
     </View>
   )
