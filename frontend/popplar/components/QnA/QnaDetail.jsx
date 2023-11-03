@@ -34,7 +34,6 @@ export default function QnaDetail({ route }) {
             .catch((err) => {
               console.log("에러 메시지 ::", err);
             });
-            console.log(response)
           })
           .catch((err) => {
             console.log("에러 메시지 ::", err);

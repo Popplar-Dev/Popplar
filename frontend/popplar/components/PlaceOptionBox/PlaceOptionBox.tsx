@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { useNavigation } from '@react-navigation/native';
 
 type Props = {
   type: "chat" | "game"
@@ -10,6 +11,11 @@ type Props = {
 export default function PlaceOptionBox({ type }: Props) {
   const { width } = Dimensions.get('window');
   const halfScreenWidth = width / 2.3;
+  const navigation = useNavigation();
+
+  function gogame() {
+    navigation.navigate('SpeedTouch' as never)
+  }
 
   let dynamicStyles = {
     placeOptionBox: {
@@ -30,7 +36,7 @@ return (
       <Text style={styles.placeContent}>Popplar의 사람들과 
         {type=="game" ? "게임을 통해 경쟁하세요" : "채팅을 시작하세요"}
       </Text>
-      <TouchableOpacity onPress={() => {}} style={styles.placeOptionButton}>
+      <TouchableOpacity onPress={() => {gogame}} style={styles.placeOptionButton}>
         <Text style={{ color: 'white', textAlign: 'center'}}>{type=="game" ? "게임 시작하기" : "채팅방 입장"}</Text>
       </TouchableOpacity>
     </View>

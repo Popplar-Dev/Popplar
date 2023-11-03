@@ -172,7 +172,7 @@ const MapScreen: React.FC = () => {
               <Text style={styles.optionName}>Q & A</Text>
             </View>
             <View style={styles.answerContainer}>
-              <BottomSheetQnA />
+              <BottomSheetQnA spaceId={spaceInfo.id} spacename={spaceInfo.place_name}/>
             </View>
           </View>
 
@@ -346,9 +346,10 @@ const styles = StyleSheet.create({
   answerContainer: {
     flex: 0.8,
     marginTop: 9,
-    backgroundColor: '#8B90F7',
+    // backgroundColor: '#8B90F7',
+    borderWidth:2,
     borderRadius: 20,
-    opacity: 0.5,
+    // opacity: 0.5,
     height: 2,
     // borderWidth: 1, 
     // borderColor: 'red',
