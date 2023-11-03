@@ -18,9 +18,9 @@ class ChattingMemberService(
     fun createChattingMember(chattingMemberReqDto: ChattingMemberReqDto) {
         chattingMemberRepository.save(
             ChattingMember(
-                memberId = cryptService.decrypt(chattingMemberReqDto.memberId),
-                memberName = chattingMemberReqDto.memberName!!,
-                memberProfileImage = chattingMemberReqDto.memberProfileImage!!
+                memberId = chattingMemberReqDto.memberId,
+                memberName = chattingMemberReqDto.memberName,
+                memberProfileImage = chattingMemberReqDto.memberProfileImage
             )
         )
     }
@@ -28,7 +28,7 @@ class ChattingMemberService(
     @Transactional
     fun updateChattingMember(chattingMemberReqDto: ChattingMemberReqDto) {
         val member =
-            chattingMemberRepository.findByMemberId(cryptService.decrypt(chattingMemberReqDto.memberId))
+            chattingMemberRepository.findByMemberId(chattingMemberReqDto.memberId)
                 ?: throw RuntimeException("회원을 찾을 수 없습니다.")
         member.update(chattingMemberReqDto)
     }
