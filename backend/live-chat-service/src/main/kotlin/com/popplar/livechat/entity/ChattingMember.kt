@@ -19,7 +19,7 @@ class ChattingMember(
     var memberProfileImage: String,
 ) {
     fun update(chattingMemberReqDto: ChattingMemberReqDto) {
-        this.memberName = chattingMemberReqDto.memberName ?: this.memberName
-        this.memberProfileImage = chattingMemberReqDto.memberProfileImage ?: this.memberProfileImage
+        this.memberName = chattingMemberReqDto.memberName
+        this.memberProfileImage = chattingMemberReqDto.memberProfileImage
     }
 }
