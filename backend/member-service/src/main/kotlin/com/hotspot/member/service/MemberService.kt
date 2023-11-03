@@ -1,6 +1,7 @@
 package com.hotspot.member.service
 
 import com.hotspot.global.eureka.dto.ChattingMemberReqDto
+import com.hotspot.global.eureka.dto.ChattingMemberResDto
 import com.hotspot.global.oauth.dto.OAuthMemberDto
 import com.hotspot.member.dto.MemberProfileResDto
 import com.hotspot.member.dto.MemberUpdateReqDto
@@ -22,17 +23,20 @@ class MemberService(
     private val cryptService: CryptService,
     private val blockedMemberRepository: BlockedMemberRepository,
 
-    @Value("\${GATEWAY_URL}")
-    private val gatewayURL: String,
+    @Value("\${LIVE_CHAT_URL}")
+    private val liveChatURL: String,
+
 ) {
 
     fun createMember(oAuthMemberDto: OAuthMemberDto): Member {
         val member = memberRepository.save(Member.create(oAuthMemberDto))
 
         webClient.post()
-            .uri("$gatewayURL/live-chat/chatting-member")
+            .uri("$liveChatURL/chatting-member")
             .bodyValue(ChattingMemberReqDto.create(member))
             .retrieve()
+            .bodyToMono(ChattingMemberResDto::class.java)
+            .block()
 
         return member
     }
@@ -50,9 +54,11 @@ class MemberService(
         member.update(memberUpdateReqDto)
 
         webClient.patch()
-            .uri("$gatewayURL/live-chat/chatting-member")
+            .uri("$liveChatURL/chatting-member")
             .bodyValue(ChattingMemberReqDto.create(member))
             .retrieve()
+            .bodyToMono(ChattingMemberResDto::class.java)
+            .block()
 
         return MemberProfileResDto.create(cryptService, member)
     }
