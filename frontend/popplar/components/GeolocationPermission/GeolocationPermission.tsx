@@ -26,20 +26,21 @@ export default function GeolocationPermission() {
     requestPermission().then(result => {
       console.log({ result });
       if (result === "granted") {
-        Geolocation.getCurrentPosition(
-          pos => {
-            console.log(pos)
-            // setLocation(pos.coords);
-          },
-          error => {
-            console.log(error);
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 3600,
-            maximumAge: 3600,
-          },
-        );
+        console.log('granted')
+        // Geolocation.getCurrentPosition(
+        //   pos => {
+        //     console.log(pos)
+        //     // setLocation(pos.coords);
+        //   },
+        //   error => {
+        //     console.log(error);
+        //   },
+        //   {
+        //     enableHighAccuracy: true,
+        //     timeout: 3600,
+        //     maximumAge: 3600,
+        //   },
+        // );
       } else {
         Alert.alert(
           '제목', '내용',

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { Place } from '../types/place'
 import {BASE_URL} from './baseUrl'
-import {AsyncStorage} from 'react-native';
 const accessToken = process.env.REACT_APP_ACCESS_TOKEN;
 
 // 전체 핫플레이스 조회
@@ -10,7 +9,7 @@ export async function getAllHotplace() {
     method: 'get',
     url: `${BASE_URL}/hot-place`,
     headers: { "access-token" : accessToken }
-   }).then((res) => res.data._embedded.hotPlaceResDtoList)
+   }).then((res) => res)
 }
 
 // id로 핫플레이스 조회
@@ -27,6 +26,6 @@ export async function getHotplaceVisitors(id: string) {
   return await axios({
     method: 'get',
     url: `${BASE_URL}/visitor/${id}`,
-    // headers: addAccessTokenToHeaders(),
+    headers: { "access-token" : accessToken }
    }).then((res) => res)
 }

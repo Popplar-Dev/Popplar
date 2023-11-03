@@ -16,6 +16,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import NameBox from './NameBox/NameBox'
 import PlaceOptionBox from './PlaceOptionBox/PlaceOptionBox'
 import GeolocationPermission from './GeolocationPermission/GeolocationPermission'
+import BottomSheetQnA from './BottomSheetQnA/BottomSheetQnA'
 import { FlipInEasyX } from 'react-native-reanimated';
 
 const windowWidth = Dimensions.get('window').width;
@@ -79,30 +80,31 @@ const MapScreen: React.FC = () => {
   const [longitude, setLogitude] = useState<any>(null);
 
   const geoLocation = () => {
+    console.log('location')
     // 사용자의 위치를 감지
-    Geolocation.getCurrentPosition(
-        position => {
-            const latitude = JSON.stringify(position.coords.latitude);
-            const longitude = JSON.stringify(position.coords.longitude);
+    // Geolocation.getCurrentPosition(
+    //     position => {
+    //         const latitude = JSON.stringify(position.coords.latitude);
+    //         const longitude = JSON.stringify(position.coords.longitude);
 
-            setLatitude(latitude);
-            setLogitude(longitude);
-        },
-        error => { console.log(error.code, error.message); },
-        {enableHighAccuracy:true, timeout: 15000, maximumAge: 10000 },
-    )
+    //         setLatitude(latitude);
+    //         setLogitude(longitude);
+    //     },
+    //     error => { console.log(error.code, error.message); },
+    //     {enableHighAccuracy:true, timeout: 15000, maximumAge: 10000 },
+    // )
     
-    // 사용자의 위치 변화를 감지
-    Geolocation.watchPosition(
-      position => {
-        const latitude = JSON.stringify(position.coords.latitude);
-        const longitude =  JSON.stringify(position.coords.longitude);
+    // // 사용자의 위치 변화를 감지
+    // Geolocation.watchPosition(
+    //   position => {
+    //     const latitude = JSON.stringify(position.coords.latitude);
+    //     const longitude =  JSON.stringify(position.coords.longitude);
 
-        console.log('move', latitude, longitude)
-      },
-      error => { console.log(error.code, error.message); },
-      {enableHighAccuracy:true, timeout: 15000, maximumAge: 10000 },
-    )
+    //     console.log('move', latitude, longitude)
+    //   },
+    //   error => { console.log(error.code, error.message); },
+    //   {enableHighAccuracy:true, timeout: 15000, maximumAge: 10000 },
+    // )
   }
 
   useEffect(() => {
@@ -170,7 +172,7 @@ const MapScreen: React.FC = () => {
               <Text style={styles.optionName}>Q & A</Text>
             </View>
             <View style={styles.answerContainer}>
-              <Text>여기 답변 출력될거예요</Text>
+              <BottomSheetQnA />
             </View>
           </View>
 
