@@ -43,6 +43,12 @@ export default function Map () {
     });
   }, [])
 
+  useEffect(() => {
+    document.addEventListener("message", function(e) {
+      alert("받은 데이터(Web) : "+ e);
+    })
+  }, [])
+
   // function placesSearchCB(data: any, status: any, pagination: any) {
   //   if (status === kakao.maps.services.Status.OK) {
   //     console.log(data)
