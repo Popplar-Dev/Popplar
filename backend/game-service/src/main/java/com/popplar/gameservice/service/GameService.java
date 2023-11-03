@@ -9,6 +9,7 @@ import com.popplar.gameservice.dto.MyBoardDto;
 import com.popplar.gameservice.entity.Conqueror;
 import com.popplar.gameservice.entity.Game;
 import com.popplar.gameservice.entity.GameType;
+import com.popplar.gameservice.exception.BadRequestException;
 import com.popplar.gameservice.mapper.ConquerorMapper;
 import com.popplar.gameservice.mapper.GameMapper;
 import com.popplar.gameservice.repository.ConquerorRepository;
@@ -34,6 +35,9 @@ public class GameService {
 
     @Transactional
     public GameResultDto insertGameService(GameDto gameDto) {
+        if (gameDto == null) {
+            throw new BadRequestException("입력할 게임 정보가 존재하지 않습니다.");
+        }
         //데이터를 entity로 변환해서 save한다
         Game game = GameMapper.INSTANCE.gameDtoToGame(gameDto);
         gameRepository.save(game);
@@ -94,7 +98,10 @@ public class GameService {
     }
 
     public GameBoardDto getGameBoard(Long hotPlaceId, String type) {
-        // hotPlaceId에 해당하는 게임 정보를 조회
+
+        if (!isValidGameType(type)) {
+            throw new IllegalArgumentException("게임 타입이 잘못되었습니다.");
+        }
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalDate currentDate = currentDateTime.toLocalDate();
         LocalDateTime startOfDay = currentDate.atStartOfDay();
@@ -105,7 +112,19 @@ public class GameService {
         return GameBoardDto.builder().boardDtoList(boardDtoList).build();
     }
 
+    public boolean isValidGameType(String type) {
+        try {
+            GameType.valueOf(type);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
     public MyBoardDto getMyGameBoard(Long memberId, Long hotPlaceId, String type) {
+        if (!isValidGameType(type)) {
+            throw new IllegalArgumentException("게임 타입이 잘못되었습니다.");
+        }
         List<Game> gameList = gameRepository.findByHotPlaceIdAndTypeAndMemberIdAndDeletedFalseOrderByPointsDesc(
             hotPlaceId,
             GameType.valueOf(type), memberId);
