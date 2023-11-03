@@ -10,6 +10,7 @@ import com.hotspot.global.oauth.service.OAuthService
 import com.hotspot.member.dto.MemberProfileResDto
 import com.hotspot.member.repository.MemberRepository
 import com.hotspot.member.service.CryptService
+import com.hotspot.member.service.MemberService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -23,6 +24,7 @@ class KakaoOAuthService(
     private val memberRepository: MemberRepository,
     private val cryptService: CryptService,
     private val jwtService: JWTService,
+    private val memberService: MemberService,
 
     @Value("\${KAKAO_RESTAPI_KEY}")
     private val KAKAO_RESTPAPI_KEY: String,
@@ -61,10 +63,12 @@ class KakaoOAuthService(
     }
 
     override fun login(oAuthMemberDto: OAuthMemberDto): Member {
-        return memberRepository.findBySocialIdAndDeletedFalse(oAuthMemberDto.socialId) ?: memberRepository.save(Member.create(oAuthMemberDto))
+        return memberRepository.findBySocialIdAndDeletedFalse(oAuthMemberDto.socialId)
+            ?: memberService.createMember(oAuthMemberDto)
     }
 
     override fun generateJWT(member: Member): MemberProfileResDto {
-        return MemberProfileResDto.create(cryptService, member).insertJWT(jwtService.createAccessToken(member))
+        return MemberProfileResDto.create(cryptService, member)
+            .insertJWT(jwtService.createAccessToken(member))
     }
 }
