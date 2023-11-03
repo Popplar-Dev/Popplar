@@ -21,6 +21,25 @@ import QnaDetail from '../QnA/QnaDetail';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
+const MapScreenStack = () => {
+   return (
+    <Stack.Navigator
+      screenOptions={{
+        headerTintColor:'#8B90F7',
+        headerStyle:{backgroundColor:'transparent'},
+        headerShadowVisible:false
+      }}
+    >
+      {/* <Stack.Screen name="Mypage" component={MyPageScreen} options={{headerShown: false}}/> */}
+      <Stack.Screen name="Map" component={MapScreen} options={{headerShown: false}}/>
+      <Stack.Screen name="SpeedTouch" component={SpeedTouch} options={{headerTitle: 'SpeedTouchGame'}}/>
+      <Stack.Screen name="QnaList" component={QnaList} options={{headerTitle: 'QnaList'}}/>
+      <Stack.Screen name="QnaDetail" component={QnaDetail} options={{headerTitle: 'QnaDetail'}}/>
+    </Stack.Navigator>
+  );
+}
+
+
 const MyPageStack = () => {
 
   return (
@@ -28,7 +47,7 @@ const MyPageStack = () => {
       screenOptions={{
         headerTintColor:'#8B90F7',
         headerStyle:{backgroundColor:'transparent'},
-        headerShadowVisible:false
+        headerShadowVisible:false,
       }}
     >
       <Stack.Screen name="Mypage" component={MyPageScreen} options={{headerShown: false}}/>
@@ -84,7 +103,7 @@ export default function BottomTab() {
       />
       <Tab.Screen
         name="Map"
-        component={MapScreen}
+        component={MapScreenStack}
         options={{
           tabBarIcon: ({focused}) => (
             <View style={styles.mapTabBackground}>

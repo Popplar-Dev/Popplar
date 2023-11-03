@@ -9,7 +9,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { userInfoState } from '../recoil/userState';
 import { useRecoilState } from 'recoil';
 
-export default function QnaList() {
+export default function QnaList({ route }) {
+  const {spaceId, spacename} = route.params;
+  console.log(spaceId, spacename)
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
   const [qnaData, setQnaData] = useState('');
@@ -26,7 +28,7 @@ export default function QnaList() {
   const handleCreateQuestion = (newQuestion) => {
     
     const requestData = {
-      hotPlaceId: 21414107,
+      hotPlaceId: spaceId,
       memberId: userinfo.id, 
       content: newQuestion, 
     };
@@ -43,7 +45,7 @@ export default function QnaList() {
         )
           .then((response) => {
             setModalVisible(false);
-            axios.get(`https://k9a705.p.ssafy.io:8000/member/qna/hotplace/21414107`, 
+            axios.get(`https://k9a705.p.ssafy.io:8000/member/qna/hotplace/${spaceId}`, 
               {
                 headers: {
                   'Access-Token': userAccessToken,
@@ -71,7 +73,7 @@ export default function QnaList() {
       const AccessToken = await AsyncStorage.getItem('userAccessToken');
       if (AccessToken !== null) {
         const userAccessToken = JSON.parse(AccessToken);
-        axios.get(`https://k9a705.p.ssafy.io:8000/member/qna/hotplace/21414107`, 
+        axios.get(`https://k9a705.p.ssafy.io:8000/member/qna/hotplace/${spaceId}`, 
           {
             headers: {
               'Access-Token': userAccessToken,
@@ -91,7 +93,7 @@ export default function QnaList() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.hotplace}>MultiCampus</Text>
+      <Text style={styles.hotplace}>{spacename}</Text>
       <Pressable style={styles.createqna} onPress={() => openModal()}>
         <Text style={styles.text}>질문하기</Text>
       </Pressable>
@@ -101,10 +103,10 @@ export default function QnaList() {
         </View>
       ) : (
         <FlatList
-        style={styles.qnacontainer}
-        data={qnaData}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => (
+          style={styles.qnacontainer}
+          data={qnaData}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => (
           <Pressable style={styles.qnabox} key={index} onPress={() => handleItemPress(item.questionResDto.id)}>
             <View style={styles.questionbox}>
               <View style={styles.questionboxtop}>
