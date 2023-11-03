@@ -50,7 +50,7 @@ class AchievementService(
         stamp = stamp ?: stampRepository.save(Stamp.create(decryptedMemberId, hotPlaceId))
 
 
-        val hotPlaceResDto = retryWithBackoff(webClient, HttpMethod.POST, "$hotPlaceURL/visitor", VisitorReqDto.create(stamp), 5)
+        val hotPlaceResDto = retryWithBackoff(webClient, HttpMethod.POST, "$hotPlaceURL/visitor", VisitorReqDto.create(stamp), 5, VisitorReqDto::class.java)
 
         stamp.update(hotPlaceResDto as HotPlaceResDto)
 
