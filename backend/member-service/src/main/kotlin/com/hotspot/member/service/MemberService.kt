@@ -34,7 +34,7 @@ class MemberService(
         val member = memberRepository.save(Member.create(oAuthMemberDto))
         val maxRetries = 3 // 최대 재시도 횟수
 
-        retryWithBackoff(webClient, HttpMethod.POST, "$liveChatURL/chatting-member", ChattingMemberReqDto.create(member), maxRetries)
+        retryWithBackoff(webClient, HttpMethod.POST, "$liveChatURL/chatting-member", ChattingMemberReqDto.create(member), maxRetries, ChattingMemberReqDto::class.java)
 
         return member
     }
@@ -54,7 +54,7 @@ class MemberService(
         member.update(memberUpdateReqDto)
         val maxRetries = 3 // 최대 재시도 횟수
 
-        retryWithBackoff(webClient, HttpMethod.PATCH, "$liveChatURL/chatting-member", ChattingMemberReqDto.create(member), maxRetries)
+        retryWithBackoff(webClient, HttpMethod.PATCH, "$liveChatURL/chatting-member", ChattingMemberReqDto.create(member), maxRetries, ChattingMemberReqDto::class.java)
 
 
         return MemberProfileResDto.create(cryptService, member)
