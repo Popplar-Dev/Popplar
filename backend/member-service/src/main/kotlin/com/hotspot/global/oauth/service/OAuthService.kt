@@ -5,11 +5,10 @@ import com.hotspot.member.entity.Member
 import com.hotspot.member.entity.SocialType
 import com.hotspot.global.oauth.dto.OAuthMemberDto
 import com.hotspot.global.oauth.dto.OAuthTokenDto
-import com.hotspot.member.service.CryptService
 
 interface OAuthService {
     fun process(accessToken: String): MemberProfileResDto {
-        return generateJWT(login(getUser(accessToken)))
+        return generateJWT(login(getUser(getAccessToken(accessToken).accessToken)))
     }
 
     fun getSocialType(): SocialType
