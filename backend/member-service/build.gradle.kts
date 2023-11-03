@@ -34,9 +34,12 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-hateoas")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+	implementation("io.jsonwebtoken:jjwt-api:0.11.2")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	runtimeOnly("com.mysql:mysql-connector-j")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

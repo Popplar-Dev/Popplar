@@ -19,11 +19,11 @@ public class HotPlaceAssembler {
             "findById"));
     }
 
-    public EntityModel<?> likeHotPlaceToModel(Long hotPlaceId) {
+    public EntityModel<?> likeHotPlaceToModel(Long memberId, Long hotPlaceId) {
         return EntityModel.of(
             new ResponseEntity<Void>(HttpStatus.OK),
-            linkTo(methodOn(HotPlaceController.class).likeHotPlace(hotPlaceId)).withRel("like"),
-            linkTo(methodOn(HotPlaceController.class).deleteLikeHotPlace(hotPlaceId)).withRel(
+            linkTo(methodOn(HotPlaceController.class).likeHotPlace(memberId, hotPlaceId)).withRel("like"),
+            linkTo(methodOn(HotPlaceController.class).deleteLikeHotPlace(memberId, hotPlaceId)).withRel(
                 "deleteLike"));
     }
 }

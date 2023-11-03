@@ -1,5 +1,6 @@
 package com.hotspot.hotplace.service;
 
+import com.hotspot.global.exception.exceptions.BadRequestException;
 import com.hotspot.hotplace.dto.HotPlaceResDto;
 import com.hotspot.hotplace.dto.HotPlaceReqDto;
 import com.hotspot.hotplace.entity.HotPlace;
@@ -59,7 +60,7 @@ public class HotPlaceService {
     @Transactional
     public HotPlaceResDto insertHotPlace(HotPlaceReqDto hotPlaceReqDto) {
         if (hotPlaceRepository.findById(hotPlaceReqDto.getId()).isPresent()) {
-            throw new ArithmeticException("이미 핫플레이스로 등록되어있습니다.");
+            throw new BadRequestException("이미 핫플레이스로 등록되어있습니다.");
         }
 
         // 카테고리 기타 처리
@@ -82,7 +83,7 @@ public class HotPlaceService {
     public void likeHotPlace(Long hotPlaceId, Long memberId) {
         HotPlace hotPlace = findHotPlaceById(hotPlaceId);
         if (likeRepository.findByHotPlaceAndMemberId(hotPlace, memberId).isPresent()) {
-            throw new RuntimeException("이미 좋아요 누른 핫플레이스입니다.");
+            throw new BadRequestException("이미 좋아요 누른 핫플레이스입니다.");
         }
         hotPlace.increaseLikeCount();
         if (hotPlace.getLikeCount() >= 5) {
@@ -95,17 +96,21 @@ public class HotPlaceService {
     public void deleteLikeHotPlace(Long hotPlaceId, Long memberId) {
         HotPlace hotPlace = findHotPlaceById(hotPlaceId);
         Like like = likeRepository.findByHotPlaceAndMemberId(hotPlace, memberId)
-            .orElseThrow(() -> new ArithmeticException("좋아요를 하지 않은 핫플레이스입니다."));
+            .orElseThrow(() -> new BadRequestException("좋아요를 하지 않은 핫플레이스입니다."));
         likeRepository.delete(like);
         hotPlace.decreaseLikeCount();
     }
 
+
+    //레디스 관련 로직
     public void insertMemberPosition(MemberPosition memberPosition) {
-//        System.out.println("memberPosition.getMemberId() = " + memberPosition.getMemberId());
-//        if (memberPositionRepository.existsByMemberId(memberPosition.getMemberId())) {
-//            System.out.println("있다고 뜸:::::::::::::::::::::::::");
-//            memberPositionRepository.deleteAllByMemberId(memberPosition.getMemberId());
-//        }
+        MemberPosition memberPos = memberPositionRepository.findByMemberId(
+            memberPosition.getMemberId());
+        if (memberPos != null) {
+            memberPos.memberUpdate(memberPosition);
+            memberPositionRepository.save(memberPos);
+            return;
+        }
         memberPositionRepository.save(memberPosition);
     }
 
@@ -117,7 +122,7 @@ public class HotPlaceService {
     // -- 예외 처리용 코드 -- //
     public HotPlace findHotPlaceById(Long hotPlaceId) {
         return hotPlaceRepository.findById(hotPlaceId)
-            .orElseThrow(() -> new ArithmeticException("핫플레이스가 존재하지 않습니다"));
+            .orElseThrow(() -> new BadRequestException("핫플레이스가 존재하지 않습니다"));
     }
 
     // -- 기타 카테고리 처리용 코드 -- //

@@ -5,12 +5,18 @@ import com.hotspot.member.entity.SocialType
 import com.hotspot.member.service.CryptService
 
 class MemberProfileResDto(
-    var id: Long,
-    var name: String,
-    var socialType: SocialType,
-    var profileImage: String,
-    var exp: Int,
+    val id: Long,
+    val name: String,
+    val socialType: SocialType,
+    val profileImage: String,
+    val exp: Int,
+    var jwt: String? = null,
 ) {
+
+    fun insertJWT(jwt: String): MemberProfileResDto {
+        this.jwt = jwt
+        return this
+    }
 
     companion object {
         fun create(cryptService: CryptService, member: Member): MemberProfileResDto {

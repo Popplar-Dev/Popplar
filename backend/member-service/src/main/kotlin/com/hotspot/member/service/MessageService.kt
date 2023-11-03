@@ -50,9 +50,8 @@ class MessageService(
     }
 
     fun getMyMessageList(receivedMemberId: Long): MutableList<MessageResDto> {
-        val decryptedReceivedMemberId = cryptService.decrypt(receivedMemberId)
         val messageList =
-            messageRepository.findAllByReceivedMemberIdAndDeletedFalse(decryptedReceivedMemberId)
+            messageRepository.findAllByReceivedMemberIdAndDeletedFalse(receivedMemberId)
 
 
         return messageList.stream().map {

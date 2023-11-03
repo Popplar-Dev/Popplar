@@ -5,14 +5,7 @@ import com.hotspot.qna.dto.QnAResDto
 import com.hotspot.qna.dto.QnAUpdateReqDto
 import com.hotspot.qna.dto.QuestionReqDto
 import com.hotspot.qna.service.QnAService
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/member/qna")
@@ -33,54 +26,63 @@ class QnAController(
 
     @PostMapping("/question")
     fun createQuestion(
+        @RequestHeader("Member-Id") myId: String,
         @RequestBody questionReqDto: QuestionReqDto
     ): QnAResDto {
-        return qnaService.createQuestion(questionReqDto)
+        return qnaService.createQuestion(myId.toLong(), questionReqDto)
     }
 
     @PatchMapping("/question/{questionId}")
     fun updateQuestion(
+        @RequestHeader("Member-Id") myId: String,
         @PathVariable questionId: Long,
         @RequestBody qnaUpdateReqDto: QnAUpdateReqDto
     ): QnAResDto {
-        return qnaService.updateQuestion(questionId, qnaUpdateReqDto.content)
+        return qnaService.updateQuestion(myId.toLong(), questionId, qnaUpdateReqDto.content)
     }
 
     @DeleteMapping("/question/{questionId}")
-    fun deleteQuestion(@PathVariable questionId: Long) {
-        qnaService.deleteQuestion(questionId)
+    fun deleteQuestion(
+        @RequestHeader("Member-Id") myId: String,
+        @PathVariable questionId: Long
+    ) {
+        qnaService.deleteQuestion(myId.toLong(), questionId)
     }
 
     @PostMapping("/answer/{questionId}")
     fun createAnswer(
+        @RequestHeader("Member-Id") myId: String,
         @PathVariable questionId: Long,
         @RequestBody answerReqDto: AnswerReqDto
     ): QnAResDto {
-        return qnaService.createAnswer(questionId, answerReqDto)
+        return qnaService.createAnswer(myId.toLong(), questionId, answerReqDto)
     }
 
     @PatchMapping("/answer/{questionId}/{answerId}")
     fun updateAnswer(
+        @RequestHeader("Member-Id") myId: String,
         @PathVariable questionId: Long,
         @PathVariable answerId: Long,
         @RequestBody qnaUpdateReqDto: QnAUpdateReqDto
     ): QnAResDto {
-        return qnaService.updateAnswer(questionId, answerId, qnaUpdateReqDto.content)
+        return qnaService.updateAnswer(myId.toLong(), questionId, answerId, qnaUpdateReqDto.content)
     }
 
     @DeleteMapping("/answer/{questionId}/{answerId}")
     fun deleteAnswer(
+        @RequestHeader("Member-Id") myId: String,
         @PathVariable questionId: Long,
         @PathVariable answerId: Long,
     ) {
-        qnaService.deleteAnswer(questionId, answerId)
+        qnaService.deleteAnswer(myId.toLong(), questionId, answerId)
     }
 
     @PatchMapping("/adopt/{questionId}/{answerId}")
     fun adoptAnswer(
+        @RequestHeader("Member-Id") myId: String,
         @PathVariable questionId: Long,
         @PathVariable answerId: Long,
     ): QnAResDto {
-        return qnaService.adoptAnswer(questionId, answerId)
+        return qnaService.adoptAnswer(myId.toLong(), questionId, answerId)
     }
 }

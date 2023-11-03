@@ -7,20 +7,37 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import lombok.Getter;
+import org.springframework.data.redis.core.RedisKeyValueAdapter;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-@EnableRedisRepositories
+@Getter
 @Configuration
 @RequiredArgsConstructor
+@EnableRedisRepositories(enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP)
 public class RedisConfig {
 
-    @Value("${redis.host}")
-    private String redisHost;
+    @Value("${spring.cache.redis.host}")
+    private String host;
 
-    @Value("${redis.port}")
-    private int redisPort;
+    @Value("${spring.cache.redis.port}")
+    private int port;
+
 
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(redisHost, redisPort);
+    public RedisConnectionFactory redisConnectionFactory(){
+        return new LettuceConnectionFactory(host, port);
+    }
+
+    /**
+     * RedisConnection에서 넘겨준 byte 값 객체 직렬화
+     */
+    @Bean
+    public RedisTemplate<?,?> redisTemplate(){
+        RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        return redisTemplate;
     }
 }
