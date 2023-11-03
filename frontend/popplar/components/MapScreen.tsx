@@ -19,6 +19,9 @@ import GeolocationPermission from './GeolocationPermission/GeolocationPermission
 import BottomSheetQnA from './BottomSheetQnA/BottomSheetQnA'
 import { FlipInEasyX } from 'react-native-reanimated';
 
+import { useRecoilState } from 'recoil';
+import { locationState } from './recoil/locationState'
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -37,7 +40,7 @@ type SpaceInfo = {
 }
 
 const MapScreen: React.FC = () => {
-
+  const [location, setLocation] = useRecoilState<Here>(locationState);
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo>({})
   // bottom-sheet
   // ref
@@ -65,9 +68,12 @@ const MapScreen: React.FC = () => {
   let webRef = useRef<WebView | null>(null);
 
   /* native -> web */
-  const native_to_web = () => {
+  const native_to_web = (data: any) => {
+    console.log('native_to_web')
+    console.log(data)
     if (webRef.current) {
-      console.log(webRef.current.postMessage("전송 데이터(React) : 웹으로 데이터 전송"));
+      webRef.current.postMessage(data)
+      console.log("전송 데이터(React) : 웹으로 데이터 전송");
     }
   }
 
@@ -115,6 +121,11 @@ const MapScreen: React.FC = () => {
     getAllHotplace()
     .then((res) => console.log(res))
   }, [])
+
+  useEffect(() => {
+    const locationData = {type: 'location', data: location}
+    native_to_web(locationData)
+  }, [location])
 
   return (
     <GestureHandlerRootView style={{ flex: 1}}>
