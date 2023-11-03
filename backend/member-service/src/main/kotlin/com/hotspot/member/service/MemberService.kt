@@ -1,6 +1,7 @@
 package com.hotspot.member.service
 
 import com.hotspot.global.eureka.dto.ChattingMemberReqDto
+import com.hotspot.global.oauth.dto.OAuthMemberDto
 import com.hotspot.member.dto.MemberProfileResDto
 import com.hotspot.member.dto.MemberUpdateReqDto
 import com.hotspot.member.entity.BlockedMember
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.bodyToMono
 
 @Service
 @Transactional(readOnly = true)
@@ -26,6 +26,17 @@ class MemberService(
     private val gatewayURL: String,
 ) {
 
+    fun createMember(oAuthMemberDto: OAuthMemberDto): Member {
+        val member = memberRepository.save(Member.create(oAuthMemberDto))
+
+        webClient.post()
+            .uri("$gatewayURL/live-chat/chatting-member")
+            .bodyValue(ChattingMemberReqDto.create(member))
+            .retrieve()
+
+        return member
+    }
+
     fun getMemberProfile(memberId: Long): MemberProfileResDto {
         return MemberProfileResDto.create(cryptService, findMemberByEncryptedId(memberId))
     }
@@ -38,10 +49,8 @@ class MemberService(
         val member = findMemberByEncryptedId(memberId)
         member.update(memberUpdateReqDto)
 
-        println(member.name)
-
         webClient.patch()
-            .uri("http://localhost:8203/live-chat/chatting-member")
+            .uri("$gatewayURL/live-chat/chatting-member")
             .bodyValue(ChattingMemberReqDto.create(member))
             .retrieve()
 
