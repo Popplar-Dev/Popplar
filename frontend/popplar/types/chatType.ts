@@ -9,7 +9,3 @@ export type ChatMessageType = {
   date?: string;
   time?: string; 
 }
-
-export type ChatInfoType = {
-  date: string; 
-}

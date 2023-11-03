@@ -8,7 +8,7 @@ import { useRecoilState } from 'recoil';
 import { userInfoState } from '../recoil/userState';
 
 const REST_API_KEY = '0da056655f3ed1ec3ebd8325d19ac9f6';
-const REDIRECT_URI = 'http://10.0.2.2:8081/member/login';
+const REDIRECT_URI = 'https://k9a705.p.ssafy.io:8000/member/login';
 const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage('message from webView')`;
 
 export default function Login() {
