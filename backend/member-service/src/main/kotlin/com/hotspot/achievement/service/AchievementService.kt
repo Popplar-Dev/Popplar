@@ -22,8 +22,9 @@ import java.time.LocalDate
 @Transactional(readOnly = true)
 class AchievementService(
 
-    @Value("\${GATEWAY_URL}")
-    private val gatewayURL: String,
+    @Value("\${HOT_PLACE_URL}")
+    private val hotPlaceURL: String,
+
     private val webClient: WebClient,
     private val stampRepository: StampRepository,
     private val memberCategoryCountRepository: MemberCategoryCountRepository,
@@ -48,7 +49,9 @@ class AchievementService(
 
 
         val hotPlaceResDto = webClient.post()
-            .uri("$gatewayURL/hot-place/$hotPlaceId")
+            .uri("$hotPlaceURL" +
+                    "/visitor")
+            .header("Member-Id", decryptedMemberId.toString())
             .bodyValue(VisitorReqDto.create(stamp))
             .retrieve()
             .bodyToMono(HotPlaceResDto::class.java)
