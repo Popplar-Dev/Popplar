@@ -16,6 +16,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import NameBox from './NameBox/NameBox'
 import PlaceOptionBox from './PlaceOptionBox/PlaceOptionBox'
 import GeolocationPermission from './GeolocationPermission/GeolocationPermission'
+import BottomSheetQnA from './BottomSheetQnA/BottomSheetQnA'
 import { FlipInEasyX } from 'react-native-reanimated';
 
 const windowWidth = Dimensions.get('window').width;
@@ -171,7 +172,7 @@ const MapScreen: React.FC = () => {
               <Text style={styles.optionName}>Q & A</Text>
             </View>
             <View style={styles.answerContainer}>
-              <Text>여기 답변 출력될거예요</Text>
+              <BottomSheetQnA />
             </View>
           </View>
 
