@@ -1,29 +1,21 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import {View, Pressable, TextInput, Keyboard, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 type ChatInputProps = {
-  onSend: Function; 
-}
-type ChatMessage = {
-  messageType: 'me' | 'others';
-  memberId: number;  
-  nickname: string; 
-  profilePic?: string;  
-  content: string; 
-  date?: string;
-  time?: string; 
-}
+  onSend: Function;
+  onScrollToEnd: Function;
+};
 
-export default function ChatInput({onSend}: ChatInputProps) {
-
-  const [inputText, setInputText] = useState("");
+export default function ChatInput({onSend, onScrollToEnd}: ChatInputProps) {
+  const [inputText, setInputText] = useState('');
 
   const handleSend = () => {
     onSend(inputText);
-    setInputText(""); 
+    setInputText('');
+    onScrollToEnd();
     Keyboard.dismiss();
-  }
+  };
 
   return (
     <View style={styles.inputContainer}>
