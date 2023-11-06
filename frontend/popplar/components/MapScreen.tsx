@@ -268,6 +268,7 @@ const MapScreen: React.FC = () => {
             </View>
           </View> */}
         
+        {spaceInfo &&
           <View style={styles.qnaContainer}>
             <View style={styles.qnaTitle}>
               <Icon name="question" size={16} color={'white'} style={styles.qnaIcon}/>
@@ -277,6 +278,7 @@ const MapScreen: React.FC = () => {
               <BottomSheetQnA spaceId={spaceInfo.id} spacename={spaceInfo.place_name}/>
             </View>
           </View>
+        }
 
           <View style={styles.placeBottomContainer}>
             <PlaceOptionBox type="chat"/>
