@@ -1,6 +1,7 @@
 package com.hotspot.member.service
 
 import com.hotspot.global.eureka.dto.ChattingMemberReqDto
+import com.hotspot.global.eureka.dto.ChattingMemberResDto
 import com.hotspot.global.oauth.dto.OAuthMemberDto
 import com.hotspot.global.service.WebClientService
 import com.hotspot.member.dto.MemberProfileResDto
@@ -34,7 +35,7 @@ class MemberService(
         val member = memberRepository.save(Member.create(oAuthMemberDto))
         val maxRetries = 3 // 최대 재시도 횟수
 
-        retryWithBackoff(webClient, HttpMethod.POST, "$liveChatURL/chatting-member", ChattingMemberReqDto.create(member), maxRetries, ChattingMemberReqDto::class.java)
+        retryWithBackoff(webClient, HttpMethod.POST, "$liveChatURL/chatting-member", ChattingMemberReqDto.create(member), maxRetries, ChattingMemberResDto::class.java)
 
         return member
     }
@@ -54,7 +55,7 @@ class MemberService(
         member.update(memberUpdateReqDto)
         val maxRetries = 3 // 최대 재시도 횟수
 
-        retryWithBackoff(webClient, HttpMethod.PATCH, "$liveChatURL/chatting-member", ChattingMemberReqDto.create(member), maxRetries, ChattingMemberReqDto::class.java)
+        retryWithBackoff(webClient, HttpMethod.PATCH, "$liveChatURL/chatting-member", ChattingMemberReqDto.create(member), maxRetries, ChattingMemberResDto::class.java)
 
 
         return MemberProfileResDto.create(cryptService, member)

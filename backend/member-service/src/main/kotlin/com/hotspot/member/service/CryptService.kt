@@ -1,6 +1,5 @@
 package com.hotspot.member.service
 
-import com.hotspot.member.dto.MemberProfileResDto
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

@@ -7,7 +7,6 @@ import com.hotspot.member.repository.MemberRepository
 import com.hotspot.member.repository.MessageRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import kotlin.streams.toList
 
 @Service
 @Transactional(readOnly = true)
