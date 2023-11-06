@@ -65,8 +65,6 @@ public class GameService {
             Conqueror newConqueror = conquerorRepository.save(
                 GameMapper.INSTANCE.gameToConqueror(game));
             newConqueror.setPoints(sumAllGamePoint(game));
-            //기존 정복자 정보는 삭제
-//            conqueror.orElseThrow().setDeleted();
             return GameResultDto.builder().isConqueror(true).points(newConqueror.getPoints())
                 .createdTime(newConqueror.getCreatedDate())
                 .build();
@@ -111,19 +109,10 @@ public class GameService {
 
         List<BoardDto> boardDtoList = gameQueryDSLRepository.findMaxPointsByHotPlaceIdAndType(
             hotPlaceId, type, startOfDay, endOfDay);
-        GameBoardDto gameBoardDto=GameBoardDto.builder().boardDtoList(boardDtoList).build();
+        GameBoardDto gameBoardDto = GameBoardDto.builder().boardDtoList(boardDtoList).build();
         gameBoardDto.encryptGameDtoList(cryptService);
         return gameBoardDto;
     }
-//
-//    public boolean isValidGameType(String type) {
-//        try {
-//            GameType.valueOf(type);
-//            return true;
-//        } catch (IllegalArgumentException e) {
-//            return false;
-//        }
-//    }
 
     public MyBoardDto getMyGameBoard(Long memberId, Long hotPlaceId, String type) {
         if (!GameType.isValidGameType(type)) {
@@ -148,7 +137,7 @@ public class GameService {
         Optional<ConquerorInfoDto> conquerorDto = conquerorRepository.findTopByHotPlaceIdAndDeletedFalseAndCreatedDateBetweenOrderByPointsDesc(
                 hotPlaceId, startOfDay, endOfDay)
             .map(ConquerorMapper.INSTANCE::conquerorToConquerorInfoDto);
-        if (conquerorDto.isEmpty()){
+        if (conquerorDto.isEmpty()) {
             return ConquerorInfoDto.builder().id(0L).build();
         }
         //암호화해서 전달.
