@@ -12,10 +12,10 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 class WebSocketConfig : WebSocketMessageBrokerConfigurer {
 
     override fun configureMessageBroker(config: MessageBrokerRegistry) {
-        //발행자가 "/topic"의 경로로 메시지를 주면 구독자들에게 전달
-        config.enableSimpleBroker("/topic")
-        // 발행자가 "/app"의 경로로 메시지를 주면 가공을 해서 구독자들에게 전달
-        config.setApplicationDestinationPrefixes("/app")
+        //발행자가 "/room"의 경로로 메시지를 주면 구독자들에게 전달
+        config.enableSimpleBroker("/room")
+        // 발행자가 "/live-chat"의 경로로 메시지를 주면 가공을 해서 구독자들에게 전달
+        config.setApplicationDestinationPrefixes("/live-chat")
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
