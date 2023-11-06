@@ -28,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class GameService {
 
+    private final CryptService cryptService;
+
     private final GameRepository gameRepository;
     private final GameQueryDSLRepository gameQueryDSLRepository;
     private final ConquerorRepository conquerorRepository;
@@ -63,8 +65,6 @@ public class GameService {
             Conqueror newConqueror = conquerorRepository.save(
                 GameMapper.INSTANCE.gameToConqueror(game));
             newConqueror.setPoints(sumAllGamePoint(game));
-            //기존 정복자 정보는 삭제
-            conqueror.orElseThrow().setDeleted();
             return GameResultDto.builder().isConqueror(true).points(newConqueror.getPoints())
                 .createdTime(newConqueror.getCreatedDate())
                 .build();
@@ -99,7 +99,7 @@ public class GameService {
 
     public GameBoardDto getGameBoard(Long hotPlaceId, String type) {
 
-        if (!isValidGameType(type)) {
+        if (!GameType.isValidGameType(type)) {
             throw new IllegalArgumentException("게임 타입이 잘못되었습니다.");
         }
         LocalDateTime currentDateTime = LocalDateTime.now();
@@ -109,20 +109,13 @@ public class GameService {
 
         List<BoardDto> boardDtoList = gameQueryDSLRepository.findMaxPointsByHotPlaceIdAndType(
             hotPlaceId, type, startOfDay, endOfDay);
-        return GameBoardDto.builder().boardDtoList(boardDtoList).build();
-    }
-
-    public boolean isValidGameType(String type) {
-        try {
-            GameType.valueOf(type);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
+        GameBoardDto gameBoardDto = GameBoardDto.builder().boardDtoList(boardDtoList).build();
+        gameBoardDto.encryptGameDtoList(cryptService);
+        return gameBoardDto;
     }
 
     public MyBoardDto getMyGameBoard(Long memberId, Long hotPlaceId, String type) {
-        if (!isValidGameType(type)) {
+        if (!GameType.isValidGameType(type)) {
             throw new IllegalArgumentException("게임 타입이 잘못되었습니다.");
         }
         List<Game> gameList = gameRepository.findByHotPlaceIdAndTypeAndMemberIdAndDeletedFalseOrderByPointsDesc(
@@ -141,9 +134,15 @@ public class GameService {
         LocalDateTime startOfDay = currentDate.atStartOfDay();
         LocalDateTime endOfDay = currentDate.atTime(LocalTime.MAX);
 
-        return conquerorRepository.findTopByHotPlaceIdAndDeletedFalseAndCreatedDateBetweenOrderByPointsDesc(
+        Optional<ConquerorInfoDto> conquerorDto = conquerorRepository.findTopByHotPlaceIdAndDeletedFalseAndCreatedDateBetweenOrderByPointsDesc(
                 hotPlaceId, startOfDay, endOfDay)
-            .map(ConquerorMapper.INSTANCE::conquerorToConquerorInfoDto)
-            .orElseGet(() -> ConquerorInfoDto.builder().id(0L).build());
+            .map(ConquerorMapper.INSTANCE::conquerorToConquerorInfoDto);
+        if (conquerorDto.isEmpty()) {
+            return ConquerorInfoDto.builder().id(0L).build();
+        }
+        //암호화해서 전달.
+        ConquerorInfoDto conquerorInfoDto = conquerorDto.orElseThrow();
+        conquerorInfoDto.setMemberId(cryptService.encrypt(conquerorInfoDto.getMemberId()));
+        return conquerorInfoDto;
     }
 }
