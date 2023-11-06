@@ -36,10 +36,10 @@ public class Game extends BaseEntity {
     private Long hotPlaceId;
 
     @NotNull
-    private int points;
+    private double points;
 
     @Builder
-    public Game(GameType type, Long memberId, Long hotPlaceId, int points) {
+    public Game(GameType type, Long memberId, Long hotPlaceId, double points) {
         this.type = type;
         this.memberId = memberId;
         this.hotPlaceId = hotPlaceId;
