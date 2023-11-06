@@ -34,7 +34,6 @@ function disconnect() {
 
 function sendName() {
   let test = Math.floor(Math.random()*10)
-  console.log(test)
   stompClient.send(`/live-chat/chat/${test}`, {}, JSON.stringify({'memberId': 446164955855, 'chattingContent' : $("#name").val()}));
 }
 
