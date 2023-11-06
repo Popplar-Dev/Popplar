@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { View, Text, Button, StyleSheet, Dimensions, Alert, TouchableOpacity } from 'react-native';
 import { Platform, PermissionsAndroid } from "react-native";
+import { Linking } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -18,6 +19,8 @@ import PlaceOptionBox from './PlaceOptionBox/PlaceOptionBox'
 import GeolocationPermission from './GeolocationPermission/GeolocationPermission'
 import BottomSheetQnA from './BottomSheetQnA/BottomSheetQnA'
 import { FlipInEasyX } from 'react-native-reanimated';
+
+import { requestPermission } from '../utils/reqLocationPermission'
 
 import { useRecoilState } from 'recoil';
 import { locationState } from './recoil/locationState'
@@ -39,9 +42,98 @@ type SpaceInfo = {
   // place_url: string
 }
 
+type Here = {
+  granted: string
+  y: string
+  x: string
+}
+
+type locationData = {
+  type: string
+  data: {
+    granted: string
+    x: string
+    y: string
+  }
+}
+
 const MapScreen: React.FC = () => {
   const [location, setLocation] = useRecoilState<Here>(locationState);
-  const [spaceInfo, setSpaceInfo] = useState<SpaceInfo>({})
+  const [spaceInfo, setSpaceInfo] = useState<SpaceInfo|null>(null)
+
+  useEffect(() => {
+    requestPermission().then(result => {
+      setLocation(prev => ({...prev, granted: result as string}))
+    })
+  }, [])
+
+  async function get_location() {
+    // return new Promise((resolve, reject) => {
+    if (location.granted=="granted") {
+      Geolocation.getCurrentPosition(
+        pos => {
+          console.log('IM HERE', pos)
+          const lat = pos.coords.latitude.toString()
+          const lng = pos.coords.longitude.toString()
+          setLocation(prev => ({...prev, y: lat, x: lng }))
+          handle_native_location(lat, lng)
+        },
+        error => {
+          console.log(error);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 3600,
+          maximumAge: 3600,
+        },
+      );
+    } else {
+      Alert.alert(
+        '위치 추적 허용', 
+        '사용자 위치 확인을 위해 위치 정보 제공 동의를 해주세요!',
+        [
+          {
+            text: '설정 변경하기',
+            onPress: () => Linking.openSettings()
+          },
+        ],
+        {cancelable: false}
+      );
+      // reject('Permission not granted');
+      }
+    // })
+  }
+
+  // const inject = `alert('메세지 수신됨')`
+
+  async function handle_native_location (y: string, x: string) {
+    if (webRef.current) {
+      const data: { y: string, x: string } = {y: y, x: x}
+      const locationData: { type: string, data: { y: string, x: string } } = {type: 'location', data: data}
+      console.log(locationData)
+      webRef.current.injectJavaScript(`
+      const customEvent = new CustomEvent('customMessage', {detail: ${JSON.stringify(locationData) }});
+      window.dispatchEvent(customEvent);
+      `);
+      // webRef.current.postMessage(JSON.stringify(locationData))
+      console.log("전송 데이터(React) : customMessageOpen");
+    }
+  }
+
+  async function native_to_web() {
+    console.log('native_to_web')
+    await get_location()
+    setInterval(() => {
+      console.log('location 정보 update');
+      get_location(); // 5초마다 get_location 함수를 호출
+    }, 5000); // 5초(5000 밀리초)마다 실행
+    // await handle_native_location()
+  }
+
+  useEffect(() => {
+
+  }, [])
+
   // bottom-sheet
   // ref
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -68,14 +160,14 @@ const MapScreen: React.FC = () => {
   let webRef = useRef<WebView | null>(null);
 
   /* native -> web */
-  const native_to_web = (data: any) => {
-    console.log('native_to_web')
-    console.log(data)
-    if (webRef.current) {
-      webRef.current.postMessage(data)
-      console.log("전송 데이터(React) : 웹으로 데이터 전송");
-    }
-  }
+  // const native_to_web = (data: any) => {
+  //   console.log('native_to_web')
+  //   console.log(data)
+  //   if (webRef.current) {
+  //     webRef.current.postMessage(data)
+  //     console.log("전송 데이터(React) : 웹으로 데이터 전송");
+  //   }
+  // }
 
   /* web -> native */
   const web_to_native = (e) => {
@@ -113,23 +205,18 @@ const MapScreen: React.FC = () => {
     // )
   }
 
-  useEffect(() => {
-    geoLocation();
-  }, [])
+  // useEffect(() => {
+  //   getAllHotplace()
+  //   .then((res) => console.log(res))
+  // }, [])
 
-  useEffect(() => {
-    getAllHotplace()
-    .then((res) => console.log(res))
-  }, [])
-
-  useEffect(() => {
-    const locationData = {type: 'location', data: location}
-    native_to_web(locationData)
-  }, [location])
+  // useEffect(() => {
+  //   const locationData = {type: 'location', data: location}
+  //   native_to_web(locationData)
+  // }, [location])
 
   return (
     <GestureHandlerRootView style={{ flex: 1}}>
-      <GeolocationPermission />
       <BottomSheetModalProvider>
       <View style={styles.container}>
         <BottomSheetModal
@@ -140,7 +227,8 @@ const MapScreen: React.FC = () => {
           backdropComponent={renderBackdrop}
           backgroundStyle={{ backgroundColor: '#2C2C2C' }}
         >
-          
+
+        {spaceInfo &&
           <View style={styles.spaceName}>
             <NameBox w={200} h={38} text={spaceInfo.place_name} />
             <View style={styles.buttons}>
@@ -149,8 +237,9 @@ const MapScreen: React.FC = () => {
               <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/>
             </View>
           </View>
+        } 
           <View style={styles.bottomsheetContainer}>
-
+        {spaceInfo &&
           <View style={styles.previewContainer}>
             <View style={styles.previewTopContainer}>
               <View style={styles.address}>
@@ -166,6 +255,7 @@ const MapScreen: React.FC = () => {
               :(<Text style={styles.bottomSheetPhone}>번호가 없습니다</Text>)}
             </View>
           </View>
+        }
 
           {/* <View style={styles.placeDetail}>
             <View style={styles.info}>
@@ -191,6 +281,7 @@ const MapScreen: React.FC = () => {
             <PlaceOptionBox type="chat"/>
             <PlaceOptionBox type="game"/>
           </View>
+        
         </View>
 
         </BottomSheetModal>
@@ -205,13 +296,19 @@ const MapScreen: React.FC = () => {
           source={{uri: 'https://jiwoopaeng.github.io/popmmm/'}}
           javaScriptEnabled={true}
           onLoad={native_to_web}
+          // injectedJavaScript={inject}
           onMessage={(event) => {
-            handlePresentModalPress();
-            const data = JSON.parse(event.nativeEvent.data)
-            // console.log(data?.type)
-            console.log(data.data)
-            setSpaceInfo(data.data)
-            // console.log("받은 데이터(React) : " + data.data);
+            const data: any = JSON.parse(event.nativeEvent.data)
+            console.log('raw data', data)
+            if (data.type=="test") {
+              console.log('web에서 들어왔어요')
+              console.log(data)
+            } else {
+              handlePresentModalPress();
+              console.log(data.data)
+              setSpaceInfo(data.data)
+              // console.log("받은 데이터(React) : " + data.data);
+            }
           }}
         />
       </View>
