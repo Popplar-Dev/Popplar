@@ -35,11 +35,7 @@ export default function UserSetting() {
         if (AccessToken !== null) {
 					const userAccessToken = JSON.parse(AccessToken);
 					axios.patch(`https://k9a705.p.ssafy.io:8000/member/${userinfo.id}`, updatedInfo, 
-						{
-							headers: {
-								'Access-Token': userAccessToken,
-							},
-						}
+						{headers: {'Access-Token': userAccessToken}}
 					)
 					.then((response) => {
 						const userInfo = {

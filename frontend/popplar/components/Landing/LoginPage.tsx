@@ -73,7 +73,11 @@ export default function Login() {
         .catch((err) => {
           console.log("에러 메시지 :", err);
         });
-        navigation.navigate('FirstLanding' as never);
+        if (userInfo.name === '새 유저') {
+          navigation.navigate('FirstLanding' as never);
+        } else {
+          navigation.navigate('BottomTab' as never);
+        }
       //requestUserInfo(AccessToken);
     }).catch(function (error) {
       console.log('error', error);
