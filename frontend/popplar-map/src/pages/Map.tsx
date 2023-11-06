@@ -25,6 +25,8 @@ export default function Map () {
   const [centerLat, setCenterLat] = useRecoilState<string>(CenterLatState);
   const [centerLng, setCenterLng] = useRecoilState<string>(CenterLngState);
 
+  const [event, setEvent] = useState<any>({})
+
   useEffect(() => {
     // 장소 검색 객체를 생성합니다
     var ps = new kakao.maps.services.Places();  
@@ -43,10 +45,60 @@ export default function Map () {
     });
   }, [])
 
+  // const handleLocation = (event: Event) => {
+  //   console.log(event)
+  //   console.log(event.data)
+  //   const data = JSON.parse(event.data);
+  //   console.log(data)
+  // }
+
   useEffect(() => {
-    document.addEventListener("message", function(e) {
-      alert("받은 데이터(Web) : "+ e);
-    })
+    // window.addEventListener('message', (event) => {
+    //   alert('메세지 수신됨')
+    //   const { type, data } = JSON.parse(event.data);
+    //   const Lat = data.y.slice(0, -8)
+    //   const Lng = data.x.slice(0, -8)
+    //   setCenterLat(Lat)
+    //   setCenterLng(Lng)
+    //   if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+    //     window.ReactNativeWebView.postMessage(
+    //       JSON.stringify({ 
+    //         type: 'test',
+    //         data: data,
+    //       })
+    //     );
+    //   }
+    // })
+
+    window.addEventListener("message", (event: any) => {
+      // if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+      //   window.ReactNativeWebView.postMessage(
+      //     JSON.stringify('native에서 보낸 정보를 받아줬으면 좋겠어...')
+      //   );
+      // }
+      // const data = JSON.parse(event.data);
+      const data = event.data.data;
+      // const detail = JSON.parse(data.detail)
+      // const data = detail.data
+      const LatTest = data.y.toString()
+      const LngTest = data.x.toString()
+      const Lat = data.y.toString().slice(0, -8)
+      const Lng = data.x.toString().slice(0, -8)
+      setCenterLat(Lat)
+      setCenterLng(Lng)
+      if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({ 
+            type: 'test',
+            data: { data, Lat, Lng }
+          })
+        );
+      }
+    });
+
+    // return () => {
+    //   document.removeEventListener("message", handleLocation);
+    // }
   }, [])
 
   // function placesSearchCB(data: any, status: any, pagination: any) {
@@ -66,7 +118,7 @@ export default function Map () {
       window.ReactNativeWebView.postMessage(
         JSON.stringify({ 
           type: 'place',
-          data: data
+          data: data,
         })
       );
     }
@@ -88,7 +140,7 @@ export default function Map () {
 
   // 내 위치로 돌아가기
   const moveToMypos = () => {
-    var moveLatLon = new kakao.maps.LatLng(37.50134, 127.0397);
+    var moveLatLon = new kakao.maps.LatLng(centerLat, centerLng);
     visibleMap.panTo(moveLatLon); 
     setTimeout(() => {
       visibleMap.setLevel(4); 
@@ -105,13 +157,11 @@ export default function Map () {
     if (hotPlaceLatLng.x) {
       const Lat = hotPlaceLatLng.y.slice(0, -8)
       const Lng = hotPlaceLatLng.x.slice(0, -8)
-      console.log('이건 제대로 돼?', Lat, Lng)
       setCenterLat(Lat)
       setCenterLng(Lng)
-      console.log(Lat, Lng)
     } else {
-      setCenterLat("37.50134")
-      setCenterLng("127.0397")
+      // setCenterLat("37.50033")
+      // setCenterLng("127.0362")
     }
 
     var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
@@ -142,7 +192,6 @@ export default function Map () {
   if (positions) {
 
     for (var i = 0; i < positions.length; i ++) {
-        console.log('position', positions[i])
         // 마커 이미지의 이미지 크기 입니다
         var imageSize = new kakao.maps.Size(24, 35); 
   
@@ -210,8 +259,38 @@ export default function Map () {
       setTimeout(() => {
         map.setLevel(2); 
       }, 400)             
-    }        
-  }, 100)  
+    } 
+
+  // function displayMarker(locPosition: any) {
+
+  //   // 마커를 생성합니다
+  //   var marker = new kakao.maps.Marker({  
+  //       map: map, 
+  //       position: locPosition
+  //   }); 
+    
+  //   // 지도 중심좌표를 접속위치로 변경합니다
+  //   map.setCenter(locPosition);      
+  // }    
+    
+  // if (navigator.geolocation) {
+    
+  // // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+  // navigator.geolocation.getCurrentPosition(function(position) {
+      
+  //     // var lat = position.coords.latitude, // 위도
+  //     var lat = 37.50033, // 위도
+  //         // lon = position.coords.longitude; // 경도
+  //         lon = 127.0362; // 경도
+
+  //     var locPosition = new kakao.maps.LatLng(lat, lon)
+      
+  //     // 마커와 인포윈도우를 표시합니다
+  //     displayMarker(locPosition);
+          
+  //   });
+  // }
+}, 100)  
 }, [centerLat, centerLng, hotplaceList])
 
   return (
