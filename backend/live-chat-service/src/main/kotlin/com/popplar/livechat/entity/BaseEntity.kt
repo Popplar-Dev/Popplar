@@ -1,4 +1,4 @@
-package com.hotspot.global.entity
+package com.popplar.livechat.entity
 
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.MappedSuperclass

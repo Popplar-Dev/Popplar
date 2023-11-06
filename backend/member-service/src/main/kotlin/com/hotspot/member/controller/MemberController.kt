@@ -3,7 +3,7 @@ package com.hotspot.member.controller
 import com.hotspot.auth.service.AuthService
 import com.hotspot.member.dto.*
 import com.hotspot.member.service.MemberService
-import org.springframework.http.HttpStatus.*
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -16,7 +16,7 @@ class MemberController(
 
     @GetMapping("/{memberId}")
     fun getMemberProfile(@PathVariable memberId: Long): ResponseEntity<MemberProfileResDto> {
-        return ResponseEntity<MemberProfileResDto>(memberService.getMemberProfile(memberId), OK)
+        return ResponseEntity<MemberProfileResDto>(memberService.getMemberProfile(memberId), HttpStatus.OK)
     }
 
     @PatchMapping("/{memberId}")
@@ -29,7 +29,7 @@ class MemberController(
         return ResponseEntity<MemberProfileResDto>(memberService.updateMemberProfile(
                 memberId,
                 memberUpdateReqDto
-        ), org.springframework.http.HttpStatus.OK);
+        ), HttpStatus.OK)
     }
 
     @DeleteMapping("/{memberId}")
