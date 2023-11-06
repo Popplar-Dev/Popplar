@@ -15,9 +15,8 @@ export default function BottomSheetQnA(props) {
   const spacename = props.spacename;
   const navigation = useNavigation();
   const [qnaData, setQnaData] = useState('');
-  // console.log(props)
+
   function goQna(space) {
-    // console.log( space.spaceId, space.spacename)
     navigation.navigate('QnaList' , {spaceId: space.spaceId, spacename: space.spacename} )
   }
 
@@ -91,7 +90,8 @@ const styles = StyleSheet.create({
     marginTop:10
   },
   text: {
-    color:'white'
+    color:'white',
+    fontWeight:'bold'
   },
   colortext: {
     color:'#8B90F7',

@@ -10,9 +10,8 @@ function SpeedTouch() {
 
   useEffect(() => {
     if (gameStarted) {
-
       const timeout = setTimeout(() => {
-        setGameColor('green');
+        setGameColor('#8B90F7');
         startReactionTimeMeasurement();
       }, Math.floor(Math.random() * 3000) + 2000);
 
@@ -30,10 +29,15 @@ function SpeedTouch() {
   };
 
   const measureReactionTime = () => {
-    if (startTime) {
-      const endTime = new Date();
-      const reactionTime = (endTime.getTime() - startTime.getTime()) / 1000;
-      setReactionTime(reactionTime);
+    if (gameColor==='gray') {
+      setGameStarted(false);
+    } else {
+      if (startTime) {
+        const endTime = new Date();
+        const reactionTime = (endTime.getTime() - startTime.getTime()) / 1000;
+        setReactionTime(reactionTime);
+        setGameStarted(false); 
+      }
     }
   };
 
@@ -46,24 +50,38 @@ function SpeedTouch() {
 
   return (
     <View style={styles.container}>
+      <View>
+        <View>
+          <Text>
+            내 점수: 
+          </Text>
+        </View>
+      </View>
       <View style={[styles.gamecontainer, { backgroundColor: gameColor }]}>
         {gameStarted ? (
-          <Pressable onPress={measureReactionTime} style={styles.button}>
-            <Text style={styles.buttonText}>클릭!</Text>
-          </Pressable>
-        ) : (
-          <Pressable onPress={startGame} style={styles.button}>
-            <Text style={styles.buttonText}>게임 시작</Text>
-          </Pressable>
-        )}
-        {reactionTime !== null && (
           <View>
-            <Text style={styles.text}>반응 속도: {reactionTime.toFixed(3)} 초</Text>
-            <Pressable onPress={resetGame} style={styles.button}>
-              <Text style={styles.buttonText}>게임 재시작</Text>
+            <Text style={styles.text}>화면이 보라색이 되면 클릭하세요</Text>
+            <Pressable onPress={measureReactionTime} style={styles.button}>
+              <Text style={styles.buttonText}>클릭!</Text>
             </Pressable>
           </View>
+        ) : (
+          <View>
+            {reactionTime !== null ? (
+              <View>
+                <Text style={styles.text}>반응 속도: {reactionTime.toFixed(3)} 초</Text>
+                <Pressable onPress={resetGame} style={styles.button}>
+                  <Text style={styles.buttonText}>게임 재시작</Text>
+                </Pressable>
+              </View>
+            ) : (
+              <Pressable onPress={startGame} style={styles.button}>
+                <Text style={styles.buttonText}>게임 시작</Text>
+              </Pressable>
+            )}
+          </View>
         )}
+        
       </View>
     </View>
   );
@@ -78,7 +96,9 @@ const styles = StyleSheet.create({
   gamecontainer:{
     width:'80%',
     height:'50%',
-    justifyContent:'flex-end'
+    justifyContent:'center',
+    alignItems:'center',
+    borderRadius:10
   },
   text: {
     color: 'white',
