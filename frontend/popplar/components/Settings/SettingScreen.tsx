@@ -78,11 +78,11 @@ function SettingScreen() {
                 <Text style={styles.text}>반응 속도 게임</Text>
               </View>
             </Pressable>
-            <Pressable onPress={navigateToQnaList}>
+            {/* <Pressable onPress={navigateToQnaList}>
               <View style={styles.menu}>
                 <Text style={styles.text}>Q&A</Text>
               </View>
-            </Pressable>
+            </Pressable> */}
           </View>
           <Pressable onPress={Logout}>
             <Text style={styles.logout}>로그아웃</Text>

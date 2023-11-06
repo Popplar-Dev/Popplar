@@ -18,10 +18,6 @@ function ProfileSetting() {
   const [photo ,setPhoto] = useState('')
   const [userinfo, setUserInfo] = useRecoilState(userInfoState);
 
-  useEffect(() => {
-    console.log(userinfo.id)
-  }, []);
-
 	const startEditing = () => {
     setIsEditing(true);
     setNewNickname(nickname);
@@ -39,11 +35,7 @@ function ProfileSetting() {
 					const userAccessToken = JSON.parse(AccessToken);
           console.log(userAccessToken)
 					axios.patch(`https://k9a705.p.ssafy.io:8000/member/${userinfo.id}`, updatedInfo, 
-						{
-							headers: {
-								'Access-Token': userAccessToken,
-							},
-						}
+						{headers: {'Access-Token': userAccessToken}}
 					)
 					.then((response) => {
 						setUserInfo({ ...userinfo, name: newNickname });
@@ -53,13 +45,6 @@ function ProfileSetting() {
 					.catch((err) => {
 						console.error("실패...", err);
 					}); 
-          console.log(userinfo)
-          const a = await AsyncStorage.getItem('userInfo')
-          if (a !== null) {
-            const aa = JSON.parse(a)
-            console.log(aa)
-          }
-
 				}
 			}
 			isLogin()
