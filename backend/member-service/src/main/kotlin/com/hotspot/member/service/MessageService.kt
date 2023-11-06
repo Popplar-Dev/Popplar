@@ -7,7 +7,6 @@ import com.hotspot.member.repository.MemberRepository
 import com.hotspot.member.repository.MessageRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import kotlin.streams.toList
 
 @Service
 @Transactional(readOnly = true)
@@ -24,7 +23,10 @@ class MessageService(
 
         message.check()
 
-        if (myId != message.receivedMemberId && myId != message.sentMemberId) {
+        // TODO
+        //  내가 보낸 메세지 확인 하는 get 추가 필요
+
+        if (myId != message.sentMemberId) {
             throw RuntimeException("쪽지 열람 권한이 없습니다.")
         }
 

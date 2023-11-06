@@ -6,13 +6,13 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 open class WebClientService {
 
-    fun <T : Any> retryWithBackoff(
+    fun <T: Any, C : Any> retryWithBackoff(
             webClient: WebClient,
             httpMethod: HttpMethod,
             uri: String,
             body: T,
             retries: Int,
-            classType: Class<T>
+            classType: Class<C>
     ): Any? {
         try {
             val request = when (httpMethod) {
@@ -25,7 +25,7 @@ open class WebClientService {
                     .uri(uri)
                     .bodyValue(body)
                     .retrieve()
-                    .bodyToMono(classType::class.java)
+                    .bodyToMono(classType)
                     .block()
         } catch (e: WebClientResponseException) {
             if (retries > 0) {
