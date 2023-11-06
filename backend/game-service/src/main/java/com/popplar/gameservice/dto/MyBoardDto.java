@@ -9,8 +9,6 @@ import lombok.Data;
 @Builder
 public class MyBoardDto {
 
-    private final CryptService cryptService;
-
     private List<GameDto> gameDtoList;
 
     public void encryptGameDtoList(CryptService cryptService){
