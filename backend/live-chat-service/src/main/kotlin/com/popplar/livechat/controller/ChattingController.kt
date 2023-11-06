@@ -44,4 +44,9 @@ class ChattingController (
         return chattingService.insertChatting(chattingReqDto)
     }
 
+    // TODO
+    //  채팅방 내용 조회
+    //  채팅 어디까지 읽었는지
+    //  또 뭐있지
+
 }
