@@ -1,9 +1,13 @@
 package com.popplar.livechat.entity
 
 import jakarta.persistence.*
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "chattings")
+@EntityListeners(value = [AuditingEntityListener::class])
 class Chatting(
 
     @Id
@@ -16,7 +20,4 @@ class Chatting(
 
     val content: String,
 
-    // TODO
-    //  createAt 추가 필요
-
-)
+) : BaseEntity()

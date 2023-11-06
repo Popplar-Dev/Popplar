@@ -1,84 +1,56 @@
 package com.hotspot.member.controller
 
-import com.hotspot.member.assembler.MemberProfileResDtoRA
+import com.hotspot.auth.service.AuthService
 import com.hotspot.member.dto.*
-import com.hotspot.member.entity.SocialType
-import com.hotspot.global.oauth.dto.OAuthLoginReqDto
-import com.hotspot.global.oauth.service.OAuthServiceFactory
-import com.hotspot.member.service.CryptService
 import com.hotspot.member.service.MemberService
-import org.springframework.hateoas.EntityModel
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/member")
 class MemberController(
-    private val memberService: MemberService,
-    private val oAuthServiceFactory: OAuthServiceFactory,
-    private val memberProfileResDtoRA: MemberProfileResDtoRA,
-    private val cryptService: CryptService,
+        private val memberService: MemberService,
+        private val authService: AuthService,
 ) {
 
-    // 테스트용 코드
-    @GetMapping("/login")
-    fun loginTest(@RequestParam code: String): EntityModel<MemberProfileResDto> {
-        return memberProfileResDtoRA.toModel(
-            oAuthServiceFactory.getOauthService(SocialType.GOOGLE).process(cryptService, code)
-        )
-    }
-
-    @PostMapping("/login")
-    fun login(@RequestBody oAuthLoginReqDto: OAuthLoginReqDto): EntityModel<MemberProfileResDto> {
-        // TODO JWT 생성 로직 추가 필요
-        return memberProfileResDtoRA.toModel(
-            oAuthServiceFactory.getOauthService(oAuthLoginReqDto.loginType)
-                .process(cryptService, oAuthLoginReqDto.accessToken)
-        )
-    }
-
     @GetMapping("/{memberId}")
-    fun getMemberProfile(@PathVariable memberId: Long): EntityModel<MemberProfileResDto> {
-        return memberProfileResDtoRA.toModel(
-            memberService.getMemberProfile(memberId)
-        )
+    fun getMemberProfile(@PathVariable memberId: Long): ResponseEntity<MemberProfileResDto> {
+        return ResponseEntity<MemberProfileResDto>(memberService.getMemberProfile(memberId), HttpStatus.OK)
     }
 
-    // TODO
-    //  본인 검증 로직 추가 필요
     @PatchMapping("/{memberId}")
     fun updateMemberProfile(
-        @PathVariable memberId: Long,
-        @RequestBody memberUpdateReqDto: MemberUpdateReqDto
-    ): EntityModel<MemberProfileResDto> {
-        return memberProfileResDtoRA.toModel(
-            memberService.updateMemberProfile(
+            @RequestHeader("Member-Id") myId: String,
+            @PathVariable memberId: Long,
+            @RequestBody memberUpdateReqDto: MemberUpdateReqDto
+    ): ResponseEntity<MemberProfileResDto> {
+        authService.checkAuth(memberId, myId)
+        return ResponseEntity<MemberProfileResDto>(memberService.updateMemberProfile(
                 memberId,
                 memberUpdateReqDto
-            )
-        )
+        ), HttpStatus.OK)
     }
 
-    // TODO
-    //  본인 검증 로직 추가 필요
     @DeleteMapping("/{memberId}")
-    fun deleteMember(@PathVariable memberId: Long) {
+    fun deleteMember(@RequestHeader("Member-Id") myId: String, @PathVariable memberId: Long) {
+        authService.checkAuth(memberId, myId)
         memberService.deleteMember(memberId)
     }
 
-    // TODO
-    //  본인 검증 로직 추가 필요
-    @PostMapping("/block/{memberId}/{blockedMemberId}")
-    fun blockMember(@PathVariable memberId: Long, @PathVariable blockedMemberId: Long) {
+    @PostMapping("/block/{blockedMemberId}")
+    fun blockMember(
+            @RequestHeader("Member-Id") myId: String,
+            @PathVariable memberId: Long,
+            @PathVariable blockedMemberId: Long
+    ) {
+        authService.checkAuth(memberId, myId)
         memberService.blockMember(memberId, blockedMemberId)
     }
 
-    // TODO
-    //  본인 검증 로직 추가 필요
     @DeleteMapping("/block/{memberId}/{blockedMemberId}")
-    fun unBlockMember(@PathVariable memberId: Long, @PathVariable blockedMemberId: Long) {
+    fun unBlockMember(@RequestHeader("Member-Id") myId: String, @PathVariable memberId: Long, @PathVariable blockedMemberId: Long) {
+        authService.checkAuth(memberId, myId)
         memberService.unBlockMember(memberId, blockedMemberId)
     }
-
-    // TODO
-    //  스탬프 추가 로직 필요 (스탬프 추가 시 핫플레이스 서버에 방문자 추가 요청)
 }

@@ -35,17 +35,18 @@ class QnAService(
     }
 
     @Transactional
-    fun createQuestion(hotPlaceId: Long, questionReqDto: QuestionReqDto): QnAResDto {
-        val question = questionRepository.save(Question.create(cryptService, hotPlaceId, questionReqDto))
+    fun createQuestion(decryptedMemberId: Long, questionReqDto: QuestionReqDto): QnAResDto {
+        val question =
+            questionRepository.save(Question.create(decryptedMemberId, questionReqDto))
         return questionToQnAResDto(question)
     }
 
     @Transactional
-    fun createAnswer(questionId: Long, answerReqDto: AnswerReqDto): QnAResDto {
+    fun createAnswer(decryptedMemberId: Long, questionId: Long, answerReqDto: AnswerReqDto): QnAResDto {
         val question = findQuestionById(questionId)
         answerRepository.save(
             Answer.create(
-                cryptService,
+                decryptedMemberId,
                 question.hotPlaceId,
                 questionId,
                 answerReqDto
@@ -55,21 +56,98 @@ class QnAService(
         return questionToQnAResDto(question)
     }
 
+    @Transactional
+    fun adoptAnswer(decryptedMemberId: Long, questionId: Long, answerId: Long): QnAResDto {
+        val question = findQuestionById(questionId)
+
+        checkAuth(decryptedMemberId, question.memberId)
+
+        if (question.adoptedAnswer != null) {
+            throw RuntimeException("이미 채택 하였습니다.")
+        }
+
+        val answer = findAnswerById(answerId)
+
+        question.adopt(answer)
+        return questionToQnAResDto(question)
+    }
+
+    @Transactional
+    fun updateQuestion(decryptedMemberId: Long, questionId: Long, content: String): QnAResDto {
+        val question = findQuestionById(questionId)
+
+        checkAuth(decryptedMemberId, question.memberId)
+
+        if (question.answerList.isNotEmpty()) {
+            throw RuntimeException("답변이 있는 경우 삭제할 수 없습니다.")
+        }
+
+        question.update(content)
+
+        return questionToQnAResDto(question)
+    }
+
+    @Transactional
+    fun deleteQuestion(decryptedMemberId: Long, questionId: Long) {
+        val question = findQuestionById(questionId)
+
+        checkAuth(decryptedMemberId, question.memberId)
+
+        if (question.answerList.isNotEmpty()) {
+            throw RuntimeException("답변이 있는 경우 삭제할 수 없습니다.")
+        }
+
+        question.delete()
+    }
+
+    @Transactional
+    fun updateAnswer(decryptedMemberId: Long, questionId: Long, answerId: Long, content: String): QnAResDto {
+        val question = findQuestionById(questionId)
+        val answer = findAnswerById(answerId)
+
+        checkAuth(decryptedMemberId, answer.memberId)
+
+        if (question.adoptedAnswer == answer) {
+            throw RuntimeException("답변이 채택 된 경우 수정할 수 없습니다.")
+        }
+
+        answer.update(content)
+
+        return questionToQnAResDto(question)
+    }
+
+    @Transactional
+    fun deleteAnswer(decryptedMemberId: Long, questionId: Long, answerId: Long) {
+        val question = findQuestionById(questionId)
+        val answer = findAnswerById(answerId)
+
+        checkAuth(decryptedMemberId, answer.memberId)
+
+        if (question.adoptedAnswer == answer) {
+            throw RuntimeException("답변이 채택 된 경우 삭제할 수 없습니다.")
+        }
+
+        answer.delete()
+    }
+
+
     fun questionToQnAResDto(question: Question): QnAResDto {
         val questionResDto = questionToQuestionResDto(question)
         val qnaResDto = QnAResDto.create(questionResDto)
 
-        question.answerList.forEach {
-            val answerMember = findMemberById(it.memberId)
-            qnaResDto.answerResDtoList.add(
-                AnswerResDto.create(
-                    cryptService = cryptService,
-                    answer = it,
-                    memberName = answerMember.name,
-                    memberProfileImage = answerMember.profileImage
+        question.answerList
+            .filter { !it.deleted }
+            .forEach {
+                val answerMember = findMemberById(it.memberId)
+                qnaResDto.answerResDtoList.add(
+                    AnswerResDto.create(
+                        cryptService = cryptService,
+                        answer = it,
+                        memberName = answerMember.name,
+                        memberProfileImage = answerMember.profileImage
+                    )
                 )
-            )
-        }
+            }
 
         return qnaResDto
     }
@@ -85,9 +163,19 @@ class QnAService(
         )
     }
 
+    fun checkAuth(myId: Long, checkId: Long) {
+        if (myId != checkId)
+            throw RuntimeException("권한이 없습니다.")
+    }
+
     fun findQuestionById(questionId: Long): Question {
         return questionRepository.findByIdAndDeletedFalse(questionId)
             ?: throw RuntimeException("해당하는 질문이 없습니다.")
+    }
+
+    fun findAnswerById(answerId: Long): Answer {
+        return answerRepository.findByIdAndDeletedFalse(answerId)
+            ?: throw RuntimeException("해당하는 답변이 없습니다.")
     }
 
     fun findMemberById(memberId: Long): Member {

@@ -2,7 +2,7 @@ package com.hotspot.qna.dto
 
 class QuestionReqDto(
 
-    var memberId: Long,
+    val hotPlaceId: Long,
 
     val content: String,
 )

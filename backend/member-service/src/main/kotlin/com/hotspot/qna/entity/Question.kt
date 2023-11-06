@@ -20,22 +20,26 @@ class Question(
     var content: String,
 
     @OneToOne
-    val adoptedAnswer: Answer? = null,
+    var adoptedAnswer: Answer? = null,
 
     @OneToMany
     @JoinColumn(name = "questionId")
     val answerList: MutableList<Answer> = arrayListOf()
 ) : BaseEntity() {
 
-    fun insertAnswer(answer: Answer) {
-        this.answerList.add(answer)
+    fun adopt(answer: Answer) {
+        this.adoptedAnswer = answer
+    }
+
+    fun update(content: String) {
+        this.content = content
     }
 
     companion object {
-        fun create(cryptService: CryptService, hotPlaceId: Long, questionReqDto: QuestionReqDto): Question {
+        fun create(decryptedMemberId: Long, questionReqDto: QuestionReqDto): Question {
             return Question(
-                memberId = cryptService.decrypt(questionReqDto.memberId),
-                hotPlaceId = hotPlaceId,
+                memberId = decryptedMemberId,
+                hotPlaceId = questionReqDto.hotPlaceId,
                 content = questionReqDto.content
             )
         }

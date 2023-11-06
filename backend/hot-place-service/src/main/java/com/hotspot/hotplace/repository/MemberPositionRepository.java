@@ -8,8 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberPositionRepository extends CrudRepository<MemberPosition, String> {
     List<MemberPosition> findAllByHotPlaceId(Long hotPlaceId);
-
-    boolean existsByMemberId(Long memberId);
-
-    void deleteAllByMemberId(Long memberId);
+    MemberPosition findByMemberId(Long memberId);
 }

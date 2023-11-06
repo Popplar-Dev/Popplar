@@ -11,8 +11,10 @@ import com.hotspot.achievement.repository.MemberCategoryCountRepository
 import com.hotspot.achievement.repository.StampRepository
 import com.hotspot.global.eureka.dto.HotPlaceResDto
 import com.hotspot.global.eureka.dto.VisitorReqDto
+import com.hotspot.global.service.WebClientService
 import com.hotspot.member.service.CryptService
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
@@ -22,13 +24,14 @@ import java.time.LocalDate
 @Transactional(readOnly = true)
 class AchievementService(
 
-    @Value("\${GATEWAY_URL}")
-    private val gateWayURL: String,
+    @Value("\${HOT_PLACE_URL}")
+    private val hotPlaceURL: String,
+
     private val webClient: WebClient,
     private val stampRepository: StampRepository,
     private val memberCategoryCountRepository: MemberCategoryCountRepository,
     private val cryptService: CryptService,
-) {
+) :WebClientService() {
 
     @Transactional
     fun createStamp(memberId: Long, stampReqDto: StampReqDto): StampResDto {
@@ -46,22 +49,17 @@ class AchievementService(
         }
         stamp = stamp ?: stampRepository.save(Stamp.create(decryptedMemberId, hotPlaceId))
 
+        stamp.increaseVisitCount()
+        stamp = stampRepository.saveAndFlush(stamp)
 
-        val hotPlaceResDto = webClient.post()
-            .uri("$gateWayURL/hot-place/$hotPlaceId")
-            .bodyValue(VisitorReqDto.create(stamp))
-            .retrieve()
-            .bodyToMono(HotPlaceResDto::class.java)
-            .block() ?: throw RuntimeException("해당하는 핫플레이스가 없습니다")
+        val hotPlaceResDto = retryWithBackoff(webClient, HttpMethod.POST, "$hotPlaceURL/visitor", VisitorReqDto.create(stamp), 5, HotPlaceResDto::class.java)
 
-        stamp.update(hotPlaceResDto)
+        stamp.update(hotPlaceResDto as HotPlaceResDto)
 
         val memberCategoryCount =
             memberCategoryCountRepository.findByMemberIdAndCategory(stamp.memberId, stamp.category)
                 ?: memberCategoryCountRepository.save(MemberCategoryCount.create(stamp))
         memberCategoryCount.increaseVisitedSet()
-
-        stamp.increaseVisitCount()
 
         return StampResDto.create(stamp)
     }
