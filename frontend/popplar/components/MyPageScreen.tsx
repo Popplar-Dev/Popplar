@@ -38,6 +38,7 @@ function MyPageScreen() {
       const AccessToken = await AsyncStorage.getItem('userAccessToken');
       if (AccessToken !== null) {
         const userAccessToken = JSON.parse(AccessToken);
+        console.log(userAccessToken)
         axios.get(`https://k9a705.p.ssafy.io:8000/member/achievement/${userinfo.id}`,
           {
             headers: {

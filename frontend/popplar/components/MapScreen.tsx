@@ -281,8 +281,8 @@ const MapScreen: React.FC = () => {
         }
 
           <View style={styles.placeBottomContainer}>
-            <PlaceOptionBox type="chat"/>
-            <PlaceOptionBox type="game"/>
+            <PlaceOptionBox spaceId={spaceInfo.id} type="chat"/>
+            <PlaceOptionBox spaceId={spaceInfo.id} type="game"/>
           </View>
         
         </View>

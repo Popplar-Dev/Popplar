@@ -7,9 +7,10 @@ import GameListModal from '../Modals/GameListModal';
 
 type Props = {
   type: "chat" | "game"
+  spaceId: number
 }
 
-export default function PlaceOptionBox({ type }: Props) {
+export default function PlaceOptionBox({ type, spaceId }: Props) {
   const { width } = Dimensions.get('window');
   const halfScreenWidth = width / 2.3;
   const navigation = useNavigation();
@@ -57,6 +58,7 @@ return (
     <GameListModal
       visible={isModalVisible}
       onClose={() => setModalVisible(false)}
+      spaceid={spaceId}
     />
   </View>
   );
