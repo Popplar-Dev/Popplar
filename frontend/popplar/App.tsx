@@ -10,6 +10,7 @@ import FirstLanding from './components/Landing/FirstLanding';
 import LoginPage from './components/Landing/LoginPage';
 import Home from './components/Landing/Home';
 import UserSetting from './components/Landing/UserSetting';
+import LocationPermission from './components/Landing/LocationPermission';
 
 function App() {
   const navTheme = {
@@ -43,6 +44,7 @@ function App() {
                 <Stack.Screen name="BottomTab" component={BottomTab} />
                 <Stack.Screen name="Home" component={Home} />
                 <Stack.Screen name="UserSetting" component={UserSetting} />
+                <Stack.Screen name="LocationPermission" component={LocationPermission} />
                 {/* <Stack.Screen name="Main" component={Main} /> */}
               </Stack.Navigator>
               {/* <BottomTab /> */}

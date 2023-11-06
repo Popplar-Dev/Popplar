@@ -69,7 +69,7 @@ const MapScreen: React.FC = () => {
 
   async function get_location() {
     // return new Promise((resolve, reject) => {
-    if (location.granted=="granted") {
+    if (location.granted==="granted") {
       Geolocation.getCurrentPosition(
         pos => {
           console.log('IM HERE', pos)
@@ -100,8 +100,8 @@ const MapScreen: React.FC = () => {
         {cancelable: false}
       );
       // reject('Permission not granted');
-      }
     // })
+    }
   }
 
   // const inject = `alert('메세지 수신됨')`
@@ -112,7 +112,8 @@ const MapScreen: React.FC = () => {
       const locationData: { type: string, data: { y: string, x: string } } = {type: 'location', data: data}
       console.log(locationData)
       webRef.current.injectJavaScript(`
-      const customEvent = new CustomEvent('customMessage', {detail: ${JSON.stringify(locationData) }});
+      const customEvent = new Event('message');
+      customEvent.data = ${JSON.stringify(locationData)};
       window.dispatchEvent(customEvent);
       `);
       // webRef.current.postMessage(JSON.stringify(locationData))
@@ -125,8 +126,8 @@ const MapScreen: React.FC = () => {
     await get_location()
     setInterval(() => {
       console.log('location 정보 update');
-      get_location(); // 5초마다 get_location 함수를 호출
-    }, 5000); // 5초(5000 밀리초)마다 실행
+      get_location();
+    }, 5000);
     // await handle_native_location()
   }
 
@@ -302,7 +303,7 @@ const MapScreen: React.FC = () => {
             console.log('raw data', data)
             if (data.type=="test") {
               console.log('web에서 들어왔어요')
-              console.log(data)
+              console.log(data.data)
             } else {
               handlePresentModalPress();
               console.log(data.data)
