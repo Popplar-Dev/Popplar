@@ -31,7 +31,7 @@ const MapScreenStack = () => {
       }}
     >
       {/* <Stack.Screen name="Mypage" component={MyPageScreen} options={{headerShown: false}}/> */}
-      <Stack.Screen name="Map" component={MapScreen} options={{headerShown: false}}/>
+      <Stack.Screen name="MapScreen" component={MapScreen} options={{headerShown: false}}/>
       <Stack.Screen name="SpeedTouch" component={SpeedTouch} options={{headerTitle: 'SpeedTouchGame'}}/>
       <Stack.Screen name="QnaList" component={QnaList} options={{headerTitle: 'QnaList'}}/>
       <Stack.Screen name="QnaDetail" component={QnaDetail} options={{headerTitle: 'QnaDetail'}}/>
