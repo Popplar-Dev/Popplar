@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function SettingScreen() {
 
@@ -27,6 +28,12 @@ function SettingScreen() {
   const navigateToQnaList = () => {
     navigation.navigate('QnaList' as never); 
   };
+
+  const Logout = () => {
+    AsyncStorage.clear();
+    navigation.navigate('Home' as never);
+  };
+
 
 
   return (
@@ -71,13 +78,15 @@ function SettingScreen() {
                 <Text style={styles.text}>반응 속도 게임</Text>
               </View>
             </Pressable>
-            <Pressable onPress={navigateToQnaList}>
+            {/* <Pressable onPress={navigateToQnaList}>
               <View style={styles.menu}>
                 <Text style={styles.text}>Q&A</Text>
               </View>
-            </Pressable>
+            </Pressable> */}
           </View>
-          <Text style={styles.logout}>로그아웃</Text>
+          <Pressable onPress={Logout}>
+            <Text style={styles.logout}>로그아웃</Text>
+          </Pressable>
         </View>
       </ImageBackground>
     </View>
