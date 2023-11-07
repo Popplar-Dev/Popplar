@@ -80,12 +80,13 @@ export default function Map () {
       // }
       // const data = JSON.parse(event.data);
       const data = event.data.data;
+      const type = event.data.type;
       // const detail = JSON.parse(data.detail)
       // const data = detail.data
-      const LatTest = data.y.toString()
-      const LngTest = data.x.toString()
-      const Lat = data.y.toString().slice(0, -8)
-      const Lng = data.x.toString().slice(0, -8)
+      // const LatTest = data.y.toString()
+      // const LngTest = data.x.toString()
+      const Lat = data.y.toString().slice(0, 8)
+      const Lng = data.x.toString().slice(0, 8)
       setCurrLocation(prev => ({...prev, Lat: Lat, Lng: Lng}))
       // setCenterLat(Lat)
       // setCenterLng(Lng)
@@ -98,10 +99,6 @@ export default function Map () {
         );
       }
     });
-
-    // return () => {
-    //   document.removeEventListener("message", handleLocation);
-    // }
   }, [])
 
   // function placesSearchCB(data: any, status: any, pagination: any) {
@@ -113,6 +110,17 @@ export default function Map () {
   //       );
   //   }}
   // }
+
+  // 내 위치 돌아가기 버튼 선택시, web- > native 에 내 위치 데이터 보내달라고 요청
+  const requestLocation = () => {
+    if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({ 
+          type: 'relocation',
+        })
+      );
+    }
+  }
 
   // 핫플 마커 선택시, web->native 데이터 전송
   const requestPermission = (data: any) => {
@@ -145,6 +153,7 @@ export default function Map () {
   const moveToMypos = () => {
     var moveLatLon = new kakao.maps.LatLng(currLocation.Lat, currLocation.Lng);
     visibleMap.panTo(moveLatLon); 
+
     setTimeout(() => {
       visibleMap.setLevel(4); 
     }, 400)    
@@ -294,7 +303,7 @@ export default function Map () {
   //   });
   // }
 }, 100)  
-}, [centerLat, centerLng, hotplaceList])
+}, [currLocation, hotplaceList])
 
   return (
   <div className={`container`}>
@@ -310,9 +319,10 @@ export default function Map () {
 
     <button className={styles.mypos} onClick={() => {
       moveToMypos();
+      requestLocation();
       sethotPlaceLatLng({x: "", y: ""});
-      setCenterLat("37.50134");
-      setCenterLng("127.0397");
+      // setCenterLat(currLocation.Lat);
+      // setCenterLng(currLocation.Lng);
     }}>
       <BiSolidRocket size={25} color={'#8B90F7'}/>
     </button>
