@@ -5,7 +5,7 @@ import { Linking } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { getAllHotplace } from './services/getHotplace'
+import HotRegisterButton from './HotRegisterButton/HotRegisterButton'
 
 import {
   BottomSheetModal,
@@ -24,6 +24,9 @@ import { requestPermission } from '../utils/reqLocationPermission'
 
 import { useRecoilState } from 'recoil';
 import { locationState } from './recoil/locationState'
+
+import { getIdHotplace } from './services/getHotplace'
+import { previousDay } from 'date-fns';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -152,6 +155,25 @@ const MapScreen: React.FC = () => {
     [],
   );
 
+  // 개별 hotplace 조회
+  // const handleHotPlace = (id: string) => {
+  //   console.log('handle hotplace 실행')
+  //   getIdHotplace(id)
+  //   .then((res) => {
+  //     const data: SpaceInfo = res.data
+  //     console.log('핫플레이스 개별 조회')
+  //     console.log('id data', data)
+  //     // setSpaceInfo(data)
+  //   })
+  //   .catch((error) => {
+  //     if (error.response && error.response.status === 400) {
+        
+  //     } else {
+  //       console.error('에러:', error.message);
+  //     }
+  //   })
+  // } 
+
 
   let webRef = useRef<WebView | null>(null);
 
@@ -168,18 +190,24 @@ const MapScreen: React.FC = () => {
           backgroundStyle={{ backgroundColor: '#2C2C2C' }}
         >
 
-        {spaceInfo &&
+        {spaceInfo && spaceInfo.place_name &&
           <View style={styles.spaceName}>
-            <NameBox w={200} h={38} text={spaceInfo.place_name} />
-            <View style={styles.buttons}>
+            <NameBox h={38} text={spaceInfo.place_name} />
+            {spaceInfo.placeType ? (
+              <View style={styles.buttons}>
               <Icon name="comments" size={20} color={'white'} style={styles.Icon}/>
               <Icon name="gamepad" size={20} color={'white'} style={styles.Icon}/>
               <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/>
             </View>
+            ): (
+              <HotRegisterButton />
+              )}
           </View>
         } 
           <View style={styles.bottomsheetContainer}>
         {spaceInfo &&
+          (
+            <>
           <View style={styles.previewContainer}>
             <View style={styles.previewTopContainer}>
               <View style={styles.address}>
@@ -195,6 +223,8 @@ const MapScreen: React.FC = () => {
               :(<Text style={styles.bottomSheetPhone}>번호가 없습니다</Text>)}
             </View>
           </View>
+          </>
+          )
         }
 
           {/* <View style={styles.placeDetail}>
@@ -253,7 +283,7 @@ const MapScreen: React.FC = () => {
               native_to_web();
             } else {
               handlePresentModalPress();
-              // console.log(data.data)
+              console.log(data.data.id)
               setSpaceInfo(data.data)
               // console.log("받은 데이터(React) : " + data.data);
             }
@@ -285,7 +315,8 @@ const styles = StyleSheet.create({
   },
   bottomSheetCategory: {
     color: 'white',
-    marginTop: 4,
+    marginTop: 5,
+    marginLeft: 10,
     // borderWidth: 1, 
     // borderColor: 'red', 
   },
@@ -311,7 +342,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   previewContainer: {
-    flex: 0.1,
+    flex: 0.11,
     marginTop: 10,
     marginBottom: 8,
     lineHeight: 40,
