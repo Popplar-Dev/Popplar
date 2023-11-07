@@ -14,7 +14,7 @@ export default function BottomSheetQnA(props) {
   const Id = props.spaceId;
   const spacename = props.spacename;
   const navigation = useNavigation();
-  const [qnaData, setQnaData] = useState('');
+  const [qnaData, setQnaData] = useState(null);
 
   function goQna(space) {
     navigation.navigate('QnaList' , {spaceId: space.spaceId, spacename: space.spacename} )
@@ -44,12 +44,14 @@ export default function BottomSheetQnA(props) {
     <SafeAreaView style={styles.Container}>
       <View style={styles.Containertop}>
         <Text style={styles.text}><Text style={styles.colortext}>{spacename}</Text> 에 등록된 질문</Text>
-      </View>  
-          {qnaData.length===0 ? (
+      </View>
+        {qnaData ? (
+          <View style={styles.qnacontainer}>
+            {qnaData.length===0 ? (
             <ActivityIndicator size="large" color="#ffffff" />
             ) : (
-            <View style={styles.qnacontainer}>
-            <Pressable style={styles.qnabox} onPress={() => goQna(space)}>
+            <View style={styles.qnaboxcontainer}>
+              <Pressable style={styles.qnabox} onPress={() => goQna(space)}>
                 <View style={styles.questionbox}>
                   <View style={styles.questionboxtop}>
                     <Text style={styles.text}>{qnaData.questionResDto.memberName}</Text>
@@ -69,13 +71,28 @@ export default function BottomSheetQnA(props) {
                   <Text style={styles.text}>{qnaData.answerResDtoList.length}</Text>
                 </View>
               </Pressable>
+              <Pressable style={styles.more} onPress={() => goQna(space)}>
+                <Text style={styles.text}>
+                  더보기
+                </Text>
+              </Pressable>  
             </View>     
             )}  
-          <Pressable style={styles.more} onPress={() => goQna(space)}>
-            <Text style={styles.text}>
-              더보기
-            </Text>
-          </Pressable>  
+          </View>
+        ) : (
+          <View style={styles.noqnacontainer}>
+            <View style={styles.noqna}>
+              <Text style={styles.text}> 아직 질문이 없습니다</Text>
+            </View>
+            <Pressable style={styles.more} onPress={() => goQna(space)}>
+              <Text style={styles.text}>
+                질문하러 가기
+              </Text>
+            </Pressable>
+          </View>
+        )}
+          
+          
     </SafeAreaView>
   );
 };
@@ -101,12 +118,16 @@ const styles = StyleSheet.create({
   more: {
     marginBottom:10
   },
+  qnaboxcontainer: {
+    alignItems:'center'
+  },
   qnabox: {
     borderRadius: 20,
     borderStyle: 'solid',
     padding: 20,
     backgroundColor: 'rgba(139, 144, 247, 0.6)',
     marginVertical: 10,
+    width: '100%'
   },
   questionbox: {},
   questionboxtop: {
@@ -127,5 +148,12 @@ const styles = StyleSheet.create({
   qnacontainer: {
     width: '90%',
     marginTop: 10,
+    // alignItems:'center'
   },
+  noqnacontainer: {
+    alignItems:'center'
+  },
+  noqna: {
+    margin:20
+  }
 })
