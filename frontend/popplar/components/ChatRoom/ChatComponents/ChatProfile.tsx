@@ -6,13 +6,13 @@ type ChatProfileProps = {
 
 export default function ChatProfile({imgUrl}: ChatProfileProps) {
   return (
-    <View style={sytles.container}>
-      <View style={sytles.profilePicContainer}>
+    <View style={styles.container}>
+      <View style={styles.profilePicContainer}>
         <Image
           source={{
             uri: imgUrl,
           }}
-          style={sytles.profilePic}
+          style={styles.profilePic}
           alt="profilepic"
           resizeMode="cover"
         />
@@ -21,7 +21,7 @@ export default function ChatProfile({imgUrl}: ChatProfileProps) {
   );
 }
 
-const sytles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     width: 50,
     height: 50,
