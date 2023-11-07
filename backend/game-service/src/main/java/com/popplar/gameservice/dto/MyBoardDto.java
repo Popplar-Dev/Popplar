@@ -1,5 +1,6 @@
 package com.popplar.gameservice.dto;
 
+import com.popplar.gameservice.service.CryptService;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
@@ -8,5 +9,11 @@ import lombok.Data;
 @Builder
 public class MyBoardDto {
 
-    List<GameDto> gameDtoList;
+    private List<GameDto> gameDtoList;
+
+    public void encryptGameDtoList(CryptService cryptService){
+        for(GameDto gameDto : this.gameDtoList){
+            gameDto.setMemberId(cryptService.encrypt(gameDto.getMemberId()));
+        }
+    }
 }
