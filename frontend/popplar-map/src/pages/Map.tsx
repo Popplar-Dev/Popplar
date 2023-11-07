@@ -87,7 +87,7 @@ export default function Map () {
       // const data = detail.data
       // const LatTest = data.y.toString()
       // const LngTest = data.x.toString()
-      if (!hotPlaceLatLng.x) {
+      if (type=="location") {
         const Lat = data.y.toString().slice(0, 8)
         const Lng = data.x.toString().slice(0, 8)
         setCurrLocation(prev => ({...prev, Lat: Lat, Lng: Lng}))
@@ -101,6 +101,9 @@ export default function Map () {
             })
           );
         }
+      } else if (type=="postHotplace") {
+        getAllHotplace()
+        .then((res) => setHotplaceList(res.data))
       }
     });
   }, [])
@@ -253,19 +256,20 @@ export default function Map () {
           panToHandler(La, Ma);
           getIdHotplace(id)
           .then((res) => res.data)
-          .then((res) => console.log(res))
-          // .then((res) => requestPermission({
-          //   id, 
-          //   place_name, 
-          //   road_address_name, 
-          //   category_group_name, 
-          //   likeCount: res.likeCount,
-          //   phone: res.phone,
-          //   placeType: res.placeType,
-          //   visitorCount: res.visitorCount,
-          //   y: res.y,
-          //   x: res.x
-          // }))
+          // .then((res) => console.log(res))
+          .then((res) => requestPermission({
+            id, 
+            place_name, 
+            road_address_name, 
+            category_group_name, 
+            address_name: res.addressName,
+            likeCount: res.likeCount,
+            phone: res.phone,
+            placeType: res.placeType,
+            visitorCount: res.visitorCount,
+            y: res.y,
+            x: res.x
+          }))
         })
         // marker.setMap(map);
       }
