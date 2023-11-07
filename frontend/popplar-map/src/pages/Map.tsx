@@ -210,13 +210,14 @@ export default function Map () {
     if (positions) {
       
       for (var i = 0; i < positions.length; i ++) {
-        console.log(positions[i])
+        // console.log(positions[i])
         // 마커 이미지의 이미지 크기 입니다
-        var imageSize = new kakao.maps.Size(40, 45); 
-
+        
         if (positions[i].placeType==="FLAG") {
+          var imageSize = new kakao.maps.Size(40, 45); 
           var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/b3564221-b312-4f4d-a073-fc14dccb3c15";
         } else {
+          var imageSize = new kakao.maps.Size(25, 35); 
           var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
         }
         
