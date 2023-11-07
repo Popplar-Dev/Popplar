@@ -42,7 +42,7 @@ export default function Home() {
           .catch((err) => {
             console.log("에러 메시지 :", err)
           });
-			navigation.navigate("BottomTab" as never)
+			navigation.navigate("LocationPermission" as never)
 		} else {
 			Alert.alert(
 				'로그인 먼저 해주세요'
