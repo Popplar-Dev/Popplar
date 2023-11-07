@@ -4,7 +4,7 @@ export const getToken = () => {
   return AsyncStorage.getItem('userAccessToken')
     .then((value) => {
       if (value !== null) {
-        // console.log('userAccessToken:', value);
+        console.log('userAccessToken:', value);
         const userAccessToken = JSON.parse(value);
         console.log(userAccessToken)
         return userAccessToken

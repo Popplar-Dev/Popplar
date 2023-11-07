@@ -33,6 +33,8 @@ import { SpaceInfo } from './types/place'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+import { getToken } from './services/getAccessToken'
+
 type Here = {
   granted: string
   y: string
@@ -67,6 +69,15 @@ const MapScreen: React.FC = () => {
           const lat = pos.coords.latitude.toString()
           const lng = pos.coords.longitude.toString()
           setLocation(prev => ({...prev, y: lat, x: lng }))
+          
+
+          // 로드시, accessToken web으로 전송해서 사용
+          const token = getToken();
+          if (webRef.current) {
+            webRef.current.injectJavaScript(`
+            localStorage.setItem('token', '${token}');
+          `);
+          }
           if (type!=="load") {
             handle_native_location(lat, lng)
           }
@@ -107,12 +118,6 @@ const MapScreen: React.FC = () => {
       webRef.current.injectJavaScript(`
       window.postMessage(${JSON.stringify(locationData)}, '*')
       `);
-      // const customEvent = new Event('message');
-      // customEvent.data = ${JSON.stringify(locationData)};
-      // window.dispatchEvent(customEvent);
-
-      // webRef.current.postMessage(JSON.stringify(locationData))
-      // console.log("전송 데이터(React) : customMessageOpen");
     }
   }
 
