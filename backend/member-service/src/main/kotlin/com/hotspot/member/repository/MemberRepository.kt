@@ -7,4 +7,5 @@ interface MemberRepository : JpaRepository<Member, Long> {
 
     fun findByIdAndDeletedFalse(memberId: Long): Member?
     fun findBySocialIdAndDeletedFalse(socialId: String): Member?
+    fun findByIdIn(memberIdList: List<Long>): ArrayList<Member>
 }

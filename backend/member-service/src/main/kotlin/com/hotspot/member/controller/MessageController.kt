@@ -4,14 +4,16 @@ import com.hotspot.auth.service.AuthService
 import com.hotspot.member.dto.MessageReqDto
 import com.hotspot.member.dto.MessageResDto
 import com.hotspot.member.service.MessageService
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/member/message")
 class MessageController(
 
-    private val messageService: MessageService,
-    private val authService: AuthService,
+        private val messageService: MessageService,
+        private val authService: AuthService,
 ) {
 
     // TODO
@@ -19,20 +21,20 @@ class MessageController(
 
     @GetMapping("/{memberId}/{messageId}")
     fun getMessage(
-        @RequestHeader("Member-Id") myId: String,
-        @PathVariable memberId: Long,
-        @PathVariable messageId: Long
-    ): MessageResDto {
+            @RequestHeader("Member-Id") myId: String,
+            @PathVariable memberId: Long,
+            @PathVariable messageId: Long
+    ): ResponseEntity<MessageResDto> {
         authService.checkAuth(memberId, myId)
-        return messageService.getMessage(messageId)
+        return ResponseEntity<MessageResDto>(messageService.getMessage(myId.toLong(), messageId), HttpStatus.OK)
     }
 
     @PostMapping("/{sentMemberId}/{receivedMemberId}")
     fun postMessage(
-        @RequestHeader("Member-Id") myId: String,
-        @PathVariable sentMemberId: Long,
-        @PathVariable receivedMemberId: Long,
-        @RequestBody messageReqDto: MessageReqDto,
+            @RequestHeader("Member-Id") myId: String,
+            @PathVariable sentMemberId: Long,
+            @PathVariable receivedMemberId: Long,
+            @RequestBody messageReqDto: MessageReqDto,
     ) {
         authService.checkAuth(sentMemberId, myId)
         messageService.postMessage(sentMemberId, receivedMemberId, messageReqDto.content)
@@ -40,20 +42,20 @@ class MessageController(
 
     @DeleteMapping("/{memberId}/{messageId}")
     fun deleteMessage(
-        @RequestHeader("Member-Id") myId: String,
-        @PathVariable memberId: Long,
-        @PathVariable messageId: Long
+            @RequestHeader("Member-Id") myId: String,
+            @PathVariable memberId: Long,
+            @PathVariable messageId: Long
     ) {
         authService.checkAuth(memberId, myId)
-        messageService.deleteMessage(messageId)
+        messageService.deleteMessage(myId.toLong(), messageId)
     }
 
     @GetMapping("/find-all/{memberId}")
     fun getMyMessageList(
-        @RequestHeader("Member-Id") myId: String,
-        @PathVariable memberId: Long,
-    ): MutableList<MessageResDto> {
+            @RequestHeader("Member-Id") myId: String,
+            @PathVariable memberId: Long,
+    ): ResponseEntity<MutableList<MessageResDto>> {
         authService.checkAuth(memberId, myId)
-        return messageService.getMyMessageList(myId.toLong())
+        return ResponseEntity<MutableList<MessageResDto>>(messageService.getMyMessageList(myId.toLong()), HttpStatus.OK)
     }
 }

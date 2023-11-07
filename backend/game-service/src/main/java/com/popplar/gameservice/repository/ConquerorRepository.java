@@ -7,5 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ConquerorRepository extends JpaRepository<Conqueror, Long> {
 
+    int countByMemberIdAndHotPlaceIdAndDeletedFalseAndCreatedDateBetweenAndPointsGreaterThan(
+        Long memberId, Long hotPlaceId, LocalDateTime startOfDay, LocalDateTime endOfDay, double point);
     Optional<Conqueror> findTopByHotPlaceIdAndDeletedFalseAndCreatedDateBetweenOrderByPointsDesc(Long hotPlaceId, LocalDateTime startOfDay, LocalDateTime endOfDay);
 }
