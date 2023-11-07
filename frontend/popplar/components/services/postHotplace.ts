@@ -8,8 +8,8 @@ export async function postHotplace(data: Place) {
   const token = await getToken();
   return await axios({
     method: 'post',
-    url: `${BASE_URL}/hot-place`,
-    data: { data },
+    url: `https://k9a705.p.ssafy.io:8000/hot-place`,
+    data,
     headers: { 'Access-Token': token }
    }).then((res) => res)
 }

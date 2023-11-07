@@ -5,31 +5,52 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-export default function HotRegisterButton() {
-  const navigation = useNavigation();
+import { postHotplace } from '../services/postHotplace'
+import { getIdHotplace } from '../services/getHotplace'
+import { SpaceInfo } from '../types/place'
 
-  useEffect(() => {
-    const isLogin = async () => {
-      const AccessToken = await AsyncStorage.getItem('userAccessToken');
-      if (AccessToken !== null) {
-        const userAccessToken = JSON.parse(AccessToken);
-        axios.get(`https://k9a705.p.ssafy.io:8000/member/qna/hotplace/${Id}`, 
-          {headers: {'Access-Token': userAccessToken}}
-        )
-          .then((response) => {
-            setQnaData(response.data[0])
-          })
-          .catch((err) => {
-            console.log("에러 메시지 :", err)
-          });
-        }
-      }
-    isLogin()
-  }, []);
+type Props = {
+  props: SpaceInfo
+  setSpaceInfo: () => void
+}
 
+export default function HotRegisterButton({ props, setSpaceInfo }: Props) {
+
+  const handlePostHotplace = () => {
+    const data = {
+      "addressName": props.address_name,
+      "id": props.id,
+      "phone": props.phone,
+      "placeName": props.place_name,
+      "roadAddressName": props.road_address_name,
+      "x": props.x,
+      "y": props.y,
+      "category": props.category_group_name
+    }
+    console.log(data)
+    postHotplace(data)
+    .then((res) => {
+      const data: SpaceInfo = res.data
+      // const space: SpaceInfo = {
+      //   id: data.id,
+      //   place_name: data.placeName,
+      //   address_name: data.addressName,
+      //   road_address_name: data.roadAddressName,
+      //   category_group_name: data.categoty,
+      //   likeCount: data.likeCount,
+      //   phone: data.phone,
+      //   placeType: data.placeType,
+      //   visitorCount: data.visitorCount,
+      //   y: data.y,
+      //   x: data.x
+      // }
+      console.log('data', data)
+      setSpaceInfo(data)
+    })
+  }
 
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={handlePostHotplace}>
       <View style={styles.button}>
       <Icon name="burn" size={19} color={'white'} style={styles.Icon}/>
         <Text style={styles.text}>핫플 등록</Text>

@@ -28,22 +28,10 @@ import { locationState } from './recoil/locationState'
 import { getIdHotplace } from './services/getHotplace'
 import { previousDay } from 'date-fns';
 
+import { SpaceInfo } from './types/place'
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
-type SpaceInfo = {
-  id: string
-  place_name: string
-  road_address_name: string
-  category_group_name: string
-  likeCount: number
-  phone: string
-  placeType: string
-  visitorCount: number
-  y: string
-  x: string
-  // place_url: string
-}
 
 type Here = {
   granted: string
@@ -60,6 +48,15 @@ const MapScreen: React.FC = () => {
       setLocation(prev => ({...prev, granted: result as string}))
     })
   }, [])
+
+  // 현재 표시된 장소 정보가 변경되면, 핫플레이스 화면에 띄우는 정보 변경해달라고 요청
+  useEffect(() => {
+    if (webRef.current) {
+      webRef.current.injectJavaScript(`
+      window.postMessage(${JSON.stringify(locationData)}, '*')
+      `);
+    }
+  }, [spaceInfo])
 
   async function get_location(type: string) {
     // return new Promise((resolve, reject) => {
@@ -147,32 +144,13 @@ const MapScreen: React.FC = () => {
   }, [spaceInfo]);
   const handleSheetChanges = useCallback((index: number) => {
     // bottomSheetModalRef.current?.present();
-    // console.log('handleSheetChanges', index);
+
   }, []);
   // backdrop close by pressing background
   const renderBackdrop = useCallback(
     (props: any) => <BottomSheetBackdrop {...props} pressBehavior="close" />,
     [],
   );
-
-  // 개별 hotplace 조회
-  // const handleHotPlace = (id: string) => {
-  //   console.log('handle hotplace 실행')
-  //   getIdHotplace(id)
-  //   .then((res) => {
-  //     const data: SpaceInfo = res.data
-  //     console.log('핫플레이스 개별 조회')
-  //     console.log('id data', data)
-  //     // setSpaceInfo(data)
-  //   })
-  //   .catch((error) => {
-  //     if (error.response && error.response.status === 400) {
-        
-  //     } else {
-  //       console.error('에러:', error.message);
-  //     }
-  //   })
-  // } 
 
 
   let webRef = useRef<WebView | null>(null);
@@ -193,15 +171,15 @@ const MapScreen: React.FC = () => {
         {spaceInfo && spaceInfo.place_name &&
           <View style={styles.spaceName}>
             <NameBox h={38} text={spaceInfo.place_name} />
-            {spaceInfo.placeType ? (
-              <View style={styles.buttons}>
-              <Icon name="comments" size={20} color={'white'} style={styles.Icon}/>
-              <Icon name="gamepad" size={20} color={'white'} style={styles.Icon}/>
-              <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/>
-            </View>
+            {!spaceInfo.placeType ? (
+              <HotRegisterButton props={spaceInfo} setSpaceInfo={setSpaceInfo}/>
             ): (
-              <HotRegisterButton />
-              )}
+              <View style={styles.buttons}>
+                <Icon name="comments" size={20} color={'white'} style={styles.Icon}/>
+                <Icon name="gamepad" size={20} color={'white'} style={styles.Icon}/>
+                <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/>
+              </View>
+            )}
           </View>
         } 
           <View style={styles.bottomsheetContainer}>

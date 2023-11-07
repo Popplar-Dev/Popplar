@@ -6,6 +6,7 @@ export const getToken = () => {
       if (value !== null) {
         // console.log('userAccessToken:', value);
         const userAccessToken = JSON.parse(value);
+        console.log(userAccessToken)
         return userAccessToken
       } else {
         console.log('userAccessToken is not set or an error occurred.');
