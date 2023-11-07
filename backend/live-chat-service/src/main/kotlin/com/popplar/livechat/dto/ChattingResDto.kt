@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 
 class ChattingResDto(
 
+    val chattingId: Long,
     val chattingRoomId: Long,
     val chattingContent: String,
     val chattingCreatedAt: LocalDateTime,
@@ -18,6 +19,7 @@ class ChattingResDto(
 
         fun create(chatting: Chatting, chattingMember: ChattingMember): ChattingResDto {
             return ChattingResDto(
+                chattingId = chatting.id!!,
                 chattingRoomId = chatting.chattingRoomId,
                 chattingContent = chatting.content,
                 chattingCreatedAt = chatting.createdAt,
