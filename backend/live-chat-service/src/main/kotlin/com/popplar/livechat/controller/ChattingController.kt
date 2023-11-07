@@ -73,7 +73,7 @@ class ChattingController(
     @DeleteMapping("/chatting-room/{chattingRoomId}")
     fun leaveChattingRoom(
         @PathVariable chattingRoomId: Long,
-        @RequestHeader("MemberId") memberId: Long
+        @RequestHeader("Member-Id") memberId: Long
     ): ResponseEntity<Any> {
         chattingService.leaveChattingRoom(chattingRoomId, memberId)
         return ResponseEntity<Any>(HttpStatus.OK)
