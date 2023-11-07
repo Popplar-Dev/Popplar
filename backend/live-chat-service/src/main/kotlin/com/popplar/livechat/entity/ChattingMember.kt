@@ -17,7 +17,7 @@ class ChattingMember(
     var memberName: String,
 
     var memberProfileImage: String,
-) {
+) : BaseEntity() {
     fun update(chattingMemberReqDto: ChattingMemberReqDto) {
         this.memberName = chattingMemberReqDto.memberName
         this.memberProfileImage = chattingMemberReqDto.memberProfileImage

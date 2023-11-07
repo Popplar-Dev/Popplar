@@ -13,15 +13,24 @@ public class GameResultDto {
     private boolean isConqueror;
     //본인의 최종 점수
     @NotNull
-    private int points;
+    private double points;
 
     @NotNull
     private LocalDateTime createdTime;
 
+    @NotNull
+    private boolean qualified;
+
+    @NotNull
+    private int rank;
+
     @Builder
-    public GameResultDto(boolean isConqueror, int points, LocalDateTime createdTime) {
+    public GameResultDto(boolean isConqueror, double points, LocalDateTime createdTime,
+        boolean qualified, int rank) {
         this.isConqueror = isConqueror;
         this.points = points;
         this.createdTime = createdTime;
+        this.qualified = qualified;
+        this.rank = rank;
     }
 }

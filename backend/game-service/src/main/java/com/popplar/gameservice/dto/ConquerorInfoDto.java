@@ -17,10 +17,10 @@ public class ConquerorInfoDto {
     private Long hotPlaceId;
 
     @NotNull
-    private int points;
+    private double points;
 
     @Builder
-    public ConquerorInfoDto(Long id, Long memberId, Long hotPlaceId, int points) {
+    public ConquerorInfoDto(Long id, Long memberId, Long hotPlaceId, double points) {
         this.id = id;
         this.memberId = memberId;
         this.hotPlaceId = hotPlaceId;

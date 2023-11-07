@@ -20,6 +20,4 @@ class Chatting(
 
     val content: String,
 
-    @CreatedDate
-    val createdDate: LocalDateTime = LocalDateTime.now(),
-)
+) : BaseEntity()
