@@ -32,23 +32,25 @@ public class HotPlaceService {
     private final LikeRepository likeRepository;
     private final MemberPositionRepository memberPositionRepository;
 
+    @Transactional
     public List<HotPlaceResDto> findAllHotPlace() {
         List<HotPlace> hotPlaceList = hotPlaceRepository.findAll();
         List<HotPlaceResDto> hotPlaceResDtoList = new ArrayList<>();
         for (HotPlace hotPlace : hotPlaceList) {
             HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(
                 hotPlace);
-            hotPlaceResDto = updateDto(hotPlaceResDto, hotPlace);
+            hotPlaceResDto = updateHotPlaceDto(hotPlaceResDto, hotPlace);
             hotPlaceResDtoList.add(hotPlaceResDto);
         }
 
         return hotPlaceResDtoList;
     }
 
+    @Transactional
     public HotPlaceResDto findHotPlace(Long hotPlaceId) {
         HotPlace hotPlace = findHotPlaceById(hotPlaceId);
         HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
-        hotPlaceResDto = updateDto(hotPlaceResDto, hotPlace);
+        hotPlaceResDto = updateHotPlaceDto(hotPlaceResDto, hotPlace);
 
         return hotPlaceResDto;
     }
@@ -68,7 +70,7 @@ public class HotPlaceService {
         hotPlaceRepository.save(hotPlace);
 
         HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
-        hotPlaceResDto = updateDto(hotPlaceResDto, hotPlace);
+        hotPlaceResDto = updateHotPlaceDto(hotPlaceResDto, hotPlace);
 
         return hotPlaceResDto;
     }
@@ -132,20 +134,22 @@ public class HotPlaceService {
     }
 
     // -- DTO 필드 추가 -- //
-    public HotPlaceResDto updateDto(HotPlaceResDto hotPlaceResDto, HotPlace hotPlace) {
+    public HotPlaceResDto updateHotPlaceDto(HotPlaceResDto hotPlaceResDto, HotPlace hotPlace) {
         // 2주간 사용자 방문 횟수 체크
         int twoWeeksVisitorCount = visitorRepository.countByVisitedDateAfterAndHotPlaceId(
             LocalDateTime.now().minus(
                 Duration.ofDays(14)), hotPlace.getId());
         hotPlaceResDto.setVisitorCount(twoWeeksVisitorCount);
-        // 핫플 랭크 생성
-        hotPlaceResDto.setRank(checkRank(twoWeeksVisitorCount, hotPlace.getPlaceType()));
+        // 핫플 티어 생성
+        int tier = checkTier(twoWeeksVisitorCount, hotPlace.getPlaceType());
+        hotPlaceResDto.setTier(tier);
+        hotPlace.updateTier(hotPlaceResDto.getTier());
 
         return hotPlaceResDto;
     }
 
     // -- 핫플레이스 랭크 체크용 코드 -- //
-    public int checkRank(int count, HotPlaceType type) {
+    public int checkTier(int count, HotPlaceType type) {
         if (type == HotPlaceType.FLAG) {
             return 0;
         }

@@ -28,5 +28,5 @@ public class HotPlaceResDto {
 
     private int visitorCount;
 
-    private int rank;
+    private int tier;
 }
