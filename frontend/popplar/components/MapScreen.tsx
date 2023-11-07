@@ -124,7 +124,7 @@ const MapScreen: React.FC = () => {
   }
 
   async function native_to_web() {
-    console.log('native_to_web')
+    // console.log('native_to_web')
     await get_location()
     setInterval(() => {
       // console.log('location 정보 update');
@@ -170,7 +170,7 @@ const MapScreen: React.FC = () => {
 
   /* web -> native */
   const web_to_native = (e) => {
-    console.log(e.nativeEvent.data);
+    // console.log(e.nativeEvent.data);
   }
 
   const [latitude, setLatitude] = useState<any>(null);
@@ -306,13 +306,11 @@ const MapScreen: React.FC = () => {
             const data: any = JSON.parse(event.nativeEvent.data)
             // console.log('raw data', data)
             if (data.type=="test") {
-              console.log('web에서 들어왔어요')
-              console.log(data.data)
-            } else if (data.type=="relocation") {
-              native_to_web()
+              // console.log('web에서 들어왔어요')
+              // console.log(data.data)
             } else {
               handlePresentModalPress();
-              console.log(data.data)
+              // console.log(data.data)
               setSpaceInfo(data.data)
               // console.log("받은 데이터(React) : " + data.data);
             }
