@@ -72,7 +72,7 @@ const MapScreen: React.FC = () => {
     if (location.granted==="granted") {
       Geolocation.getCurrentPosition(
         pos => {
-          console.log('IM HERE', pos)
+          // console.log('IM HERE', pos)
           const lat = pos.coords.latitude.toString()
           const lng = pos.coords.longitude.toString()
           setLocation(prev => ({...prev, y: lat, x: lng }))
@@ -110,14 +110,16 @@ const MapScreen: React.FC = () => {
     if (webRef.current) {
       const data: { y: string, x: string } = {y: y, x: x}
       const locationData: { type: string, data: { y: string, x: string } } = {type: 'location', data: data}
-      console.log(locationData)
+      // console.log('locationData', locationData)
       webRef.current.injectJavaScript(`
-      const customEvent = new Event('message');
-      customEvent.data = ${JSON.stringify(locationData)};
-      window.dispatchEvent(customEvent);
+      window.postMessage(${JSON.stringify(locationData)}, '*')
       `);
+      // const customEvent = new Event('message');
+      // customEvent.data = ${JSON.stringify(locationData)};
+      // window.dispatchEvent(customEvent);
+
       // webRef.current.postMessage(JSON.stringify(locationData))
-      console.log("전송 데이터(React) : customMessageOpen");
+      // console.log("전송 데이터(React) : customMessageOpen");
     }
   }
 
@@ -125,7 +127,7 @@ const MapScreen: React.FC = () => {
     console.log('native_to_web')
     await get_location()
     setInterval(() => {
-      console.log('location 정보 update');
+      // console.log('location 정보 update');
       get_location();
     }, 5000);
     // await handle_native_location()
@@ -141,11 +143,11 @@ const MapScreen: React.FC = () => {
   // callbacks
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
-    console.log('pop!!')
+    // console.log('pop!!')
   }, [spaceInfo]);
   const handleSheetChanges = useCallback((index: number) => {
     // bottomSheetModalRef.current?.present();
-    console.log('handleSheetChanges', index);
+    // console.log('handleSheetChanges', index);
   }, []);
   // backdrop close by pressing background
   const renderBackdrop = useCallback(
@@ -175,7 +177,7 @@ const MapScreen: React.FC = () => {
   const [longitude, setLogitude] = useState<any>(null);
 
   const geoLocation = () => {
-    console.log('location')
+    // console.log('location')
     // 사용자의 위치를 감지
     // Geolocation.getCurrentPosition(
     //     position => {
@@ -302,10 +304,12 @@ const MapScreen: React.FC = () => {
           // injectedJavaScript={inject}
           onMessage={(event) => {
             const data: any = JSON.parse(event.nativeEvent.data)
-            console.log('raw data', data)
+            // console.log('raw data', data)
             if (data.type=="test") {
               console.log('web에서 들어왔어요')
               console.log(data.data)
+            } else if (data.type=="relocation") {
+              native_to_web()
             } else {
               handlePresentModalPress();
               console.log(data.data)
