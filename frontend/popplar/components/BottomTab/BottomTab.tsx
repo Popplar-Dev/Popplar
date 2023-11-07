@@ -15,6 +15,7 @@ import AlarmSetting from '../Settings/AlarmSetting';
 import Terms from '../Settings/Terms';
 import Inquire from '../Settings/Inquire';
 import SpeedTouch from '../Games/SpeedTouch';
+import ClickGame from '../Games/ClickGame';
 import QnaList from '../QnA/QnaList';
 import QnaDetail from '../QnA/QnaDetail';
 
@@ -33,6 +34,7 @@ const MapScreenStack = () => {
       {/* <Stack.Screen name="Mypage" component={MyPageScreen} options={{headerShown: false}}/> */}
       <Stack.Screen name="MapScreen" component={MapScreen} options={{headerShown: false}}/>
       <Stack.Screen name="SpeedTouch" component={SpeedTouch} options={{headerTitle: 'SpeedTouchGame'}}/>
+      <Stack.Screen name="ClickGame" component={ClickGame} options={{headerTitle: 'ClickGame'}}/>
       <Stack.Screen name="QnaList" component={QnaList} options={{headerTitle: 'QnaList'}}/>
       <Stack.Screen name="QnaDetail" component={QnaDetail} options={{headerTitle: 'QnaDetail'}}/>
       <Stack.Screen name="Chat" component={ChatScreen} options={{headerShown: false}}/>
