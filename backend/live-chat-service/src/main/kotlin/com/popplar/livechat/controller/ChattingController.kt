@@ -82,4 +82,7 @@ class ChattingController(
     //  채팅 어디까지 읽었는지
     //  또 뭐있지
 
+    // TODO
+    //  내가 속해있는 채팅방 알려주기
+
 }
