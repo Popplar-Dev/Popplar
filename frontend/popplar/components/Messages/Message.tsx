@@ -1,20 +1,32 @@
 import {View, Text, Image, StyleSheet} from 'react-native';
-import { messageType } from '../types/message';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+import {messageType} from '../types/message';
 
 type messageProp = {
-  checked?: boolean;
+  read?: boolean;
+  isDeleting?: boolean;
+  isChecked?: boolean;
   msgType: 'received' | 'sent';
-  message: messageType; 
+  message: messageType;
 };
 
-export default function Message({checked = false, msgType, message }: messageProp) {
+export default function Message({
+  read = false,
+  isDeleting = false,
+  isChecked = false,
+  msgType,
+  message,
+}: messageProp) {
   const imgUrl =
     'https://i.pinimg.com/736x/4c/7b/63/4c7b63eac0e1645c5c3b9e3bcf706074.jpg';
 
   return (
     <View
       style={
-        (checked && msgType==="received") ? [styles.container, styles.checkedColor] : [styles.container]
+        read && msgType === 'received'
+          ? [styles.container, styles.checkedColor]
+          : [styles.container]
       }>
       <View style={styles.profilePicContainer}>
         <Image
@@ -30,7 +42,7 @@ export default function Message({checked = false, msgType, message }: messagePro
       <View style={styles.messageContentContainer}>
         <Text
           style={
-            (checked && msgType==="received")
+            read && msgType === 'received'
               ? [styles.nickname, styles.checkedTextColor]
               : styles.nickname
           }>
@@ -38,7 +50,9 @@ export default function Message({checked = false, msgType, message }: messagePro
         </Text>
         <Text
           style={
-            (checked && msgType==="received") ? [styles.content, styles.checkedTextColor] : styles.content
+            read && msgType === 'received'
+              ? [styles.content, styles.checkedTextColor]
+              : styles.content
           }
           numberOfLines={1}
           ellipsizeMode="tail">
@@ -47,14 +61,28 @@ export default function Message({checked = false, msgType, message }: messagePro
         </Text>
         <Text
           style={
-            (checked && msgType==="received") ? [styles.date, styles.checkedTextColor] : styles.date
+            read && msgType === 'received'
+              ? [styles.date, styles.checkedTextColor]
+              : styles.date
           }>
-          11월 6일 1시 30분
+          11월 6일
         </Text>
       </View>
 
       <View style={styles.checkmarkContainer}>
-        {msgType==='received' && !checked && <View style={styles.checkmark}></View>}
+        <View style={styles.unreadContainer}>
+          {msgType === 'received' && !read && (
+            <View style={styles.unread}></View>
+          )}
+        </View>
+        <View style={styles.checkmark}>
+          {isDeleting &&
+            (isChecked ? (
+              <Icon name="checkbox-outline" size={23} color="white" />
+            ) : (
+              <Icon name="square-outline" size={23} color="white" />
+            ))}
+        </View>
       </View>
     </View>
   );
@@ -62,7 +90,7 @@ export default function Message({checked = false, msgType, message }: messagePro
 // '#2f2f2fbc', '#1e1e1e80'
 const styles = StyleSheet.create({
   container: {
-    backgroundColor:'#2f2f2fbc',
+    backgroundColor: '#2f2f2fbc',
     width: '100%',
     height: 80,
     paddingHorizontal: 12,
@@ -73,7 +101,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
   },
   checkedColor: {
-    backgroundColor:  '#1e1e1e80',
+    backgroundColor: '#1e1e1e80',
   },
   checkedTextColor: {
     color: '#b8b8b8',
@@ -91,14 +119,14 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   messageContentContainer: {
-    width: '80%',
+    width: '75%',
     // borderColor: 'white',
     // borderWidth: 1,
     paddingHorizontal: 12,
   },
   nickname: {
     color: 'white',
-    fontWeight: 'bold',
+    fontWeight: '700',
     fontSize: 16,
     marginBottom: 3,
   },
@@ -116,11 +144,21 @@ const styles = StyleSheet.create({
     // borderColor: 'white',
     // borderWidth: 1,
   },
-  checkmark: {
+  unreadContainer: {
+    height: 10,
+    marginTop: 6,
+    alignItems: 'flex-end',
+  },
+  unread: {
     width: 10,
     height: 10,
     backgroundColor: '#613EEA',
     borderRadius: 25,
-    marginTop: 6,
+  },
+  checkmark: {
+    paddingTop: 5,
+    alignItems: 'flex-start',
+    // borderColor: 'white',
+    // borderWidth: 1,
   },
 });

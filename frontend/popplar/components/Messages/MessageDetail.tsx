@@ -1,9 +1,11 @@
 import { useEffect } from 'react'; 
 import { Text, View, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage'; 
-import { messageType } from '../types/message';
-import axios from 'axios';
+
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import axios from 'axios';
+
+import { messageType } from '../types/message';
 
 type RootStackParamList = {
   Home: undefined;
@@ -37,8 +39,10 @@ export default function MessageDetail({ route }: DetailScreenRouteProp) {
 
   return (
     <View style={styles.container}>
-      <Text>{message.sentMemberName}</Text>
-      <Text>{message.content}</Text>
+      <View style={styles.messageContainer}>
+        <Text>{message.sentMemberName}</Text>
+        <Text>{message.content}</Text>
+      </View>
     </View>
   )
 }
@@ -46,6 +50,16 @@ export default function MessageDetail({ route }: DetailScreenRouteProp) {
 const styles = StyleSheet.create({
   container: {
     flex: 1, 
+    marginHorizontal: 12, 
+    borderColor: 'white', 
+    borderWidth: 1, 
+    paddingHorizontal: 12, 
+  }, 
+  messageContainer: {
+    borderColor: '#ececec',
+    borderWidth: 1,
+    width: '85%',
+    height: 500
   }
 
 
