@@ -48,15 +48,6 @@ type Here = {
   x: string
 }
 
-type locationData = {
-  type: string
-  data: {
-    granted: string
-    x: string
-    y: string
-  }
-}
-
 const MapScreen: React.FC = () => {
   const [location, setLocation] = useRecoilState<Here>(locationState);
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo|null>(null)
@@ -158,62 +149,6 @@ const MapScreen: React.FC = () => {
 
   let webRef = useRef<WebView | null>(null);
 
-  /* native -> web */
-  // const native_to_web = (data: any) => {
-  //   console.log('native_to_web')
-  //   console.log(data)
-  //   if (webRef.current) {
-  //     webRef.current.postMessage(data)
-  //     console.log("전송 데이터(React) : 웹으로 데이터 전송");
-  //   }
-  // }
-
-  /* web -> native */
-  const web_to_native = (e) => {
-    // console.log(e.nativeEvent.data);
-  }
-
-  const [latitude, setLatitude] = useState<any>(null);
-  const [longitude, setLogitude] = useState<any>(null);
-
-  const geoLocation = () => {
-    // console.log('location')
-    // 사용자의 위치를 감지
-    // Geolocation.getCurrentPosition(
-    //     position => {
-    //         const latitude = JSON.stringify(position.coords.latitude);
-    //         const longitude = JSON.stringify(position.coords.longitude);
-
-    //         setLatitude(latitude);
-    //         setLogitude(longitude);
-    //     },
-    //     error => { console.log(error.code, error.message); },
-    //     {enableHighAccuracy:true, timeout: 15000, maximumAge: 10000 },
-    // )
-    
-    // // 사용자의 위치 변화를 감지
-    // Geolocation.watchPosition(
-    //   position => {
-    //     const latitude = JSON.stringify(position.coords.latitude);
-    //     const longitude =  JSON.stringify(position.coords.longitude);
-
-    //     console.log('move', latitude, longitude)
-    //   },
-    //   error => { console.log(error.code, error.message); },
-    //   {enableHighAccuracy:true, timeout: 15000, maximumAge: 10000 },
-    // )
-  }
-
-  // useEffect(() => {
-  //   getAllHotplace()
-  //   .then((res) => console.log(res))
-  // }, [])
-
-  // useEffect(() => {
-  //   const locationData = {type: 'location', data: location}
-  //   native_to_web(locationData)
-  // }, [location])
-
   return (
     <GestureHandlerRootView style={{ flex: 1}}>
       <BottomSheetModalProvider>
@@ -308,6 +243,8 @@ const MapScreen: React.FC = () => {
             if (data.type=="test") {
               // console.log('web에서 들어왔어요')
               // console.log(data.data)
+            } else if (data.type=="relocation") {
+              native_to_web();
             } else {
               handlePresentModalPress();
               // console.log(data.data)
