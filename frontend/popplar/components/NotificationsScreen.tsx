@@ -10,7 +10,7 @@ import {messageType} from './types/message';
 
 type RootStackParamList = {
   Home: undefined;
-  Detail: {message: messageType};
+  Detail: {message: messageType, tab: 'received'|'sent'};
 };
 
 const ReceivedMessagesStack = () => {

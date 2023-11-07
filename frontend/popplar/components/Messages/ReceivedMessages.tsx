@@ -23,7 +23,7 @@ import {check} from 'react-native-permissions';
 
 type RootStackParamList = {
   Home: undefined;
-  Detail: {message: messageType};
+  Detail: {message: messageType, tab: 'received'|'sent'};
 };
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
@@ -110,7 +110,7 @@ export default function ReceivedMessages({
         }
       });
     } else {
-      navigation.navigate('Detail', {message: item});
+      navigation.navigate('Detail', {message: item, tab: 'received'});
     }
   };
 

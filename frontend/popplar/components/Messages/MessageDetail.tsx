@@ -1,66 +1,126 @@
-import { useEffect } from 'react'; 
-import { Text, View, StyleSheet } from 'react-native';
+import {useEffect} from 'react';
+import {Text, View, Image, StyleSheet} from 'react-native';
 
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-import { messageType } from '../types/message';
+import {messageType} from '../types/message';
 
 type RootStackParamList = {
   Home: undefined;
-  Detail: { message: messageType };
+  Detail: {message: messageType; tab: 'received' | 'sent'};
 };
 
-type DetailScreenRouteProp = NativeStackScreenProps<RootStackParamList, 'Detail'>;
+type DetailScreenRouteProp = NativeStackScreenProps<
+  RootStackParamList,
+  'Detail'
+>;
 
-export default function MessageDetail({ route }: DetailScreenRouteProp) { 
-  
-  const { message } = route.params; 
-  
+export default function MessageDetail({route}: DetailScreenRouteProp) {
+  const {message, tab} = route.params;
+  // console.log(route);
+  const imgUrl =
+  'https://i.pinimg.com/736x/4c/7b/63/4c7b63eac0e1645c5c3b9e3bcf706074.jpg';
 
-  useEffect(()=>{
+  useEffect(() => {
     async function getMessageDetail() {
       const accessToken = await AsyncStorage.getItem('userAccessToken');
       if (!accessToken) return;
-      const userAccessToken = JSON.parse(accessToken); 
+      const userAccessToken = JSON.parse(accessToken);
       try {
         //const url = `https://k9a705.p.ssafy.io:8000/member/message/${message.sentMemberId}/${message.messageId}`
-        const url = `https://k9a705.p.ssafy.io:8000/member/message/356931964684/7`
+        const url = `https://k9a705.p.ssafy.io:8000/member/message/356931964684/7`;
         await axios.get(url, {
-          headers: {'Access-Token': userAccessToken}
-        })
+          headers: {'Access-Token': userAccessToken},
+        });
       } catch (e) {
-        console.error(e); 
+        console.error(e);
       }
     }
-    getMessageDetail(); 
-  }, [])
+    getMessageDetail();
+  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.messageContainer}>
-        <Text>{message.sentMemberName}</Text>
-        <Text>{message.content}</Text>
+        <View style={styles.usernameContainer}>
+          <View style={styles.profilePicContainer}>
+            <Image
+              source={{
+                uri: imgUrl,
+              }}
+              style={styles.profilePic}
+              alt="profilepic"
+              resizeMode="cover"
+            />
+          </View>
+          <Text style={styles.username}>
+            {tab === 'received'
+              ? message.sentMemberName
+              : message.receivedMemberName}
+            이름
+          </Text>
+        </View>
+        <View style={styles.messageContentContainer}>
+          <Text style={styles.content}>{message.content}</Text>
+        </View>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, 
-    marginHorizontal: 12, 
-    borderColor: 'white', 
-    borderWidth: 1, 
-    paddingHorizontal: 12, 
-  }, 
+    flex: 1,
+    alignItems: 'center',
+    marginHorizontal: 12,
+    // borderColor: 'white',
+    // borderWidth: 1,
+    paddingHorizontal: 12,
+  },
   messageContainer: {
-    borderColor: '#ececec',
+    marginTop: 30,
+    borderColor: '#8B90F7',
     borderWidth: 1,
-    width: '85%',
-    height: 500
-  }
-
-
+    borderStyle: 'dashed',
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    borderBottomRightRadius: 25,
+    width: '95%',
+    padding: 25,
+    minHeight: 200,
+  },
+  profilePicContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 24,
+    // borderWidth: 1,
+    // borderColor: 'white',
+    overflow: 'hidden',
+    marginEnd: 12
+  },
+  profilePic: {
+    width: '100%',
+    height: '100%',
+  },
+  usernameContainer: {
+    paddingBottom: 12,
+    borderBottomColor: '#8B90F7',
+    borderBottomWidth: 1,
+    borderStyle: 'dashed',
+    flexDirection: 'row',
+    alignItems: 'center', 
+  },
+  username: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: 'white',
+  },
+  messageContentContainer: {
+    paddingTop: 12,
+  },
+  content: {
+    color: 'white',
+  },
 });

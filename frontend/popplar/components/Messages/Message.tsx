@@ -46,7 +46,7 @@ export default function Message({
               ? [styles.nickname, styles.checkedTextColor]
               : styles.nickname
           }>
-          재은
+          {msgType === "received" ? message.sentMemberName: message.receivedMemberName}
         </Text>
         <Text
           style={
@@ -56,8 +56,7 @@ export default function Message({
           }
           numberOfLines={1}
           ellipsizeMode="tail">
-          간단한 내용. 이렇게 이렇게 멧지를 써볼까 함 여기서 만나는 거 어떻게
-          생각하는지 답장을 줘도 좋고
+          {message.content}
         </Text>
         <Text
           style={
