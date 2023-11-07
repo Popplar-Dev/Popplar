@@ -97,7 +97,7 @@ const MapScreen: React.FC = () => {
           handle_native_location(lat, lng)
         },
         error => {
-          console.log(error);
+          // console.log(error);
         },
         {
           enableHighAccuracy: true,
