@@ -4,6 +4,7 @@ import com.hotspot.global.eureka.dto.ChattingMemberReqDto
 import com.hotspot.global.eureka.dto.ChattingMemberResDto
 import com.hotspot.global.oauth.dto.OAuthMemberDto
 import com.hotspot.global.service.WebClientService
+import com.hotspot.member.dto.MemberInfoDto
 import com.hotspot.member.dto.MemberProfileResDto
 import com.hotspot.member.dto.MemberUpdateReqDto
 import com.hotspot.member.entity.BlockedMember
@@ -14,7 +15,9 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.util.MultiValueMap
 import org.springframework.web.reactive.function.client.WebClient
+import kotlin.streams.toList
 
 
 @Service
@@ -102,5 +105,12 @@ class MemberService(
     fun findMemberByEncryptedId(encryptedId: Long): Member {
         return memberRepository.findById(cryptService.decrypt(encryptedId))
                 .orElseThrow { throw ArithmeticException("사용자 정보가 없습니다.") }
+    }
+
+    fun getMemberInfo(memberIdList: List<Long>): MutableList<MemberInfoDto>? {
+        val memberList = memberRepository.findByIdIn(memberIdList);
+        return memberList.stream()
+                .map { MemberInfoDto.create(it) }
+                .toList()
     }
 }
