@@ -17,13 +17,16 @@ function ProfileSetting() {
   const toggleSwitch = (value: boolean) => setIsEnabled(value);
   const [photo ,setPhoto] = useState('')
   const [userinfo, setUserInfo] = useRecoilState(userInfoState);
+  const user = useRecoilValue(userInfoState);
 
 	const startEditing = () => {
     setIsEditing(true);
     setNewNickname(nickname);
+    console.log(user)
   };
 
   const saveNickname = () => {
+    console.log(user)
 			setNickname(newNickname);
 			const updatedInfo = {
 				name: newNickname,
@@ -34,6 +37,7 @@ function ProfileSetting() {
         if (AccessToken !== null) {
 					const userAccessToken = JSON.parse(AccessToken);
           console.log(userAccessToken)
+          console.log(userinfo.id)
 					axios.patch(`https://k9a705.p.ssafy.io:8000/member/${userinfo.id}`, updatedInfo, 
 						{headers: {'Access-Token': userAccessToken}}
 					)
