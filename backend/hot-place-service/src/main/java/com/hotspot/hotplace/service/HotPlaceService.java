@@ -38,9 +38,7 @@ public class HotPlaceService {
         for (HotPlace hotPlace : hotPlaceList) {
             HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(
                 hotPlace);
-            hotPlaceResDto.setVisitorCount(
-                visitorRepository.countByVisitedDateAfterAndHotPlaceId(LocalDateTime.now().minus(
-                    Duration.ofDays(14)), hotPlaceResDto.getId()));
+            hotPlaceResDto = updateDto(hotPlaceResDto, hotPlace);
             hotPlaceResDtoList.add(hotPlaceResDto);
         }
 
@@ -50,9 +48,7 @@ public class HotPlaceService {
     public HotPlaceResDto findHotPlace(Long hotPlaceId) {
         HotPlace hotPlace = findHotPlaceById(hotPlaceId);
         HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
-        hotPlaceResDto.setVisitorCount(
-            visitorRepository.countByVisitedDateAfterAndHotPlaceId(LocalDateTime.now().minus(
-                Duration.ofDays(14)), hotPlaceId));
+        hotPlaceResDto = updateDto(hotPlaceResDto, hotPlace);
 
         return hotPlaceResDto;
     }
@@ -72,9 +68,7 @@ public class HotPlaceService {
         hotPlaceRepository.save(hotPlace);
 
         HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
-        hotPlaceResDto.setVisitorCount(
-            visitorRepository.countByVisitedDateAfterAndHotPlaceId(LocalDateTime.now().minus(
-                Duration.ofDays(14)), hotPlace.getId()));
+        hotPlaceResDto = updateDto(hotPlaceResDto, hotPlace);
 
         return hotPlaceResDto;
     }
@@ -137,5 +131,36 @@ public class HotPlaceService {
         }
     }
 
+    // -- DTO 필드 추가 -- //
+    public HotPlaceResDto updateDto(HotPlaceResDto hotPlaceResDto, HotPlace hotPlace) {
+        // 2주간 사용자 방문 횟수 체크
+        int twoWeeksVisitorCount = visitorRepository.countByVisitedDateAfterAndHotPlaceId(
+            LocalDateTime.now().minus(
+                Duration.ofDays(14)), hotPlace.getId());
+        hotPlaceResDto.setVisitorCount(twoWeeksVisitorCount);
+        // 핫플 랭크 생성
+        hotPlaceResDto.setRank(checkRank(twoWeeksVisitorCount, hotPlace.getPlaceType()));
+
+        return hotPlaceResDto;
+    }
+
+    // -- 핫플레이스 랭크 체크용 코드 -- //
+    public int checkRank(int count, HotPlaceType type) {
+        if (type == HotPlaceType.FLAG) {
+            return 0;
+        }
+
+        if (count < 10) {
+            return 5;
+        } else if (count < 50) {
+            return 4;
+        } else if (count < 100) {
+            return 3;
+        } else if (count < 500) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
 }
 

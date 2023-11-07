@@ -27,4 +27,6 @@ public class HotPlaceResDto {
     private int likeCount;
 
     private int visitorCount;
+
+    private int rank;
 }
