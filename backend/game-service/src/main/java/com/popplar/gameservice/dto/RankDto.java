@@ -10,6 +10,7 @@ import lombok.ToString;
 @Data
 @ToString
 public class RankDto {
+
     @NotNull
     private Long memberId;
 
@@ -28,10 +29,9 @@ public class RankDto {
     @NotNull
     private String memberProfileImage;
 
-    public void setRankDtoMember(String memberName,
-        String memberProfileImage) {
-        this.memberName = memberName;
-        this.memberProfileImage = memberProfileImage;
+    public void setRankDtoMember(MemberInfoDto memberInfoDto) {
+        this.memberName = memberInfoDto.getName();
+        this.memberProfileImage = memberInfoDto.getProfileImage();
     }
 
     @Builder
