@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../recoil/userState';
+import LocationPermission from './LocationPermission'
 
 const REST_API_KEY = '0da056655f3ed1ec3ebd8325d19ac9f6';
 const REDIRECT_URI = 'https://k9a705.p.ssafy.io:8000/member/login';
@@ -72,7 +73,7 @@ export default function Login() {
           if (response.data.name === '새 유저') {
           navigation.navigate('FirstLanding' as never);
         } else {
-          navigation.navigate('BottomTab' as never);
+          navigation.navigate('LocationPermission' as never);
         }
         })
         .catch((err) => {

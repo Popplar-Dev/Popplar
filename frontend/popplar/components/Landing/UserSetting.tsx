@@ -8,6 +8,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../recoil/userState';
 
+import LocationPermission from './LocationPermission'
+
 export default function UserSetting() {
 
 	const [nickname, setNickname] = useState('') 
@@ -53,7 +55,7 @@ export default function UserSetting() {
 								'닉네임을 설정해주세요!'
 							)
 						} else {
-							navigation.navigate('BottomTab' as never);
+							navigation.navigate("LocationPermission" as never);
 						}
 					})
 					.catch((err) => {

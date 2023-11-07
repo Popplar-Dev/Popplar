@@ -131,10 +131,6 @@ const MapScreen: React.FC = () => {
     // await handle_native_location()
   }
 
-  useEffect(() => {
-
-  }, [])
-
   // bottom-sheet
   // ref
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);

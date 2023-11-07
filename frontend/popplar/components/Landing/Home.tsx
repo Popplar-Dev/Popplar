@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../recoil/userState';
 import Icon from 'react-native-vector-icons/Ionicons';
+import LocationPermission from './LocationPermission'
 
 export default function Home() {
 
@@ -79,7 +80,7 @@ export default function Home() {
           .catch((err) => {
             console.log("에러 메시지 :", err)
           });
-			navigation.navigate("BottomTab" as never)
+			navigation.navigate("LocationPermission" as never)
 		} else {
 			navigation.navigate("LoginPage" as never)
 		}

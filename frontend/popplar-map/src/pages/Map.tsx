@@ -9,6 +9,7 @@ import { useRecoilState } from 'recoil';
 import { HotLatLngState } from "../recoil/hotLatLng/index";
 import { CenterLatState } from "../recoil/centerLat/index"
 import { CenterLngState } from "../recoil/centerLng/index"
+import { CurrLocation, Location } from "../recoil/currLocation/index"
 
 import { LatLng } from '../types/LatLng'
 
@@ -24,6 +25,7 @@ export default function Map () {
   const [hotPlaceLatLng, sethotPlaceLatLng] = useRecoilState<LatLng>(HotLatLngState);
   const [centerLat, setCenterLat] = useRecoilState<string>(CenterLatState);
   const [centerLng, setCenterLng] = useRecoilState<string>(CenterLngState);
+  const [currLocation, setCurrLocation] = useRecoilState<Location>(CurrLocation);
 
   const [event, setEvent] = useState<any>({})
 
@@ -84,8 +86,9 @@ export default function Map () {
       const LngTest = data.x.toString()
       const Lat = data.y.toString().slice(0, -8)
       const Lng = data.x.toString().slice(0, -8)
-      setCenterLat(Lat)
-      setCenterLng(Lng)
+      setCurrLocation(prev => ({...prev, Lat: Lat, Lng: Lng}))
+      // setCenterLat(Lat)
+      // setCenterLng(Lng)
       if (typeof window !== 'undefined' && window.ReactNativeWebView) {
         window.ReactNativeWebView.postMessage(
           JSON.stringify({ 
@@ -140,7 +143,7 @@ export default function Map () {
 
   // 내 위치로 돌아가기
   const moveToMypos = () => {
-    var moveLatLon = new kakao.maps.LatLng(centerLat, centerLng);
+    var moveLatLon = new kakao.maps.LatLng(currLocation.Lat, currLocation.Lng);
     visibleMap.panTo(moveLatLon); 
     setTimeout(() => {
       visibleMap.setLevel(4); 
@@ -160,8 +163,8 @@ export default function Map () {
       setCenterLat(Lat)
       setCenterLng(Lng)
     } else {
-      // setCenterLat("37.50033")
-      // setCenterLng("127.0362")
+      setCenterLat(currLocation.Lat)
+      setCenterLng(currLocation.Lng)
     }
 
     var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
