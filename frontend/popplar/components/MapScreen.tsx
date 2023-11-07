@@ -110,12 +110,14 @@ const MapScreen: React.FC = () => {
     if (webRef.current) {
       const data: { y: string, x: string } = {y: y, x: x}
       const locationData: { type: string, data: { y: string, x: string } } = {type: 'location', data: data}
-      // console.log(locationData)
+      // console.log('locationData', locationData)
       webRef.current.injectJavaScript(`
-      const customEvent = new Event('message');
-      customEvent.data = ${JSON.stringify(locationData)};
-      window.dispatchEvent(customEvent);
+      window.postMessage(${JSON.stringify(locationData)}, '*')
       `);
+      // const customEvent = new Event('message');
+      // customEvent.data = ${JSON.stringify(locationData)};
+      // window.dispatchEvent(customEvent);
+
       // webRef.current.postMessage(JSON.stringify(locationData))
       // console.log("전송 데이터(React) : customMessageOpen");
     }
