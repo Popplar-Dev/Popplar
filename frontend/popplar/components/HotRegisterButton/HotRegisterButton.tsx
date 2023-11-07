@@ -30,22 +30,21 @@ export default function HotRegisterButton({ props, setSpaceInfo }: Props) {
     console.log(data)
     postHotplace(data)
     .then((res) => {
-      const data: SpaceInfo = res.data
-      // const space: SpaceInfo = {
-      //   id: data.id,
-      //   place_name: data.placeName,
-      //   address_name: data.addressName,
-      //   road_address_name: data.roadAddressName,
-      //   category_group_name: data.categoty,
-      //   likeCount: data.likeCount,
-      //   phone: data.phone,
-      //   placeType: data.placeType,
-      //   visitorCount: data.visitorCount,
-      //   y: data.y,
-      //   x: data.x
-      // }
-      console.log('data', data)
-      setSpaceInfo(data)
+      const data = res.data
+      const space: SpaceInfo = {
+        id: data.id,
+        place_name: data.placeName,
+        address_name: data.addressName,
+        road_address_name: data.roadAddressName,
+        category_group_name: data.categoty,
+        likeCount: data.likeCount,
+        phone: data.phone,
+        placeType: data.placeType,
+        visitorCount: data.visitorCount,
+        y: data.y,
+        x: data.x
+      }
+      setSpaceInfo(space)
     })
   }
 

@@ -53,7 +53,7 @@ const MapScreen: React.FC = () => {
   useEffect(() => {
     if (webRef.current) {
       webRef.current.injectJavaScript(`
-      window.postMessage(${JSON.stringify(locationData)}, '*')
+      window.postMessage('{type: 'postHotplace'}', '*')
       `);
     }
   }, [spaceInfo])
