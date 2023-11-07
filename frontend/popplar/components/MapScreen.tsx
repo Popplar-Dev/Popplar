@@ -58,7 +58,7 @@ const MapScreen: React.FC = () => {
     })
   }, [])
 
-  async function get_location() {
+  async function get_location(type: string) {
     // return new Promise((resolve, reject) => {
     if (location.granted==="granted") {
       Geolocation.getCurrentPosition(
@@ -67,7 +67,9 @@ const MapScreen: React.FC = () => {
           const lat = pos.coords.latitude.toString()
           const lng = pos.coords.longitude.toString()
           setLocation(prev => ({...prev, y: lat, x: lng }))
-          handle_native_location(lat, lng)
+          if (type!=="load") {
+            handle_native_location(lat, lng)
+          }
         },
         error => {
           console.log(error);
@@ -114,14 +116,18 @@ const MapScreen: React.FC = () => {
     }
   }
 
-  async function native_to_web() {
+  async function native_to_web_load() {
     // console.log('native_to_web')
-    await get_location()
+    await get_location('relocation')
     setInterval(() => {
       // console.log('location 정보 update');
-      get_location();
+      get_location('load');
     }, 5000);
     // await handle_native_location()
+  }
+
+  async function native_to_web() {
+    await get_location('relocation')
   }
 
   // bottom-sheet
@@ -235,11 +241,11 @@ const MapScreen: React.FC = () => {
           style={styles.webview}
           source={{uri: 'https://jiwoopaeng.github.io/popmmm/'}}
           javaScriptEnabled={true}
-          onLoad={native_to_web}
+          onLoad={native_to_web_load}
           // injectedJavaScript={inject}
           onMessage={(event) => {
             const data: any = JSON.parse(event.nativeEvent.data)
-            // console.log('raw data', data)
+            console.log('raw data', data)
             if (data.type=="test") {
               // console.log('web에서 들어왔어요')
               // console.log(data.data)
