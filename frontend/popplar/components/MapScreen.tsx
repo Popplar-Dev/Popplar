@@ -5,6 +5,8 @@ import { Linking } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import MetalIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import { getAllHotplace } from './services/getHotplace'
 
 import {
@@ -24,6 +26,9 @@ import { requestPermission } from '../utils/reqLocationPermission'
 
 import { useRecoilState } from 'recoil';
 import { locationState } from './recoil/locationState'
+
+import { useNavigation } from '@react-navigation/native';
+import GameListModal from './Modals/GameListModal';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -60,6 +65,19 @@ type locationData = {
 const MapScreen: React.FC = () => {
   const [location, setLocation] = useRecoilState<Here>(locationState);
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo|null>(null)
+  const navigation = useNavigation();
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  function goqna() {
+    navigation.navigate('QnaList' , {spaceId: spaceInfo.id, spacename: spaceInfo.place_name} )
+  }
+  // function goQna(space) {
+  //   navigation.navigate('QnaList' , {spaceId: space.spaceId, spacename: space.spacename} )
+  // }
 
   useEffect(() => {
     requestPermission().then(result => {
@@ -231,10 +249,20 @@ const MapScreen: React.FC = () => {
           <View style={styles.spaceName}>
             <NameBox w={200} h={38} text={spaceInfo.place_name} />
             <View style={styles.buttons}>
-              <Icon name="comments" size={20} color={'white'} style={styles.Icon}/>
-              <Icon name="gamepad" size={20} color={'white'} style={styles.Icon}/>
+              <Icon name="comments" size={20} color={'white'} style={styles.Icon} />
+              <TouchableOpacity>
+                <Icon name="gamepad" size={20} color={'white'} style={styles.Icon} onPress={openModal}/>
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Icon name="question-circle" size={20} color={'white'} style={styles.Icon} onPress={goqna}/>
+              </TouchableOpacity>
               <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/>
             </View>
+            <GameListModal
+              visible={isModalVisible}
+              onClose={() => setModalVisible(false)}
+              spaceid={spaceInfo.id}
+            />
           </View>
         } 
           <View style={styles.bottomsheetContainer}>
