@@ -69,15 +69,16 @@ export default function Login() {
           }
           storeUserInfo(userInfo)
           storeData(jwt);
-        })
-        .catch((err) => {
-          console.log("에러 메시지 :", err);
-        });
-        if (userInfo.name === '새 유저') {
+          if (response.data.name === '새 유저') {
           navigation.navigate('FirstLanding' as never);
         } else {
           navigation.navigate('BottomTab' as never);
         }
+        })
+        .catch((err) => {
+          console.log("에러 메시지 :", err);
+        });
+        
       //requestUserInfo(AccessToken);
     }).catch(function (error) {
       console.log('error', error);

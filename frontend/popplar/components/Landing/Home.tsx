@@ -27,8 +27,8 @@ export default function Home() {
           }
         )
           .then((response) => {
-						console.log(userinfo)
-						console.log(response.data)
+						// console.log(userinfo)
+						// console.log(response.data)
 						const user = {
 							exp: response.data.exp,
 							id: response.data.id,
@@ -66,8 +66,15 @@ export default function Home() {
         )
           .then((response) => {
 						// console.log()
-						console.log(response.data)
-						setUserInfo({ ...userInfo, name: response.data.name })
+						// console.log(response.data)
+						const user = {
+							exp: response.data.exp,
+							id: response.data.id,
+							name: response.data.name,
+							profileImage: response.data.profileImage,
+							socialType: response.data.socialType,
+						}
+						setUserInfo(user)
           })
           .catch((err) => {
             console.log("에러 메시지 :", err)
