@@ -5,14 +5,15 @@ import com.popplar.gameservice.dto.ConquerorInfoDto;
 import com.popplar.gameservice.dto.GameBoardDto;
 import com.popplar.gameservice.dto.GameDto;
 import com.popplar.gameservice.dto.GameResultDto;
-import com.popplar.gameservice.dto.MemberDto;
-import com.popplar.gameservice.dto.MemberInfoResponseDto;
+import com.popplar.gameservice.dto.MemberInfoDto;
+import com.popplar.gameservice.dto.MemberResponseDto;
 import com.popplar.gameservice.dto.MyBoardDto;
 import com.popplar.gameservice.dto.RankDto;
 import com.popplar.gameservice.entity.Conqueror;
 import com.popplar.gameservice.entity.Game;
 import com.popplar.gameservice.entity.GameType;
 import com.popplar.gameservice.exception.BadRequestException;
+import com.popplar.gameservice.exception.NotFoundException;
 import com.popplar.gameservice.mapper.ConquerorMapper;
 import com.popplar.gameservice.mapper.GameMapper;
 import com.popplar.gameservice.repository.ConquerorRepository;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,12 +73,17 @@ public class GameService {
             memberIdList.add(rankDto.getMemberId());
         }
         System.out.println(memberIdList);
-        MemberInfoResponseDto memberInfoResponseDto =  webClientService.retryWithBackoff(
-            webClient, HttpMethod.POST, memberUrl + "/info", memberIdList, 3, MemberInfoResponseDto.class);
-
-        System.out.println(memberInfoResponseDto.toString());
-        for(MemberDto memberDto: memberInfoResponseDto.getMemberDtoList()){
-            System.out.println(memberDto.toString());
+        MemberResponseDto memberResponseDto = webClientService.retryWithBackoff(
+            webClient, HttpMethod.POST, memberUrl + "/info", memberIdList, 3).getBody();
+        List<MemberInfoDto> memberInfoDtoList = memberResponseDto.getMemberInfoDtoList();
+        System.out.println(memberInfoDtoList);
+        if (rankDtoList.size() != memberIdList.size()) {
+            throw new BadRequestException("사용자 정보가 존재하지 않습니다");
+        }
+        for (int i = 0; i < rankDtoList.size(); i++) {
+            RankDto rankDto = rankDtoList.get(i);
+            MemberInfoDto memberInfoDto = memberInfoDtoList.get(i);
+            rankDto.setRankDtoMember(memberInfoDto);
         }
 
         boolean qualification = GameType.isQualified(game, gameRepository, startOfDay, endOfDay);
