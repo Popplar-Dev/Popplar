@@ -11,8 +11,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
 
-    List<Game> findByHotPlaceIdAndTypeAndMemberIdAndDeletedFalseOrderByPointsDesc(Long hotPlaceId, GameType type, Long memberId);
+    List<Game> findAllByHotPlaceIdAndTypeAndMemberIdAndDeletedFalseOrderByPointsDesc(Long hotPlaceId, GameType type, Long memberId);
 
     Optional<Game> findTopByMemberIdAndHotPlaceIdAndTypeAndDeletedFalseAndCreatedDateBetweenOrderByPointsDesc(
         Long memberId, Long HotPlaceId, GameType type, LocalDateTime startOfDay, LocalDateTime endOfDay);
+
+    List<Game> findAllByHotPlaceIdAndTypeAndDeletedFalseAndCreatedDateBetweenOrderByPointsDesc(
+        Long HotPlaceId, GameType type, LocalDateTime startOfDay, LocalDateTime endOfDay);
+
 }
