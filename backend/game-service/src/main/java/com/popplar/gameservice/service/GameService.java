@@ -5,7 +5,10 @@ import com.popplar.gameservice.dto.ConquerorInfoDto;
 import com.popplar.gameservice.dto.GameBoardDto;
 import com.popplar.gameservice.dto.GameDto;
 import com.popplar.gameservice.dto.GameResultDto;
+import com.popplar.gameservice.dto.MemberDto;
+import com.popplar.gameservice.dto.MemberInfoResponseDto;
 import com.popplar.gameservice.dto.MyBoardDto;
+import com.popplar.gameservice.dto.RankDto;
 import com.popplar.gameservice.entity.Conqueror;
 import com.popplar.gameservice.entity.Game;
 import com.popplar.gameservice.entity.GameType;
@@ -18,11 +21,15 @@ import com.popplar.gameservice.repository.GameRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
@@ -31,10 +38,16 @@ public class GameService {
     //TODO: 2. 시간 범위 처리 로직 메서드화로 코드 중복 감소
 
     private final CryptService cryptService;
+    private final WebClientService webClientService;
 
     private final GameRepository gameRepository;
     private final GameQueryDSLRepository gameQueryDSLRepository;
     private final ConquerorRepository conquerorRepository;
+
+    @Value("${MEMBER_URL}")
+    private String memberUrl;
+
+    private final WebClient webClient;
 
 
     @Transactional
@@ -50,6 +63,22 @@ public class GameService {
         LocalDateTime startOfDay = currentDate.atStartOfDay();
         LocalDateTime endOfDay = currentDate.atTime(LocalTime.MAX);
 
+        //별개로 해당 게임의 top10리스트는 출력해야함.
+        List<RankDto> rankDtoList = gameQueryDSLRepository.findMaxPointsMemberByHotPlaceIdAndType(
+            game.getHotPlaceId(), game.getType(), startOfDay, endOfDay);
+        List<Long> memberIdList = new ArrayList<>();
+        for (RankDto rankDto : rankDtoList) {
+            memberIdList.add(rankDto.getMemberId());
+        }
+        System.out.println(memberIdList);
+        MemberInfoResponseDto memberInfoResponseDto =  webClientService.retryWithBackoff(
+            webClient, HttpMethod.POST, memberUrl + "/info", memberIdList, 3, MemberInfoResponseDto.class);
+
+        System.out.println(memberInfoResponseDto.toString());
+        for(MemberDto memberDto: memberInfoResponseDto.getMemberDtoList()){
+            System.out.println(memberDto.toString());
+        }
+
         boolean qualification = GameType.isQualified(game, gameRepository, startOfDay, endOfDay);
 
         //두 게임에 모두 참가했다면, 정복자 판단을 시작함.
@@ -57,29 +86,21 @@ public class GameService {
             Optional<Conqueror> conqueror = conquerorRepository.findTopByHotPlaceIdAndDeletedFalseAndCreatedDateBetweenOrderByPointsDesc(
                 game.getHotPlaceId(), startOfDay, endOfDay);
 
-            if (conqueror.isEmpty()) {
-                //내가 무조건 정복자
-                Conqueror newConqueror = conquerorRepository.save(
-                    GameMapper.INSTANCE.gameToConqueror(game));
-                newConqueror.setPoints(sumAllGamePoint(game));
-                return GameResultDto.builder().isConqueror(true)
-                    .points(newConqueror.getPoints()).createdTime(newConqueror.getCreatedDate())
-                    .qualified(true)
-                    .build();
-            }
-
-            //정복자가 있고 정복자보다 내가 더 높으면 정복자로 등록하고 정복자 등록 이벤트를 발동
-            if (sumAllGamePoint(game) > conqueror.orElseThrow().getPoints()) {
+            //정복자가 현재 없거나, 정복자가 있고 정복자보다 내가 더 높으면 정복자로 등록하고 정복자 등록 이벤트를 발동
+            if (conqueror.isEmpty() || sumAllGamePoint(game) > conqueror.orElseThrow()
+                .getPoints()) {
                 Conqueror newConqueror = conquerorRepository.save(
                     GameMapper.INSTANCE.gameToConqueror(game));
                 newConqueror.setPoints(sumAllGamePoint(game));
                 return GameResultDto.builder().isConqueror(true).points(newConqueror.getPoints())
                     .createdTime(newConqueror.getCreatedDate()).qualified(true)
+                    .rankingList(rankDtoList)
                     .build();
             }
         }
         return GameResultDto.builder().isConqueror(false).points(sumAllGamePoint(game))
-            .qualified(qualification).build();
+            .qualified(qualification).createdTime(game.getCreatedDate()).rankingList(rankDtoList)
+            .build();
     }
 
     public double sumAllGamePoint(Game game) {
@@ -120,7 +141,7 @@ public class GameService {
         LocalDateTime endOfDay = currentDate.atTime(LocalTime.MAX);
 
         List<BoardDto> boardDtoList = gameQueryDSLRepository.findMaxPointsByHotPlaceIdAndType(
-            hotPlaceId, type, startOfDay, endOfDay);
+            hotPlaceId, GameType.valueOf(type), startOfDay, endOfDay);
         GameBoardDto gameBoardDto = GameBoardDto.builder().boardDtoList(boardDtoList).build();
         gameBoardDto.encryptGameDtoList(cryptService);
         return gameBoardDto;
@@ -130,7 +151,7 @@ public class GameService {
         if (!GameType.isValidGameType(type)) {
             throw new IllegalArgumentException("게임 타입이 잘못되었습니다.");
         }
-        List<Game> gameList = gameRepository.findByHotPlaceIdAndTypeAndMemberIdAndDeletedFalseOrderByPointsDesc(
+        List<Game> gameList = gameRepository.findAllByHotPlaceIdAndTypeAndMemberIdAndDeletedFalseOrderByPointsDesc(
             hotPlaceId,
             GameType.valueOf(type), memberId);
         return MyBoardDto.builder()

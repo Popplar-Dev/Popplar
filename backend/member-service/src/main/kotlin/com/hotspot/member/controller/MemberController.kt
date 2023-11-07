@@ -55,7 +55,7 @@ class MemberController(
     }
 
     @PostMapping("/info")
-    fun getMemberInfoList(@RequestBody memberIdList: List<Long>): ResponseEntity<MutableList<MemberInfoDto>> {
-        return ResponseEntity<MutableList<MemberInfoDto>>(memberService.getMemberInfo(memberIdList),HttpStatus.OK);
+    fun getMemberInfoList(@RequestBody memberIdList: List<Long>): ResponseEntity<MemberInfoResponseDto> {
+        return ResponseEntity<MemberInfoResponseDto>(memberService.getMemberInfo(memberIdList),HttpStatus.OK)
     }
 }
