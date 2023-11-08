@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { View, Text, Button, StyleSheet, Dimensions, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, Button, StyleSheet, Dimensions, Alert, TouchableOpacity, Pressable} from 'react-native';
 import { Platform, PermissionsAndroid } from "react-native";
 import { Linking } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
@@ -28,6 +28,7 @@ import { useRecoilState } from 'recoil';
 import { locationState } from './recoil/locationState'
 
 import { getIdHotplace } from './services/getHotplace'
+import { likeHotplace, delLikeHotplace } from './services/postHotplace'
 import { previousDay } from 'date-fns';
 
 import { SpaceInfo } from './types/place'
@@ -49,7 +50,8 @@ const MapScreen: React.FC = () => {
   const [location, setLocation] = useRecoilState<Here>(locationState);
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo|null>(null)
   const navigation = useNavigation();
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisible, setModalVisible] = useState<boolean>(false);
+  const [spaceLike, setSpaceLike] = useState<boolean>(false)
 
   const openModal = () => {
     setModalVisible(true);
@@ -175,6 +177,22 @@ const MapScreen: React.FC = () => {
     [],
   );
 
+  const postLike = () => {
+    if (spaceInfo && spaceInfo.id) {
+      likeHotplace(spaceInfo.id)
+      .then((res) => console.log(res, '좋아요 success!!'))
+      .then(() => setSpaceLike(true))
+    }
+  }
+
+  const postLikeDel = () => {
+    if (spaceInfo && spaceInfo.id) {
+      delLikeHotplace(spaceInfo.id)
+      .then((res) => console.log(res, '좋아요 취소 success!!'))
+      .then(() => setSpaceLike(false))
+    }
+  }
+
 
   let webRef = useRef<WebView | null>(null);
 
@@ -207,8 +225,18 @@ const MapScreen: React.FC = () => {
               </TouchableOpacity>
               {/* <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/> */}
               <TouchableOpacity style={styles.likeContainer}>
-                <Icon name="heart" size={21} color={'white'} style={styles.heartIcon}/>
-                {spaceInfo.likeCount > 0 && <Text style={styles.currLikeCount}>{spaceInfo.likeCount}</Text>}
+                {!spaceLike ? (
+                  <Pressable onPress={postLike}>
+                  <Icon name="heart" size={21} color={'white'} style={styles.heartIcon}/>
+                  {spaceInfo.likeCount > 0 && <Text style={styles.currLikeCount}>{spaceInfo.likeCount}</Text>}
+                  </Pressable>
+                ):
+                (
+                  <Pressable onPress={postLikeDel}>
+                  <Icon name="heart" size={21} color={'red'} style={styles.heartIcon}/>
+                  {spaceInfo.likeCount > 0 && <Text style={styles.currLikeCount}>{spaceInfo.likeCount}</Text>}
+                  </Pressable>
+                )}
               </TouchableOpacity>
             <GameListModal
               visible={isModalVisible}
@@ -297,6 +325,7 @@ const MapScreen: React.FC = () => {
               handlePresentModalPress();
               console.log(data.data.id)
               setSpaceInfo(data.data)
+              setSpaceLike(data.data.myLike)
               // console.log("받은 데이터(React) : " + data.data);
             }
           }}
@@ -349,9 +378,11 @@ const styles = StyleSheet.create({
   spaceName: {
     flex: 0.06, 
     flexDirection: 'row',
+    justifyContent: 'space-between',
     marginLeft: 20, 
-    height: 30, 
-    justifyContent: "space-between"
+    height: 30,
+    // borderWidth: 1, 
+    // borderColor: 'red',  
   },
   previewContainer: {
     flex: 0.11,
@@ -463,7 +494,7 @@ const styles = StyleSheet.create({
     // borderColor: 'red',
   },
   likeContainer: {
-    flex: 1,
+    // flex: 1,
     // borderWidth: 1, 
     // borderColor: 'red',
   },
