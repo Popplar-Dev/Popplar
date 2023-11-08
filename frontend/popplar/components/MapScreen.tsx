@@ -66,12 +66,32 @@ const MapScreen: React.FC = () => {
     const data: any = route.params;
     if (data && data.data) {
       const currHotPlace: any = data.data
+      console.log(currHotPlace)
       const lat = currHotPlace.y
       const lng = currHotPlace.x
 
       const loc: { y: string, x: string } = {y: lat, x: lng}
       const locationData: { type: string, data: { y: string, x: string } } = {type: 'location', data: loc}
-      if (webRef.current) {
+      if (webRef.current && currHotPlace) {
+        handlePresentModalPress();
+              // console.log(data.data.id)
+        setSpaceInfo({
+          id: currHotPlace.id,
+          place_name: currHotPlace.placeName,
+          address_name: currHotPlace.addressName,
+          road_address_name: currHotPlace.roadAddressName,
+          category_group_name: currHotPlace.category,
+          likeCount: currHotPlace.likeCount,
+          phone: currHotPlace.phone,
+          placeType: currHotPlace.placeType,
+          visitorCount: currHotPlace.visitorCount,
+          y: currHotPlace.y,
+          x: currHotPlace.x,
+          tier: currHotPlace.tier,
+          myLike: currHotPlace.myLike,
+        })
+        setSpaceLike(currHotPlace.myLike)
+        setSpaceLikeCount(currHotPlace.likeCount)
         webRef.current.injectJavaScript(`
         window.postMessage(${JSON.stringify(locationData)}, '*')
         `);
