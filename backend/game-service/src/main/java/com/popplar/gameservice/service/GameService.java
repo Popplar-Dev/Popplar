@@ -4,9 +4,10 @@ import com.popplar.gameservice.dto.BoardDto;
 import com.popplar.gameservice.dto.ConquerorInfoDto;
 import com.popplar.gameservice.dto.GameBoardDto;
 import com.popplar.gameservice.dto.GameDto;
+import com.popplar.gameservice.dto.GameInfoResDto;
 import com.popplar.gameservice.dto.GameResultDto;
-import com.popplar.gameservice.dto.MemberDto;
-import com.popplar.gameservice.dto.MemberInfoResponseDto;
+import com.popplar.gameservice.dto.MemberInfoDto;
+import com.popplar.gameservice.dto.MemberResponseDto;
 import com.popplar.gameservice.dto.MyBoardDto;
 import com.popplar.gameservice.dto.RankDto;
 import com.popplar.gameservice.entity.Conqueror;
@@ -66,17 +67,27 @@ public class GameService {
         //별개로 해당 게임의 top10리스트는 출력해야함.
         List<RankDto> rankDtoList = gameQueryDSLRepository.findMaxPointsMemberByHotPlaceIdAndType(
             game.getHotPlaceId(), game.getType(), startOfDay, endOfDay);
+
         List<Long> memberIdList = new ArrayList<>();
         for (RankDto rankDto : rankDtoList) {
             memberIdList.add(rankDto.getMemberId());
         }
-        System.out.println(memberIdList);
-        MemberInfoResponseDto memberInfoResponseDto =  webClientService.retryWithBackoff(
-            webClient, HttpMethod.POST, memberUrl + "/info", memberIdList, 3, MemberInfoResponseDto.class);
 
-        System.out.println(memberInfoResponseDto.toString());
-        for(MemberDto memberDto: memberInfoResponseDto.getMemberDtoList()){
-            System.out.println(memberDto.toString());
+        MemberResponseDto memberResponseDto = webClientService.retryWithBackoff(
+            webClient, HttpMethod.POST, memberUrl + "/info", memberIdList, 3).getBody();
+        List<MemberInfoDto> memberInfoDtoList = memberResponseDto.getMemberInfoDtoList();
+
+        if (rankDtoList.size() != memberIdList.size()) {
+            throw new BadRequestException("사용자 정보가 존재하지 않습니다");
+        }
+        for (int i = 0; i < rankDtoList.size(); i++) {
+            RankDto rankDto = rankDtoList.get(i);
+            for (int j = 0; j < memberInfoDtoList.size(); j++) {
+                MemberInfoDto memberInfoDto = memberInfoDtoList.get(j);
+                if (rankDto.getMemberId() == memberInfoDto.getId()) {
+                    rankDto.setRankDtoMember(memberInfoDto);
+                }
+            }
         }
 
         boolean qualification = GameType.isQualified(game, gameRepository, startOfDay, endOfDay);
@@ -177,5 +188,50 @@ public class GameService {
         ConquerorInfoDto conquerorInfoDto = conquerorDto.orElseThrow();
         conquerorInfoDto.setMemberId(cryptService.encrypt(conquerorInfoDto.getMemberId()));
         return conquerorInfoDto;
+    }
+
+    public GameInfoResDto getGameInfo(Long memberId, Long hotPlaceId) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDate currentDate = currentDateTime.toLocalDate();
+        LocalDateTime startOfDay = currentDate.atStartOfDay();
+        LocalDateTime endOfDay = currentDate.atTime(LocalTime.MAX);
+        //현재 핫플 정복자 정보와 점수 가져오기
+        //정보가져오기
+        ConquerorInfoDto conquerorInfoDto = getConquerorInfo(hotPlaceId);
+        System.out.println(conquerorInfoDto.toString());
+        //점수 가져오기
+
+        //정복자가 없으면
+        if (conquerorInfoDto.getId() == 0) {
+            //현재 핫플레이스의 각각의 게임에 대한 최고 점수를 가져와야 함.
+            List<Double> pointList = GameType.maxGamePoint(memberId, hotPlaceId, startOfDay,
+                endOfDay,
+                gameRepository);
+            return GameInfoResDto.builder().hasConqueror(false)
+                .myMaxFightingPoints(pointList.get(0))
+                .myMaxReflexesPoints(pointList.get(1))
+                .maxFightingPoints(pointList.get(2))
+                .maxReflexesPoints(pointList.get(3)).build();
+        }
+
+        //정복자가 있으면 정복자에 대한 이미지와 닉네임 정보 가져와야함
+        List<Long> memberIdList = new ArrayList<>();
+        memberIdList.add(cryptService.decrypt(conquerorInfoDto.getMemberId()));
+        MemberResponseDto memberResponseDto = webClientService.retryWithBackoff(
+            webClient, HttpMethod.POST, memberUrl + "/info", memberIdList, 3).getBody();
+        List<MemberInfoDto> memberInfoDtoList = memberResponseDto.getMemberInfoDtoList();
+        MemberInfoDto conquerMemberInfo = memberInfoDtoList.get(0);
+
+        //현재 핫플레이스의 각각의 게임에 대한 최고 점수를 가져와야 함.
+        List<Double> pointList = GameType.maxGamePoint(memberId, hotPlaceId, startOfDay, endOfDay,
+            gameRepository);
+        System.out.println(pointList);
+
+        return GameInfoResDto.builder().conquerorInfo(conquerMemberInfo).hasConqueror(true)
+            .conquerorPoints(conquerorInfoDto.getPoints())
+            .myMaxFightingPoints(pointList.get(0))
+            .myMaxReflexesPoints(pointList.get(1))
+            .maxFightingPoints(pointList.get(2))
+            .maxReflexesPoints(pointList.get(3)).build();
     }
 }

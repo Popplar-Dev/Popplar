@@ -73,7 +73,7 @@ class ChattingController(
     @DeleteMapping("/chatting-room/{chattingRoomId}")
     fun leaveChattingRoom(
         @PathVariable chattingRoomId: Long,
-        @RequestHeader("MemberId") memberId: Long
+        @RequestHeader("Member-Id") memberId: Long
     ): ResponseEntity<Any> {
         chattingService.leaveChattingRoom(chattingRoomId, memberId)
         return ResponseEntity<Any>(HttpStatus.OK)
@@ -81,5 +81,8 @@ class ChattingController(
 
     //  채팅 어디까지 읽었는지
     //  또 뭐있지
+
+    // TODO
+    //  내가 속해있는 채팅방 알려주기
 
 }

@@ -49,6 +49,9 @@ public class HotPlace {
     @NotNull
     private int likeCount;
 
+    @NotNull
+    private int tier;
+
     @Builder
     public HotPlace(Long id, String placeName, String addressName, String phone,
         String roadAddressName,
@@ -63,6 +66,7 @@ public class HotPlace {
         this.category = category;
         this.placeType = HotPlaceType.FLAG;
         this.likeCount = 0;
+        this.tier = 0;
     }
 
     public void increaseLikeCount() {
@@ -75,5 +79,9 @@ public class HotPlace {
 
     public void updatePlaceType(HotPlaceType hotPlaceType) {
         this.placeType = hotPlaceType;
+    }
+
+    public void updateTier(int tier) {
+        this.tier = tier;
     }
 }

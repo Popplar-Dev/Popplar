@@ -27,11 +27,11 @@ public class GameDto {
     private LocalDateTime createdDate;
 
     @Builder
-    public GameDto(GameType type, Long hotPlaceId, double points,
+    public GameDto(GameType type, Long hotPlaceId, Long memberId, double points,
         LocalDateTime createdDate) {
         this.type = type;
-        this.memberId=0L;
         this.hotPlaceId = hotPlaceId;
+        this.memberId = memberId;
         this.points = points;
         this.createdDate = createdDate;
     }

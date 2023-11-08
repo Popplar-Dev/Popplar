@@ -3,6 +3,7 @@ package com.popplar.gameservice.controller;
 import com.popplar.gameservice.dto.ConquerorInfoDto;
 import com.popplar.gameservice.dto.GameBoardDto;
 import com.popplar.gameservice.dto.GameDto;
+import com.popplar.gameservice.dto.GameInfoResDto;
 import com.popplar.gameservice.dto.GameResultDto;
 import com.popplar.gameservice.dto.MyBoardDto;
 import com.popplar.gameservice.service.GameService;
@@ -23,6 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class GameController {
 
     private final GameService gameService;
+
+    //게임 시작 전 정복자 정보, 모든 게임에 대한 최대 정보 get
+    @GetMapping("/info/{hotPlaceId}")
+    public ResponseEntity<GameInfoResDto> getGameInfo(@RequestHeader("Member-Id") Long memberId, @PathVariable Long hotPlaceId){
+        return new ResponseEntity<>(gameService.getGameInfo(memberId,hotPlaceId), HttpStatus.OK);
+    }
 
     //일단 게임이 종료되었을 때 결과를 저장하는 메서드
     @PostMapping("/insert-result")

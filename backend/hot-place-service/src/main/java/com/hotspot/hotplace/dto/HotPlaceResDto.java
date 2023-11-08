@@ -27,4 +27,8 @@ public class HotPlaceResDto {
     private int likeCount;
 
     private int visitorCount;
+
+    private int tier;
+
+    private boolean myLike;
 }

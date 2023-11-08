@@ -32,33 +32,31 @@ public class HotPlaceService {
     private final LikeRepository likeRepository;
     private final MemberPositionRepository memberPositionRepository;
 
-    public List<HotPlaceResDto> findAllHotPlace() {
+    @Transactional
+    public List<HotPlaceResDto> findAllHotPlace(Long memberId) {
         List<HotPlace> hotPlaceList = hotPlaceRepository.findAll();
         List<HotPlaceResDto> hotPlaceResDtoList = new ArrayList<>();
         for (HotPlace hotPlace : hotPlaceList) {
             HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(
                 hotPlace);
-            hotPlaceResDto.setVisitorCount(
-                visitorRepository.countByVisitedDateAfterAndHotPlaceId(LocalDateTime.now().minus(
-                    Duration.ofDays(14)), hotPlaceResDto.getId()));
+            hotPlaceResDto = updateHotPlaceDto(hotPlaceResDto, hotPlace, memberId);
             hotPlaceResDtoList.add(hotPlaceResDto);
         }
 
         return hotPlaceResDtoList;
     }
 
-    public HotPlaceResDto findHotPlace(Long hotPlaceId) {
+    @Transactional
+    public HotPlaceResDto findHotPlace(Long hotPlaceId, Long memberId) {
         HotPlace hotPlace = findHotPlaceById(hotPlaceId);
         HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
-        hotPlaceResDto.setVisitorCount(
-            visitorRepository.countByVisitedDateAfterAndHotPlaceId(LocalDateTime.now().minus(
-                Duration.ofDays(14)), hotPlaceId));
+        hotPlaceResDto = updateHotPlaceDto(hotPlaceResDto, hotPlace, memberId);
 
         return hotPlaceResDto;
     }
 
     @Transactional
-    public HotPlaceResDto insertHotPlace(HotPlaceReqDto hotPlaceReqDto) {
+    public HotPlaceResDto insertHotPlace(HotPlaceReqDto hotPlaceReqDto, Long memberId) {
         if (hotPlaceRepository.findById(hotPlaceReqDto.getId()).isPresent()) {
             throw new BadRequestException("이미 핫플레이스로 등록되어있습니다.");
         }
@@ -72,9 +70,7 @@ public class HotPlaceService {
         hotPlaceRepository.save(hotPlace);
 
         HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
-        hotPlaceResDto.setVisitorCount(
-            visitorRepository.countByVisitedDateAfterAndHotPlaceId(LocalDateTime.now().minus(
-                Duration.ofDays(14)), hotPlace.getId()));
+        hotPlaceResDto = updateHotPlaceDto(hotPlaceResDto, hotPlace, memberId);
 
         return hotPlaceResDto;
     }
@@ -137,5 +133,43 @@ public class HotPlaceService {
         }
     }
 
+    // -- DTO 필드 추가 -- //
+    public HotPlaceResDto updateHotPlaceDto(HotPlaceResDto hotPlaceResDto, HotPlace hotPlace,
+        Long memberId) {
+        // 2주간 사용자 방문 횟수 체크
+        int twoWeeksVisitorCount = visitorRepository.countByVisitedDateAfterAndHotPlaceId(
+            LocalDateTime.now().minus(
+                Duration.ofDays(14)), hotPlace.getId());
+        hotPlaceResDto.setVisitorCount(twoWeeksVisitorCount);
+        // 핫플 티어 생성
+        int tier = checkTier(twoWeeksVisitorCount, hotPlace.getPlaceType());
+        hotPlaceResDto.setTier(tier);
+        hotPlace.updateTier(hotPlaceResDto.getTier());
+
+        // 내 인정 여부
+        hotPlaceResDto.setMyLike(
+            likeRepository.findByHotPlaceAndMemberId(hotPlace, memberId).isPresent());
+
+        return hotPlaceResDto;
+    }
+
+    // -- 핫플레이스 랭크 체크용 코드 -- //
+    public int checkTier(int count, HotPlaceType type) {
+        if (type == HotPlaceType.FLAG) {
+            return 0;
+        }
+
+        if (count < 10) {
+            return 5;
+        } else if (count < 50) {
+            return 4;
+        } else if (count < 100) {
+            return 3;
+        } else if (count < 500) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
 }
 

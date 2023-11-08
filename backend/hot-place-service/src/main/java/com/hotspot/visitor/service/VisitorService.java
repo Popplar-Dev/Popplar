@@ -1,9 +1,7 @@
 package com.hotspot.visitor.service;
 
 import com.hotspot.global.exception.exceptions.BadRequestException;
-import com.hotspot.hotplace.dto.HotPlaceResDto;
 import com.hotspot.hotplace.entity.HotPlace;
-import com.hotspot.hotplace.mapper.HotPlaceMapper;
 import com.hotspot.hotplace.repository.HotPlaceRepository;
 import com.hotspot.visitor.dto.VisitorReqDto;
 import com.hotspot.visitor.dto.VisitorResDto;
@@ -39,7 +37,7 @@ public class VisitorService {
     }
 
     @Transactional
-    public HotPlaceResDto insertVisitor(VisitorReqDto visitorReqDto) {
+    public void insertVisitor(VisitorReqDto visitorReqDto) {
         Long memberId = visitorReqDto.getMemberId();
         Long hotPlaceId = visitorReqDto.getHotPlaceId();
         LocalDateTime visitedDate = visitorReqDto.getVisitedDate();
@@ -53,9 +51,6 @@ public class VisitorService {
         HotPlace hotPlace = hotPlaceRepository.findById(hotPlaceId)
             .orElseThrow(() -> new BadRequestException("핫플레이스가 존재하지 않습니다."));
         visitor.updateHotPlace(hotPlace);
-
         visitorRepository.save(visitor);
-
-        return HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
     }
 }
