@@ -15,6 +15,8 @@ import { LatLng } from '../types/LatLng'
 
 import { getAllHotplace, getIdHotplace } from '../api/getHotplace'
 
+import flag from '../assets/images/flag-iso-color.png'
+
 const { kakao } = window;
 
 export default function Map () {
@@ -80,28 +82,30 @@ export default function Map () {
       // }
       // const data = JSON.parse(event.data);
       const data = event.data.data;
+      const type = event.data.type;
       // const detail = JSON.parse(data.detail)
       // const data = detail.data
-      const LatTest = data.y.toString()
-      const LngTest = data.x.toString()
-      const Lat = data.y.toString().slice(0, -8)
-      const Lng = data.x.toString().slice(0, -8)
-      setCurrLocation(prev => ({...prev, Lat: Lat, Lng: Lng}))
-      // setCenterLat(Lat)
-      // setCenterLng(Lng)
-      if (typeof window !== 'undefined' && window.ReactNativeWebView) {
-        window.ReactNativeWebView.postMessage(
-          JSON.stringify({ 
-            type: 'test',
-            data: { data, Lat, Lng }
-          })
-        );
+      // const LatTest = data.y.toString()
+      // const LngTest = data.x.toString()
+      if (type=="location") {
+        const Lat = data.y.toString().slice(0, 8)
+        const Lng = data.x.toString().slice(0, 8)
+        setCurrLocation(prev => ({...prev, Lat: Lat, Lng: Lng}))
+        setCenterLat(Lat)
+        setCenterLng(Lng)
+        if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({ 
+              type: 'test',
+              data: { data, Lat, Lng }
+            })
+          );
+        }
+      } else if (type=="postHotplace") {
+        getAllHotplace()
+        .then((res) => setHotplaceList(res.data))
       }
     });
-
-    // return () => {
-    //   document.removeEventListener("message", handleLocation);
-    // }
   }, [])
 
   // function placesSearchCB(data: any, status: any, pagination: any) {
@@ -113,6 +117,17 @@ export default function Map () {
   //       );
   //   }}
   // }
+
+  // 내 위치 돌아가기 버튼 선택시, web- > native 에 내 위치 데이터 보내달라고 요청
+  const requestLocation = () => {
+    if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({ 
+          type: 'relocation',
+        })
+      );
+    }
+  }
 
   // 핫플 마커 선택시, web->native 데이터 전송
   const requestPermission = (data: any) => {
@@ -145,6 +160,7 @@ export default function Map () {
   const moveToMypos = () => {
     var moveLatLon = new kakao.maps.LatLng(currLocation.Lat, currLocation.Lng);
     visibleMap.panTo(moveLatLon); 
+
     setTimeout(() => {
       visibleMap.setLevel(4); 
     }, 400)    
@@ -163,8 +179,8 @@ export default function Map () {
       setCenterLat(Lat)
       setCenterLng(Lng)
     } else {
-      setCenterLat(currLocation.Lat)
-      setCenterLng(currLocation.Lng)
+      // setCenterLat(currLocation.Lat)
+      // setCenterLng(currLocation.Lng)
     }
 
     var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
@@ -190,14 +206,21 @@ export default function Map () {
     // 핫플 마커 띄우기
     var positions = hotplaceList
 
-  var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
-  
-  if (positions) {
-
-    for (var i = 0; i < positions.length; i ++) {
+    
+    if (positions) {
+      
+      for (var i = 0; i < positions.length; i ++) {
+        // console.log(positions[i])
         // 마커 이미지의 이미지 크기 입니다
-        var imageSize = new kakao.maps.Size(24, 35); 
-  
+        
+        if (positions[i].placeType==="FLAG") {
+          var imageSize = new kakao.maps.Size(40, 45); 
+          var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/b3564221-b312-4f4d-a073-fc14dccb3c15";
+        } else {
+          var imageSize = new kakao.maps.Size(25, 35); 
+          var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+        }
+        
         // 마커 이미지를 생성합니다    
         var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
   
@@ -234,11 +257,13 @@ export default function Map () {
           panToHandler(La, Ma);
           getIdHotplace(id)
           .then((res) => res.data)
+          // .then((res) => console.log(res))
           .then((res) => requestPermission({
             id, 
             place_name, 
             road_address_name, 
             category_group_name, 
+            address_name: res.addressName,
             likeCount: res.likeCount,
             phone: res.phone,
             placeType: res.placeType,
@@ -310,9 +335,10 @@ export default function Map () {
 
     <button className={styles.mypos} onClick={() => {
       moveToMypos();
+      requestLocation();
       sethotPlaceLatLng({x: "", y: ""});
-      setCenterLat("37.50134");
-      setCenterLng("127.0397");
+      // setCenterLat(currLocation.Lat);
+      // setCenterLng(currLocation.Lng);
     }}>
       <BiSolidRocket size={25} color={'#8B90F7'}/>
     </button>

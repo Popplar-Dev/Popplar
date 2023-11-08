@@ -5,9 +5,9 @@ import { Linking } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import HotRegisterButton from './HotRegisterButton/HotRegisterButton'
 import MetalIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { getAllHotplace } from './services/getHotplace'
 
 import {
   BottomSheetModal,
@@ -27,39 +27,22 @@ import { requestPermission } from '../utils/reqLocationPermission'
 import { useRecoilState } from 'recoil';
 import { locationState } from './recoil/locationState'
 
+import { getIdHotplace } from './services/getHotplace'
+import { previousDay } from 'date-fns';
+
+import { SpaceInfo } from './types/place'
 import { useNavigation } from '@react-navigation/native';
 import GameListModal from './Modals/GameListModal';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-type SpaceInfo = {
-  id: string
-  place_name: string
-  road_address_name: string
-  category_group_name: string
-  likeCount: number
-  phone: string
-  placeType: string
-  visitorCount: number
-  y: string
-  x: string
-  // place_url: string
-}
+import { getToken } from './services/getAccessToken'
 
 type Here = {
   granted: string
   y: string
   x: string
-}
-
-type locationData = {
-  type: string
-  data: {
-    granted: string
-    x: string
-    y: string
-  }
 }
 
 const MapScreen: React.FC = () => {
@@ -85,7 +68,16 @@ const MapScreen: React.FC = () => {
     })
   }, [])
 
-  async function get_location() {
+  // 현재 표시된 장소 정보가 변경되면, 핫플레이스 화면에 띄우는 정보 변경해달라고 요청
+  useEffect(() => {
+    if (webRef.current) {
+      webRef.current.injectJavaScript(`
+      window.postMessage('{type: 'postHotplace'}', '*')
+      `);
+    }
+  }, [spaceInfo])
+
+  async function get_location(type: string) {
     // return new Promise((resolve, reject) => {
     if (location.granted==="granted") {
       Geolocation.getCurrentPosition(
@@ -94,7 +86,18 @@ const MapScreen: React.FC = () => {
           const lat = pos.coords.latitude.toString()
           const lng = pos.coords.longitude.toString()
           setLocation(prev => ({...prev, y: lat, x: lng }))
-          handle_native_location(lat, lng)
+          
+
+          // 로드시, accessToken web으로 전송해서 사용
+          // const token = getToken();
+          // if (webRef.current) {
+          //   webRef.current.injectJavaScript(`
+          //   localStorage.setItem('token', '${token}');
+          // `);
+          // }
+          if (type!=="load") {
+            handle_native_location(lat, lng)
+          }
         },
         error => {
           // console.log(error);
@@ -132,23 +135,21 @@ const MapScreen: React.FC = () => {
       webRef.current.injectJavaScript(`
       window.postMessage(${JSON.stringify(locationData)}, '*')
       `);
-      // const customEvent = new Event('message');
-      // customEvent.data = ${JSON.stringify(locationData)};
-      // window.dispatchEvent(customEvent);
-
-      // webRef.current.postMessage(JSON.stringify(locationData))
-      // console.log("전송 데이터(React) : customMessageOpen");
     }
   }
 
-  async function native_to_web() {
+  async function native_to_web_load() {
     // console.log('native_to_web')
-    await get_location()
+    await get_location('relocation')
     setInterval(() => {
       // console.log('location 정보 update');
-      get_location();
+      get_location('load');
     }, 5000);
     // await handle_native_location()
+  }
+
+  async function native_to_web() {
+    await get_location('relocation')
   }
 
   // bottom-sheet
@@ -165,7 +166,7 @@ const MapScreen: React.FC = () => {
   }, [spaceInfo]);
   const handleSheetChanges = useCallback((index: number) => {
     // bottomSheetModalRef.current?.present();
-    // console.log('handleSheetChanges', index);
+
   }, []);
   // backdrop close by pressing background
   const renderBackdrop = useCallback(
@@ -175,62 +176,6 @@ const MapScreen: React.FC = () => {
 
 
   let webRef = useRef<WebView | null>(null);
-
-  /* native -> web */
-  // const native_to_web = (data: any) => {
-  //   console.log('native_to_web')
-  //   console.log(data)
-  //   if (webRef.current) {
-  //     webRef.current.postMessage(data)
-  //     console.log("전송 데이터(React) : 웹으로 데이터 전송");
-  //   }
-  // }
-
-  /* web -> native */
-  const web_to_native = (e) => {
-    // console.log(e.nativeEvent.data);
-  }
-
-  const [latitude, setLatitude] = useState<any>(null);
-  const [longitude, setLogitude] = useState<any>(null);
-
-  const geoLocation = () => {
-    // console.log('location')
-    // 사용자의 위치를 감지
-    // Geolocation.getCurrentPosition(
-    //     position => {
-    //         const latitude = JSON.stringify(position.coords.latitude);
-    //         const longitude = JSON.stringify(position.coords.longitude);
-
-    //         setLatitude(latitude);
-    //         setLogitude(longitude);
-    //     },
-    //     error => { console.log(error.code, error.message); },
-    //     {enableHighAccuracy:true, timeout: 15000, maximumAge: 10000 },
-    // )
-    
-    // // 사용자의 위치 변화를 감지
-    // Geolocation.watchPosition(
-    //   position => {
-    //     const latitude = JSON.stringify(position.coords.latitude);
-    //     const longitude =  JSON.stringify(position.coords.longitude);
-
-    //     console.log('move', latitude, longitude)
-    //   },
-    //   error => { console.log(error.code, error.message); },
-    //   {enableHighAccuracy:true, timeout: 15000, maximumAge: 10000 },
-    // )
-  }
-
-  // useEffect(() => {
-  //   getAllHotplace()
-  //   .then((res) => console.log(res))
-  // }, [])
-
-  // useEffect(() => {
-  //   const locationData = {type: 'location', data: location}
-  //   native_to_web(locationData)
-  // }, [location])
 
   return (
     <GestureHandlerRootView style={{ flex: 1}}>
@@ -245,10 +190,13 @@ const MapScreen: React.FC = () => {
           backgroundStyle={{ backgroundColor: '#2C2C2C' }}
         >
 
-        {spaceInfo &&
+        {spaceInfo && spaceInfo.place_name &&
           <View style={styles.spaceName}>
-            <NameBox w={200} h={38} text={spaceInfo.place_name} />
-            <View style={styles.buttons}>
+            <NameBox h={38} text={spaceInfo.place_name} />
+            {!spaceInfo.placeType ? (
+              <HotRegisterButton props={spaceInfo} setSpaceInfo={setSpaceInfo}/>
+            ): (
+              <View style={styles.buttons}>
               <Icon name="comments" size={20} color={'white'} style={styles.Icon} />
               <TouchableOpacity>
                 <Icon name="gamepad" size={20} color={'white'} style={styles.Icon} onPress={openModal}/>
@@ -257,16 +205,20 @@ const MapScreen: React.FC = () => {
                 <Icon name="question-circle" size={20} color={'white'} style={styles.Icon} onPress={goqna}/>
               </TouchableOpacity>
               <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/>
-            </View>
             <GameListModal
               visible={isModalVisible}
               onClose={() => setModalVisible(false)}
               spaceid={spaceInfo.id}
             />
+              </View>
+            )}
           </View>
-        } 
+        }
+
           <View style={styles.bottomsheetContainer}>
         {spaceInfo &&
+          (
+            <>
           <View style={styles.previewContainer}>
             <View style={styles.previewTopContainer}>
               <View style={styles.address}>
@@ -282,6 +234,8 @@ const MapScreen: React.FC = () => {
               :(<Text style={styles.bottomSheetPhone}>번호가 없습니다</Text>)}
             </View>
           </View>
+          </>
+          )
         }
 
           {/* <View style={styles.placeDetail}>
@@ -328,17 +282,19 @@ const MapScreen: React.FC = () => {
           style={styles.webview}
           source={{uri: 'https://jiwoopaeng.github.io/popmmm/'}}
           javaScriptEnabled={true}
-          onLoad={native_to_web}
+          onLoad={native_to_web_load}
           // injectedJavaScript={inject}
           onMessage={(event) => {
             const data: any = JSON.parse(event.nativeEvent.data)
-            // console.log('raw data', data)
+            console.log('raw data', data)
             if (data.type=="test") {
               // console.log('web에서 들어왔어요')
               // console.log(data.data)
+            } else if (data.type=="relocation") {
+              native_to_web();
             } else {
               handlePresentModalPress();
-              // console.log(data.data)
+              console.log(data.data.id)
               setSpaceInfo(data.data)
               // console.log("받은 데이터(React) : " + data.data);
             }
@@ -370,7 +326,8 @@ const styles = StyleSheet.create({
   },
   bottomSheetCategory: {
     color: 'white',
-    marginTop: 4,
+    marginTop: 5,
+    marginLeft: 10,
     // borderWidth: 1, 
     // borderColor: 'red', 
   },
@@ -396,7 +353,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   previewContainer: {
-    flex: 0.1,
+    flex: 0.11,
     marginTop: 10,
     marginBottom: 8,
     lineHeight: 40,
