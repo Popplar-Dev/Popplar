@@ -2,7 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, Pressable, Switch } from 'react-native';
 import { useState, useEffect } from 'react';
 
-function SpeedTouch() {
+type spaceparam = {
+  spaceId: number;
+  mybestscore:number
+};
+
+function SpeedTouch({route}: spaceparam) {
+  const gameinfo = route.params;
+  console.log(gameinfo)
 	const [gameStarted, setGameStarted] = useState(false);
   const [gameColor, setGameColor] = useState('gray');
   const [startTime, setStartTime] = useState<Date | null>(null);
@@ -52,16 +59,16 @@ function SpeedTouch() {
     <View style={styles.container}>
       <View style={styles.scorecomponent}>
         <View style={styles.conquerorscore}>
-          <Text style={styles.scoretext}>
+          {/* <Text style={styles.scoretext}>
             정복자 점수: 
           </Text>
           <Text style={styles.scoretext}>
             현재 점수: 
-          </Text>
+          </Text> */}
         </View>
         <View style={styles.myscore}>
           <Text style={styles.scoretext}>
-            내 최고 점수: 
+            내 최고 점수: {gameinfo.mybestscore} 초
           </Text>
           <Text style={styles.scoretext}>
             현재 점수: 
