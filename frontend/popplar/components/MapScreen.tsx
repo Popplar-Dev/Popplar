@@ -34,6 +34,7 @@ import { previousDay } from 'date-fns';
 import { SpaceInfo } from './types/place'
 import { useNavigation } from '@react-navigation/native';
 import GameListModal from './Modals/GameListModal';
+import { useRoute } from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -46,7 +47,28 @@ type Here = {
   x: string
 }
 
+interface HotPlace {
+  addressName: string;
+  category: string;
+  placeName: string;
+  placeType: string;
+  roadAddressName: string;
+  phone: string;
+  id: number;
+  likeCount: number;
+  visitorCount: number;
+  tier: number;
+}
+
 const MapScreen: React.FC = () => {
+  const route = useRoute();
+  useEffect(() => {
+    const data: {data: HotPlace} = route.params;
+    if (data && data.data) {
+      console.log('item', data.data)
+    }
+  }, [route.params])
+  
   const [location, setLocation] = useRecoilState<Here>(locationState);
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo|null>(null)
   const navigation = useNavigation();

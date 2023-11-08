@@ -2,6 +2,8 @@ import { View, Text, StyleSheet, Image, FlatList, TextInput, Button, Pressable, 
 import { useState, useEffect, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
+import MapScreen from './MapScreen'
+import { useNavigation } from "@react-navigation/native";
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from './recoil/userState';
 import { useRecoilState } from 'recoil';
@@ -28,6 +30,13 @@ export default function AllPlacesScreen() {
   const [showNoResults, setShowNoResults] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState('전체'); 
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
+
+  const navigation = useNavigation();
+
+  function gomap(item: HotPlace) {
+    // navigation.navigate('MapScreen' , {spaceId: spaceInfo.id, spacename: spaceInfo.place_name} )
+    navigation.navigate('MapScreen', {data: item})
+  }
 
   const images = [
     { name: "0", uri: require("../assets/mark/flag-iso-color.png") },
@@ -194,7 +203,8 @@ export default function AllPlacesScreen() {
           data={searchedHotplaces.length > 0 ? searchedHotplaces : Hotplaces}
           keyExtractor={(item, index) => item.id.toString()}
           renderItem={({ item, index }) => (
-            <View style={styles.hotplace}>
+          <Pressable onPress={() => gomap(item)}>
+            <View style={styles.hotplace} >
               <View style={styles.hotplaceleft}>
                 <View style={styles.hotplaceinfo}>
                   <View style={styles.title}>
@@ -219,6 +229,7 @@ export default function AllPlacesScreen() {
                 </View>
               </View>
             </View>
+          </Pressable>
           )}
         />
         ) : (
