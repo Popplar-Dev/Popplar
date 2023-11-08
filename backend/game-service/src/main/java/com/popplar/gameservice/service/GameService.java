@@ -82,8 +82,12 @@ public class GameService {
         }
         for (int i = 0; i < rankDtoList.size(); i++) {
             RankDto rankDto = rankDtoList.get(i);
-            MemberInfoDto memberInfoDto = memberInfoDtoList.get(i);
-            rankDto.setRankDtoMember(memberInfoDto);
+            for (int j = 0; j < memberInfoDtoList.size(); j++) {
+                MemberInfoDto memberInfoDto = memberInfoDtoList.get(j);
+                if (rankDto.getMemberId() == memberInfoDto.getId()) {
+                    rankDto.setRankDtoMember(memberInfoDto);
+                }
+            }
         }
 
         boolean qualification = GameType.isQualified(game, gameRepository, startOfDay, endOfDay);
