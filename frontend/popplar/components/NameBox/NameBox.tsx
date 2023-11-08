@@ -26,6 +26,7 @@ return (
       <View style={styles.linearGradient}>
         <Image
           source={require('popplar/assets/mark/flag-iso-color.png')}
+          // source={require('popplar/assets/tier/그림1.png')}
           style={dynamicStyles.image}
           resizeMode="contain"
         />

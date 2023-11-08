@@ -50,10 +50,21 @@ function SpeedTouch() {
 
   return (
     <View style={styles.container}>
-      <View>
-        <View>
-          <Text>
-            내 점수: 
+      <View style={styles.scorecomponent}>
+        <View style={styles.conquerorscore}>
+          <Text style={styles.scoretext}>
+            정복자 점수: 
+          </Text>
+          <Text style={styles.scoretext}>
+            현재 점수: 
+          </Text>
+        </View>
+        <View style={styles.myscore}>
+          <Text style={styles.scoretext}>
+            내 최고 점수: 
+          </Text>
+          <Text style={styles.scoretext}>
+            현재 점수: 
           </Text>
         </View>
       </View>
@@ -90,7 +101,7 @@ function SpeedTouch() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   gamecontainer:{
@@ -103,6 +114,23 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 20,
+  },
+  scorecomponent: {
+    flexDirection:'row',
+    // borderWidth:1,
+    width:'80%',
+    justifyContent:'space-around',
+    marginBottom:100
+  },
+  scoretext: {
+    color:'white',
+    fontSize:15
+  },
+  conquerorscore: {
+    margin:10
+  },
+  myscore: {
+    margin:10
   },
   button: {
     backgroundColor: 'blue',

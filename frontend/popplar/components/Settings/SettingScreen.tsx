@@ -73,11 +73,11 @@ function SettingScreen() {
               </View>
             </Pressable>
 
-            <Pressable onPress={navigateToSpeedTouch}>
+            {/* <Pressable onPress={navigateToSpeedTouch}>
               <View style={styles.menu}>
                 <Text style={styles.text}>반응 속도 게임</Text>
               </View>
-            </Pressable>
+            </Pressable> */}
             {/* <Pressable onPress={navigateToQnaList}>
               <View style={styles.menu}>
                 <Text style={styles.text}>Q&A</Text>

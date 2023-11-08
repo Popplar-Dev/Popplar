@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { BlurView } from "@react-native-community/blur";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
+import SettingScreen from '../Settings/SettingScreen';
 
 interface GameListModalProps {
   visible: boolean;
@@ -22,6 +23,10 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
 
 	function gospeedtouchgame() {
     navigation.navigate('SpeedTouch' as never)
+  }
+
+	function goClickGame() {
+    navigation.navigate('ClickGame' as never)
   }
 
   useEffect(() => {
@@ -103,7 +108,7 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
                   </View>
                 </View>
                 <View style={styles.gamebottom}>
-                  <Text style={styles.textbig}>??? 게임</Text>
+                  <Text style={styles.textbig}>최대한 많이 클릭해보슈</Text>
                   <View style={styles.gameinfo}>
                   {myfightingscore.length === 0 ? (
                     <View style={styles.gameinfotitle}>
@@ -116,7 +121,7 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
                         <Text style={styles.text}>전체 최고 기록: </Text>
                       </View>
                     )} 
-                    <Pressable style={styles.gamestart}>
+                    <Pressable style={styles.gamestart} onPress={goClickGame}>
                       <Text style={styles.text}>게임 하기</Text>
                     </Pressable>
                   </View>
