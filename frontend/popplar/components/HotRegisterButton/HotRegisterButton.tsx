@@ -41,20 +41,18 @@ export default function HotRegisterButton({ props, setSpaceInfo, setSpaceLike, s
         address_name: data.addressName,
         road_address_name: data.roadAddressName,
         category_group_name: data.categoty,
-        likeCount: 0,
+        likeCount: data.likeCount,
         phone: data.phone,
         placeType: data.placeType,
         visitorCount: data.visitorCount,
         y: data.y,
         x: data.x,
-        tier: 0,
-        myLike: false,
+        tier: data.tier,
+        myLike: data.myLike,
       }
       setSpaceInfo(space)
-      const status = false
-      setSpaceLike(status)
-      const count = 0
-      setSpaceLikeCount(count)
+      setSpaceLike(true)
+      setSpaceLikeCount(1)
       })
     )
   }
