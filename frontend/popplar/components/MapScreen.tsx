@@ -52,6 +52,7 @@ const MapScreen: React.FC = () => {
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const [spaceLike, setSpaceLike] = useState<boolean>(false)
+  const [spaceLikeCount, setSpaceLikeCount] = useState<number>(0)
 
   const openModal = () => {
     setModalVisible(true);
@@ -181,7 +182,7 @@ const MapScreen: React.FC = () => {
     if (spaceInfo && spaceInfo.id) {
       likeHotplace(spaceInfo.id)
       .then((res) => console.log(res, '좋아요 success!!'))
-      .then(() => setSpaceLike(true))
+      .then(() => {setSpaceLike(true);  setSpaceLikeCount(prev => prev + 1)})
     }
   }
 
@@ -189,7 +190,7 @@ const MapScreen: React.FC = () => {
     if (spaceInfo && spaceInfo.id) {
       delLikeHotplace(spaceInfo.id)
       .then((res) => console.log(res, '좋아요 취소 success!!'))
-      .then(() => setSpaceLike(false))
+      .then(() => {setSpaceLike(false);  setSpaceLikeCount(prev => prev - 1)})
     }
   }
 
@@ -228,13 +229,13 @@ const MapScreen: React.FC = () => {
                 {!spaceLike ? (
                   <Pressable onPress={postLike}>
                   <Icon name="heart" size={21} color={'white'} style={styles.heartIcon}/>
-                  {spaceInfo.likeCount > 0 && <Text style={styles.currLikeCount}>{spaceInfo.likeCount}</Text>}
+                  <Text style={styles.currLikeCount}>{spaceLikeCount}</Text>
                   </Pressable>
                 ):
                 (
                   <Pressable onPress={postLikeDel}>
                   <Icon name="heart" size={21} color={'red'} style={styles.heartIcon}/>
-                  {spaceInfo.likeCount > 0 && <Text style={styles.currLikeCount}>{spaceInfo.likeCount}</Text>}
+                  <Text style={styles.currLikeCount}>{spaceLikeCount}</Text>
                   </Pressable>
                 )}
               </TouchableOpacity>
@@ -326,6 +327,7 @@ const MapScreen: React.FC = () => {
               console.log(data.data.id)
               setSpaceInfo(data.data)
               setSpaceLike(data.data.myLike)
+              setSpaceLikeCount(data.data.likeCount)
               // console.log("받은 데이터(React) : " + data.data);
             }
           }}
