@@ -13,12 +13,15 @@ import lombok.ToString;
 public class MemberInfoDto {
 
     @JsonProperty
+    private Long id;
+    @JsonProperty
     private String name;
     @JsonProperty
     private String profileImage;
 
     @Builder
-    public MemberInfoDto(String name, String profileImage) {
+    public MemberInfoDto(Long id, String name, String profileImage) {
+        this.id = id;
         this.name = name;
         this.profileImage = profileImage;
     }
