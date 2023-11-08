@@ -38,7 +38,7 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
   }
 
 	function goClickGame() {
-    navigation.navigate('ClickGame' as never)
+    navigation.navigate('ClickGame', {spaceId: spaceid, gameInfo: gameinfo})
   }
 
   useEffect(() => {
