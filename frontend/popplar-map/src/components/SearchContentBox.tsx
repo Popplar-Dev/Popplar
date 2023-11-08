@@ -29,11 +29,25 @@ export default function SearchContentBox({ place, placePosHandler }: Props) {
     placePosHandler(place.x, place.y);
     getIdHotplace(place.id)
     .then((res) => {
-      requestPermission(res.data)
+      const place = {
+        id: res.data.id,
+        place_name: res.data.placeName,
+        address_name: res.data.addressName,
+        road_address_name: res.data.roadAddressName,
+        category_group_name: res.data.category,
+        likeCount: res.data.likeCount,
+        phone: res.data.phone,
+        placeType: res.data.placeType,
+        visitorCount: res.data.visitorCount,
+        y: res.data.y,
+        x: res.data.x
+      }
+      requestPermission(place)
       console.log('여기에 정보 들어와요', res.data)
     })
     .catch((error) => {
       if (error.response && error.response.status === 400) {
+        console.log('정보 이쪽으로!', place)
         requestPermission(place)
     }});
   }
