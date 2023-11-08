@@ -6,6 +6,8 @@ import Geolocation from '@react-native-community/geolocation';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import HotRegisterButton from './HotRegisterButton/HotRegisterButton'
+import MetalIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 import {
   BottomSheetModal,
@@ -29,6 +31,8 @@ import { getIdHotplace } from './services/getHotplace'
 import { previousDay } from 'date-fns';
 
 import { SpaceInfo } from './types/place'
+import { useNavigation } from '@react-navigation/native';
+import GameListModal from './Modals/GameListModal';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -44,6 +48,19 @@ type Here = {
 const MapScreen: React.FC = () => {
   const [location, setLocation] = useRecoilState<Here>(locationState);
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo|null>(null)
+  const navigation = useNavigation();
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  function goqna() {
+    navigation.navigate('QnaList' , {spaceId: spaceInfo.id, spacename: spaceInfo.place_name} )
+  }
+  // function goQna(space) {
+  //   navigation.navigate('QnaList' , {spaceId: space.spaceId, spacename: space.spacename} )
+  // }
 
   useEffect(() => {
     requestPermission().then(result => {
@@ -84,7 +101,7 @@ const MapScreen: React.FC = () => {
           }
         },
         error => {
-          console.log(error);
+          // console.log(error);
         },
         {
           enableHighAccuracy: true,
@@ -181,13 +198,24 @@ const MapScreen: React.FC = () => {
               <HotRegisterButton props={spaceInfo} setSpaceInfo={setSpaceInfo}/>
             ): (
               <View style={styles.buttons}>
-                <Icon name="comments" size={20} color={'white'} style={styles.Icon}/>
-                <Icon name="gamepad" size={20} color={'white'} style={styles.Icon}/>
-                <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/>
+              <Icon name="comments" size={20} color={'white'} style={styles.Icon} />
+              <TouchableOpacity>
+                <Icon name="gamepad" size={20} color={'white'} style={styles.Icon} onPress={openModal}/>
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Icon name="question-circle" size={20} color={'white'} style={styles.Icon} onPress={goqna}/>
+              </TouchableOpacity>
+              <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/>
+            <GameListModal
+              visible={isModalVisible}
+              onClose={() => setModalVisible(false)}
+              spaceid={spaceInfo.id}
+            />
               </View>
             )}
           </View>
-        } 
+        }
+
           <View style={styles.bottomsheetContainer}>
         {spaceInfo &&
           (
