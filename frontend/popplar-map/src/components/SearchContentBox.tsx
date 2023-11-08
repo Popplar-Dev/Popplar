@@ -3,6 +3,8 @@ import { Place } from '../types/place'
 
 import flag from '../assets/images/flag-iso-color.png'
 
+import { getIdHotplace } from '../api/getHotplace'
+
 type Props = {
   place: Place
   placePosHandler: (x: string, y: string) => void
@@ -23,10 +25,31 @@ export default function SearchContentBox({ place, placePosHandler }: Props) {
   }
 
   function placeSelectHandler() {
-    placePosHandler(place.x, place.y)
-    console.log(place)
-    requestPermission(place)
-    // setHotPlaceInfo(place)
+    // setHotPlaceInfo(place);
+    placePosHandler(place.x, place.y);
+    getIdHotplace(place.id)
+    .then((res) => {
+      const place = {
+        id: res.data.id,
+        place_name: res.data.placeName,
+        address_name: res.data.addressName,
+        road_address_name: res.data.roadAddressName,
+        category_group_name: res.data.category,
+        likeCount: res.data.likeCount,
+        phone: res.data.phone,
+        placeType: res.data.placeType,
+        visitorCount: res.data.visitorCount,
+        y: res.data.y,
+        x: res.data.x
+      }
+      requestPermission(place)
+      console.log('여기에 정보 들어와요', res.data)
+    })
+    .catch((error) => {
+      if (error.response && error.response.status === 400) {
+        console.log('정보 이쪽으로!', place)
+        requestPermission(place)
+    }});
   }
   
   return(
