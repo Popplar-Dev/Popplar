@@ -213,6 +213,7 @@ const MapScreen: React.FC = () => {
               </View>
             )}
           </View>
+        }
 
           <View style={styles.bottomsheetContainer}>
         {spaceInfo &&
