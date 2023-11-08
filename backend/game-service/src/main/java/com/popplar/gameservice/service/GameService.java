@@ -84,7 +84,7 @@ public class GameService {
             RankDto rankDto = rankDtoList.get(i);
             for (int j = 0; j < memberInfoDtoList.size(); j++) {
                 MemberInfoDto memberInfoDto = memberInfoDtoList.get(i);
-                if (rankDtoList.get(i).getMemberId() == memberInfoDto.getId()) {
+                if (rankDto.getMemberId() == memberInfoDto.getId()) {
                     rankDto.setRankDtoMember(memberInfoDto);
                 }
             }
