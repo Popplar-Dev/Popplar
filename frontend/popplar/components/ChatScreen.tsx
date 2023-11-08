@@ -1,26 +1,20 @@
 import { useState, useEffect } from 'react'; 
 import { View, StyleSheet } from 'react-native';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { NavigationProp } from '@react-navigation/native'; 
+import { NavigationProp } from '@react-navigation/native';
 
+import { useRecoilState } from 'recoil';
+import { chatroomState } from './recoil/chatroomState';
+
+import { TabNavigatorParamList } from './types/tabNavigatorParams';
 import ChatRoom from './ChatRoom/ChatRoom';
 
-type NavigatorParamList = {
-  AllPlaces: undefined,
-  Chat: undefined,
-  Map: undefined,  
-  Notifications: undefined,
-  MyPage: undefined, 
-}
-
-const ChatScreen = ({navigation} : { navigation: NavigationProp<NavigatorParamList> }) => {
-
-  const tabBarHeight = useBottomTabBarHeight();
+const ChatScreen = ({navigation} : { navigation: NavigationProp<TabNavigatorParamList> }) => {
 
   const [ inChatRoom, setInChatRoom ] = useState(true);
+  const [ chatroomId, setChatroomId ] = useRecoilState<number|null>(chatroomState); 
   
   useEffect(() => {
-    if ( inChatRoom ) {
+    if ( chatroomId ) {
       navigation.setOptions({tabBarStyle: {display: 'none'}});
     } else {
       navigation.setOptions({tabBarStyle: {display: 'flex'}});
@@ -30,7 +24,7 @@ const ChatScreen = ({navigation} : { navigation: NavigationProp<NavigatorParamLi
 
   return (
     <View style={styles.rootContainer} >
-      {inChatRoom && <ChatRoom />} 
+      {chatroomId ? <ChatRoom roomId={chatroomId}/> : <ChatRoom roomId={21414107} />} 
     </View>
   );
 };

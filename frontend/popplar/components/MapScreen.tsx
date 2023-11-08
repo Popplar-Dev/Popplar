@@ -97,7 +97,7 @@ const MapScreen: React.FC = () => {
           handle_native_location(lat, lng)
         },
         error => {
-          console.log(error);
+          // console.log(error);
         },
         {
           enableHighAccuracy: true,
@@ -308,8 +308,8 @@ const MapScreen: React.FC = () => {
 
             {spaceInfo ? (
               <View style={styles.placeBottomContainer}>
-                <PlaceOptionBox spaceId={spaceInfo.id} type="chat"/>
-                <PlaceOptionBox spaceId={spaceInfo.id} type="game"/> 
+                <PlaceOptionBox spaceId={parseInt(spaceInfo.id)} type="chat"/>
+                <PlaceOptionBox spaceId={parseInt(spaceInfo.id)} type="game"/> 
               </View>
             ):(
               null

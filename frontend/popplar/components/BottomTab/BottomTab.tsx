@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {View, StyleSheet} from 'react-native';
 
+import { TabNavigatorParamList } from '../types/tabNavigatorParams';
+
 //스크린 컴포넌트
 import MapScreen from '../MapScreen';
 import ChatScreen from '../ChatScreen';
@@ -18,11 +20,11 @@ import SpeedTouch from '../Games/SpeedTouch';
 import QnaList from '../QnA/QnaList';
 import QnaDetail from '../QnA/QnaDetail';
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<TabNavigatorParamList>();
 const Stack = createNativeStackNavigator();
 
 const MapScreenStack = () => {
-   return (
+  return (
     <Stack.Navigator
       screenOptions={{
         headerTintColor:'#8B90F7',
