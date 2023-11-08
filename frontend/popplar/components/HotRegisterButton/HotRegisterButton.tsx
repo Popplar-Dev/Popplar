@@ -9,12 +9,16 @@ import { postHotplace } from '../services/postHotplace'
 import { getIdHotplace } from '../services/getHotplace'
 import { SpaceInfo } from '../types/place'
 
+import { likeHotplace } from '../services/postHotplace'
+
 type Props = {
   props: SpaceInfo
-  setSpaceInfo: () => void
+  setSpaceInfo: (space: SpaceInfo) => void
+  setSpaceLike: (status: boolean) => void
+  setSpaceLikeCount: (count: number) => void
 }
 
-export default function HotRegisterButton({ props, setSpaceInfo }: Props) {
+export default function HotRegisterButton({ props, setSpaceInfo, setSpaceLike, setSpaceLikeCount }: Props) {
 
   const handlePostHotplace = () => {
     const data = {
@@ -29,7 +33,7 @@ export default function HotRegisterButton({ props, setSpaceInfo }: Props) {
     }
     console.log(data)
     postHotplace(data)
-    .then((res) => {
+    .then((res) => likeHotplace(props.id).then(() => {
       const data = res.data
       const space: SpaceInfo = {
         id: data.id,
@@ -37,15 +41,22 @@ export default function HotRegisterButton({ props, setSpaceInfo }: Props) {
         address_name: data.addressName,
         road_address_name: data.roadAddressName,
         category_group_name: data.categoty,
-        likeCount: data.likeCount,
+        likeCount: 0,
         phone: data.phone,
         placeType: data.placeType,
         visitorCount: data.visitorCount,
         y: data.y,
-        x: data.x
+        x: data.x,
+        tier: 0,
+        myLike: false,
       }
       setSpaceInfo(space)
-    })
+      const status = false
+      setSpaceLike(status)
+      const count = 0
+      setSpaceLikeCount(count)
+      })
+    )
   }
 
   return (

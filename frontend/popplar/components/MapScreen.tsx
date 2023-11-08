@@ -178,22 +178,19 @@ const MapScreen: React.FC = () => {
     [],
   );
 
-  const postLike = () => {
+  const hotSpaceLike = () => {
     if (spaceInfo && spaceInfo.id) {
       likeHotplace(spaceInfo.id)
-      .then((res) => console.log(res, '좋아요 success!!'))
       .then(() => {setSpaceLike(true);  setSpaceLikeCount(prev => prev + 1)})
     }
   }
 
-  const postLikeDel = () => {
+  const hotSpaceLikeDel = () => {
     if (spaceInfo && spaceInfo.id) {
       delLikeHotplace(spaceInfo.id)
-      .then((res) => console.log(res, '좋아요 취소 success!!'))
       .then(() => {setSpaceLike(false);  setSpaceLikeCount(prev => prev - 1)})
     }
   }
-
 
   let webRef = useRef<WebView | null>(null);
 
@@ -214,7 +211,12 @@ const MapScreen: React.FC = () => {
           <View style={styles.spaceName}>
             <NameBox h={38} text={spaceInfo.place_name} />
             {!spaceInfo.placeType ? (
-              <HotRegisterButton props={spaceInfo} setSpaceInfo={setSpaceInfo}/>
+              <HotRegisterButton 
+              props={spaceInfo} 
+              setSpaceInfo={setSpaceInfo} 
+              setSpaceLike={setSpaceLike}
+              setSpaceLikeCount={setSpaceLikeCount}
+              />
             ): (
               <View style={styles.buttons}>
               <Icon name="comments" size={21} color={'white'} style={styles.Icon} />
@@ -227,14 +229,14 @@ const MapScreen: React.FC = () => {
               {/* <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/> */}
               <TouchableOpacity style={styles.likeContainer}>
                 {!spaceLike ? (
-                  <Pressable onPress={postLike}>
-                  <Icon name="heart" size={21} color={'white'} style={styles.heartIcon}/>
+                  <Pressable onPress={hotSpaceLike}>
+                  <Icon name="heart" size={22} color={'white'} style={styles.heartIcon}/>
                   <Text style={styles.currLikeCount}>{spaceLikeCount}</Text>
                   </Pressable>
                 ):
                 (
-                  <Pressable onPress={postLikeDel}>
-                  <Icon name="heart" size={21} color={'red'} style={styles.heartIcon}/>
+                  <Pressable onPress={hotSpaceLikeDel}>
+                  <Icon name="heart" size={22} color={'#B3B7FD'} style={styles.heartIcon} />
                   <Text style={styles.currLikeCount}>{spaceLikeCount}</Text>
                   </Pressable>
                 )}
