@@ -72,6 +72,7 @@ const MapScreen: React.FC = () => {
           
 
           // 로드시, accessToken web으로 전송해서 사용
+          // 현재 비활성화
           // const token = getToken();
           // if (webRef.current) {
           //   webRef.current.injectJavaScript(`
