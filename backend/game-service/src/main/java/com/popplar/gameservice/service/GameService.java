@@ -14,7 +14,6 @@ import com.popplar.gameservice.entity.Conqueror;
 import com.popplar.gameservice.entity.Game;
 import com.popplar.gameservice.entity.GameType;
 import com.popplar.gameservice.exception.BadRequestException;
-import com.popplar.gameservice.exception.NotFoundException;
 import com.popplar.gameservice.mapper.ConquerorMapper;
 import com.popplar.gameservice.mapper.GameMapper;
 import com.popplar.gameservice.repository.ConquerorRepository;
@@ -28,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -198,10 +196,20 @@ public class GameService {
         ConquerorInfoDto conquerorInfoDto = getConquerorInfo(hotPlaceId);
         System.out.println(conquerorInfoDto.toString());
         //점수 가져오기
-        //정복자가 없으면 null반환.
+
+        //정복자가 없으면
         if (conquerorInfoDto.getId() == 0) {
-            return GameInfoResDto.builder().hasConqueror(false).build();
+            //현재 핫플레이스의 각각의 게임에 대한 최고 점수를 가져와야 함.
+            List<Double> pointList = GameType.maxGamePoint(memberId, hotPlaceId, startOfDay,
+                endOfDay,
+                gameRepository);
+            return GameInfoResDto.builder().hasConqueror(false)
+                .myMaxFightingPoints(pointList.get(0))
+                .myMaxReflexesPoints(pointList.get(1))
+                .maxFightingPoints(pointList.get(2))
+                .maxReflexesPoints(pointList.get(3)).build();
         }
+
         //정복자가 있으면 정복자에 대한 이미지와 닉네임 정보 가져와야함
         List<Long> memberIdList = new ArrayList<>();
         memberIdList.add(cryptService.decrypt(conquerorInfoDto.getMemberId()));
