@@ -44,11 +44,11 @@ return (
         {type=="game" ? "게임을 통해 경쟁하세요" : "채팅을 시작하세요"}
       </Text>
       <TouchableOpacity onPress={() => { 
-        if (type === "game") {
-          openModal();
-        } else {
-          gochat();
-        }
+        // if (type === "game") {
+        //   openModal();
+        // } else {
+        //   gochat();
+        // }
       }} style={styles.placeOptionButton}>
         <Text style={{ color: 'white', textAlign: 'center'}}>
           {type === "game" ? "게임 시작하기" : "채팅방 입장"}

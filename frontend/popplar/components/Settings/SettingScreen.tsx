@@ -51,20 +51,20 @@ function SettingScreen() {
                 <Text style={styles.text}>프로필 수정</Text>
               </View>
             </Pressable>
-            <Pressable onPress={navigateToAlarm}>
+            {/* <Pressable onPress={navigateToAlarm}>
               <View style={styles.menu}>
                 <Icon style={styles.icons} name='notifications-outline' size={25} color='#ffffff'
                 />
                 <Text style={styles.text}>알림</Text>
               </View>
-            </Pressable>
-            <Pressable onPress={navigateToInquire}>
+            </Pressable> */}
+            {/* <Pressable onPress={navigateToInquire}>
               <View style={styles.menu}>
                 <Icon style={styles.icons} name='help-circle-outline' size={25} color='#ffffff'
                 />
                 <Text style={styles.text}>문의하기</Text>
               </View>
-            </Pressable>
+            </Pressable> */}
             <Pressable onPress={navigateToTerm}>
               <View style={styles.menu}>
                 <Icon style={styles.icons} name='information-circle-outline' size={25} color='#ffffff'
