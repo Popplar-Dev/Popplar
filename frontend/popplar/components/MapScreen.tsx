@@ -72,12 +72,12 @@ const MapScreen: React.FC = () => {
           
 
           // 로드시, accessToken web으로 전송해서 사용
-          const token = getToken();
-          if (webRef.current) {
-            webRef.current.injectJavaScript(`
-            localStorage.setItem('token', '${token}');
-          `);
-          }
+          // const token = getToken();
+          // if (webRef.current) {
+          //   webRef.current.injectJavaScript(`
+          //   localStorage.setItem('token', '${token}');
+          // `);
+          // }
           if (type!=="load") {
             handle_native_location(lat, lng)
           }
