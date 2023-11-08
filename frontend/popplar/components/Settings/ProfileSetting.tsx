@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button,Pressable,Switch } from 'react-native';
+import { Modal, View, Text, StyleSheet,Image, ImageBackground, TextInput, Button,Pressable,Switch } from 'react-native';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import axios from "axios";
 import * as ImagePicker from 'react-native-image-picker';
@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../recoil/userState';
 import { useRecoilState } from 'recoil';
+import ProfileImageSelectModal from '../Modals/ProfileImageSelectModal'
 
 function ProfileSetting() {
 	const [nickname, setNickname] = useState('') 
@@ -18,12 +19,32 @@ function ProfileSetting() {
   const [photo ,setPhoto] = useState('')
   const [userinfo, setUserInfo] = useRecoilState(userInfoState);
   const user = useRecoilValue(userInfoState);
+  const profileimages = [
+    { name: "boy1", uri: require("popplar/assets/avatars/04.png") },
+    { name: "boy2", uri: require("popplar/assets/avatars/07.png") },
+    { name: "boy3", uri: require("popplar/assets/avatars/20.png") },
+    { name: "boy4", uri: require("popplar/assets/avatars/13.png") },
+    { name: "girl1", uri: require("popplar/assets/avatars/02.png") },
+    { name: "girl2", uri: require("popplar/assets/avatars/03.png") },
+    { name: "girl3", uri: require("popplar/assets/avatars/10.png") },
+    { name: "girl4", uri: require("popplar/assets/avatars/12.png") },
+  ];
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const openModal = () => {
+    setModalVisible(true);
+    console.log(modalVisible)
+  };
 
 	const startEditing = () => {
     setIsEditing(true);
     setNewNickname(nickname);
     console.log(user)
   };
+  // useEffect(() => {
+  //   console.log(modalVisible)
+  // }, []);
 
   const saveNickname = () => {
     console.log(user)
@@ -95,20 +116,8 @@ function ProfileSetting() {
               style={styles.profileImage}
             />
           </View>
-          <Pressable onPress={() =>
-            ImagePicker.launchImageLibrary({
-                mediaType: 'photo',
-                includeBase64: false,
-                maxHeight: 200,
-                maxWidth: 200,
-              },
-              (response) => {
-                console.log(response);
-                // this.setState({
-                //   resourcePath: response
-                // });
-              },
-            )}>
+          <Pressable 
+            onPress={openModal}>
             <View style={styles.edit}>
               <Text style={styles.text}>프로필 사진 수정</Text>
             </View>
@@ -134,7 +143,10 @@ function ProfileSetting() {
             />
           </View>
         </View>
-        
+        <ProfileImageSelectModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+        />
         <Text style={styles.delete}>계정 삭제</Text>
         </View>
 			</ImageBackground>
@@ -234,7 +246,7 @@ const styles = StyleSheet.create({
   delete: {
     color:'red',
     margin:30
-  }
+  },
 });
 
 export default ProfileSetting;
