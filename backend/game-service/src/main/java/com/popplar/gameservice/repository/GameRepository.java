@@ -19,4 +19,7 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     List<Game> findAllByHotPlaceIdAndTypeAndDeletedFalseAndCreatedDateBetweenOrderByPointsDesc(
         Long HotPlaceId, GameType type, LocalDateTime startOfDay, LocalDateTime endOfDay);
 
+    Optional<Game> findTopByHotPlaceIdAndTypeAndDeletedFalseAndCreatedDateBetweenOrderByPointsDesc(
+        Long hotPlaceId,
+        GameType type, LocalDateTime startOfDay, LocalDateTime endOfDay);
 }
