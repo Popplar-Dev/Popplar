@@ -40,7 +40,9 @@ export default function SearchContentBox({ place, placePosHandler }: Props) {
         placeType: res.data.placeType,
         visitorCount: res.data.visitorCount,
         y: res.data.y,
-        x: res.data.x
+        x: res.data.x,
+        tier: res.data.tier,
+        myLike: res.data.myLike
       }
       requestPermission(place)
       console.log('여기에 정보 들어와요', res.data)

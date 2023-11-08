@@ -257,7 +257,6 @@ export default function Map () {
           panToHandler(La, Ma);
           getIdHotplace(id)
           .then((res) => res.data)
-          // .then((res) => console.log(res))
           .then((res) => requestPermission({
             id, 
             place_name, 
@@ -269,7 +268,9 @@ export default function Map () {
             placeType: res.placeType,
             visitorCount: res.visitorCount,
             y: res.y,
-            x: res.x
+            x: res.x,
+            tier: res.tier,
+            myLike: res.myLike
           }))
         })
         // marker.setMap(map);

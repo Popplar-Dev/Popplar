@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { View, Text, Button, StyleSheet, Dimensions, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, Button, StyleSheet, Dimensions, Alert, TouchableOpacity, Pressable} from 'react-native';
 import { Platform, PermissionsAndroid } from "react-native";
 import { Linking } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
@@ -28,11 +28,13 @@ import { useRecoilState } from 'recoil';
 import { locationState } from './recoil/locationState'
 
 import { getIdHotplace } from './services/getHotplace'
+import { likeHotplace, delLikeHotplace } from './services/postHotplace'
 import { previousDay } from 'date-fns';
 
 import { SpaceInfo } from './types/place'
 import { useNavigation } from '@react-navigation/native';
 import GameListModal from './Modals/GameListModal';
+import { useRoute } from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -45,11 +47,64 @@ type Here = {
   x: string
 }
 
+interface HotPlace {
+  addressName: string;
+  category: string;
+  placeName: string;
+  placeType: string;
+  roadAddressName: string;
+  phone: string;
+  id: number;
+  likeCount: number;
+  visitorCount: number;
+  tier: number;
+}
+
 const MapScreen: React.FC = () => {
+  const route = useRoute();
+  useEffect(() => {
+    const data: any = route.params;
+    if (data && data.data) {
+      const currHotPlace: any = data.data
+      console.log(currHotPlace)
+      const lat = currHotPlace.y
+      const lng = currHotPlace.x
+
+      const loc: { y: string, x: string } = {y: lat, x: lng}
+      const locationData: { type: string, data: { y: string, x: string } } = {type: 'location', data: loc}
+      if (webRef.current && currHotPlace) {
+        handlePresentModalPress();
+              // console.log(data.data.id)
+        setSpaceInfo({
+          id: currHotPlace.id,
+          place_name: currHotPlace.placeName,
+          address_name: currHotPlace.addressName,
+          road_address_name: currHotPlace.roadAddressName,
+          category_group_name: currHotPlace.category,
+          likeCount: currHotPlace.likeCount,
+          phone: currHotPlace.phone,
+          placeType: currHotPlace.placeType,
+          visitorCount: currHotPlace.visitorCount,
+          y: currHotPlace.y,
+          x: currHotPlace.x,
+          tier: currHotPlace.tier,
+          myLike: currHotPlace.myLike,
+        })
+        setSpaceLike(currHotPlace.myLike)
+        setSpaceLikeCount(currHotPlace.likeCount)
+        webRef.current.injectJavaScript(`
+        window.postMessage(${JSON.stringify(locationData)}, '*')
+        `);
+      }
+    }
+  }, [route.params])
+  
   const [location, setLocation] = useRecoilState<Here>(locationState);
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo|null>(null)
   const navigation = useNavigation();
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisible, setModalVisible] = useState<boolean>(false);
+  const [spaceLike, setSpaceLike] = useState<boolean>(false)
+  const [spaceLikeCount, setSpaceLikeCount] = useState<number>(0)
 
   const openModal = () => {
     setModalVisible(true);
@@ -89,6 +144,7 @@ const MapScreen: React.FC = () => {
           
 
           // 로드시, accessToken web으로 전송해서 사용
+          // 현재 비활성화
           // const token = getToken();
           // if (webRef.current) {
           //   webRef.current.injectJavaScript(`
@@ -174,6 +230,19 @@ const MapScreen: React.FC = () => {
     [],
   );
 
+  const hotSpaceLike = () => {
+    if (spaceInfo && spaceInfo.id) {
+      likeHotplace(spaceInfo.id)
+      .then(() => {setSpaceLike(true);  setSpaceLikeCount(prev => prev + 1)})
+    }
+  }
+
+  const hotSpaceLikeDel = () => {
+    if (spaceInfo && spaceInfo.id) {
+      delLikeHotplace(spaceInfo.id)
+      .then(() => {setSpaceLike(false);  setSpaceLikeCount(prev => prev - 1)})
+    }
+  }
 
   let webRef = useRef<WebView | null>(null);
 
@@ -194,17 +263,36 @@ const MapScreen: React.FC = () => {
           <View style={styles.spaceName}>
             <NameBox h={38} text={spaceInfo.place_name} />
             {!spaceInfo.placeType ? (
-              <HotRegisterButton props={spaceInfo} setSpaceInfo={setSpaceInfo}/>
+              <HotRegisterButton 
+              props={spaceInfo} 
+              setSpaceInfo={setSpaceInfo} 
+              setSpaceLike={setSpaceLike}
+              setSpaceLikeCount={setSpaceLikeCount}
+              />
             ): (
               <View style={styles.buttons}>
-              <Icon name="comments" size={20} color={'white'} style={styles.Icon} />
+              <Icon name="comments" size={21} color={'white'} style={styles.Icon} />
               <TouchableOpacity>
-                <Icon name="gamepad" size={20} color={'white'} style={styles.Icon} onPress={openModal}/>
+                <Icon name="gamepad" size={21} color={'white'} style={styles.Icon} onPress={openModal}/>
               </TouchableOpacity>
               <TouchableOpacity>
-                <Icon name="question-circle" size={20} color={'white'} style={styles.Icon} onPress={goqna}/>
+                <Icon name="question-circle" size={21} color={'white'} style={styles.Icon} onPress={goqna}/>
               </TouchableOpacity>
-              <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/>
+              {/* <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/> */}
+              <TouchableOpacity style={styles.likeContainer}>
+                {!spaceLike ? (
+                  <Pressable onPress={hotSpaceLike}>
+                  <Icon name="heart" size={22} color={'white'} style={styles.heartIcon}/>
+                  <Text style={styles.currLikeCount}>{spaceLikeCount}</Text>
+                  </Pressable>
+                ):
+                (
+                  <Pressable onPress={hotSpaceLikeDel}>
+                  <Icon name="heart" size={22} color={'#B3B7FD'} style={styles.heartIcon} />
+                  <Text style={styles.currLikeCount}>{spaceLikeCount}</Text>
+                  </Pressable>
+                )}
+              </TouchableOpacity>
             <GameListModal
               visible={isModalVisible}
               onClose={() => setModalVisible(false)}
@@ -273,10 +361,6 @@ const MapScreen: React.FC = () => {
 
         </BottomSheetModal>
 
-        {/* <Button title={'postMessage'} onPress={native_to_web}></Button>
-        <Button title="Get GeoLocation" onPress={() => geoLocation()}/> */}
-        {/* <Text style={{ color: "white" }}> latitude: {latitude} </Text>
-        <Text style={{ color: "white" }}> longitude: {longitude} </Text> */}
         <WebView 
           ref={webRef}
           style={styles.webview}
@@ -286,7 +370,7 @@ const MapScreen: React.FC = () => {
           // injectedJavaScript={inject}
           onMessage={(event) => {
             const data: any = JSON.parse(event.nativeEvent.data)
-            console.log('raw data', data)
+            // console.log('raw data', data)
             if (data.type=="test") {
               // console.log('web에서 들어왔어요')
               // console.log(data.data)
@@ -294,8 +378,10 @@ const MapScreen: React.FC = () => {
               native_to_web();
             } else {
               handlePresentModalPress();
-              console.log(data.data.id)
+              // console.log(data.data.id)
               setSpaceInfo(data.data)
+              setSpaceLike(data.data.myLike)
+              setSpaceLikeCount(data.data.likeCount)
               // console.log("받은 데이터(React) : " + data.data);
             }
           }}
@@ -348,9 +434,11 @@ const styles = StyleSheet.create({
   spaceName: {
     flex: 0.06, 
     flexDirection: 'row',
+    justifyContent: 'space-between',
     marginLeft: 20, 
-    height: 30, 
-    justifyContent: "space-between"
+    height: 30,
+    // borderWidth: 1, 
+    // borderColor: 'red',  
   },
   previewContainer: {
     flex: 0.11,
@@ -461,4 +549,22 @@ const styles = StyleSheet.create({
     // borderWidth: 1, 
     // borderColor: 'red',
   },
+  likeContainer: {
+    // flex: 1,
+    // borderWidth: 1, 
+    // borderColor: 'red',
+  },
+  heartIcon: {
+    marginLeft: 12,
+    marginTop: 10,
+  },
+  currLikeCount: {
+    position: 'absolute',
+    flex: 1,
+    top: 14, 
+    left: 20, 
+    color: "white",
+    fontSize: 10,
+    fontWeight: "bold",
+  }
 })
