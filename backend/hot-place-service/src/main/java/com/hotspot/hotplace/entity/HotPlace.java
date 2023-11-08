@@ -81,5 +81,7 @@ public class HotPlace {
         this.placeType = hotPlaceType;
     }
 
-    public void updateTier(int tier) { this.tier = tier; }
+    public void updateTier(int tier) {
+        this.tier = tier;
+    }
 }
