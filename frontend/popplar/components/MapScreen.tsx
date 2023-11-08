@@ -63,9 +63,19 @@ interface HotPlace {
 const MapScreen: React.FC = () => {
   const route = useRoute();
   useEffect(() => {
-    const data: {data: HotPlace} = route.params;
+    const data: any = route.params;
     if (data && data.data) {
-      console.log('item', data.data)
+      const currHotPlace: any = data.data
+      const lat = currHotPlace.y
+      const lng = currHotPlace.x
+
+      const loc: { y: string, x: string } = {y: lat, x: lng}
+      const locationData: { type: string, data: { y: string, x: string } } = {type: 'location', data: loc}
+      if (webRef.current) {
+        webRef.current.injectJavaScript(`
+        window.postMessage(${JSON.stringify(locationData)}, '*')
+        `);
+      }
     }
   }, [route.params])
   
@@ -340,7 +350,7 @@ const MapScreen: React.FC = () => {
           // injectedJavaScript={inject}
           onMessage={(event) => {
             const data: any = JSON.parse(event.nativeEvent.data)
-            console.log('raw data', data)
+            // console.log('raw data', data)
             if (data.type=="test") {
               // console.log('web에서 들어왔어요')
               // console.log(data.data)
@@ -348,7 +358,7 @@ const MapScreen: React.FC = () => {
               native_to_web();
             } else {
               handlePresentModalPress();
-              console.log(data.data.id)
+              // console.log(data.data.id)
               setSpaceInfo(data.data)
               setSpaceLike(data.data.myLike)
               setSpaceLikeCount(data.data.likeCount)
