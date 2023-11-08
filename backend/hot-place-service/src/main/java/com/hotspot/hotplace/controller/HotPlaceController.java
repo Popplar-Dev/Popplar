@@ -28,25 +28,26 @@ public class HotPlaceController {
 
     private final HotPlaceService hotPlaceService;
 
-
     @GetMapping
-    public ResponseEntity<List<HotPlaceResDto>> findAllHotPlace() {
-        List<HotPlaceResDto> hotPlaceDtolist = hotPlaceService.findAllHotPlace();
+    public ResponseEntity<List<HotPlaceResDto>> findAllHotPlace(
+        @RequestHeader("Member-Id") Long memberId) {
+        List<HotPlaceResDto> hotPlaceDtolist = hotPlaceService.findAllHotPlace(memberId);
 
         return new ResponseEntity<>(hotPlaceDtolist, HttpStatus.OK);
     }
 
     @GetMapping("/{hotPlaceId}")
-    public ResponseEntity<HotPlaceResDto> findHotPlace(@PathVariable Long hotPlaceId) {
-        HotPlaceResDto hotPlaceResDto = hotPlaceService.findHotPlace(hotPlaceId);
+    public ResponseEntity<HotPlaceResDto> findHotPlace(@RequestHeader("Member-Id") Long memberId,
+        @PathVariable Long hotPlaceId) {
+        HotPlaceResDto hotPlaceResDto = hotPlaceService.findHotPlace(hotPlaceId, memberId);
 
         return new ResponseEntity<>(hotPlaceResDto, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<HotPlaceResDto> insertHotPlace(
+    public ResponseEntity<HotPlaceResDto> insertHotPlace(@RequestHeader("Member-Id") Long memberId,
         @RequestBody HotPlaceReqDto hotPlaceReqDto) {
-        HotPlaceResDto hotPlaceResDto = hotPlaceService.insertHotPlace(hotPlaceReqDto);
+        HotPlaceResDto hotPlaceResDto = hotPlaceService.insertHotPlace(hotPlaceReqDto, memberId);
 
         return new ResponseEntity<>(hotPlaceResDto, HttpStatus.OK);
     }
