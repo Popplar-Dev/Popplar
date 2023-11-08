@@ -198,14 +198,18 @@ const MapScreen: React.FC = () => {
               <HotRegisterButton props={spaceInfo} setSpaceInfo={setSpaceInfo}/>
             ): (
               <View style={styles.buttons}>
-              <Icon name="comments" size={20} color={'white'} style={styles.Icon} />
+              <Icon name="comments" size={21} color={'white'} style={styles.Icon} />
               <TouchableOpacity>
-                <Icon name="gamepad" size={20} color={'white'} style={styles.Icon} onPress={openModal}/>
+                <Icon name="gamepad" size={21} color={'white'} style={styles.Icon} onPress={openModal}/>
               </TouchableOpacity>
               <TouchableOpacity>
-                <Icon name="question-circle" size={20} color={'white'} style={styles.Icon} onPress={goqna}/>
+                <Icon name="question-circle" size={21} color={'white'} style={styles.Icon} onPress={goqna}/>
               </TouchableOpacity>
-              <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/>
+              {/* <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/> */}
+              <TouchableOpacity style={styles.likeContainer}>
+                <Icon name="heart" size={21} color={'white'} style={styles.heartIcon}/>
+                {spaceInfo.likeCount > 0 && <Text style={styles.currLikeCount}>{spaceInfo.likeCount}</Text>}
+              </TouchableOpacity>
             <GameListModal
               visible={isModalVisible}
               onClose={() => setModalVisible(false)}
@@ -274,10 +278,6 @@ const MapScreen: React.FC = () => {
 
         </BottomSheetModal>
 
-        {/* <Button title={'postMessage'} onPress={native_to_web}></Button>
-        <Button title="Get GeoLocation" onPress={() => geoLocation()}/> */}
-        {/* <Text style={{ color: "white" }}> latitude: {latitude} </Text>
-        <Text style={{ color: "white" }}> longitude: {longitude} </Text> */}
         <WebView 
           ref={webRef}
           style={styles.webview}
@@ -462,4 +462,22 @@ const styles = StyleSheet.create({
     // borderWidth: 1, 
     // borderColor: 'red',
   },
+  likeContainer: {
+    flex: 1,
+    // borderWidth: 1, 
+    // borderColor: 'red',
+  },
+  heartIcon: {
+    marginLeft: 12,
+    marginTop: 10,
+  },
+  currLikeCount: {
+    position: 'absolute',
+    flex: 1,
+    top: 14, 
+    left: 20, 
+    color: "white",
+    fontSize: 10,
+    fontWeight: "bold",
+  }
 })
