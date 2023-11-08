@@ -36,7 +36,7 @@ export type SpaceInfo = {
   visitorCount: number
   y: string
   x: string
-  tier: string
+  tier: number
   myLike: boolean
   // place_url: string
 }
