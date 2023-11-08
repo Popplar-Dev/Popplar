@@ -26,6 +26,17 @@ export default function AllPlacesScreen() {
   const [Hotplaces, setHotplaces] = useState<HotPlace[]>([]);
   const [searchedHotplaces, setSearchedHotplaces] = useState<HotPlace[]>([]);
   const [showNoResults, setShowNoResults] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState('전체'); 
+  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
+
+  const images = [
+    { name: "0", uri: require("../assets/mark/flag-iso-color.png") },
+    { name: "1", uri: require("../assets/tier/그림1.png") },
+    { name: "2", uri: require("../assets/tier/그림2.png") },
+    { name: "3", uri: require("../assets/tier/그림3.png") },
+    { name: "4", uri: require("../assets/tier/그림4.png") },
+    { name: "5", uri: require("../assets/tier/그림5.png") },
+  ];
 
   function disassembleHangul(text: string): string {
     const cho = 'rRseEfaqQtTdwWczxvg';
@@ -68,7 +79,7 @@ export default function AllPlacesScreen() {
           const sortedHotplaces = response.data.sort((a: HotPlace, b: HotPlace) => b.visitorCount - a.visitorCount);
           setHotplaces(sortedHotplaces);
           setSearchedHotplaces(sortedHotplaces); 
-          console.log(sortedHotplaces)
+          // console.log(sortedHotplaces)
           setLoading(false);
         })
         .catch((err) => {
@@ -96,6 +107,25 @@ export default function AllPlacesScreen() {
     setShowNoResults(filteredHotplaces.length === 0);
   };
 
+  
+  const handleFilterSelection = (filter: string) => {
+    setSelectedFilter(filter);
+    setIsFilterDropdownOpen(false);
+    if (filter === '전체') {
+      setSearchedHotplaces(Hotplaces);
+    } else {
+      const filteredHotplaces = Hotplaces.filter((item) => item.category === filter);
+      if (filteredHotplaces.length===0) {
+        setSearchedHotplaces(filteredHotplaces)
+        setShowNoResults(true)
+      } else {
+        setSearchedHotplaces(filteredHotplaces);
+      }
+    }
+  };
+  
+  
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>전체 핫플 목록</Text>
@@ -107,6 +137,53 @@ export default function AllPlacesScreen() {
           value={searchQuery}
           onChangeText={handleSearchInputChange}
         />
+        <View>
+          <Pressable
+            style={[styles.filterButton, selectedFilter === '전체' && styles.selectedFilter]}
+            onPress={() => handleFilterSelection('전체')}
+          >
+            <Text style={styles.filterText}>전체보기</Text>
+          </Pressable>
+          <View style={styles.filterContainer}>
+            <Pressable
+              style={[styles.filterButton, selectedFilter === '음식점' && styles.selectedFilter]}
+              onPress={() => handleFilterSelection('음식점')}
+            >
+              <Text style={styles.filterText}>음식점</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.filterButton, selectedFilter === '카페' && styles.selectedFilter]}
+              onPress={() => handleFilterSelection('카페')}
+            >
+              <Text style={styles.filterText}>카페</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.filterButton, selectedFilter === '문화시설' && styles.selectedFilter]}
+              onPress={() => handleFilterSelection('문화시설')}
+            >
+              <Text style={styles.filterText}>문화시설</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.filterButton, selectedFilter === '관광명소' && styles.selectedFilter]}
+              onPress={() => handleFilterSelection('관광명소')}
+            >
+              <Text style={styles.filterText}>관광명소</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.filterButton, selectedFilter === '학교' && styles.selectedFilter]}
+              onPress={() => handleFilterSelection('학교')}
+            >
+              <Text style={styles.filterText}>학교</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.filterButton, selectedFilter === '기타' && styles.selectedFilter]}
+              onPress={() => handleFilterSelection('기타')}
+            >
+              <Text style={styles.filterText}>기타</Text>
+            </Pressable>
+          </View>
+        </View>
+
       </View>
       {loading ? (
         <ActivityIndicator size="large" color="#ffffff" />
@@ -121,17 +198,10 @@ export default function AllPlacesScreen() {
               <View style={styles.hotplaceleft}>
                 <View style={styles.hotplaceinfo}>
                   <View style={styles.title}>
-                    {item.tier>0 ? (
-                      <Image
-                        source={require('../assets/tier/그림5.png')}
+                    <Image
+                        source={images[item.tier].uri}
                         style={styles.tierImage}
                       />
-                    ):(
-                      <Image
-                        source={require('../assets/mark/flag-iso-color.png')}
-                        style={styles.tierImage}
-                      />
-                    )}
                     <Text style={styles.textbig}>{item.placeName}</Text>
                   </View>
                   {/* <Text style={styles.text}>핫플 티어 {item.tier}</Text> */}
@@ -152,7 +222,7 @@ export default function AllPlacesScreen() {
           )}
         />
         ) : (
-          <Text style={styles.text}>결과 없습니다</Text>
+          <Text style={styles.text}>결과가 없습니다</Text>
         )
       )}
     </SafeAreaView>
@@ -174,9 +244,10 @@ const styles = StyleSheet.create({
     color: 'white',
     backgroundColor: 'grey',
     width: '50%',
-    height: 40,
+    height: 38,
     borderRadius: 10,
     alignItems: 'center',
+    justifyContent:'center',
     margin: 10,
   },
   text: {
@@ -222,13 +293,31 @@ const styles = StyleSheet.create({
   tierImage: {
     marginRight:5
   },
-  button: {
-    backgroundColor: 'blue',
-    padding: 10,
+
+  filterContainer: {
+    flexDirection:'row'
   },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
+  filterLabel: {
+
+  },
+  filterButton: {
+    alignItems:'center',
+    marginHorizontal:8,
+    marginBottom:5,
+    paddingHorizontal:5,
+    paddingVertical:3,
+    // borderWidth:1,
+    // borderRadius:5,
+    // borderColor:'#8B90F7',
+    // width:
+  },
+  selectedFilter: {
+    backgroundColor:'#8B90F7',
+    borderRadius:5
+  },
+  filterText:{
+    color:'white',
+    paddingBottom:2
   }
 });
 
