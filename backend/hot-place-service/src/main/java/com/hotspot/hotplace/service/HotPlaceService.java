@@ -33,13 +33,13 @@ public class HotPlaceService {
     private final MemberPositionRepository memberPositionRepository;
 
     @Transactional
-    public List<HotPlaceResDto> findAllHotPlace() {
+    public List<HotPlaceResDto> findAllHotPlace(Long memberId) {
         List<HotPlace> hotPlaceList = hotPlaceRepository.findAll();
         List<HotPlaceResDto> hotPlaceResDtoList = new ArrayList<>();
         for (HotPlace hotPlace : hotPlaceList) {
             HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(
                 hotPlace);
-            hotPlaceResDto = updateHotPlaceDto(hotPlaceResDto, hotPlace);
+            hotPlaceResDto = updateHotPlaceDto(hotPlaceResDto, hotPlace, memberId);
             hotPlaceResDtoList.add(hotPlaceResDto);
         }
 
@@ -47,16 +47,16 @@ public class HotPlaceService {
     }
 
     @Transactional
-    public HotPlaceResDto findHotPlace(Long hotPlaceId) {
+    public HotPlaceResDto findHotPlace(Long hotPlaceId, Long memberId) {
         HotPlace hotPlace = findHotPlaceById(hotPlaceId);
         HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
-        hotPlaceResDto = updateHotPlaceDto(hotPlaceResDto, hotPlace);
+        hotPlaceResDto = updateHotPlaceDto(hotPlaceResDto, hotPlace, memberId);
 
         return hotPlaceResDto;
     }
 
     @Transactional
-    public HotPlaceResDto insertHotPlace(HotPlaceReqDto hotPlaceReqDto) {
+    public HotPlaceResDto insertHotPlace(HotPlaceReqDto hotPlaceReqDto, Long memberId) {
         if (hotPlaceRepository.findById(hotPlaceReqDto.getId()).isPresent()) {
             throw new BadRequestException("이미 핫플레이스로 등록되어있습니다.");
         }
@@ -70,7 +70,7 @@ public class HotPlaceService {
         hotPlaceRepository.save(hotPlace);
 
         HotPlaceResDto hotPlaceResDto = HotPlaceMapper.INSTANCE.entityToHotPlaceResDto(hotPlace);
-        hotPlaceResDto = updateHotPlaceDto(hotPlaceResDto, hotPlace);
+        hotPlaceResDto = updateHotPlaceDto(hotPlaceResDto, hotPlace, memberId);
 
         return hotPlaceResDto;
     }
@@ -134,7 +134,8 @@ public class HotPlaceService {
     }
 
     // -- DTO 필드 추가 -- //
-    public HotPlaceResDto updateHotPlaceDto(HotPlaceResDto hotPlaceResDto, HotPlace hotPlace) {
+    public HotPlaceResDto updateHotPlaceDto(HotPlaceResDto hotPlaceResDto, HotPlace hotPlace,
+        Long memberId) {
         // 2주간 사용자 방문 횟수 체크
         int twoWeeksVisitorCount = visitorRepository.countByVisitedDateAfterAndHotPlaceId(
             LocalDateTime.now().minus(
@@ -144,6 +145,10 @@ public class HotPlaceService {
         int tier = checkTier(twoWeeksVisitorCount, hotPlace.getPlaceType());
         hotPlaceResDto.setTier(tier);
         hotPlace.updateTier(hotPlaceResDto.getTier());
+
+        // 내 인정 여부
+        hotPlaceResDto.setMyLike(
+            likeRepository.findByHotPlaceAndMemberId(hotPlace, memberId).isPresent());
 
         return hotPlaceResDto;
     }
