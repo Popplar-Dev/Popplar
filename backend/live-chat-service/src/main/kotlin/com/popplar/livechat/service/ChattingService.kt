@@ -32,7 +32,7 @@ class ChattingService(
                 content = chattingReqDto.chattingContent
             )
         )
-        return ChattingResDto.create(chatting, chattingMember)
+        return ChattingResDto.create(cryptService, chatting, chattingMember)
     }
 
     fun getChattingByChattingRoomId(chattingRoomId: Long): List<ChattingResDto> {
@@ -40,7 +40,7 @@ class ChattingService(
 
         return chattingList.map {
             val chattingMember = findChattingMemberByMemberId(it.memberId)
-            ChattingResDto.create(it, chattingMember)
+            ChattingResDto.create(cryptService, it, chattingMember)
         }.toList()
     }
 

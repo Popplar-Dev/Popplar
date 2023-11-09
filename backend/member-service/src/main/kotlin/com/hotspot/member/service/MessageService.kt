@@ -34,7 +34,7 @@ class MessageService(
         val receivedMember = findMember(message.receivedMemberId)
 
 
-        return MessageResDto.create(message, sentMember, receivedMember)
+        return MessageResDto.create(cryptService, message, sentMember, receivedMember)
     }
 
     @Transactional
@@ -63,13 +63,31 @@ class MessageService(
         val messageList =
             messageRepository.findAllByReceivedMemberIdAndDeletedFalse(receivedMemberId)
 
-
-        return messageList.stream().map {
+        return messageList.map {
             val sentMember = findMember(it.sentMemberId)
             val receivedMember = findMember(it.receivedMemberId)
 
-            MessageResDto.create(it, sentMember, receivedMember)
-        }.toList()!!
+            MessageResDto.create(cryptService, it, sentMember, receivedMember)
+        }.toMutableList()
+    }
+
+    @Transactional
+    fun deleteMultiMessage(
+        memberId: Long,
+        messageIdList: ArrayList<Long>
+    ): MutableList<MessageResDto> {
+
+        val member = findMember(memberId)
+
+        messageIdList.map {
+            val message = findMessage(it)
+            if (member.id != message.receivedMemberId) {
+                throw RuntimeException("삭제 권한이 없습니다.")
+            }
+            message.delete()
+        }
+
+        return getMyMessageList(memberId)
     }
 
     fun findMessage(messageId: Long): Message {

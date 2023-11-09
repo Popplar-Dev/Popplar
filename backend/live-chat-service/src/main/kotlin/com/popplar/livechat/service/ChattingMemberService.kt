@@ -25,7 +25,7 @@ class ChattingMemberService(
             )
         )
 
-        return ChattingMemberResDto.create(chattingMember)
+        return ChattingMemberResDto.create(cryptService, chattingMember)
 
     }
 
@@ -36,6 +36,6 @@ class ChattingMemberService(
             chattingMemberRepository.findByMemberId(chattingMemberReqDto.memberId)
                 ?: throw RuntimeException("회원을 찾을 수 없습니다.")
         chattingMember.update(chattingMemberReqDto)
-        return ChattingMemberResDto.create(chattingMember)
+        return ChattingMemberResDto.create(cryptService, chattingMember)
     }
 }
