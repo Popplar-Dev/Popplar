@@ -19,7 +19,7 @@ function connect() {
     setConnected(true);
     console.log('Connected: ' + frame);
     stompClient.subscribe('/room/21414107', function (greeting) {
-      showGreeting(JSON.parse(greeting.body).content);
+      showGreeting(JSON.parse(greeting.body));
     });
   });
 }
@@ -38,7 +38,8 @@ function sendName() {
 }
 
 function showGreeting(message) {
-  $("#greetings").append("<tr><td>" + message + "</td></tr>");
+  $("#greetings").append("<tr><td>" + message.memberName + " :        " + message.chattingContent + "         " + message.chattingCreatedAt + "</td></tr>");
+
 }
 
 $(function () {
