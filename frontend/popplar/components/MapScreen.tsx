@@ -79,10 +79,8 @@ const MapScreen: React.FC = () => {
 
   // 전체 핫플레이스 검색 클릭 시, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
   useEffect(() => {
-    console.log('hello', spaceId)
     getIdHotplace(spaceId)
     .then((res) => {
-      console.log(res)
       const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
   
       const loc: { y: string, x: string } = {y: y, x: x}
@@ -110,7 +108,7 @@ const MapScreen: React.FC = () => {
         window.postMessage(${JSON.stringify(locationData)}, '*')
         `);
       }
-    }).catch(() => console.log('핫플레이스가 아니므로, 검색한 정보로 출력합니다.'))
+    }).catch(() => console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.'))
   }, [spaceId])
   
 
@@ -271,12 +269,14 @@ const MapScreen: React.FC = () => {
           <View style={styles.spaceName}>
             <NameBox h={38} text={spaceInfo.place_name} />
             {!spaceInfo.placeType ? (
+              <>
               <HotRegisterButton 
               props={spaceInfo} 
               setSpaceInfo={setSpaceInfo} 
               setSpaceLike={setSpaceLike}
               setSpaceLikeCount={setSpaceLikeCount}
               />
+            </>
             ): (
               <View style={styles.buttons}>
               <Icon name="comments" size={21} color={'white'} style={styles.Icon} />
