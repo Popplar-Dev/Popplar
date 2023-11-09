@@ -21,7 +21,7 @@ class MemberController(
 
     @PatchMapping("/{memberId}")
     fun updateMemberProfile(
-            @RequestHeader("Member-Id") myId: String,
+            @RequestHeader("Member-Id") myId: Long,
             @PathVariable memberId: Long,
             @RequestBody memberUpdateReqDto: MemberUpdateReqDto
     ): ResponseEntity<MemberProfileResDto> {
@@ -33,14 +33,14 @@ class MemberController(
     }
 
     @DeleteMapping("/{memberId}")
-    fun deleteMember(@RequestHeader("Member-Id") myId: String, @PathVariable memberId: Long) {
+    fun deleteMember(@RequestHeader("Member-Id") myId: Long, @PathVariable memberId: Long) {
         authService.checkAuth(memberId, myId)
         memberService.deleteMember(memberId)
     }
 
     @PostMapping("/block/{blockedMemberId}")
     fun blockMember(
-            @RequestHeader("Member-Id") myId: String,
+            @RequestHeader("Member-Id") myId: Long,
             @PathVariable memberId: Long,
             @PathVariable blockedMemberId: Long
     ) {
@@ -49,7 +49,7 @@ class MemberController(
     }
 
     @DeleteMapping("/block/{memberId}/{blockedMemberId}")
-    fun unBlockMember(@RequestHeader("Member-Id") myId: String, @PathVariable memberId: Long, @PathVariable blockedMemberId: Long) {
+    fun unBlockMember(@RequestHeader("Member-Id") myId: Long, @PathVariable memberId: Long, @PathVariable blockedMemberId: Long) {
         authService.checkAuth(memberId, myId)
         memberService.unBlockMember(memberId, blockedMemberId)
     }
