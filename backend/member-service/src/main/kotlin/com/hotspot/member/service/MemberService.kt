@@ -4,6 +4,8 @@ import com.hotspot.global.eureka.dto.ChattingMemberReqDto
 import com.hotspot.global.eureka.dto.ChattingMemberResDto
 import com.hotspot.global.oauth.dto.OAuthMemberDto
 import com.hotspot.global.service.WebClientService
+import com.hotspot.member.dto.MemberInfoDto
+import com.hotspot.member.dto.MemberInfoResponseDto
 import com.hotspot.member.dto.MemberProfileResDto
 import com.hotspot.member.dto.MemberUpdateReqDto
 import com.hotspot.member.entity.BlockedMember
@@ -102,5 +104,10 @@ class MemberService(
     fun findMemberByEncryptedId(encryptedId: Long): Member {
         return memberRepository.findById(cryptService.decrypt(encryptedId))
                 .orElseThrow { throw ArithmeticException("사용자 정보가 없습니다.") }
+    }
+
+    fun getMemberInfo(memberIdList: List<Long>): MemberInfoResponseDto {
+        val memberList = memberRepository.findByIdIn(memberIdList)
+        return MemberInfoResponseDto(memberList.map { MemberInfoDto.create(it) }.toMutableList())
     }
 }

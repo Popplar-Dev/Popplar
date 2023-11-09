@@ -53,4 +53,9 @@ class MemberController(
         authService.checkAuth(memberId, myId)
         memberService.unBlockMember(memberId, blockedMemberId)
     }
+
+    @PostMapping("/info")
+    fun getMemberInfoList(@RequestBody memberIdList: List<Long>): ResponseEntity<MemberInfoResponseDto> {
+        return ResponseEntity<MemberInfoResponseDto>(memberService.getMemberInfo(memberIdList),HttpStatus.OK)
+    }
 }
