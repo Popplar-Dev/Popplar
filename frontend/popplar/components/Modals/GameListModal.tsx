@@ -42,7 +42,6 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
   }
 
   useEffect(() => {
-    console.log(spaceid)
     const isLogin = async () => {
       const AccessToken = await AsyncStorage.getItem('userAccessToken');
       if (AccessToken !== null) {
@@ -51,7 +50,6 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
           {headers: {'Access-Token': userAccessToken}}
         )
         .then((response) => {
-          // console.log(response.data);
           setgameinfo(response.data)
           setLoading(false); 
         })
@@ -62,7 +60,7 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
       }
     }
     isLogin()
-  }, []);
+  }, [spaceid, gameinfo]);
   
   // console.log(gameinfo)
 
