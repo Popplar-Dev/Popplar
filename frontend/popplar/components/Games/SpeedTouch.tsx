@@ -1,14 +1,30 @@
 import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, Pressable, Switch } from 'react-native';
 import { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
 
-function SpeedTouch() {
+type spaceparam = {
+  spaceId: number;
+  mybestscore:number
+};
+
+function SpeedTouch({route}: spaceparam) {
+  const gameinfo = route.params;
+  // console.log(gameinfo)
+
+	const [mybestscore, setMybestscore] = useState<number | null>(null);
 	const [gameStarted, setGameStarted] = useState(false);
   const [gameColor, setGameColor] = useState('gray');
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [reactionTime, setReactionTime] = useState<number | null>(null);
 
+  useEffect(() =>{
+    setMybestscore(gameinfo.mybestscore)
+  },[])
+
   useEffect(() => {
+    // setMybestscore(gameinfo.mybestscore)
     if (gameStarted) {
       const timeout = setTimeout(() => {
         setGameColor('#8B90F7');
@@ -36,6 +52,38 @@ function SpeedTouch() {
         const endTime = new Date();
         const reactionTime = (endTime.getTime() - startTime.getTime()) / 1000;
         setReactionTime(reactionTime);
+        // console.log(reactionTime)
+        const isLogin = async () => {
+          const AccessToken = await AsyncStorage.getItem('userAccessToken');
+          if (AccessToken !== null) {
+            const userAccessToken = JSON.parse(AccessToken);
+            const insertscore = {
+              type:"REFLEXES",
+              hotPlaceId: gameinfo.spaceId,
+              points: reactionTime*(-100)
+            }
+            reactionTime*(-100)
+            axios.post(`https://k9a705.p.ssafy.io:8000/game/insert-result`,
+              insertscore,
+              {headers: {'Access-Token': userAccessToken}}
+            )
+            .then((response) => {
+              setMybestscore(reactionTime)
+              axios.get(`https://k9a705.p.ssafy.io:8000/game/info/${gameinfo.spaceId}`,
+              {headers: {'Access-Token': userAccessToken}}
+              )
+              .then((response)=>{
+                setMybestscore(response.data.maxReflexesPoints/(-100))
+              })
+
+            console.log(response.data);
+            })
+            .catch((err) => {
+              console.log("에러 메시지 :", err);
+            })
+          }
+        }
+        isLogin()
         setGameStarted(false); 
       }
     }
@@ -51,20 +99,26 @@ function SpeedTouch() {
   return (
     <View style={styles.container}>
       <View style={styles.scorecomponent}>
-        <View style={styles.conquerorscore}>
+        {/* <View style={styles.conquerorscore}>
           <Text style={styles.scoretext}>
             정복자 점수: 
           </Text>
           <Text style={styles.scoretext}>
             현재 점수: 
           </Text>
-        </View>
+        </View> */}
         <View style={styles.myscore}>
+          {mybestscore ? (
+            <Text style={styles.scoretext}>
+              내 최고 점수: {mybestscore.toFixed(3)} 초
+            </Text>
+            ):(
+              <Text style={styles.scoretext}>
+                내 최고 점수: 초
+              </Text>
+            )}
           <Text style={styles.scoretext}>
-            내 최고 점수: 
-          </Text>
-          <Text style={styles.scoretext}>
-            현재 점수: 
+            현재 점수: {reactionTime} 초
           </Text>
         </View>
       </View>
@@ -93,6 +147,9 @@ function SpeedTouch() {
           </View>
         )}
         
+      </View>
+      <View>
+
       </View>
     </View>
   );

@@ -1,29 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, Pressable, Modal, Image, BackHandler } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 
-export default function ClickGame() {
+export default function ClickGame({ route }) {
+  const spaceId = route.params.spaceId; // 이런 방식으로 사용 가능
   const navigation = useNavigation();
+  const [gameInfo, setGameInfo] = useState(route.params.gameInfo);
   const [gameStarted, setGameStarted] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(10); // 5 seconds
   const [modalVisible, setModalVisible] = useState(false);
   const [planetImage, setPlanetImage] = useState(require('../../assets/planet/1.png')); // 초기 이미지
 
+  
   useEffect(() => {
     let timer;
-
     if (gameStarted && timeRemaining > 0) {
       timer = setInterval(() => {
         setTimeRemaining(prevTime => prevTime - 1);
       }, 1000);
     }
 
-    if (timeRemaining === 0) {
+    if (gameStarted && timeRemaining === 0) {
       setGameStarted(false);
       setModalVisible(true);
+      handleGameEnd();
     }
+
     // 클릭 횟수가 10, 20, 30, 40, 50일 때 이미지 업데이트
     if (clickCount < 10) {
       setPlanetImage(require('../../assets/planet/1.png'));
@@ -44,11 +50,46 @@ export default function ClickGame() {
     };
   }, [gameStarted, timeRemaining]);
 
-  const handleStartGame = () => {
+  const handleGameStart = () => {
+    console.log("gameInfo:", gameInfo)
     setGameStarted(true);
     setTimeRemaining(10); // Reset the timer
     setClickCount(0); // Reset click count
     setModalVisible(false);
+  };
+
+  const handleGameEnd = async () => {
+    // 게임 종료 시 AccessToken을 AsyncStorage에서 가져온 후 axios 요청
+    const AccessToken = await AsyncStorage.getItem('userAccessToken');
+    const requestData = {
+      type:"FIGHTING",
+      hotPlaceId: spaceId,
+      points: clickCount
+    };
+
+    if (AccessToken !== null) {
+      const userAccessToken = JSON.parse(AccessToken);
+      console.log(AccessToken);
+      axios.post(`https://k9a705.p.ssafy.io:8000/game/insert-result`, requestData,
+        { headers: {'Access-Token': userAccessToken} }
+        )
+        .then(() => {
+          axios.get(`https://k9a705.p.ssafy.io:8000/game/info/${spaceId}`,
+          { headers: {'Access-Token': userAccessToken} }
+          )
+          .then((response) => {
+            console.log("infiunfi",response.data)
+            setGameInfo(response.data)
+          })
+          .catch((err) => {
+            console.log("gameInfo ERROR :", err)
+          });
+        })
+        .catch((err) => {
+          console.log("insert result ERROR :", err)
+        });
+    
+      }
   };
 
   const handleButtonClick = () => {
@@ -57,7 +98,7 @@ export default function ClickGame() {
     }
   };
 
-  const handleEndGame = () => {
+  const handleQuitGame = () => {
     navigation.goBack();
   };
 
@@ -77,7 +118,9 @@ export default function ClickGame() {
   return (
     <View style={styles.container}>
       {gameStarted && (
-        <View style={styles.gameContainer}>          
+        <View style={styles.gameContainer}>
+          <Text style={styles.text}>나의 최고 점수 : {gameInfo.myMaxFightingPoints}</Text>
+          <Text style={styles.text}>전체 최고 점수 : {gameInfo.maxFightingPoints}</Text>
           <Image source={planetImage} style={styles.planetImage} />
           <Text style={styles.text}> CLICK : {clickCount}</Text>
           <Text style={styles.text}> 남은 시간 : {timeRemaining} 초</Text>
@@ -91,7 +134,7 @@ export default function ClickGame() {
       {!gameStarted && (
         <>
           <Image source={planetImage} style={styles.planetImage} />
-          <Pressable onPress={handleStartGame} style={styles.buttonContainer}>
+          <Pressable onPress={handleGameStart} style={styles.buttonContainer}>
             <Text style={styles.buttonText}>게임 시작</Text>
           </Pressable>
         </>
@@ -109,7 +152,7 @@ export default function ClickGame() {
             <Pressable onPress={handleModalClose} style={styles.modalButton}>
               <Text style={styles.buttonText}>예</Text>
             </Pressable>
-            <Pressable onPress={handleEndGame} style={styles.modalButton}>
+            <Pressable onPress={handleQuitGame} style={styles.modalButton}>
               <Text style={styles.buttonText}>아니오</Text>
             </Pressable>
           </View>

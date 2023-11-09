@@ -14,19 +14,31 @@ interface GameListModalProps {
   spaceid: number;
 }
 
+interface GameInfo {
+  conquerorInfo: {
+    name: string;
+    profileImage: string;
+  };
+  conquerorPoints: number;
+  hasConqueror: boolean;
+  maxFightingPoints: number;
+  maxReflexesPoints: number;
+  myMaxFightingPoints: number;
+  myMaxReflexesPoints: number;
+}
+
 export default function GameListModal({ visible, onClose,spaceid}:GameListModalProps) {
   const navigation = useNavigation();
-  const [myrefscore, setrefMyScores] = useState<{ points: number, type: string }[] | []>([]);
-  const [myfightingscore, setfightingMyScores] = useState<{ points: number, type: string }[]| []>([]);
+  const [gameinfo, setgameinfo] = useState<GameInfo | null>(null);
   const [conqueror, setConquerorScores] = useState()
   const [loading, setLoading] = useState(true);
 
 	function gospeedtouchgame() {
-    navigation.navigate('SpeedTouch' as never)
+    navigation.navigate('SpeedTouch' , {spaceId: spaceid, mybestscore:gameinfo.myMaxReflexesPoints/(-100)})
   }
 
 	function goClickGame() {
-    navigation.navigate('ClickGame' as never)
+    navigation.navigate('ClickGame', {spaceId: spaceid, gameInfo: gameinfo})
   }
 
   useEffect(() => {
@@ -35,24 +47,12 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
       const AccessToken = await AsyncStorage.getItem('userAccessToken');
       if (AccessToken !== null) {
         const userAccessToken = JSON.parse(AccessToken);
-        axios.get(`https://k9a705.p.ssafy.io:8000/game/get-my-stat/${spaceid}/REFLEXES`,
+        axios.get(`https://k9a705.p.ssafy.io:8000/game/info/${spaceid}`,
           {headers: {'Access-Token': userAccessToken}}
         )
         .then((response) => {
-          console.log(response.data);
-          setrefMyScores(response.data.gameDtoList);
-          setLoading(false); 
-        })
-        .catch((err) => {
-          console.log("에러 메시지 :", err);
-          setLoading(false); 
-        })
-        axios.get(`https://k9a705.p.ssafy.io:8000/game/get-my-stat/${spaceid}/FIGHTING`,
-          {headers: {'Access-Token': userAccessToken}}
-        )
-        .then((response) => {
-          // console.log(response.data.gameDtoList[0]);
-          setfightingMyScores(response.data.gameDtoList);
+          // console.log(response.data);
+          setgameinfo(response.data)
           setLoading(false); 
         })
         .catch((err) => {
@@ -62,9 +62,9 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
       }
     }
     isLogin()
-    // console.log(myscore)
   }, []);
-
+  
+  // console.log(gameinfo)
 
   return (
     <Modal
@@ -85,21 +85,29 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
           <View style={styles.modalContent}>
             <View style={styles.modalhead}>
               <Text style={styles.headtext}>Game List</Text>
-              <Text style={styles.headtext}>정복자 : </Text>
+              {gameinfo!.hasConqueror ? (
+                <View style={styles.conquerorbox}> 
+                  <Text style={styles.headtext}>오늘의 정복자 : {gameinfo!.conquerorInfo.name}</Text>
+                  <Text style={styles.headtext}>정복자 점수 : {gameinfo!.conquerorPoints} 점</Text>
+                </View>
+              ):(
+                <View>
+                  <Text style={styles.headtext}>아직 정복자가 없습니다!</Text>
+                </View>
+              )}
             </View>
               <View style={styles.gamecontainer}>
                 <View style={styles.gametop}>
                   <Text style={styles.textbig}>반응 속도 테스트</Text>
                   <View style={styles.gameinfo}>
-                  {myrefscore.length === 0 ? (
+                  {gameinfo ? (
                     <View style={styles.gameinfotitle}>
-                      <Text style={styles.text}>내 최고 기록: 아직 기록이 없습니다</Text>
-                      <Text style={styles.text}>전체 최고 기록: </Text>
+                      <Text style={styles.text}>오늘 나의 최고 기록 : {gameinfo.myMaxReflexesPoints/(-100)} 초</Text>
+                      <Text style={styles.text}>전체 최고 기록 : {gameinfo.maxReflexesPoints/(-100)} 초</Text>
                     </View>
                     ):(
                       <View style={styles.gameinfotitle}>
-                        <Text style={styles.text}>내 최고 기록: {myrefscore[0].points}</Text>
-                        <Text style={styles.text}>전체 최고 기록: </Text>
+                        <ActivityIndicator size="large" color="#ffffff" />
                       </View>
                     )} 
                     <Pressable style={styles.gamestart} onPress={gospeedtouchgame}>
@@ -110,15 +118,14 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
                 <View style={styles.gamebottom}>
                   <Text style={styles.textbig}>최대한 많이 클릭해보슈</Text>
                   <View style={styles.gameinfo}>
-                  {myfightingscore.length === 0 ? (
+                  {gameinfo ? (
                     <View style={styles.gameinfotitle}>
-                      <Text style={styles.text}>내 최고 기록: 아직 기록이 없습니다</Text>
-                      <Text style={styles.text}>전체 최고 기록: </Text>
+                      <Text style={styles.text}>오늘 나의 최고 기록 : {gameinfo.myMaxFightingPoints} 회</Text>
+                      <Text style={styles.text}>전체 최고 기록 : {gameinfo.maxFightingPoints} 회</Text>
                     </View>
                     ):(
                       <View style={styles.gameinfotitle}>
-                        <Text style={styles.text}>내 최고 기록: {myfightingscore[0].points}</Text>
-                        <Text style={styles.text}>전체 최고 기록: </Text>
+                        <ActivityIndicator size="large" color="#ffffff" />
                       </View>
                     )} 
                     <Pressable style={styles.gamestart} onPress={goClickGame}>
@@ -159,6 +166,7 @@ const styles = StyleSheet.create({
     marginBottom:20,
   },
   modalhead: {
+    alignItems: 'center',
   },
   modalContainer: {
     flex: 1,
@@ -215,7 +223,12 @@ const styles = StyleSheet.create({
     width:'100%'
   },
   gameinfotitle: {
-    justifyContent:'space-between'
+    justifyContent:'space-between',
+    paddingTop:10,
+    paddingHorizontal:20,
+    paddingBottom:10,
+    borderRadius:10,
+    backgroundColor:'#2c2c2c'
   },
   modalText: {
     fontSize: 18,
@@ -231,5 +244,13 @@ const styles = StyleSheet.create({
     alignItems:'center',
     width:80,
     height:35
+  },
+  conquerorbox: {
+    // borderWidth:1, 
+    paddingTop:10,
+    paddingHorizontal:20,
+    paddingBottom:5,
+    borderRadius:10,
+    backgroundColor:'#2c2c2c'
   }
 });
