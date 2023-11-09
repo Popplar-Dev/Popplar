@@ -115,8 +115,8 @@ class MemberService(
 
     @KafkaListener(topics = ["TOPIC"])
     fun consume(@Payload data: String): String {
-        println(data);
-        val testDto= TestDto.create(data)
+        println(data)
+        val testDto = TestDto.create(data)
         val jsonValue = objectMapper.writeValueAsString(testDto)
         kafkaTemplate.send("TEST_RETURN", jsonValue)
         return "Message: $data"

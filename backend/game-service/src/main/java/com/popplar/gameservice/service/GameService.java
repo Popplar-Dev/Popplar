@@ -40,6 +40,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 @Slf4j
 public class GameService {
+
     //TODO: 1. 등수 계산 로직 개발
     //TODO: 2. 시간 범위 처리 로직 메서드화로 코드 중복 감소
     private final KafkaTemplate<String, Object> kafkaTemplate;
@@ -250,7 +251,7 @@ public class GameService {
     }
 
     @KafkaListener(topics = "TEST_RETURN", groupId = "foo")
-    public void getTestKafka(ConsumerRecord temp){
+    public void getTestKafka(ConsumerRecord temp) {
         log.info((String) temp.value());
         log.info(temp.toString());
     }
