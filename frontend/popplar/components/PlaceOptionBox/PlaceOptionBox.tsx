@@ -55,11 +55,11 @@ return (
         </Text>
       </TouchableOpacity>
     </View>
-    <GameListModal
+    {type === 'game' && <GameListModal
       visible={isModalVisible}
       onClose={() => setModalVisible(false)}
       spaceid={spaceId}
-    />
+    />}
   </View>
   );
 };
