@@ -8,7 +8,7 @@ import axios from 'axios';
 export default function ClickGame({ route }) {
   const spaceId = route.params.spaceId; // 이런 방식으로 사용 가능
   const navigation = useNavigation();
-  const [gameInfo, setGameInfo] = useState({ userHighScore: 0, totalHighScore: 0 });
+  const [gameInfo, setGameInfo] = useState(route.params.gameInfo);
   const [gameStarted, setGameStarted] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(10); // 5 seconds
@@ -51,8 +51,9 @@ export default function ClickGame({ route }) {
   }, [gameStarted, timeRemaining]);
 
   const handleGameStart = () => {
+    console.log("gameInfo:", gameInfo)
     setGameStarted(true);
-    setTimeRemaining(5); // Reset the timer
+    setTimeRemaining(10); // Reset the timer
     setClickCount(0); // Reset click count
     setModalVisible(false);
   };
@@ -68,18 +69,26 @@ export default function ClickGame({ route }) {
 
     if (AccessToken !== null) {
       const userAccessToken = JSON.parse(AccessToken);
+      console.log(AccessToken);
       axios.post(`https://k9a705.p.ssafy.io:8000/game/insert-result`, requestData,
         { headers: {'Access-Token': userAccessToken} }
         )
-        .then((response) => {
-          setGameInfo({
-            userHighScore: response.data.userHighScore,
-            totalHighScore: response.data.totalHighScore
+        .then(() => {
+          axios.get(`https://k9a705.p.ssafy.io:8000/game/info/${spaceId}`,
+          { headers: {'Access-Token': userAccessToken} }
+          )
+          .then((response) => {
+            console.log("infiunfi",response.data)
+            setGameInfo(response.data)
+          })
+          .catch((err) => {
+            console.log("gameInfo ERROR :", err)
           });
         })
         .catch((err) => {
-          console.log("ERROR :", err)
+          console.log("insert result ERROR :", err)
         });
+    
       }
   };
 
@@ -110,8 +119,8 @@ export default function ClickGame({ route }) {
     <View style={styles.container}>
       {gameStarted && (
         <View style={styles.gameContainer}>
-          <Text style={styles.text}>나의 최고 점수 : {gameInfo.userHighScore}</Text>
-          <Text style={styles.text}>전체 최고 점수 : {gameInfo.totalHighScore}</Text>
+          <Text style={styles.text}>나의 최고 점수 : {gameInfo.myMaxFightingPoints}</Text>
+          <Text style={styles.text}>전체 최고 점수 : {gameInfo.maxFightingPoints}</Text>
           <Image source={planetImage} style={styles.planetImage} />
           <Text style={styles.text}> CLICK : {clickCount}</Text>
           <Text style={styles.text}> 남은 시간 : {timeRemaining} 초</Text>
