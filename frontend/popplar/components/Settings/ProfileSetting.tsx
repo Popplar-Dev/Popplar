@@ -19,16 +19,7 @@ function ProfileSetting() {
   const [photo ,setPhoto] = useState('')
   const [userinfo, setUserInfo] = useRecoilState(userInfoState);
   const user = useRecoilValue(userInfoState);
-  const profileimages = [
-    { name: "boy1", uri: require("popplar/assets/avatars/04.png") },
-    { name: "boy2", uri: require("popplar/assets/avatars/07.png") },
-    { name: "boy3", uri: require("popplar/assets/avatars/20.png") },
-    { name: "boy4", uri: require("popplar/assets/avatars/13.png") },
-    { name: "girl1", uri: require("popplar/assets/avatars/02.png") },
-    { name: "girl2", uri: require("popplar/assets/avatars/03.png") },
-    { name: "girl3", uri: require("popplar/assets/avatars/10.png") },
-    { name: "girl4", uri: require("popplar/assets/avatars/12.png") },
-  ];
+
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -42,9 +33,6 @@ function ProfileSetting() {
     setNewNickname(nickname);
     console.log(user)
   };
-  // useEffect(() => {
-  //   console.log(modalVisible)
-  // }, []);
 
   const saveNickname = () => {
     console.log(user)
@@ -112,7 +100,7 @@ function ProfileSetting() {
           )}
           <View style={styles.profileImageContainer}>
             <Image
-              source={require('popplar/assets/profile.png')}
+              source={{uri:userinfo.profileImage}}
               style={styles.profileImage}
             />
           </View>
@@ -199,8 +187,8 @@ const styles = StyleSheet.create({
 		marginTop:20
   },
   profileImage: {
-    width: 100,
-    height: 100,
+    width: 145,
+    height: 145,
     borderRadius: 75, 
   },
 	buttonImage: {

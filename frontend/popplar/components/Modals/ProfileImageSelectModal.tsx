@@ -3,6 +3,11 @@ import { Modal, View, Text, Pressable, StyleSheet, TouchableWithoutFeedback,Imag
 import { BlurView } from "@react-native-community/blur";
 import { useState, useEffect } from 'react';
 import axios from "axios";
+import { S3_URL } from '@env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { userInfoState } from '../recoil/userState';
+import { useRecoilState } from 'recoil';
+
 
 interface ImageSelect {
   visible: boolean;
@@ -11,22 +16,51 @@ interface ImageSelect {
 
 export default function ProfileImageSelectModal({ visible, onClose }:ImageSelect) {
 	const profileimages = [
-    { name: "boy1", uri: require("popplar/assets/avatars/04.png") },
-    { name: "boy2", uri: require("popplar/assets/avatars/07.png") },
-    { name: "boy3", uri: require("popplar/assets/avatars/20.png") },
-    { name: "boy4", uri: require("popplar/assets/avatars/13.png") },
-    { name: "boy5", uri: require("popplar/assets/avatars/21.png") },
-    { name: "girl1", uri: require("popplar/assets/avatars/02.png") },
-    { name: "girl2", uri: require("popplar/assets/avatars/03.png") },
-    { name: "girl3", uri: require("popplar/assets/avatars/10.png") },
-    { name: "girl4", uri: require("popplar/assets/avatars/12.png") },
+    { avatar: S3_URL+'avatar1.png' },
+    { avatar: S3_URL+'avatar2.png' },
+    { avatar: S3_URL+'avatar3.png' },
+    { avatar: S3_URL+'avatar4.png' },
+    { avatar: S3_URL+'avatar5.png' },
+    { avatar: S3_URL+'avatar6.png' },
+    { avatar: S3_URL+'avatar7.png' },
+    { avatar: S3_URL+'avatar8.png' },
+    { avatar: S3_URL+'avatar9.png' },
+    
   ];
 	const [selectedImage, setSelectedImage] = useState(null);
+  const [userinfo, setUserInfo] = useRecoilState(userInfoState);
 
 	// const selectImage = (image) => {
   //   setSelectedImage(image);
   //   // closeModal();
   // };
+
+  const saveProfileimage = (avatar:string) => {
+			const updatedimage = {
+				profileImage: avatar,
+			};
+			const isLogin = async () => {
+        const AccessToken = await AsyncStorage.getItem('userAccessToken');
+        if (AccessToken !== null) {
+					const userAccessToken = JSON.parse(AccessToken);
+          console.log(userinfo)
+          console.log(avatar)
+					axios.patch(`https://k9a705.p.ssafy.io:8000/member/${userinfo.id}`, updatedimage, 
+						{headers: {'Access-Token': userAccessToken}}
+					)
+					.then((response) => {
+            console.log(response.data)
+						setUserInfo({ ...userinfo, profileImage: avatar});
+            onClose()
+          })
+					.catch((err) => {
+						console.error("실패...", err);
+					}); 
+				}
+			}
+			isLogin()
+		};
+
   
   return (
     <Modal
@@ -46,8 +80,8 @@ export default function ProfileImageSelectModal({ visible, onClose }:ImageSelect
               <Text style={styles.text}>아바타 선택</Text>
 							<View style={styles.imagecontainer}>
 								{profileimages.map((image, index) => (
-									<Pressable key={index}>
-										<Image source={image.uri} style={styles.modalImage} />
+									<Pressable key={index} onPress={() => saveProfileimage(image.avatar)}>
+										<Image source={{uri: image.avatar}} style={styles.modalImage} />
 									</Pressable>
 								))}
 							</View>

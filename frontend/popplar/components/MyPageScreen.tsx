@@ -103,7 +103,7 @@ function MyPageScreen() {
           </>
           <View style={styles.profileImageContainer}>
             <Image
-              source={require('../assets/profile.png')}
+              source={{uri:userinfo.profileImage}}
               style={styles.profileImage}
             />
           </View>
@@ -210,8 +210,8 @@ const styles = StyleSheet.create({
 		marginTop:20,
   },
   profileImage: {
-    width: 100,
-    height: 100,
+    width: 145,
+    height: 145,
     borderRadius: 75, 
   },
 	buttonImage: {

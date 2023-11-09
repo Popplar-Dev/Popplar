@@ -76,7 +76,7 @@ function SpeedTouch({route}: spaceparam) {
                 setMybestscore(response.data.maxReflexesPoints/(-100))
               })
 
-            console.log(response.data);
+            // console.log(response.data);
             })
             .catch((err) => {
               console.log("에러 메시지 :", err);
