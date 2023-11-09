@@ -45,14 +45,14 @@ class ChattingService(
     }
 
     fun getMyChattingRoomId(memberId: Long): Long {
-        val chattingRoom = chattingRoomRepository.findByMemberId(memberId)
+        val chattingRoom = chattingRoomRepository.findByMemberIdAndDeletedFalse(memberId)
             ?: return 0
         return chattingRoom.chattingRoomId
     }
 
     @Transactional
     fun enterChattingRoom(chattingRoomId: Long, memberId: Long) {
-        if (chattingRoomRepository.findByChattingRoomIdAndMemberId(
+        if (chattingRoomRepository.findByChattingRoomIdAndMemberIdAndDeletedFalse(
                 chattingRoomId,
                 memberId
             ) != null
@@ -81,7 +81,7 @@ class ChattingService(
         chattingRoomId: Long,
         memberId: Long
     ): ChattingRoom {
-        return chattingRoomRepository.findByChattingRoomIdAndMemberId(chattingRoomId, memberId)
+        return chattingRoomRepository.findByChattingRoomIdAndMemberIdAndDeletedFalse(chattingRoomId, memberId)
             ?: throw RuntimeException("채팅방에 참여하지 않은 회원입니다")
     }
 }
