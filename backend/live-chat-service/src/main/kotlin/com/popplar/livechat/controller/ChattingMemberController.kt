@@ -22,9 +22,6 @@ class ChattingMemberController (
 
     @PatchMapping
     fun updateChattingMember(@RequestBody chattingMemberReqDto: ChattingMemberReqDto): ChattingMemberResDto {
-        println(chattingMemberReqDto.memberId)
-        println(chattingMemberReqDto.memberName)
         return chattingMemberService.updateChattingMember(chattingMemberReqDto)
     }
-
 }
