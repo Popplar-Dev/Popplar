@@ -24,26 +24,38 @@ import ChatInput from './ChatInput';
 import {ChatMessageType} from '../../types/chatType';
 import { getToken } from '../services/getAccessToken';
 
+import axios from 'axios';
+
 export default function ChatRoom({roomId}: {roomId: number}) {
   const navigation = useNavigation();
-  const [messages, setMessages] = useState<ChatMessageType[]>([
-    {
-      'message-id': '3333',
-      chattingRoomId: 1,
-      messageType: 'others',
-      memberId: 4,
-      memberName: 'nickname',
-      chattingContent: '하이',
-      date: '2023년 11월 3일 목요일',
-      time: '오전 11:20',
-    },
-  ]);
+  const [roomName, setRoomName] = useState('Chat');
+  const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const memberId = useRecoilValue(userIdState);
   const clientRef = useRef<Client|null>(null);
   const flatListRef = useRef<FlatList | null>(null);
 
-  console.log('mount 몇 번?')
+  // console.log('mount 몇 번?')
+
+  useEffect(()=> {
+    async function getRoomName() {
+      const userAccessToken = await getToken();
+      try {
+        const url = `https://k9a705.p.ssafy.io:8000/hot-place/${roomId}`
+        const res = await axios.get(url, {
+          headers: { 'Access-Token': userAccessToken}
+        })
+
+        setRoomName(res.data.placeName)
+
+      } catch (e) {
+        console.error(e); 
+      }
+
+    }
+
+    getRoomName(); 
+  }, [])
 
   useFocusEffect(
     useCallback(() => {
@@ -58,7 +70,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
           return;
         }
 
-        console.log(clientRef.current); 
+        // console.log(clientRef.current); 
         if (clientRef.current) {
           console.log('client active? 1', clientRef.current.active)
           console.log('client connected? 1', clientRef.current.connected)
@@ -156,7 +168,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
 
         stompClient.activate();
         clientRef.current = stompClient;
-        console.log(stompClient)
+        // console.log(stompClient)
 
         if (stompClient) {
           console.log('client active? 2', stompClient.active)
@@ -274,7 +286,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
   return (
     <TouchableWithoutFeedback onPress={pressScreen}>
       <KeyboardAvoidingView style={styles.rootContainer}>
-        <ChatHeader isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+        <ChatHeader roomName={roomName} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
         <View style={styles.chatBubblesContainer}>
           <FlatList
             data={messages}

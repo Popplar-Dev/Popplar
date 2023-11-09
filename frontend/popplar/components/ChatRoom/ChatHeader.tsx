@@ -4,11 +4,12 @@ import {Menu, PaperProvider} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 type headerProps = {
+  roomName: string;
   isMenuOpen: boolean;
   setIsMenuOpen: Function;
 };
 
-export default function ChatHeader({isMenuOpen, setIsMenuOpen}: headerProps) {
+export default function ChatHeader({roomName, isMenuOpen, setIsMenuOpen}: headerProps) {
   const navigation = useNavigation();
 
   const goBack = () => {
@@ -28,8 +29,8 @@ export default function ChatHeader({isMenuOpen, setIsMenuOpen}: headerProps) {
                     <Icon name="chevron-back" color="#8B90F7" size={25} />
                   </Pressable>
                 </View>
-                <View>
-                  <Text style={styles.title}>Chat</Text>
+                <View style={styles.titleContainer}>
+                  <Text style={styles.title}>{roomName}</Text>
                 </View>
               </View>
 
@@ -90,6 +91,13 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: 'white',
   },
+  titleContainer: {
+    // borderWidth: 1, 
+    // borderColor: 'white',
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    textAlignVertical: 'center'
+  },
   ellipsisButtonOuter: {
     width: 32,
     height: 32,
@@ -104,9 +112,14 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   title: {
+    padding: 0,
     color: 'white',
     fontSize: 20,
-    textAlign: 'center',
+    lineHeight: 26,
+    textAlignVertical: 'center',
+    verticalAlign: 'top',
+    marginVertical: 0,
+    includeFontPadding: false,
     // borderWidth: 1,
     // borderColor: 'white',
   },

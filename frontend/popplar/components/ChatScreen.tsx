@@ -7,6 +7,7 @@ import { chatroomState } from './recoil/chatroomState';
 
 import { TabNavigatorParamList } from './types/tabNavigatorParams';
 import ChatRoom from './ChatRoom/ChatRoom';
+import NoChatroom from './ChatRoom/NoChatroom';
 
 const ChatScreen = ({navigation} : { navigation: NavigationProp<TabNavigatorParamList> }) => {
 
@@ -24,7 +25,7 @@ const ChatScreen = ({navigation} : { navigation: NavigationProp<TabNavigatorPara
 
   return (
     <View style={styles.rootContainer} >
-      {chatroomId ? <ChatRoom roomId={chatroomId}/> : <ChatRoom roomId={21414107} />} 
+      {chatroomId ? <ChatRoom roomId={chatroomId}/> : <NoChatroom />} 
     </View>
   );
 };
