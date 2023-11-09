@@ -16,7 +16,6 @@ export async function getAllHotplace() {
 // id로 핫플레이스 조회
 export async function getIdHotplace(id: string) {
   const token = await getToken();
-  console.log("token", token)
   return await axios({
     method: 'get',
     url: `${BASE_URL}/hot-place/${id}`,
