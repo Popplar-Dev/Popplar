@@ -44,9 +44,19 @@ class ChattingService(
         }.toList()
     }
 
+    fun getMyChattingRoomId(memberId: Long): Long {
+        val chattingRoom = chattingRoomRepository.findByMemberId(memberId)
+            ?: return 0
+        return chattingRoom.chattingRoomId
+    }
+
     @Transactional
     fun enterChattingRoom(chattingRoomId: Long, memberId: Long) {
-        if (chattingRoomRepository.findByChattingRoomIdAndMemberId(chattingRoomId, memberId) != null) {
+        if (chattingRoomRepository.findByChattingRoomIdAndMemberId(
+                chattingRoomId,
+                memberId
+            ) != null
+        ) {
             throw RuntimeException("이미 채팅방에 참여하였습니다")
         }
         chattingRoomRepository.save(
