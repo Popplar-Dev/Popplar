@@ -26,6 +26,7 @@ import { requestPermission } from '../utils/reqLocationPermission'
 
 import { useRecoilState } from 'recoil';
 import { locationState } from './recoil/locationState'
+import { chatroomState } from './recoil/chatroomState';
 
 import { getIdHotplace } from './services/getHotplace'
 import { likeHotplace, delLikeHotplace } from './services/postHotplace'
@@ -40,6 +41,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 import { getToken } from './services/getAccessToken'
+import axios from 'axios';
 
 type Here = {
   granted: string
@@ -103,8 +105,12 @@ const MapScreen: React.FC = () => {
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo|null>(null)
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
-  const [spaceLike, setSpaceLike] = useState<boolean>(false)
-  const [spaceLikeCount, setSpaceLikeCount] = useState<number>(0)
+  const [spaceLike, setSpaceLike] = useState<boolean>(false);
+  const [spaceLikeCount, setSpaceLikeCount] = useState<number>(0);
+
+  const [chatroomId, setChatroomId] = useRecoilState<number|null>(chatroomState); 
+
+  
 
   const openModal = () => {
     setModalVisible(true);
@@ -116,6 +122,27 @@ const MapScreen: React.FC = () => {
   // function goQna(space) {
   //   navigation.navigate('QnaList' , {spaceId: space.spaceId, spacename: space.spacename} )
   // }
+
+  useEffect(() => {
+    async function getChatroomId() {
+      const userAccessToken = await getToken();
+      if (userAccessToken) {
+        try {
+          const url = `https://k9a705.p.ssafy.io:8000/live-chat/chatting-room`;
+          const res = await axios.get(url, {
+            headers: {'Access-Token': `${userAccessToken}`}
+          }); 
+          setChatroomId(res.data);           
+
+        } catch (e) {
+          console.error(e); 
+        }
+
+      } 
+
+    }
+    getChatroomId(); 
+  }, [])
 
   useEffect(() => {
     requestPermission().then(result => {
@@ -141,7 +168,6 @@ const MapScreen: React.FC = () => {
           const lat = pos.coords.latitude.toString()
           const lng = pos.coords.longitude.toString()
           setLocation(prev => ({...prev, y: lat, x: lng }))
-          
 
           // 로드시, accessToken web으로 전송해서 사용
           // 현재 비활성화

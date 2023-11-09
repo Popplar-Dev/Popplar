@@ -9,7 +9,9 @@ import {
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { useRecoilValue } from 'recoil';
+import { userIdState } from '../recoil/userState';
 
 import {Client, IMessage, IFrame, wsErrorCallbackType} from '@stomp/stompjs';
 
@@ -20,12 +22,10 @@ import ChatDate from './ChatComponents/ChatDate';
 import ChatInput from './ChatInput';
 
 import {ChatMessageType} from '../../types/chatType';
+import { getToken } from '../services/getAccessToken';
 
 export default function ChatRoom({roomId}: {roomId: number}) {
   const navigation = useNavigation();
-  const [memberId, setMemberId] = useState(4);
-  const [client, setClient] = useState<Client | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
   const [messages, setMessages] = useState<ChatMessageType[]>([
     {
       'message-id': '3333',
@@ -38,20 +38,33 @@ export default function ChatRoom({roomId}: {roomId: number}) {
       time: '오전 11:20',
     },
   ]);
-  const [userAccessToken, setUserAccessToken] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const memberId = useRecoilValue(userIdState);
+  const clientRef = useRef<Client|null>(null);
   const flatListRef = useRef<FlatList | null>(null);
+
+  console.log('mount 몇 번?')
 
   useFocusEffect(
     useCallback(() => {
       async function connectChatSocket() {
-        const accessToken = await AsyncStorage.getItem('userAccessToken');
-        if (accessToken !== null) {
-          setUserAccessToken(JSON.parse(accessToken));
-        } else {
+        const userAccessToken = await getToken();
+        if (userAccessToken === null) {
+          return; 
+        }
+      
+        if (clientRef.current && clientRef.current.connected) {
+          console.log('WebSocket already connected');
           return;
         }
+
+        console.log(clientRef.current); 
+        if (clientRef.current) {
+          console.log('client active? 1', clientRef.current.active)
+          console.log('client connected? 1', clientRef.current.connected)
+        }
+  
+
         const stompConfig = {
           connectHeaders: {
             'Access-Token': userAccessToken,
@@ -64,14 +77,13 @@ export default function ChatRoom({roomId}: {roomId: number}) {
           forceBinaryWSFrames: true,
           appendMissingNULLonIncoming: true,
         };
+
         const stompClient = new Client(stompConfig);
 
         stompClient.onConnect = (frame: IFrame) => {
           console.log('STOMP WebSocket connected');
 
-          setIsConnected(true);
-
-          stompClient.subscribe(`/live-chat/room/${roomId}`, (message: IMessage) => {
+          stompClient.subscribe(`/room/${roomId}`, (message: IMessage) => {
             if (message.body) {
               console.log('Received message: ', message.body);
               console.log('Message headers:', message.headers);
@@ -136,35 +148,49 @@ export default function ChatRoom({roomId}: {roomId: number}) {
 
         stompClient.onDisconnect = () => {
           console.log('STOMP WebSocket disconnected');
-          setIsConnected(false);
         };
 
+        stompClient.onWebSocketClose = () => {
+          console.log('STOMP WebSocket closed')
+        }
+
         stompClient.activate();
-        setClient(stompClient);
+        clientRef.current = stompClient;
+        console.log(stompClient)
+
+        if (stompClient) {
+          console.log('client active? 2', stompClient.active)
+          console.log('client connected? 2', stompClient.connected)
+
+        }
       }
 
       connectChatSocket();
 
       return () => {
-        if (client) {
+        console.log('component unmount?')
+        console.log(clientRef.current)
+        if (clientRef.current) {
           console.log('deactivating');
-          client.deactivate();
+          clientRef.current.deactivate();
         }
       };
     }, []),
   );
 
   const sendMessage = (messageBody: string) => {
-    if (client && client.connected) {
+    if (clientRef.current && clientRef.current.connected) {
       const destination = `/live-chat/chat/${roomId}`;
 
       const message = JSON.stringify({
-        chattingRoomId: 1,
+        chattingRoomId: roomId,
         memberId: memberId,
         chattingContent: messageBody,
       });
 
-      client.publish({
+      console.log(message);
+
+      clientRef.current.publish({
         destination: destination,
         body: message,
       });
