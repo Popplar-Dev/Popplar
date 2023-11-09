@@ -1,6 +1,7 @@
 package com.popplar.livechat.dto
 
 import com.popplar.livechat.entity.ChattingMember
+import com.popplar.livechat.service.CryptService
 
 class ChattingMemberResDto (
     val memberId: Long,
@@ -8,9 +9,9 @@ class ChattingMemberResDto (
     val memberProfileImage: String,
 ) {
     companion object {
-        fun create(chattingMember: ChattingMember): ChattingMemberResDto {
+        fun create(cryptService: CryptService, chattingMember: ChattingMember): ChattingMemberResDto {
             return ChattingMemberResDto(
-                memberId = chattingMember.memberId,
+                memberId = cryptService.encrypt(chattingMember.memberId),
                 memberName = chattingMember.memberName,
                 memberProfileImage = chattingMember.memberProfileImage
             )
