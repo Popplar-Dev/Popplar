@@ -35,20 +35,21 @@ export default function HotRegisterButton({ props, setSpaceInfo, setSpaceLike, s
     postHotplace(data)
     .then((res) => likeHotplace(props.id).then(() => {
       const data = res.data
+      const { id, placeName, addressName, roadAddressName, category, likeCount, phone, placeType, visitorCount, x, y, tier, myLike } = data
       const space: SpaceInfo = {
-        id: data.id,
-        place_name: data.placeName,
-        address_name: data.addressName,
-        road_address_name: data.roadAddressName,
-        category_group_name: data.categoty,
-        likeCount: data.likeCount,
-        phone: data.phone,
-        placeType: data.placeType,
-        visitorCount: data.visitorCount,
-        y: data.y,
-        x: data.x,
-        tier: data.tier,
-        myLike: data.myLike,
+        id,
+        place_name: placeName,
+        address_name: addressName,
+        road_address_name: roadAddressName,
+        category_group_name: category,
+        likeCount,
+        phone,
+        placeType,
+        visitorCount,
+        y,
+        x,
+        tier,
+        myLike,
       }
       setSpaceInfo(space)
       setSpaceLike(true)
