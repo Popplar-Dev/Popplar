@@ -132,6 +132,7 @@ const MapScreen: React.FC = () => {
           const res = await axios.get(url, {
             headers: {'Access-Token': `${userAccessToken}`}
           }); 
+          console.log(res.data)
           setChatroomId(res.data);           
 
         } catch (e) {

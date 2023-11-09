@@ -1,16 +1,31 @@
-import {View, Text, Pressable, StyleSheet} from 'react-native';
+import {View, Text, Pressable, Alert, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Menu, PaperProvider} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import { useRecoilState } from 'recoil';
+import { chatroomState } from '../recoil/chatroomState';
+
+import { NavigationProp } from '@react-navigation/native';
+import { TabNavigatorParamList } from '../types/tabNavigatorParams';
+import {getToken} from '../services/getAccessToken';
+import axios from 'axios';
+
 type headerProps = {
+  roomId: number;
   roomName: string;
   isMenuOpen: boolean;
   setIsMenuOpen: Function;
 };
 
-export default function ChatHeader({roomName, isMenuOpen, setIsMenuOpen}: headerProps) {
-  const navigation = useNavigation();
+export default function ChatHeader({
+  roomId,
+  roomName,
+  isMenuOpen,
+  setIsMenuOpen,
+}: headerProps) {
+  const navigation = useNavigation<NavigationProp<TabNavigatorParamList>>();
+  const [chatroomId, setChatroomId] = useRecoilState<number|null>(chatroomState);
 
   const goBack = () => {
     navigation.goBack();
@@ -20,40 +35,91 @@ export default function ChatHeader({roomName, isMenuOpen, setIsMenuOpen}: header
     setIsMenuOpen((prev: boolean) => !prev);
   };
 
-  return (<View style={styles.provider}>
-          <PaperProvider>
-            <View style={styles.headerContainer}>
-              <View style={styles.leftContainer}>
-                <View style={styles.goBackButtonOuter}>
-                  <Pressable onPress={goBack} android_ripple={{color: '#464646'}}>
-                    <Icon name="chevron-back" color="#8B90F7" size={25} />
-                  </Pressable>
-                </View>
-                <View style={styles.titleContainer}>
-                  <Text style={styles.title}>{roomName}</Text>
-                </View>
-              </View>
+  const exitChatroom = async () => {
+    const userAccessToken = await getToken();
+    if (!userAccessToken) return;
 
-              <Menu
-                visible={isMenuOpen}
-                onDismiss={() => setIsMenuOpen(false)}
-                anchor={
-                  <View style={styles.ellipsisButtonOuter}>
-                    <Pressable
-                      onPress={toggleMenu}
-                      android_ripple={{color: '#464646'}}>
-                      <Icon name="ellipsis-vertical" color="#8B90F7" size={25} />
-                    </Pressable>
-                  </View>
-                }
-                anchorPosition="bottom"
-                contentStyle={styles.menuContainer}>
-                <Text>채팅방 퇴장하기</Text>
-              </Menu>
+    try {
+      const url = `https://k9a705.p.ssafy.io:8000/live-chat/chatting-room/${roomId}`;
+      const res = await axios.delete(url, {
+        headers: {'Access-Token': userAccessToken},
+      });
+
+      setChatroomId(null);
+      navigation.navigate("Map");
+
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleExitPress = async () => {
+    Alert.alert(
+      '정말 채팅방에서 퇴장하시겠습니까?',
+      '',
+      [
+        {
+          text: '퇴장',
+          onPress: async () => exitChatroom(),
+          style: 'default',
+        },
+        {
+          text: '취소',
+          onPress: () => {setIsMenuOpen(false)},
+          style: 'cancel',
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () => {
+          setIsMenuOpen(false);
+        },
+      },
+    );
+  };
+
+  return (
+    <View style={styles.provider}>
+      <PaperProvider>
+        <View style={styles.headerContainer}>
+          <View style={styles.leftContainer}>
+            <View style={styles.goBackButtonOuter}>
+              <Pressable onPress={goBack} android_ripple={{color: '#464646'}}>
+                <Icon name="chevron-back" color="#8B90F7" size={25} />
+              </Pressable>
             </View>
-          </PaperProvider>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>{roomName}</Text>
+            </View>
+          </View>
 
-  </View>
+          <Menu
+            visible={isMenuOpen}
+            onDismiss={() => setIsMenuOpen(false)}
+            anchor={
+              <View style={styles.ellipsisButtonOuter}>
+                <Pressable
+                  onPress={toggleMenu}
+                  android_ripple={{color: '#464646'}}>
+                  <Icon name="ellipsis-vertical" color="#8B90F7" size={25} />
+                </Pressable>
+              </View>
+            }
+            anchorPosition="bottom"
+            contentStyle={styles.menuContainer}>
+            <View style={styles.exitButtonOuterContainer}>
+              <Pressable
+                style={styles.exitButtonInnerContainer}
+                android_ripple={{color: '#464646'}}
+                onPress={handleExitPress}>
+                <Icon name="exit-outline" size={23} color="#8B90F7"></Icon>
+                <Text style={styles.exitButtonText}>채팅방 퇴장하기</Text>
+              </Pressable>
+            </View>
+          </Menu>
+        </View>
+      </PaperProvider>
+    </View>
   );
 }
 
@@ -62,8 +128,7 @@ const styles = StyleSheet.create({
     height: 50,
     // borderWidth: 1,
     // borderColor: 'white',
-
-  }, 
+  },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -92,11 +157,11 @@ const styles = StyleSheet.create({
     // borderColor: 'white',
   },
   titleContainer: {
-    // borderWidth: 1, 
+    // borderWidth: 1,
     // borderColor: 'white',
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    textAlignVertical: 'center'
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlignVertical: 'center',
   },
   ellipsisButtonOuter: {
     width: 32,
@@ -113,7 +178,7 @@ const styles = StyleSheet.create({
   },
   title: {
     padding: 0,
-    color: 'white',
+    color: '#8B90F7',
     fontSize: 20,
     lineHeight: 26,
     textAlignVertical: 'center',
@@ -124,8 +189,27 @@ const styles = StyleSheet.create({
     // borderColor: 'white',
   },
   menuContainer: {
-    backgroundColor: '#b8bbf7',
+    backgroundColor: '#0c072c42',
     right: 20,
+    // paddingHorizontal: 10,
+  },
+  exitButtonOuterContainer: {
+    // borderColor: 'white',
+    // borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  exitButtonInnerContainer: {
+    flexDirection: 'row',
+    // borderColor: 'white',
+    // borderWidth: 1,
     paddingHorizontal: 10,
+    backgroundColor: '#0c072c42',
+  },
+  exitButtonText: {
+    marginStart: 10,
+    color: '#8B90F7',
+    fontSize: 14,
   },
 });

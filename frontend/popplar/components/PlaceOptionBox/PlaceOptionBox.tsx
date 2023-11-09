@@ -54,6 +54,7 @@ export default function PlaceOptionBox({type, spaceId}: Props) {
         const userAccessToken = JSON.parse(accessToken);
 
         const url = `https://k9a705.p.ssafy.io:8000/live-chat/chatting-room/${spaceId}`;
+        console.log(url)
         const res = await axios.post(url, {
           headers: {
             'Access-Token': userAccessToken,

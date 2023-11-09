@@ -28,7 +28,7 @@ import axios from 'axios';
 
 export default function ChatRoom({roomId}: {roomId: number}) {
   const navigation = useNavigation();
-  const [roomName, setRoomName] = useState('Chat');
+  const [roomName, setRoomName] = useState('');
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const memberId = useRecoilValue(userIdState);
@@ -286,7 +286,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
   return (
     <TouchableWithoutFeedback onPress={pressScreen}>
       <KeyboardAvoidingView style={styles.rootContainer}>
-        <ChatHeader roomName={roomName} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+        <ChatHeader roomId={roomId} roomName={roomName} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
         <View style={styles.chatBubblesContainer}>
           <FlatList
             data={messages}
