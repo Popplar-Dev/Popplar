@@ -1,13 +1,13 @@
 import {View, Text, Pressable, Alert, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {Menu, PaperProvider} from 'react-native-paper';
+import {Menu} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import { useRecoilState } from 'recoil';
-import { chatroomState } from '../recoil/chatroomState';
+import {useRecoilState} from 'recoil';
+import {chatroomState} from '../recoil/chatroomState';
 
-import { NavigationProp } from '@react-navigation/native';
-import { TabNavigatorParamList } from '../types/tabNavigatorParams';
+import {NavigationProp} from '@react-navigation/native';
+import {TabNavigatorParamList} from '../types/tabNavigatorParams';
 import {getToken} from '../services/getAccessToken';
 import axios from 'axios';
 
@@ -25,7 +25,9 @@ export default function ChatHeader({
   setIsMenuOpen,
 }: headerProps) {
   const navigation = useNavigation<NavigationProp<TabNavigatorParamList>>();
-  const [chatroomId, setChatroomId] = useRecoilState<number|null>(chatroomState);
+  const [chatroomId, setChatroomId] = useRecoilState<number | null>(
+    chatroomState,
+  );
 
   const goBack = () => {
     navigation.goBack();
@@ -46,8 +48,7 @@ export default function ChatHeader({
       });
 
       setChatroomId(null);
-      navigation.navigate("Map");
-
+      navigation.navigate('Map');
     } catch (e) {
       console.error(e);
     }
@@ -59,15 +60,18 @@ export default function ChatHeader({
       '',
       [
         {
+          text: '취소',
+          onPress: () => {
+            setIsMenuOpen(false);
+          },
+          style: 'cancel',
+        },
+        {
           text: '퇴장',
           onPress: async () => exitChatroom(),
           style: 'default',
         },
-        {
-          text: '취소',
-          onPress: () => {setIsMenuOpen(false)},
-          style: 'cancel',
-        },
+
       ],
       {
         cancelable: true,
@@ -79,56 +83,46 @@ export default function ChatHeader({
   };
 
   return (
-    <View style={styles.provider}>
-      <PaperProvider>
-        <View style={styles.headerContainer}>
-          <View style={styles.leftContainer}>
-            <View style={styles.goBackButtonOuter}>
-              <Pressable onPress={goBack} android_ripple={{color: '#464646'}}>
-                <Icon name="chevron-back" color="#8B90F7" size={25} />
-              </Pressable>
-            </View>
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>{roomName}</Text>
-            </View>
-          </View>
-
-          <Menu
-            visible={isMenuOpen}
-            onDismiss={() => setIsMenuOpen(false)}
-            anchor={
-              <View style={styles.ellipsisButtonOuter}>
-                <Pressable
-                  onPress={toggleMenu}
-                  android_ripple={{color: '#464646'}}>
-                  <Icon name="ellipsis-vertical" color="#8B90F7" size={25} />
-                </Pressable>
-              </View>
-            }
-            anchorPosition="bottom"
-            contentStyle={styles.menuContainer}>
-            <View style={styles.exitButtonOuterContainer}>
-              <Pressable
-                style={styles.exitButtonInnerContainer}
-                android_ripple={{color: '#464646'}}
-                onPress={handleExitPress}>
-                <Icon name="exit-outline" size={23} color="#8B90F7"></Icon>
-                <Text style={styles.exitButtonText}>채팅방 퇴장하기</Text>
-              </Pressable>
-            </View>
-          </Menu>
+    <View style={styles.headerContainer}>
+      <View style={styles.leftContainer}>
+        <View style={styles.goBackButtonOuter}>
+          <Pressable onPress={goBack} android_ripple={{color: '#464646'}}>
+            <Icon name="chevron-back" color="#8B90F7" size={25} />
+          </Pressable>
         </View>
-      </PaperProvider>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{roomName}</Text>
+        </View>
+      </View>
+
+      <Menu
+        visible={isMenuOpen}
+        onDismiss={() => setIsMenuOpen(false)}
+        anchor={
+          <View style={styles.ellipsisButtonOuter}>
+            <Pressable onPress={toggleMenu} android_ripple={{color: '#464646'}}>
+              <Icon name="ellipsis-vertical" color="#8B90F7" size={25} />
+            </Pressable>
+          </View>
+        }
+        anchorPosition="bottom"
+        contentStyle={styles.menuContainer}>
+        <View style={styles.exitButtonOuterContainer}>
+          <Pressable
+            style={styles.exitButtonInnerContainer}
+            android_ripple={{color: '#464646'}}
+            onPress={handleExitPress}
+            onStartShouldSetResponder={() => true}>
+            <Icon name="exit-outline" size={23} color="#8B90F7"></Icon>
+            <Text style={styles.exitButtonText}>채팅방 퇴장하기</Text>
+          </Pressable>
+        </View>
+      </Menu>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  provider: {
-    height: 50,
-    // borderWidth: 1,
-    // borderColor: 'white',
-  },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -189,7 +183,7 @@ const styles = StyleSheet.create({
     // borderColor: 'white',
   },
   menuContainer: {
-    backgroundColor: '#0c072c42',
+    backgroundColor: '#0c072c',
     right: 20,
     // paddingHorizontal: 10,
   },
@@ -204,8 +198,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // borderColor: 'white',
     // borderWidth: 1,
-    paddingHorizontal: 10,
-    backgroundColor: '#0c072c42',
+    paddingHorizontal: 6,
+    paddingVertical: 10,
+    backgroundColor: '#0c072c',
   },
   exitButtonText: {
     marginStart: 10,

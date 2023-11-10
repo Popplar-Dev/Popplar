@@ -39,7 +39,6 @@ const MapScreenStack = () => {
       <Stack.Screen name="ClickGame" component={ClickGame} options={{headerTitle: 'ClickGame'}}/>
       <Stack.Screen name="QnaList" component={QnaList} options={{headerTitle: 'QnaList'}}/>
       <Stack.Screen name="QnaDetail" component={QnaDetail} options={{headerTitle: 'QnaDetail'}}/>
-      <Stack.Screen name="Chat" component={ChatScreen} options={{headerShown: false}}/>
     </Stack.Navigator>
   );
 }

@@ -1,5 +1,5 @@
 export type ChatMessageType = {
-  'message-id': string; 
+  chattingId: number; 
   chattingRoomId: number; 
   messageType: 'me' | 'others';
   memberId: number;  

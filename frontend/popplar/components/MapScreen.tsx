@@ -41,6 +41,7 @@ import { useRoute } from '@react-navigation/native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+import { getDistance } from './utils/GetDistance'
 import { getToken } from './services/getAccessToken'
 import axios from 'axios';
 import EntranceBox from './PlaceOptionBox/EntranceBox';
@@ -187,6 +188,14 @@ const MapScreen: React.FC = () => {
     }
   }, [spaceInfo])
 
+  const getHotplaceLocation = async () => {
+    const accessToken = await getToken(); 
+    if (!accessToken) {
+      return; 
+    }
+  }
+
+
   async function get_location(type: string) {
     // return new Promise((resolve, reject) => {
     if (location.granted==="granted") {
@@ -196,6 +205,7 @@ const MapScreen: React.FC = () => {
           const lng = pos.coords.longitude.toString()
 
           setLocation(prev => ({...prev, y: lat, x: lng }))
+
 
           // 로드시, accessToken web으로 전송해서 사용
           // 현재 비활성화
