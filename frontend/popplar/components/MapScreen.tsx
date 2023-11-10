@@ -78,38 +78,38 @@ const MapScreen: React.FC = () => {
   }, [route.params])
 
   // 전체 핫플레이스 검색 클릭 시, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
-  useEffect(() => {
-    getIdHotplace(spaceId)
-    .then((res) => {
-      const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
+  // useEffect(() => {
+  //   getIdHotplace(spaceId)
+  //   .then((res) => {
+  //     const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
   
-      const loc: { y: string, x: string } = {y: y, x: x}
-      const locationData: { type: string, data: { y: string, x: string } } = {type: 'location', data: loc}
-      if (webRef.current) {
-        handlePresentModalPress();
-        setSpaceInfo({
-          id,
-          place_name: placeName,
-          address_name: addressName,
-          road_address_name: roadAddressName,
-          category_group_name: category,
-          likeCount: likeCount,
-          phone,
-          placeType,
-          visitorCount,
-          y,
-          x,
-          tier,
-          myLike,
-        })
-        setSpaceLike(myLike)
-        setSpaceLikeCount(likeCount)
-        webRef.current.injectJavaScript(`
-        window.postMessage(${JSON.stringify(locationData)}, '*')
-        `);
-      }
-    }).catch(() => console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.'))
-  }, [spaceId])
+  //     const loc: { y: string, x: string } = {y: y, x: x}
+  //     const locationData: { type: string, data: { y: string, x: string } } = {type: 'location', data: loc}
+  //     if (webRef.current) {
+  //       handlePresentModalPress();
+  //       setSpaceInfo({
+  //         id,
+  //         place_name: placeName,
+  //         address_name: addressName,
+  //         road_address_name: roadAddressName,
+  //         category_group_name: category,
+  //         likeCount: likeCount,
+  //         phone,
+  //         placeType,
+  //         visitorCount,
+  //         y,
+  //         x,
+  //         tier,
+  //         myLike,
+  //       })
+  //       setSpaceLike(myLike)
+  //       setSpaceLikeCount(likeCount)
+  //       webRef.current.injectJavaScript(`
+  //       window.postMessage(${JSON.stringify(locationData)}, '*')
+  //       `);
+  //     }
+  //   }).catch(() => console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.'))
+  // }, [spaceId])
   
 
   const openModal = () => {
@@ -130,13 +130,13 @@ const MapScreen: React.FC = () => {
   }, [])
 
   // 현재 표시된 장소 정보가 변경되면, 핫플레이스 화면에 띄우는 정보 변경해달라고 요청
-  useEffect(() => {
-    if (webRef.current) {
-      webRef.current.injectJavaScript(`
-      window.postMessage('{type: 'postHotplace'}', '*')
-      `);
-    }
-  }, [spaceInfo])
+  // useEffect(() => {
+  //   if (webRef.current) {
+  //     webRef.current.injectJavaScript(`
+  //     window.postMessage('{type: 'postHotplace'}', '*')
+  //     `);
+  //   }
+  // }, [spaceInfo])
 
   async function get_location(type: string) {
     // return new Promise((resolve, reject) => {
@@ -186,8 +186,6 @@ const MapScreen: React.FC = () => {
     // })
     }
   }
-
-  // const inject = `alert('메세지 수신됨')`
 
   async function handle_native_location (y: string, x: string) {
     if (webRef.current) {
