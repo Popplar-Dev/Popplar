@@ -24,11 +24,15 @@ class Member(
 
     var exp: Int,
 
+    var myHotPlaceId: Long
+
+
     ) : BaseEntity() {
 
     fun update(memberUpdateReqDto: MemberUpdateReqDto) {
         this.name = memberUpdateReqDto.name ?: this.name
         this.profileImage = memberUpdateReqDto.profileImage ?: this.profileImage
+        this.myHotPlaceId = memberUpdateReqDto.myHotPlaceId ?: this.myHotPlaceId
     }
 
     companion object {
@@ -39,6 +43,7 @@ class Member(
                 exp = 0,
                 socialType = oAuthMemberDto.socialType,
                 socialId = oAuthMemberDto.socialId,
+                myHotPlaceId = 0
             )
         }
     }
