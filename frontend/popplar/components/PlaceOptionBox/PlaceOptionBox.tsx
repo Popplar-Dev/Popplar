@@ -9,16 +9,15 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation} from '@react-navigation/native';
-import { NavigationProp } from '@react-navigation/native';
-import { TabNavigatorParamList } from '../types/tabNavigatorParams';
+import {NavigationProp} from '@react-navigation/native';
+import {TabNavigatorParamList} from '../types/tabNavigatorParams';
 import GameListModal from '../Modals/GameListModal';
 
 import {useRecoilState} from 'recoil';
 import {chatroomState} from '../recoil/chatroomState';
 
 import axios from 'axios';
-import { getToken } from '../services/getAccessToken';
-
+import {getToken} from '../services/getAccessToken';
 
 type Props = {
   type: 'chat' | 'game';
@@ -45,24 +44,22 @@ export default function PlaceOptionBox({type, spaceId}: Props) {
       }
     } else {
       try {
-        const accessToken = await getToken(); 
+        const accessToken = await getToken();
         if (!accessToken) {
           Alert.alert('인증에 실패하셨습니다.');
           return;
         }
 
         const url = `https://k9a705.p.ssafy.io:8000/live-chat/chatting-room/${spaceId}`;
-        console.log(url)
+        console.log(url);
         const res = await axios.post(url, {
           headers: {
             'Access-Token': accessToken,
-          }
+          },
         });
-
 
         setChatroom(spaceId);
         navigation.navigate('Chat');
-        
       } catch (e) {
         console.error(e);
       }
@@ -110,11 +107,13 @@ export default function PlaceOptionBox({type, spaceId}: Props) {
           </Text>
         </TouchableOpacity>
       </View>
-      <GameListModal
-        visible={isModalVisible}
-        onClose={() => setModalVisible(false)}
-        spaceid={spaceId}
-      />
+      {type === 'game' && (
+        <GameListModal
+          visible={isModalVisible}
+          onClose={() => setModalVisible(false)}
+          spaceid={spaceId}
+        />
+      )}
     </View>
   );
 }
