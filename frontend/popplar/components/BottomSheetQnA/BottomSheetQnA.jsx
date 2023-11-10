@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Image, SafeAreaView, Pressable, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import QnaList from '../QnA/QnaList'
 import { useEffect, useState } from 'react';
@@ -54,7 +54,13 @@ export default function BottomSheetQnA(props) {
               <Pressable style={styles.qnabox} onPress={() => goQna(space)}>
                 <View style={styles.questionbox}>
                   <View style={styles.questionboxtop}>
-                    <Text style={styles.text}>{qnaData.questionResDto.memberName}</Text>
+                    <View style={styles.questionboxprofile}>
+                      <Image
+                        source={{uri:qnaData.questionResDto.memberProfileImage}}
+                        style={styles.profileImage}
+                      />
+                      <Text style={styles.text}>{qnaData.questionResDto.memberName}</Text>
+                    </View>
                     <Text style={styles.text}>{qnaData.questionResDto.createdAt.slice(0,10)}</Text>
                   </View>
                   <View style={styles.questionboxbottom}>
@@ -126,7 +132,7 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     padding: 20,
     backgroundColor: 'rgba(139, 144, 247, 0.6)',
-    marginVertical: 10,
+    marginVertical: 5,
     width: '100%'
   },
   questionbox: {},
@@ -155,5 +161,15 @@ const styles = StyleSheet.create({
   },
   noqna: {
     margin:20
+  },
+  questionboxprofile: {
+    flexDirection:'row',
+    alignItems:'center',
+  },
+  profileImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 75,
+    marginRight:5
   }
 })

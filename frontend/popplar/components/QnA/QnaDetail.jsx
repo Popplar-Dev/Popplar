@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ImageBackground, Pressable, TextInput, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, TextInput, FlatList, ActivityIndicator } from 'react-native';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { userInfoState } from '../recoil/userState';
+import { useRecoilState } from 'recoil';
 
 export default function QnaDetail({ route }) {
-  const {qnaId, userid, username} = route.params;
+  const {qnaId, userid, username, profileimage} = route.params;
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [newAnswer, setNewAnswer] = useState('');
   const [questionDetail, setQuestionDetail] = useState('');
   const [answerDetail, setAnswerDetail] = useState('');
   const [selectcomplete, setSelectcomplete] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [userinfo, setUserInfo] = useRecoilState(userInfoState);
 
   const handleSelectAnswer = (answerid) => {
-    console.log(answerid)
       const isLogin = async () => {
         const AccessToken = await AsyncStorage.getItem('userAccessToken');
         if (AccessToken !== null) {
           const userAccessToken = JSON.parse(AccessToken);
-          console.log(userAccessToken)
           axios.patch(`https://k9a705.p.ssafy.io:8000/member/qna/adopt/${qnaId}/${answerid}`,{},
           { headers: { 'Access-Token': userAccessToken }}
           )
@@ -82,7 +83,6 @@ export default function QnaDetail({ route }) {
           { headers: { 'Access-Token': userAccessToken}}
         )
           .then((response) => {
-            // console.log(response.data.answerResDtoList)
             setQuestionDetail(response.data.questionResDto);
             setAnswerDetail(response.data.answerResDtoList);
             if (response.data.questionResDto.adoptedAnswerId === null) {
@@ -107,10 +107,16 @@ export default function QnaDetail({ route }) {
         <View style={styles.qnacontainer}>
           <View style={styles.questionboxtop}>
             <View>
-              <Text style={styles.smalltext}>작성자</Text>
-              <Text style={styles.text}>
-                {questionDetail.memberName}
-              </Text>
+              {/* <Text style={styles.smalltext}>작성자</Text> */}
+              <View style={styles.questionboxprofile}>
+                <Image
+                  source={{uri:profileimage}}
+                  style={styles.profileImage}
+                />
+                <Text style={styles.text}>
+                  {questionDetail.memberName}
+                </Text>
+              </View>
             </View>
             {/* <Text style={styles.text}>{questionDetail.createdAt.slice(0, 10)}</Text> */}
           </View>
@@ -131,7 +137,13 @@ export default function QnaDetail({ route }) {
                 renderItem={({ item, index }) => (
                   <View style={styles.qnabox} key={index}>
                     <View style={styles.answerdetail}>
-                      <Text style={styles.smalltext}>{item.memberName}</Text>
+                      <View style={styles.questionboxprofile}> 
+                        <Image
+                          source={{uri:item.memberProfileImage}}
+                          style={styles.profileImage}
+                        />
+                        <Text style={styles.smalltext}>{item.memberName}</Text>
+                      </View>
                       <Text style={styles.text}>{item.content}</Text>
                     </View>
                     { !selectcomplete ? (
@@ -272,5 +284,15 @@ const styles = StyleSheet.create({
   noanswer: {
     justifyContent:'center',
     alignItems:'center'
+  },
+  questionboxprofile: {
+    flexDirection:'row',
+    alignItems:'center',
+  },
+  profileImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 75,
+    marginRight:5
   }
 });
