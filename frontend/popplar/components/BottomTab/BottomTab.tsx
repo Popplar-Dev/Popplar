@@ -142,6 +142,7 @@ export default function BottomTab() {
               color={focused ? '#613EEA' : 'white'}
             />
           ),
+          unmountOnBlur: true
         }}
       />
     </Tab.Navigator>

@@ -100,8 +100,8 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
                   <View style={styles.gameinfo}>
                   {gameinfo ? (
                     <View style={styles.gameinfotitle}>
-                      <Text style={styles.text}>오늘 나의 최고 기록 : {gameinfo.myMaxReflexesPoints/(-100)} 초</Text>
-                      <Text style={styles.text}>전체 최고 기록 : {gameinfo.maxReflexesPoints/(-100)} 초</Text>
+                      <Text style={styles.text}>오늘 나의 최고 기록 : {(gameinfo.myMaxReflexesPoints/(-100)).toFixed(3)} 초</Text>
+                      <Text style={styles.text}>전체 최고 기록 : {(gameinfo.maxReflexesPoints/(-100)).toFixed(3)} 초</Text>
                     </View>
                     ):(
                       <View style={styles.gameinfotitle}>
