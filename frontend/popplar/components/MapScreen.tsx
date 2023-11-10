@@ -90,13 +90,21 @@ const MapScreen: React.FC = () => {
     }
   }, [route.params])
 
+  // 내 핫플레이스 조회   
+  useEffect(() => {
+    if (userInfo.id != 0) {
+      getMyInfo(userInfo.id)
+        .then((res) => {
+          setMyHotPlaceId(res.data.myHotPlaceId)
+        })
+        .catch((err) => {
+          console.log("에러 메시지 ::", err);
+        })
+    }
+  }, [userInfo.id])
+  
   // 전체 핫플레이스 검색 클릭 시, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
   useEffect(() => {
-    getMyInfo(userInfo.id)
-    .then((res) => {
-      setMyHotPlaceId(res.data.myHotPlaceId)
-    })
-
     getIdHotplace(spaceId)
     .then((res) => {
       const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
