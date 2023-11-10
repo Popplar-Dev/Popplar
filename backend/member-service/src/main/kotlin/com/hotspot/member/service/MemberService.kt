@@ -12,9 +12,9 @@ import com.hotspot.member.repository.BlockedMemberRepository
 import com.hotspot.member.repository.MemberRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpMethod
-import org.springframework.kafka.annotation.KafkaListener
-import org.springframework.kafka.core.KafkaTemplate
-import org.springframework.messaging.handler.annotation.Payload
+//import org.springframework.kafka.annotation.KafkaListener
+//import org.springframework.kafka.core.KafkaTemplate
+//import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
@@ -28,7 +28,7 @@ class MemberService(
         private val memberRepository: MemberRepository,
         private val cryptService: CryptService,
         private val blockedMemberRepository: BlockedMemberRepository,
-        private val kafkaTemplate: KafkaTemplate<String, Any>,
+//        private val kafkaTemplate: KafkaTemplate<String, Any>,
         private val objectMapper: ObjectMapper,
 
         @Value("\${LIVE_CHAT_URL}")
@@ -112,13 +112,13 @@ class MemberService(
         val memberList = memberRepository.findByIdIn(memberIdList)
         return MemberInfoResponseDto(memberList.map { MemberInfoDto.create(it) }.toMutableList())
     }
-
-    @KafkaListener(topics = ["TOPIC"])
-    fun consume(@Payload data: String): String {
-        println(data)
-        val testDto = TestDto.create(data)
-        val jsonValue = objectMapper.writeValueAsString(testDto)
-        kafkaTemplate.send("TEST_RETURN", jsonValue)
-        return "Message: $data"
-    }
+//    @KafkaListener(topics = ["TOPIC"])
+//    fun consume(@Payload data: String): String {
+//        println(data)
+//        val testDto = TestDto.create(data)
+//        val jsonValue = objectMapper.writeValueAsString(testDto)
+//        kafkaTemplate.send("TEST_RETURN", jsonValue)
+//        return "Message: $data"
+//    }
+//
 }
