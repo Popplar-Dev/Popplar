@@ -74,7 +74,6 @@ const MapScreen: React.FC = () => {
     if (data) {
       setSpaceId(data.data.id)
     }
-    console.log('침착하게', data)
   }, [route.params])
 
   // 전체 핫플레이스 검색 클릭 시, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
@@ -190,7 +189,7 @@ const MapScreen: React.FC = () => {
     if (webRef.current) {
       const data: { y: string, x: string } = {y: y, x: x}
       const locationData: { type: string, data: { y: string, x: string } } = {type: 'location', data: data}
-      console.log('locationData', locationData)
+
       webRef.current.injectJavaScript(`
       window.postMessage(${JSON.stringify(locationData)}, '*')
       `);
