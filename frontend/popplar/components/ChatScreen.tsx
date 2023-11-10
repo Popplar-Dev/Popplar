@@ -1,36 +1,38 @@
-import { useState, useEffect } from 'react'; 
-import { View, StyleSheet } from 'react-native';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { NavigationProp } from '@react-navigation/native'; 
+import {useState, useEffect, useCallback} from 'react';
+import {View, StyleSheet} from 'react-native';
+import {useFocusEffect, NavigationProp, useNavigation} from '@react-navigation/native';
 
+import {useRecoilState} from 'recoil';
+import {chatroomState} from './recoil/chatroomState';
+
+import {TabNavigatorParamList} from './types/tabNavigatorParams';
 import ChatRoom from './ChatRoom/ChatRoom';
+import NoChatroom from './ChatRoom/NoChatroom';
 
-type NavigatorParamList = {
-  AllPlaces: undefined,
-  Chat: undefined,
-  Map: undefined,  
-  Notifications: undefined,
-  MyPage: undefined, 
-}
+const ChatScreen = () => {
+  const navigation = useNavigation<NavigationProp<TabNavigatorParamList>>();
+  const [inChatRoom, setInChatRoom] = useState(true);
+  const [chatroomId, setChatroomId] = useRecoilState<number | null>(
+    chatroomState,
+  );
+  console.log('chatscreen')
 
-const ChatScreen = ({navigation} : { navigation: NavigationProp<NavigatorParamList> }) => {
-
-  const tabBarHeight = useBottomTabBarHeight();
-
-  const [ inChatRoom, setInChatRoom ] = useState(true);
-  
-  useEffect(() => {
-    if ( inChatRoom ) {
+  const checkChatroom = useCallback(() => {
+    console.log('chatroomId ', chatroomId)
+    console.log('navigation', navigation)
+    console.log(navigation.getState())
+    if (chatroomId) {
       navigation.setOptions({tabBarStyle: {display: 'none'}});
     } else {
       navigation.setOptions({tabBarStyle: {display: 'flex'}});
     }
+  }, [chatroomId]);
 
-  }, [inChatRoom])
+  useFocusEffect(checkChatroom);
 
   return (
-    <View style={styles.rootContainer} >
-      {inChatRoom && <ChatRoom />} 
+    <View style={styles.rootContainer}>
+      {chatroomId ? <ChatRoom roomId={chatroomId} /> : <NoChatroom />}
     </View>
   );
 };
@@ -39,6 +41,6 @@ export default ChatScreen;
 
 const styles = StyleSheet.create({
   rootContainer: {
-    flex: 1, 
-  }, 
+    flex: 1,
+  },
 });

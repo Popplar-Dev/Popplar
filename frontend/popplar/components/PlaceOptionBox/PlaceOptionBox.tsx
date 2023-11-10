@@ -1,68 +1,122 @@
-import React, { useState, useEffect } from 'react';
-import LinearGradient from 'react-native-linear-gradient';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  Alert,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {NavigationProp} from '@react-navigation/native';
+import {TabNavigatorParamList} from '../types/tabNavigatorParams';
 import GameListModal from '../Modals/GameListModal';
 
-type Props = {
-  type: "chat" | "game"
-  spaceId: number
-}
+import {useRecoilState} from 'recoil';
+import {chatroomState} from '../recoil/chatroomState';
 
-export default function PlaceOptionBox({ type, spaceId }: Props) {
-  const { width } = Dimensions.get('window');
+import axios from 'axios';
+import {getToken} from '../services/getAccessToken';
+
+type Props = {
+  type: 'chat' | 'game';
+  spaceId: number;
+};
+
+export default function PlaceOptionBox({type, spaceId}: Props) {
+  const {width} = Dimensions.get('window');
   const halfScreenWidth = width / 2.3;
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<TabNavigatorParamList>>();
   const [isModalVisible, setModalVisible] = useState(false);
+  const [chatroom, setChatroom] = useRecoilState<number | null>(chatroomState);
 
   const openModal = () => {
     setModalVisible(true);
   };
 
-  function gochat() {
-    navigation.navigate('Chat' as never)
-  }
+  const gochat = async () => {
+    if (chatroom) {
+      if (chatroom !== spaceId) {
+        Alert.alert('이미 입장하신 채팅방이 있습니다.');
+      } else {
+        navigation.navigate('Chat');
+      }
+    } else {
+      try {
+        const accessToken = await getToken();
+        if (!accessToken) {
+          Alert.alert('인증에 실패하셨습니다.');
+          return;
+        }
+
+        const url = `https://k9a705.p.ssafy.io:8000/live-chat/chatting-room/${spaceId}`;
+        console.log(url);
+        const res = await axios.post(url, null, {
+          headers: {
+            'Access-Token': accessToken,
+          },
+        });
+
+        setChatroom(spaceId);
+        navigation.navigate('Chat');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
 
   let dynamicStyles = {
     placeOptionBox: {
-      width: halfScreenWidth, 
+      width: halfScreenWidth,
       // borderWidth: 1,
       // borderColor: 'red',
-    }
-  }
+    },
+  };
 
-return (
-  <View style={dynamicStyles.placeOptionBox}>
-    <View style={styles.placeOptionTitle}>
-      <Icon name={type=="game" ? "gamepad" : "comments"} size={22} color={'white'} style={styles.qnaIcon}/>
-      <Text style={styles.placeOptionName}>{type=="game" ? "GAME" : "CHAT"}</Text>
-    </View>
-    <View style={styles.placeOptionContent}>
-      <Text style={styles.placeFirstContent}>Let's start!</Text>
-      <Text style={styles.placeContent}>Popplar의 사람들과 
-        {type=="game" ? "게임을 통해 경쟁하세요" : "채팅을 시작하세요"}
-      </Text>
-      <TouchableOpacity onPress={() => { 
-        if (type === "game") {
-          openModal();
-        } else {
-          gochat();
-        }
-      }} style={styles.placeOptionButton}>
-        <Text style={{ color: 'white', textAlign: 'center'}}>
-          {type === "game" ? "게임 시작하기" : "채팅방 입장"}
+  return (
+    <View style={dynamicStyles.placeOptionBox}>
+      <View style={styles.placeOptionTitle}>
+        <Icon
+          name={type == 'game' ? 'gamepad' : 'comments'}
+          size={22}
+          color={'white'}
+          style={styles.qnaIcon}
+        />
+        <Text style={styles.placeOptionName}>
+          {type == 'game' ? 'GAME' : 'CHAT'}
         </Text>
-      </TouchableOpacity>
+      </View>
+      <View style={styles.placeOptionContent}>
+        <Text style={styles.placeFirstContent}>Let's start!</Text>
+        <Text style={styles.placeContent}>
+          Popplar의 사람들과
+          {type == 'game' ? '게임을 통해 경쟁하세요' : '채팅을 시작하세요'}
+        </Text>
+        <TouchableOpacity
+          onPress={() => {
+            if (type === 'game') {
+              openModal();
+            } else {
+              gochat();
+            }
+          }}
+          style={styles.placeOptionButton}>
+          <Text style={{color: 'white', textAlign: 'center'}}>
+            {type === 'game' ? '게임 시작하기' : '채팅방 입장'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      {type === 'game' && (
+        <GameListModal
+          visible={isModalVisible}
+          onClose={() => setModalVisible(false)}
+          spaceid={spaceId}
+        />
+      )}
     </View>
-    {type === 'game' && <GameListModal
-      visible={isModalVisible}
-      onClose={() => setModalVisible(false)}
-      spaceid={spaceId}
-    />}
-  </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   placeOptionTitle: {
@@ -80,7 +134,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: '#8B90F733',
     borderRadius: 14,
-    // borderWidth: 1, 
+    // borderWidth: 1,
     // borderColor: 'red',
   },
   placeFirstContent: {
@@ -107,4 +161,4 @@ const styles = StyleSheet.create({
   qnaIcon: {
     margin: 9,
   },
-})
+});

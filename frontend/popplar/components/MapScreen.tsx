@@ -7,6 +7,7 @@ import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import HotRegisterButton from './HotRegisterButton/HotRegisterButton'
 import MetalIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import StampButton from './PlaceOptionBox/StampButton'
 
 
 import {
@@ -23,10 +24,11 @@ import { FlipInEasyX } from 'react-native-reanimated';
 
 import { requestPermission } from '../utils/reqLocationPermission'
 
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { locationState } from './recoil/locationState'
+import { chatroomState } from './recoil/chatroomState';
 
-import { getIdHotplace } from './services/getHotplace'
+import { getIdHotplace, getMyInfo, updateMyHotPlaceId } from './services/getHotplace'
 import { likeHotplace, delLikeHotplace } from './services/postHotplace'
 import { previousDay } from 'date-fns';
 
@@ -38,7 +40,12 @@ import { useRoute } from '@react-navigation/native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+import { getDistance } from './utils/GetDistance'
 import { getToken } from './services/getAccessToken'
+import axios from 'axios';
+import EntranceBox from './PlaceOptionBox/EntranceBox';
+import { getDistance } from './utils/GetDistance';
+import { userInfoState } from './recoil/userState';
 
 type Here = {
   granted: string
@@ -65,9 +72,17 @@ const MapScreen: React.FC = () => {
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo|null>(null)
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
+
+  const [chatroomId, setChatroomId] = useRecoilState<number|null>(chatroomState); 
+
   const [spaceLike, setSpaceLike] = useState<boolean>(false)
   const [spaceLikeCount, setSpaceLikeCount] = useState<number>(0)
   const [spaceId, setSpaceId] = useState<string>('')
+
+  const [isInHotPlace, setIsInHotPlace] = useState<boolean>(false);
+  const [inDistance, setInDistance] = useState<boolean>(false);
+  const [myHotPlaceId, setMyHotPlaceId] = useState<string>('');
+  const userInfo = useRecoilValue(userInfoState);
 
   useEffect(() => {
     const data: any = route.params;
@@ -78,6 +93,11 @@ const MapScreen: React.FC = () => {
 
   // 전체 핫플레이스 검색 클릭 시, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
   useEffect(() => {
+    getMyInfo(userInfo.id)
+    .then((res) => {
+      setMyHotPlaceId(res.data.myHotPlaceId)
+    })
+
     getIdHotplace(spaceId)
     .then((res) => {
       const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
@@ -107,8 +127,17 @@ const MapScreen: React.FC = () => {
         webRef.current.injectJavaScript(`
         window.postMessage(${JSON.stringify(locationData)}, '*')
         `);
+        let distance = getDistance(location.x, location.y, x, y)
+        console.log("distance: ", distance)
+        if (distance <= 500) {
+          setInDistance(true)
+        } else {
+          setInDistance(false)
+        }
       }
     }).catch(() => console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.'))
+    
+
   }, [spaceId])
   
   const openModal = () => {
@@ -121,6 +150,27 @@ const MapScreen: React.FC = () => {
   // function goQna(space) {
   //   navigation.navigate('QnaList' , {spaceId: space.spaceId, spacename: space.spacename} )
   // }
+
+  useEffect(() => {
+    async function getChatroomId() {
+      const userAccessToken = await getToken();
+      if (userAccessToken) {
+        try {
+          const url = `https://k9a705.p.ssafy.io:8000/live-chat/chatting-room`;
+          const res = await axios.get(url, {
+            headers: {'Access-Token': `${userAccessToken}`}
+          }); 
+          setChatroomId(res.data);           
+
+        } catch (e) {
+          console.error(e); 
+        }
+
+      } 
+
+    }
+    getChatroomId(); 
+  }, [])
 
   useEffect(() => {
     requestPermission().then(result => {
@@ -137,14 +187,22 @@ const MapScreen: React.FC = () => {
   //   }
   // }, [spaceInfo])
 
+  const getHotplaceLocation = async () => {
+    const accessToken = await getToken(); 
+    if (!accessToken) {
+      return; 
+    }
+  }
+
+
   async function get_location(type: string) {
     // return new Promise((resolve, reject) => {
     if (location.granted==="granted") {
       Geolocation.getCurrentPosition(
         pos => {
-          // console.log('IM HERE', pos)
           const lat = pos.coords.latitude.toString()
           const lng = pos.coords.longitude.toString()
+
           setLocation(prev => ({...prev, y: lat, x: lng }))
 
           // 로드시, accessToken web으로 전송해서 사용
@@ -219,7 +277,6 @@ const MapScreen: React.FC = () => {
   // callbacks
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
-    // console.log('pop!!')
   }, [spaceInfo]);
   const handleSheetChanges = useCallback((index: number) => {
     // bottomSheetModalRef.current?.present();
@@ -244,6 +301,12 @@ const MapScreen: React.FC = () => {
       .then(() => {setSpaceLike(false);  setSpaceLikeCount(prev => prev - 1)})
     }
   }
+
+  // 입장하기 버튼
+  const handleEnterPress = (spaceId) => {
+    updateMyHotPlaceId(spaceId, userInfo.id)
+    setMyHotPlaceId(spaceId)
+  };
 
   let webRef = useRef<WebView | null>(null);
 
@@ -273,14 +336,18 @@ const MapScreen: React.FC = () => {
               />
             </>
             ): (
-              <View style={styles.buttons}>
-              <Icon name="comments" size={21} color={'white'} style={styles.Icon} />
-              <TouchableOpacity>
-                <Icon name="gamepad" size={21} color={'white'} style={styles.Icon} onPress={openModal}/>
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Icon name="question-circle" size={21} color={'white'} style={styles.Icon} onPress={goqna}/>
-              </TouchableOpacity>
+                <View style={styles.buttons}>
+                  {myHotPlaceId === spaceId && (
+                    <>
+                      <Icon name="comments" size={21} color={'white'} style={styles.Icon} />
+                      <TouchableOpacity>
+                        <Icon name="gamepad" size={21} color={'white'} style={styles.Icon} onPress={openModal}/>
+                      </TouchableOpacity>
+                      <TouchableOpacity>
+                        <Icon name="question-circle" size={21} color={'white'} style={styles.Icon} onPress={goqna}/>
+                      </TouchableOpacity>
+                    </>
+                  )}
               {/* <Icon name="flag-checkered" size={20} color={'white'} style={styles.Icon}/> */}
               <TouchableOpacity style={styles.likeContainer}>
                 {!spaceLike ? (
@@ -296,11 +363,11 @@ const MapScreen: React.FC = () => {
                   </Pressable>
                 )}
               </TouchableOpacity>
-            <GameListModal
-              visible={isModalVisible}
-              onClose={() => setModalVisible(false)}
-              spaceid={spaceInfo.id}
-            />
+              <GameListModal
+                visible={isModalVisible}
+                onClose={() => setModalVisible(false)}
+                spaceid={spaceInfo.id}
+              />
               </View>
             )}
           </View>
@@ -340,6 +407,7 @@ const MapScreen: React.FC = () => {
           </View> */}
         
         {spaceInfo &&
+          <>
           <View style={styles.qnaContainer}>
             <View style={styles.qnaTitle}>
               <Icon name="question" size={16} color={'white'} style={styles.qnaIcon}/>
@@ -349,17 +417,32 @@ const MapScreen: React.FC = () => {
               <BottomSheetQnA spaceId={spaceInfo.id} spacename={spaceInfo.place_name}/>
             </View>
           </View>
+          </>
         }
 
-            {spaceInfo ? (
+        {spaceInfo &&
+          inDistance ? ( // 거리 내에 있으면
+            myHotPlaceId === spaceId ? ( // 내가 입장한 핫플레이스라면
+              <>
+                <View style={styles.stampcontainer}>
+                  <StampButton spaceId={spaceInfo.id}/>
+                </View>
+                <View style={styles.placeBottomContainer}>
+                  <PlaceOptionBox spaceId={parseInt(spaceInfo.id)} type="chat"/>
+                  <PlaceOptionBox spaceId={parseInt(spaceInfo.id)} type="game"/> 
+                </View>
+              </>
+            ) : (
               <View style={styles.placeBottomContainer}>
-                <PlaceOptionBox spaceId={spaceInfo.id} type="chat"/>
-                <PlaceOptionBox spaceId={spaceInfo.id} type="game"/> 
+                <EntranceBox onEnterPress={handleEnterPress} spaceId={parseInt(spaceInfo.id)} type="possible"/>
               </View>
-            ):(
-              null
-            )}
-        
+            )
+          ) : (
+            <View style={styles.placeBottomContainer}>
+              <EntranceBox onEnterPress={handleEnterPress} spaceId={0} type="impossible"/>
+            </View>
+          )
+        }
         </View>
 
         </BottomSheetModal>
@@ -373,20 +456,15 @@ const MapScreen: React.FC = () => {
           // injectedJavaScript={inject}
           onMessage={(event) => {
             const data: any = JSON.parse(event.nativeEvent.data)
-            // console.log('raw data', data)
             if (data.type=="test") {
-              // console.log('web에서 들어왔어요')
-              // console.log(data.data)
             } else if (data.type=="relocation") {
               native_to_web();
             } else {
               handlePresentModalPress();
-              // console.log(data.data.id)
               setSpaceInfo(data.data)
               setSpaceId(data.data.id)
               setSpaceLike(data.data.myLike)
               setSpaceLikeCount(data.data.likeCount)
-              // console.log("받은 데이터(React) : " + data.data);
             }
           }}
         />
@@ -509,7 +587,7 @@ const styles = StyleSheet.create({
   },
   qnaContainer: {
     flex: 0.4,
-    marginTop: 5,
+    marginTop: 2,
     // borderWidth: 1, 
     // borderColor: 'red',
   },
@@ -535,7 +613,7 @@ const styles = StyleSheet.create({
   },
   answerContainer: {
     flex: 0.8,
-    marginTop: 9,
+    marginTop: 3,
     // backgroundColor: '#8B90F7',
     backgroundColor: '#8B90F733',
     // borderWidth:2,
@@ -570,5 +648,19 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 10,
     fontWeight: "bold",
+  },
+  stampcontainer: {
+    alignItems:'center',
+    marginTop:10,
+    marginBottom:20,
+  },
+  stampbutton: {
+    width:200,
+    borderWidth:2,
+    borderColor:'red',
+    alignItems:'center',
+  },
+  stamptext: {
+    color:"white"
   }
 })

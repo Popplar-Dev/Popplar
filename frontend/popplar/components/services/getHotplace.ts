@@ -33,3 +33,26 @@ export async function getHotplaceVisitors(id: string) {
     headers: { 'Access-Token': token }
    }).then((res) => res)
 }
+
+// 내 정보 조회
+export async function getMyInfo(id: string) {
+  const token = await getToken();
+  return await axios({
+    method: 'get',
+    url: `${BASE_URL}/member/${id}`,
+    headers: { 'Access-Token': token }
+   }).then((res) => res)
+}
+
+// 내 정보 수정
+export async function updateMyHotPlaceId(hotPlaceId, memberId) {
+  const token = await getToken();
+  return await axios({
+    method: 'patch',
+    url: `${BASE_URL}/member/${memberId}`,
+    data: {
+      myHotPlaceId: hotPlaceId
+    },
+    headers: { 'Access-Token': token }
+   }).then((res) => res)
+}

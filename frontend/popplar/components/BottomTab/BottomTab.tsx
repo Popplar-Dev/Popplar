@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {View, StyleSheet} from 'react-native';
 
+import { TabNavigatorParamList } from '../types/tabNavigatorParams';
+
 //스크린 컴포넌트
 import MapScreen from '../MapScreen';
 import ChatScreen from '../ChatScreen';
@@ -19,11 +21,11 @@ import ClickGame from '../Games/ClickGame';
 import QnaList from '../QnA/QnaList';
 import QnaDetail from '../QnA/QnaDetail';
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<TabNavigatorParamList>();
 const Stack = createNativeStackNavigator();
 
 const MapScreenStack = () => {
-   return (
+  return (
     <Stack.Navigator
       screenOptions={{
         headerTintColor:'#8B90F7',
@@ -37,7 +39,6 @@ const MapScreenStack = () => {
       <Stack.Screen name="ClickGame" component={ClickGame} options={{headerTitle: 'ClickGame'}}/>
       <Stack.Screen name="QnaList" component={QnaList} options={{headerTitle: 'QnaList'}}/>
       <Stack.Screen name="QnaDetail" component={QnaDetail} options={{headerTitle: 'QnaDetail'}}/>
-      <Stack.Screen name="Chat" component={ChatScreen} options={{headerShown: false}}/>
     </Stack.Navigator>
   );
 }
@@ -89,6 +90,7 @@ export default function BottomTab() {
           tabBarIcon: ({focused}) => (
             <Icon name="list" size={25} color={focused ? '#613EEA' : 'white'} />
           ),
+          unmountOnBlur: true
         }}
       />
       <Tab.Screen
