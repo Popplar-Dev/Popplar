@@ -29,7 +29,8 @@ export default function StampButton({spaceId}:stampbuttonProps) {
         .then((response) => {
           setStamp(response.data.stampResDtoList);
           setLoading(false); 
-					console.log(response.data)
+					console.log('111:',response.data)
+          console.log('1:',stamp)
         })
         .catch((err) => {
           console.log("에러 메시지 ::", err);
@@ -56,9 +57,15 @@ export default function StampButton({spaceId}:stampbuttonProps) {
 					)
 					.then((response) => {
 						console.log(response.data)
+            Alert.alert(
+              `오늘의 스탬프를 찍었습니다!`
+            )
           })
 					.catch((err) => {
-						console.error("실패...", err);
+						// console.error("실패...", err);
+            Alert.alert(
+              '오늘의 스탬프를 이미 찍었습니다. 내일 다시 시도해주세요!'
+            )
 					}); 
 				}
 			}

@@ -40,11 +40,7 @@ function MyPageScreen() {
         const userAccessToken = JSON.parse(AccessToken);
         console.log(userAccessToken)
         axios.get(`https://k9a705.p.ssafy.io:8000/member/achievement/${userinfo.id}`,
-          {
-            headers: {
-              'Access-Token': userAccessToken,
-            },
-          }
+          {headers: {'Access-Token': userAccessToken}}
         )
         .then((response) => {
           setStamp(response.data.memberCategoryResDtoList);
