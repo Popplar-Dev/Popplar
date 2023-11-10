@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Service
 @Transactional(readOnly = true)
@@ -96,5 +97,11 @@ class AchievementService(
         }
 
         return achievementResDto
+    }
+
+    fun getIsStampChecked(memberId: Long, hotPlaceId: Long): Boolean {
+        val stamp = stampRepository.findByMemberIdAndHotPlaceId(memberId, hotPlaceId) ?: return false
+        return stamp.updatedAt.toLocalDate() == LocalDate.now()
+
     }
 }
