@@ -36,7 +36,7 @@ export default function PlaceOptionBox({type, spaceId}: Props) {
   };
 
   const gochat = async () => {
-    if (chatroom && chatroom !== spaceId) {
+    if (chatroom) {
       if (chatroom !== spaceId) {
         Alert.alert('이미 입장하신 채팅방이 있습니다.');
       } else {
@@ -52,7 +52,7 @@ export default function PlaceOptionBox({type, spaceId}: Props) {
 
         const url = `https://k9a705.p.ssafy.io:8000/live-chat/chatting-room/${spaceId}`;
         console.log(url);
-        const res = await axios.post(url, {
+        const res = await axios.post(url, null, {
           headers: {
             'Access-Token': accessToken,
           },

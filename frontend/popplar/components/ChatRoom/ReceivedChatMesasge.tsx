@@ -14,8 +14,15 @@ type ReceivedChatMessageProps = {
 export default function ReceivedChatMessage({
   msgStart = false, showTime, chatData
 }: ReceivedChatMessageProps) {
-  const imgUrl =
-    'https://www.dailypaws.com/thmb/d3vNqnLf6Vqjz8oz5XObGCQxms4=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/tiny-white-kitten-873941684-2000-0bac130389984aba9751de5e5e50d25f.jpg';
+
+  let imgUrl; 
+  if (!chatData.memberProfileImage || chatData.memberProfileImage?.includes("popplar-profile-image-bucket.s3.ap-northeast-2.amazonaws.com")) {
+    imgUrl =
+      'https://www.dailypaws.com/thmb/d3vNqnLf6Vqjz8oz5XObGCQxms4=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/tiny-white-kitten-873941684-2000-0bac130389984aba9751de5e5e50d25f.jpg';
+
+  } else {
+    imgUrl = chatData.memberProfileImage
+  }
 
   return (
     <View style={styles.rootContainer}>

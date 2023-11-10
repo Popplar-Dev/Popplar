@@ -3,7 +3,8 @@ import {StatusBar} from 'expo-status-bar';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
-import { RecoilRoot } from 'recoil';
+import {RecoilRoot} from 'recoil';
+import {PaperProvider} from 'react-native-paper';
 
 import BottomTab from './components/BottomTab/BottomTab';
 import FirstLanding from './components/Landing/FirstLanding';
@@ -29,27 +30,32 @@ function App() {
 
   return (
     <RecoilRoot>
-      <SafeAreaProvider> 
+      <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
           {/* <StatusBar style="light" /> */}
-          <ImageBackground
-            source={require('./assets/stars.png')}
-            style={styles.backgroundImage}>
-            <NavigationContainer theme={navTheme}>
-              <Stack.Navigator initialRouteName="Home" 
-              screenOptions={{headerShown: false}}
-              >
-                <Stack.Screen name="FirstLanding" component={FirstLanding} />
-                <Stack.Screen name="LoginPage" component={LoginPage} />
-                <Stack.Screen name="BottomTab" component={BottomTab} />
-                <Stack.Screen name="Home" component={Home} />
-                <Stack.Screen name="UserSetting" component={UserSetting} />
-                <Stack.Screen name="LocationPermission" component={LocationPermission} />
-                {/* <Stack.Screen name="Main" component={Main} /> */}
-              </Stack.Navigator>
-              {/* <BottomTab /> */}
-            </NavigationContainer>
-          </ImageBackground>
+          <PaperProvider>
+            <ImageBackground
+              source={require('./assets/stars.png')}
+              style={styles.backgroundImage}>
+              <NavigationContainer theme={navTheme}>
+                <Stack.Navigator
+                  initialRouteName="Home"
+                  screenOptions={{headerShown: false}}>
+                  <Stack.Screen name="FirstLanding" component={FirstLanding} />
+                  <Stack.Screen name="LoginPage" component={LoginPage} />
+                  <Stack.Screen name="BottomTab" component={BottomTab} />
+                  <Stack.Screen name="Home" component={Home} />
+                  <Stack.Screen name="UserSetting" component={UserSetting} />
+                  <Stack.Screen
+                    name="LocationPermission"
+                    component={LocationPermission}
+                  />
+                  {/* <Stack.Screen name="Main" component={Main} /> */}
+                </Stack.Navigator>
+                {/* <BottomTab /> */}
+              </NavigationContainer>
+            </ImageBackground>
+          </PaperProvider>
         </SafeAreaView>
       </SafeAreaProvider>
     </RecoilRoot>
