@@ -14,6 +14,11 @@ export default function Home() {
 	const navigation = useNavigation();
 	const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
+	const Logout = () => {
+		AsyncStorage.clear();
+		navigation.navigate('Home' as never);
+	};
+
 	const isLogin = async () => {
 		const result = await AsyncStorage.getItem('userInfo');
 		const AccessToken = await AsyncStorage.getItem('userAccessToken');
@@ -23,13 +28,11 @@ export default function Home() {
 			axios.get(`https://k9a705.p.ssafy.io:8000/member/${userinfo.id}`, 
           {
             headers: {
-              'Access-Token': userAccessToken,
+              'Access-Token': userAccessToken
             },
           }
         )
           .then((response) => {
-						// console.log(userinfo)
-						// console.log(response.data)
 						const user = {
 							exp: response.data.exp,
 							id: response.data.id,
@@ -41,6 +44,10 @@ export default function Home() {
           })
           .catch((err) => {
             console.log("에러 메시지 :", err)
+						Alert.alert(
+							'다시 로그인 해주세요'
+						)
+						Logout()
           });
 			navigation.navigate("LocationPermission" as never)
 		} else {
@@ -52,7 +59,6 @@ export default function Home() {
 	}
 
 	const newLogin = async () => {
-		// navigation.navigate("LoginPage" as never)
 		const result = await AsyncStorage.getItem('userInfo');
 		const AccessToken = await AsyncStorage.getItem('userAccessToken');
 		if (AccessToken !== null && result !== null) {
@@ -61,13 +67,11 @@ export default function Home() {
 			axios.get(`https://k9a705.p.ssafy.io:8000/member/${userinfo.id}`, 
           {
             headers: {
-              'Access-Token': userAccessToken,
+              'Access-Token': userAccessToken
             },
           }
         )
           .then((response) => {
-						// console.log()
-						// console.log(response.data)
 						const user = {
 							exp: response.data.exp,
 							id: response.data.id,
@@ -79,6 +83,10 @@ export default function Home() {
           })
           .catch((err) => {
             console.log("에러 메시지 :", err)
+						Alert.alert(
+							'다시 로그인 해주세요'
+						)
+						Logout()
           });
 			navigation.navigate("LocationPermission" as never)
 		} else {
