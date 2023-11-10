@@ -91,6 +91,10 @@ class AchievementService(
                     )
                 })
 
+        stampRepository.findAllByMemberId(decryptedId).forEach {
+            achievementResDto.stampResDtoList.add(StampResDto.create(it))
+        }
+
         return achievementResDto
     }
 }
