@@ -17,7 +17,7 @@ import {useRecoilState} from 'recoil';
 import {chatroomState} from '../recoil/chatroomState';
 
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getToken } from '../services/getAccessToken';
 
 
 type Props = {
@@ -45,26 +45,24 @@ export default function PlaceOptionBox({type, spaceId}: Props) {
       }
     } else {
       try {
-        const accessToken = await AsyncStorage.getItem('userAccessToken');
+        const accessToken = await getToken(); 
         if (!accessToken) {
-          Alert.alert('인증에 실패하셨습니다. ');
+          Alert.alert('인증에 실패하셨습니다.');
           return;
         }
-
-        const userAccessToken = JSON.parse(accessToken);
 
         const url = `https://k9a705.p.ssafy.io:8000/live-chat/chatting-room/${spaceId}`;
         console.log(url)
         const res = await axios.post(url, {
           headers: {
-            'Access-Token': userAccessToken,
-          },
+            'Access-Token': accessToken,
+          }
         });
 
-        if (res.status === 200) {
-          setChatroom(spaceId);
-          navigation.navigate('Chat');
-        }
+
+        setChatroom(spaceId);
+        navigation.navigate('Chat');
+        
       } catch (e) {
         console.error(e);
       }
