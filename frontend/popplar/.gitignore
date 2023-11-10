@@ -1,9 +1,9 @@
 # OSX
 #
 .DS_Store
-.env
 # Xcode
 #
+.env
 build/
 *.pbxuser
 !default.pbxuser

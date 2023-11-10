@@ -89,6 +89,7 @@ export default function BottomTab() {
           tabBarIcon: ({focused}) => (
             <Icon name="list" size={25} color={focused ? '#613EEA' : 'white'} />
           ),
+          unmountOnBlur: true
         }}
       />
       <Tab.Screen
