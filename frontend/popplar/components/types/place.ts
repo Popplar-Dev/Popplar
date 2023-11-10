@@ -40,3 +40,9 @@ export type SpaceInfo = {
   myLike: boolean
   // place_url: string
 }
+
+export type Position = {
+  hotPlaceId: string
+  x: string
+  y: string
+}

@@ -27,7 +27,7 @@ function App() {
 
   function placeSelectClick (x: string, y: string) {
     setPlaceKeyword("")
-    const LatLngInfo = {x: x, y: y}
+    const LatLngInfo = {x: x, y: y, flagged: false}
     sethotPlaceLatLng(LatLngInfo)
   }
   

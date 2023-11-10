@@ -19,7 +19,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import NameBox from './NameBox/NameBox'
 import PlaceOptionBox from './PlaceOptionBox/PlaceOptionBox'
-import GeolocationPermission from './GeolocationPermission/GeolocationPermission'
 import BottomSheetQnA from './BottomSheetQnA/BottomSheetQnA'
 import { FlipInEasyX } from 'react-native-reanimated';
 
@@ -104,7 +103,8 @@ const MapScreen: React.FC = () => {
       const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
   
       const loc: { y: string, x: string } = {y: y, x: x}
-      const locationData: { type: string, data: { y: string, x: string } } = {type: 'location', data: loc}
+      const locationData: { type: string, data: { y: string, x: string } } = {type: 'pickHotPlace', data: loc}
+      // console.log(locationData, '~!~!~!~!~!~!~!~!~!~')
       if (webRef.current) {
         handlePresentModalPress();
         setSpaceInfo({
@@ -140,7 +140,6 @@ const MapScreen: React.FC = () => {
 
   }, [spaceId])
   
-
   const openModal = () => {
     setModalVisible(true);
   };
@@ -180,13 +179,13 @@ const MapScreen: React.FC = () => {
   }, [])
 
   // 현재 표시된 장소 정보가 변경되면, 핫플레이스 화면에 띄우는 정보 변경해달라고 요청
-  useEffect(() => {
-    if (webRef.current) {
-      webRef.current.injectJavaScript(`
-      window.postMessage('{type: 'postHotplace'}', '*')
-      `);
-    }
-  }, [spaceInfo])
+  // useEffect(() => {
+  //   if (webRef.current) {
+  //     webRef.current.injectJavaScript(`
+  //     window.postMessage('{type: 'postHotplace'}', '*')
+  //     `);
+  //   }
+  // }, [spaceInfo])
 
   const getHotplaceLocation = async () => {
     const accessToken = await getToken(); 
@@ -205,7 +204,6 @@ const MapScreen: React.FC = () => {
           const lng = pos.coords.longitude.toString()
 
           setLocation(prev => ({...prev, y: lat, x: lng }))
-
 
           // 로드시, accessToken web으로 전송해서 사용
           // 현재 비활성화
@@ -245,13 +243,11 @@ const MapScreen: React.FC = () => {
     }
   }
 
-  // const inject = `alert('메세지 수신됨')`
-
   async function handle_native_location (y: string, x: string) {
     if (webRef.current) {
       const data: { y: string, x: string } = {y: y, x: x}
       const locationData: { type: string, data: { y: string, x: string } } = {type: 'location', data: data}
-      // console.log('locationData', locationData)
+
       webRef.current.injectJavaScript(`
       window.postMessage(${JSON.stringify(locationData)}, '*')
       `);
