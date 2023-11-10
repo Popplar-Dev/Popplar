@@ -52,7 +52,16 @@ class AchievementService(
         stamp.increaseVisitCount()
         stamp = stampRepository.saveAndFlush(stamp)
 
-//        val hotPlaceResDto = retryWithBackoff(webClient, HttpMethod.POST, "$hotPlaceURL/visitor", VisitorReqDto.create(stamp), 5, HotPlaceResDto::class.java)
+        val hotPlaceResDto = webClient.get()
+            .uri("$hotPlaceURL/$hotPlaceId")
+            .header("Member-Id", decryptedMemberId.toString())
+            .retrieve()
+            .bodyToMono(HotPlaceResDto::class.java)
+            .block()!!
+
+        stamp.update(hotPlaceResDto)
+
+//        val hotPlaceResDto = retryWithBackoff(webClient, HttpMethod.GET, "$hotPlaceURL/$hotPlaceId", VisitorReqDto.create(stamp), 5, HotPlaceResDto::class.java)
 
 //        stamp.update(hotPlaceResDto!! as HotPlaceResDto)
 
