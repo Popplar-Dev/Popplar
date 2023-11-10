@@ -18,7 +18,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import NameBox from './NameBox/NameBox'
 import PlaceOptionBox from './PlaceOptionBox/PlaceOptionBox'
-import GeolocationPermission from './GeolocationPermission/GeolocationPermission'
 import BottomSheetQnA from './BottomSheetQnA/BottomSheetQnA'
 import { FlipInEasyX } from 'react-native-reanimated';
 
@@ -75,43 +74,44 @@ const MapScreen: React.FC = () => {
     if (data) {
       setSpaceId(data.data.id)
     }
+    console.log('침착하게', data)
   }, [route.params])
 
   // 전체 핫플레이스 검색 클릭 시, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
-  // useEffect(() => {
-  //   getIdHotplace(spaceId)
-  //   .then((res) => {
-  //     const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
+  useEffect(() => {
+    getIdHotplace(spaceId)
+    .then((res) => {
+      const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
   
-  //     const loc: { y: string, x: string } = {y: y, x: x}
-  //     const locationData: { type: string, data: { y: string, x: string } } = {type: 'location', data: loc}
-  //     if (webRef.current) {
-  //       handlePresentModalPress();
-  //       setSpaceInfo({
-  //         id,
-  //         place_name: placeName,
-  //         address_name: addressName,
-  //         road_address_name: roadAddressName,
-  //         category_group_name: category,
-  //         likeCount: likeCount,
-  //         phone,
-  //         placeType,
-  //         visitorCount,
-  //         y,
-  //         x,
-  //         tier,
-  //         myLike,
-  //       })
-  //       setSpaceLike(myLike)
-  //       setSpaceLikeCount(likeCount)
-  //       webRef.current.injectJavaScript(`
-  //       window.postMessage(${JSON.stringify(locationData)}, '*')
-  //       `);
-  //     }
-  //   }).catch(() => console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.'))
-  // }, [spaceId])
+      const loc: { y: string, x: string } = {y: y, x: x}
+      const locationData: { type: string, data: { y: string, x: string } } = {type: 'pickHotPlace', data: loc}
+      // console.log(locationData, '~!~!~!~!~!~!~!~!~!~')
+      if (webRef.current) {
+        handlePresentModalPress();
+        setSpaceInfo({
+          id,
+          place_name: placeName,
+          address_name: addressName,
+          road_address_name: roadAddressName,
+          category_group_name: category,
+          likeCount: likeCount,
+          phone,
+          placeType,
+          visitorCount,
+          y,
+          x,
+          tier,
+          myLike,
+        })
+        setSpaceLike(myLike)
+        setSpaceLikeCount(likeCount)
+        webRef.current.injectJavaScript(`
+        window.postMessage(${JSON.stringify(locationData)}, '*')
+        `);
+      }
+    }).catch(() => console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.'))
+  }, [spaceId])
   
-
   const openModal = () => {
     setModalVisible(true);
   };
@@ -147,7 +147,6 @@ const MapScreen: React.FC = () => {
           const lat = pos.coords.latitude.toString()
           const lng = pos.coords.longitude.toString()
           setLocation(prev => ({...prev, y: lat, x: lng }))
-          
 
           // 로드시, accessToken web으로 전송해서 사용
           // 현재 비활성화
@@ -191,7 +190,7 @@ const MapScreen: React.FC = () => {
     if (webRef.current) {
       const data: { y: string, x: string } = {y: y, x: x}
       const locationData: { type: string, data: { y: string, x: string } } = {type: 'location', data: data}
-      // console.log('locationData', locationData)
+      console.log('locationData', locationData)
       webRef.current.injectJavaScript(`
       window.postMessage(${JSON.stringify(locationData)}, '*')
       `);
@@ -199,7 +198,6 @@ const MapScreen: React.FC = () => {
   }
 
   async function native_to_web_load() {
-    // console.log('native_to_web')
     await get_location('relocation')
     setInterval(() => {
       // console.log('location 정보 update');
