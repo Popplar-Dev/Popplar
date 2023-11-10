@@ -1,19 +1,20 @@
 package com.hotspot.member.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.hotspot.global.eureka.dto.ChattingMemberReqDto
 import com.hotspot.global.eureka.dto.ChattingMemberResDto
 import com.hotspot.global.oauth.dto.OAuthMemberDto
 import com.hotspot.global.service.WebClientService
-import com.hotspot.member.dto.MemberInfoDto
-import com.hotspot.member.dto.MemberInfoResponseDto
-import com.hotspot.member.dto.MemberProfileResDto
-import com.hotspot.member.dto.MemberUpdateReqDto
+import com.hotspot.member.dto.*
 import com.hotspot.member.entity.BlockedMember
 import com.hotspot.member.entity.Member
 import com.hotspot.member.repository.BlockedMemberRepository
 import com.hotspot.member.repository.MemberRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpMethod
+//import org.springframework.kafka.annotation.KafkaListener
+//import org.springframework.kafka.core.KafkaTemplate
+//import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
@@ -27,6 +28,8 @@ class MemberService(
         private val memberRepository: MemberRepository,
         private val cryptService: CryptService,
         private val blockedMemberRepository: BlockedMemberRepository,
+//        private val kafkaTemplate: KafkaTemplate<String, Any>,
+        private val objectMapper: ObjectMapper,
 
         @Value("\${LIVE_CHAT_URL}")
         private val liveChatURL: String,
@@ -41,7 +44,6 @@ class MemberService(
 
         return member
     }
-
 
 
     fun getMemberProfile(memberId: Long): MemberProfileResDto {
@@ -110,4 +112,13 @@ class MemberService(
         val memberList = memberRepository.findByIdIn(memberIdList)
         return MemberInfoResponseDto(memberList.map { MemberInfoDto.create(it) }.toMutableList())
     }
+//    @KafkaListener(topics = ["TOPIC"])
+//    fun consume(@Payload data: String): String {
+//        println(data)
+//        val testDto = TestDto.create(data)
+//        val jsonValue = objectMapper.writeValueAsString(testDto)
+//        kafkaTemplate.send("TEST_RETURN", jsonValue)
+//        return "Message: $data"
+//    }
+//
 }

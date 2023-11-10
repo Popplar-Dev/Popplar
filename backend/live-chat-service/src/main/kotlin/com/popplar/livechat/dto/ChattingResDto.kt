@@ -2,6 +2,7 @@ package com.popplar.livechat.dto
 
 import com.popplar.livechat.entity.Chatting
 import com.popplar.livechat.entity.ChattingMember
+import com.popplar.livechat.service.CryptService
 import java.time.LocalDateTime
 
 class ChattingResDto(
@@ -17,13 +18,13 @@ class ChattingResDto(
 
     companion object {
 
-        fun create(chatting: Chatting, chattingMember: ChattingMember): ChattingResDto {
+        fun create(cryptService: CryptService, chatting: Chatting, chattingMember: ChattingMember): ChattingResDto {
             return ChattingResDto(
                 chattingId = chatting.id!!,
                 chattingRoomId = chatting.chattingRoomId,
                 chattingContent = chatting.content,
                 chattingCreatedAt = chatting.createdAt,
-                memberId = chattingMember.memberId,
+                memberId = cryptService.encrypt(chattingMember.memberId),
                 memberName = chattingMember.memberName,
                 memberProfileImage = chattingMember.memberProfileImage
             )

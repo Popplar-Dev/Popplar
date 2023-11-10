@@ -24,21 +24,26 @@ class Member(
 
     var exp: Int,
 
+    var myHotPlaceId: Long
+
+
     ) : BaseEntity() {
 
     fun update(memberUpdateReqDto: MemberUpdateReqDto) {
         this.name = memberUpdateReqDto.name ?: this.name
         this.profileImage = memberUpdateReqDto.profileImage ?: this.profileImage
+        this.myHotPlaceId = memberUpdateReqDto.myHotPlaceId ?: this.myHotPlaceId
     }
 
     companion object {
         fun create(oAuthMemberDto: OAuthMemberDto): Member {
             return Member(
                 name = "새 유저",
-                profileImage = "default profile",
+                profileImage = "https://popplar-profile-image-bucket.s3.ap-northeast-2.amazonaws.com/avatar1.png",
                 exp = 0,
                 socialType = oAuthMemberDto.socialType,
                 socialId = oAuthMemberDto.socialId,
+                myHotPlaceId = 0
             )
         }
     }

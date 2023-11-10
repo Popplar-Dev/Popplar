@@ -49,6 +49,9 @@ dependencies {
 
 	//WebClient
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	//Kafka
+	implementation 'org.springframework.kafka:spring-kafka'
 }
 dependencyManagement {
 	imports {

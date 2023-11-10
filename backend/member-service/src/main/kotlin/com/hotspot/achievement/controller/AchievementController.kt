@@ -22,7 +22,7 @@ class AchievementController(
 
     @PostMapping("/{memberId}")
     fun createStamp(
-        @RequestHeader("Member-Id") myId: String,
+        @RequestHeader("Member-Id") myId: Long,
         @PathVariable memberId: Long,
         @RequestBody stampReqDto: StampReqDto
     ): StampResDto {

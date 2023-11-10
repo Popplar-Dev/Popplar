@@ -16,6 +16,10 @@ class CryptService (
     private val saltC: Long,
 ){
 
+    fun encrypt(id: Long): Long {
+        return id * saltA * saltB * saltC
+    }
+
     fun decrypt(id: Long): Long {
         return id / (saltA * saltB * saltC)
     }
