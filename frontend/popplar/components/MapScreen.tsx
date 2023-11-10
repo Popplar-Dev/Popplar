@@ -520,7 +520,7 @@ const styles = StyleSheet.create({
   },
   qnaContainer: {
     flex: 0.4,
-    marginTop: 5,
+    marginTop: 2,
     // borderWidth: 1, 
     // borderColor: 'red',
   },
@@ -546,7 +546,7 @@ const styles = StyleSheet.create({
   },
   answerContainer: {
     flex: 0.8,
-    marginTop: 9,
+    marginTop: 3,
     // backgroundColor: '#8B90F7',
     backgroundColor: '#8B90F733',
     // borderWidth:2,
