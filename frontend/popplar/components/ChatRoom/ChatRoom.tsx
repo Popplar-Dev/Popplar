@@ -52,7 +52,6 @@ export default function ChatRoom({roomId}: {roomId: number}) {
         console.error(e);
       }
     }
-
     getRoomName();
   }, []);
 
@@ -230,11 +229,11 @@ export default function ChatRoom({roomId}: {roomId: number}) {
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      scrollToEnd();
-    }, [flatListRef]),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     scrollToEnd();
+  //   }, [flatListRef]),
+  // );
 
   const renderChatMessageItem = ({
     item,
@@ -315,9 +314,6 @@ export default function ChatRoom({roomId}: {roomId: number}) {
             keyExtractor={(item: ChatMessageType) => item.chattingId.toString()}
             ref={flatListRef}
             initialNumToRender={30}
-            onContentSizeChange={() =>
-              flatListRef.current?.scrollToEnd({animated: true})
-            }
           />
         </View>
         <ChatInput onSend={sendMessage} onScrollToEnd={scrollToEnd} />

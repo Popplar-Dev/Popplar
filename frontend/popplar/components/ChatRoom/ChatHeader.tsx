@@ -1,6 +1,6 @@
 import {View, Text, Pressable, Alert, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {Menu, PaperProvider} from 'react-native-paper';
+import {Menu} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import {useRecoilState} from 'recoil';
@@ -60,17 +60,18 @@ export default function ChatHeader({
       '',
       [
         {
-          text: '퇴장',
-          onPress: async () => exitChatroom(),
-          style: 'default',
-        },
-        {
           text: '취소',
           onPress: () => {
             setIsMenuOpen(false);
           },
           style: 'cancel',
         },
+        {
+          text: '퇴장',
+          onPress: async () => exitChatroom(),
+          style: 'default',
+        },
+
       ],
       {
         cancelable: true,
@@ -182,9 +183,8 @@ const styles = StyleSheet.create({
     // borderColor: 'white',
   },
   menuContainer: {
-    backgroundColor: '#0c072c42',
+    backgroundColor: '#0c072c',
     right: 20,
-    zIndex: 2,
     // paddingHorizontal: 10,
   },
   exitButtonOuterContainer: {
@@ -198,9 +198,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // borderColor: 'white',
     // borderWidth: 1,
-    paddingHorizontal: 10,
+    paddingHorizontal: 6,
     paddingVertical: 10,
-    backgroundColor: '#0c072c42',
+    backgroundColor: '#0c072c',
   },
   exitButtonText: {
     marginStart: 10,
