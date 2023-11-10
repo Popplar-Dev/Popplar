@@ -7,6 +7,7 @@ import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import HotRegisterButton from './HotRegisterButton/HotRegisterButton'
 import MetalIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import StampButton from './PlaceOptionBox/StampButton'
 
 
 import {
@@ -327,11 +328,11 @@ const MapScreen: React.FC = () => {
                   </Pressable>
                 )}
               </TouchableOpacity>
-            <GameListModal
-              visible={isModalVisible}
-              onClose={() => setModalVisible(false)}
-              spaceid={spaceInfo.id}
-            />
+              <GameListModal
+                visible={isModalVisible}
+                onClose={() => setModalVisible(false)}
+                spaceid={spaceInfo.id}
+              />
               </View>
             )}
           </View>
@@ -371,6 +372,10 @@ const MapScreen: React.FC = () => {
           </View> */}
         
         {spaceInfo &&
+          <>
+          <View style={styles.stampcontainer}>
+            <StampButton spaceId={spaceInfo.id}/>
+          </View>
           <View style={styles.qnaContainer}>
             <View style={styles.qnaTitle}>
               <Icon name="question" size={16} color={'white'} style={styles.qnaIcon}/>
@@ -380,6 +385,7 @@ const MapScreen: React.FC = () => {
               <BottomSheetQnA spaceId={spaceInfo.id} spacename={spaceInfo.place_name}/>
             </View>
           </View>
+          </>
         }
 
             {spaceInfo ? (
@@ -601,5 +607,19 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 10,
     fontWeight: "bold",
+  },
+  stampcontainer: {
+    alignItems:'center',
+    marginTop:10,
+    marginBottom:20,
+  },
+  stampbutton: {
+    width:200,
+    borderWidth:2,
+    borderColor:'red',
+    alignItems:'center',
+  },
+  stamptext: {
+    color:"white"
   }
 })
