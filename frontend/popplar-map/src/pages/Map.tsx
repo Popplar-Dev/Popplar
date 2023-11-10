@@ -20,7 +20,6 @@ import flag from '../assets/images/flag-iso-color.png'
 const { kakao } = window;
 
 export default function Map () {
-  const [searchPlaceObj, setSearchPlacObj] = useState<any | null>(null)
   const [visibleMap, setVisibleMap] = useState<any | null>(null)
   const [hotplaceList, setHotplaceList] = useState<hotPlaceResDto[]>([])
   
@@ -31,16 +30,15 @@ export default function Map () {
 
   const [event, setEvent] = useState<any>({})
 
+  // 최초 마운트 시, 전체 hotplace 조회
   useEffect(() => {
-    // 장소 검색 객체를 생성합니다
-    var ps = new kakao.maps.services.Places();  
-    setSearchPlacObj(ps)
     getAllHotplace()
     .then((res) => setHotplaceList(res.data))
     // .then((res) => console.log('hot place', res.data))
     .then((err) => console.log(err))
   }, [])
 
+  // 모바일 화면 리사이징
   useEffect(() => {
     window.addEventListener('resize', function() {
       let vh = window.innerHeight * 0.01;
@@ -49,74 +47,41 @@ export default function Map () {
     });
   }, [])
 
-  // const handleLocation = (event: Event) => {
-  //   console.log(event)
-  //   console.log(event.data)
-  //   const data = JSON.parse(event.data);
-  //   console.log(data)
-  // }
-
-  useEffect(() => {
-    // window.addEventListener('message', (event) => {
-    //   alert('메세지 수신됨')
-    //   const { type, data } = JSON.parse(event.data);
-    //   const Lat = data.y.slice(0, -8)
-    //   const Lng = data.x.slice(0, -8)
-    //   setCenterLat(Lat)
-    //   setCenterLng(Lng)
-    //   if (typeof window !== 'undefined' && window.ReactNativeWebView) {
-    //     window.ReactNativeWebView.postMessage(
-    //       JSON.stringify({ 
-    //         type: 'test',
-    //         data: data,
-    //       })
-    //     );
-    //   }
-    // })
-
-    window.addEventListener("message", (event: any) => {
-      // if (typeof window !== 'undefined' && window.ReactNativeWebView) {
-      //   window.ReactNativeWebView.postMessage(
-      //     JSON.stringify('native에서 보낸 정보를 받아줬으면 좋겠어...')
-      //   );
-      // }
-      // const data = JSON.parse(event.data);
-      const data = event.data.data;
-      const type = event.data.type;
-      // const detail = JSON.parse(data.detail)
-      // const data = detail.data
-      // const LatTest = data.y.toString()
-      // const LngTest = data.x.toString()
-      if (type=="location") {
-        const Lat = data.y.toString().slice(0, 8)
-        const Lng = data.x.toString().slice(0, 8)
-        setCurrLocation(prev => ({...prev, Lat: Lat, Lng: Lng}))
-        setCenterLat(Lat)
-        setCenterLng(Lng)
-        if (typeof window !== 'undefined' && window.ReactNativeWebView) {
-          window.ReactNativeWebView.postMessage(
-            JSON.stringify({ 
-              type: 'test',
-              data: { data, Lat, Lng }
-            })
-          );
-        }
-      } else if (type=="postHotplace") {
-        getAllHotplace()
-        .then((res) => setHotplaceList(res.data))
+  const myMessageHandler = (event: any) => {
+    const sample = event.data
+    const data = event.data.data;
+    const type = event.data.type;
+    if (type=="location") {
+      const Lat = data.y.toString().slice(0, 8)
+      const Lng = data.x.toString().slice(0, 8)
+      setCurrLocation(prev => ({...prev, Lat: Lat, Lng: Lng}))
+      if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({ 
+            type: 'test',
+            data: { sample, data, Lat, Lng }
+          })
+        );
       }
-    });
-  }, [])
+    } else if (type=="postHotplace") {
+      // getAllHotplace()
+      // .then((res) => setHotplaceList(res.data))
+    } else if (type=="pickHotPlace") {
+      const Lat = data.y.toString().slice(0, 8)
+      const Lng = data.x.toString().slice(0, 8)
+      sethotPlaceLatLng({x: Lng, y: Lat, flagged: true})   
+    }
+  }
 
-  // function placesSearchCB(data: any, status: any, pagination: any) {
-  //   if (status === kakao.maps.services.Status.OK) {
-  //     console.log(data)
-  //     if (window.ReactNativeWebView) {
-  //       window.ReactNativeWebView.postMessage(
-  //         JSON.stringify({ data })
-  //       );
-  //   }}
-  // }
+  // native -> web 데이터 수신
+  useEffect(() => {
+    window.addEventListener("message", (event: any) => myMessageHandler(event))
+
+  // 언마운트시 eventListner remove
+  return (
+    window.removeEventListener("message", (event: any) => myMessageHandler(event))
+  )
+  }, [])
 
   // 내 위치 돌아가기 버튼 선택시, web- > native 에 내 위치 데이터 보내달라고 요청
   const requestLocation = () => {
@@ -140,24 +105,9 @@ export default function Map () {
         })
       );
     }
-    // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
-    // if (searchPlaceObj && data) {
-    //   searchPlaceObj.keywordSearch(data, placesSearchCB)
-    // }
   }
 
-    // if (typeof window !== 'undefined' && window.ReactNativeWebView) {
-    //   window.ReactNativeWebView.postMessage(
-    //     JSON.stringify({ data })
-    //   );
-    // } else {
-    //   // 모바일이 아니라면 모바일 아님을 alert로 띄웁니다.
-    //   // alert({ message: ERROR_TYPES.notMobile });
-    //   alert( '모바일 환경에서 실행해주세요' );
-    // }
-
-  // 내 위치로 돌아가기
-  const moveToMypos = () => {
+  async function movemove() {
     var moveLatLon = new kakao.maps.LatLng(currLocation.Lat, currLocation.Lng);
     visibleMap.panTo(moveLatLon); 
 
@@ -166,42 +116,80 @@ export default function Map () {
     }, 400)    
   }
 
+  // 내 위치로 돌아가기
+  async function moveToMypos() {
+    await sethotPlaceLatLng({x: "", y: "", flagged: false});
+    await requestLocation();
+    await movemove()  
+  }
+
+  // 마운트 시, 최초에 map을 그리는 작업 수행
+  useEffect(() => {
+    window.kakao.maps.load(() => {
+      setTimeout(() => {
+      var mapContainer = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+      if (hotPlaceLatLng.x) {
+        const Lat = hotPlaceLatLng.y.slice(0, -8)
+        const Lng = hotPlaceLatLng.x.slice(0, -8)
+        var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
+          center: new kakao.maps.LatLng(Lat, Lng), //지도의 중심좌표.
+          level: 4 //지도의 레벨(확대, 축소 정도)
+        };
+        var map = new kakao.maps.Map(mapContainer, mapOptions); //지도 생성 및 객체 리턴
+        setVisibleMap(map) 
+
+        } else {
+          var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
+            center: new kakao.maps.LatLng(currLocation.Lat, currLocation.Lng), //지도의 중심좌표.
+            level: 4 //지도의 레벨(확대, 축소 정도)
+          };
+
+          var map = new kakao.maps.Map(mapContainer, mapOptions); //지도 생성 및 객체 리턴
+          setVisibleMap(map) 
+        }
+        console.log('지도 그리기 완료~~')
+      }, 100)
+      })
+  }, [])
+
+  // 표시된 지도 위에, 마커 띄우는 로직
   useEffect(() => {
     setTimeout(() => {
-    var mapContainer = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
-    // var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
-    //   center: new kakao.maps.LatLng(37.50134, 127.0397), //지도의 중심좌표.
-    //   level: 4 //지도의 레벨(확대, 축소 정도)
-    // };
-    if (hotPlaceLatLng.x) {
-      const Lat = hotPlaceLatLng.y.slice(0, -8)
-      const Lng = hotPlaceLatLng.x.slice(0, -8)
-      setCenterLat(Lat)
-      setCenterLng(Lng)
-    } else {
-      // setCenterLat(currLocation.Lat)
-      // setCenterLng(currLocation.Lng)
-    }
+      console.log('마커 표시 시작함')
+      if (hotPlaceLatLng.x) {
+        if (!hotPlaceLatLng.flagged) {
+          // 내 위치 마커
+          // 마커가 표시될 위치입니다 
+          const Lat = hotPlaceLatLng.y.slice(0, -8)
+          const Lng = hotPlaceLatLng.x.slice(0, -8)
+          var markerPosition = new kakao.maps.LatLng(Lat, Lng);
 
-    var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
-      center: new kakao.maps.LatLng(centerLat, centerLng), //지도의 중심좌표.
-      level: 4 //지도의 레벨(확대, 축소 정도)
-    };
+          var imageSize = new kakao.maps.Size(45, 50);
+          var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/8f938ed7-61cf-450d-b3fe-4e8ebbf070c9";
+          } else {
+            var imageSize = new kakao.maps.Size(45, 50);
+            var imageSrc = "";
+          }
+      } else {
+        const Lat = currLocation.Lat
+        const Lng = currLocation.Lng
+        var markerPosition = new kakao.maps.LatLng(Lat, Lng);
 
-    // 내 위치 마커
-    // 마커가 표시될 위치입니다 
-    var markerPosition = new kakao.maps.LatLng(centerLat, centerLng);
+        var imageSize = new kakao.maps.Size(40, 45);
+        var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/8f938ed7-61cf-450d-b3fe-4e8ebbf070c9";
+      }
 
-    var map = new kakao.maps.Map(mapContainer, mapOptions); //지도 생성 및 객체 리턴
-    setVisibleMap(map) 
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
 
     // 마커를 생성합니다
     var marker = new kakao.maps.Marker({
-        position: markerPosition
+      // map: visibleMap,
+      position: markerPosition,
+      image: markerImage
     });
 
     // 마커가 지도 위에 표시되도록 설정합니다
-    marker.setMap(map);
+    marker.setMap(visibleMap);
 
     // 핫플 마커 띄우기
     var positions = hotplaceList
@@ -215,48 +203,54 @@ export default function Map () {
         
         if (positions[i].placeType==="FLAG") {
           var imageSize = new kakao.maps.Size(40, 45); 
+          // 깃발 이미지
           var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/b3564221-b312-4f4d-a073-fc14dccb3c15";
         } else {
-          var imageSize = new kakao.maps.Size(25, 35); 
-          var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
-        }
+          var imageSize = new kakao.maps.Size(35, 45);
+          if (positions[i].tier===5) {
+            var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/c1c16fdb-45db-485b-9322-9e74a9f0fef2";
+          } else if (positions[i].tier===4) {
+            var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/4a020cb7-9651-4e8a-9155-4fca453ad39e";
+          } else if (positions[i].tier===3) {
+            var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/0c5546a6-cddf-43c9-8702-aa17801c2231";
+          } else if (positions[i].tier===2) {
+            var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/a8fe3468-f4c0-401f-b6c9-e9d34520bcf1";
+          } else {
+            var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/ef5fd7c4-4e5b-4628-be7f-1ad1fd166574";
+        }}
         
         // 마커 이미지를 생성합니다    
         var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
-  
+
         const La = positions[i].y.toString().slice(0, -8)
         const Ma = positions[i].x.toString().slice(0, -8)
-  
+
         // 마커를 생성합니다
         var hotMarker = new kakao.maps.Marker({
-            map: map, // 마커를 표시할 지도
+            map: visibleMap, // 마커를 표시할 지도
             position: new kakao.maps.LatLng(La, Ma),
             title : positions[i].placeName,
             image : markerImage // 마커 이미지 
         });
-  
-        // 마커가 지도 위에 표시되도록 설정합니다
-        // hotMarker.setMap(map);
-    
-        // 마커에 표시할 인포윈도우를 생성합니다 
-        // var infowindow = new kakao.maps.InfoWindow({
-        //     content: positions[i].content // 인포윈도우에 표시할 내용
-        // });
-    
-        // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
-        // 이벤트 리스너로는 클로저를 만들어 등록합니다 
-        // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-        // kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
-        // kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+
         const place_name = positions[i].placeName
         const road_address_name = positions[i].roadAddressName
         const category_group_name = positions[i].category
+        const address = positions[i].addressName
         const id = positions[i].id
         kakao.maps.event.addListener(hotMarker, 'click', function() {
           // 클릭한 위도, 경도 정보를 가져옵니다 
           panToHandler(La, Ma);
+          // requestPermission({
+          //   id, 
+          //   place_name, 
+          //   road_address_name, 
+          //   category_group_name,
+          //   address, 
+          // })
           getIdHotplace(id)
           .then((res) => res.data)
+          // .then((res) => console.log(res))
           .then((res) => requestPermission({
             id, 
             place_name, 
@@ -273,54 +267,40 @@ export default function Map () {
             myLike: res.myLike
           }))
         })
-        // marker.setMap(map);
       }
-  }
-  
-    // 핫플 마커 클릭시 중심으로 이동
-    function panToHandler(La: string, Ma: string) {
-      // 이동할 위도 경도 위치를 생성합니다 \
-      var moveLatLon = new kakao.maps.LatLng(La, Ma);
-      
-      // 지도 중심을 부드럽게 이동시킵니다
-      // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
-      map.panTo(moveLatLon);
-      setTimeout(() => {
-        map.setLevel(2); 
-      }, 400)             
-    } 
-
-  // function displayMarker(locPosition: any) {
-
-  //   // 마커를 생성합니다
-  //   var marker = new kakao.maps.Marker({  
-  //       map: map, 
-  //       position: locPosition
-  //   }); 
+    }
     
-  //   // 지도 중심좌표를 접속위치로 변경합니다
-  //   map.setCenter(locPosition);      
-  // }    
-    
-  // if (navigator.geolocation) {
-    
-  // // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-  // navigator.geolocation.getCurrentPosition(function(position) {
-      
-  //     // var lat = position.coords.latitude, // 위도
-  //     var lat = 37.50033, // 위도
-  //         // lon = position.coords.longitude; // 경도
-  //         lon = 127.0362; // 경도
+      // 핫플 마커 클릭시 중심으로 이동
+      function panToHandler(La: string, Ma: string) {
+        // 이동할 위도 경도 위치를 생성합니다 \
+        var moveLatLon = new kakao.maps.LatLng(La, Ma);
+        
+        // 지도 중심을 부드럽게 이동시킵니다
+        // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+        visibleMap.panTo(moveLatLon);
+        setTimeout(() => {
+          visibleMap.setLevel(2); 
+        }, 400)             
+      } 
+    }, 700)  
 
-  //     var locPosition = new kakao.maps.LatLng(lat, lon)
-      
-  //     // 마커와 인포윈도우를 표시합니다
-  //     displayMarker(locPosition);
-          
-  //   });
-  // }
-}, 100)  
-}, [centerLat, centerLng, hotplaceList])
+    // setTimeout(() => {
+    //   // visibleMap.setMap(null);
+    //   setVisibleMap(null);
+    //   console.log('맵 마커 갱신 완료~~')
+    //  } , 700)
+}, [currLocation, hotPlaceLatLng, hotplaceList])
+
+// useEffect(() => {
+//   window.kakao.maps.load(() => {
+//   var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+//     mapOption = { 
+//         center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+//         level: 3 // 지도의 확대 레벨
+//     };
+//     var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+//   })
+// }, [])
 
   return (
   <div className={`container`}>
@@ -336,10 +316,6 @@ export default function Map () {
 
     <button className={styles.mypos} onClick={() => {
       moveToMypos();
-      requestLocation();
-      sethotPlaceLatLng({x: "", y: ""});
-      // setCenterLat(currLocation.Lat);
-      // setCenterLng(currLocation.Lng);
     }}>
       <BiSolidRocket size={25} color={'#8B90F7'}/>
     </button>

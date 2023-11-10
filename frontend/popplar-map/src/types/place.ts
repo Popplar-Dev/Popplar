@@ -25,6 +25,7 @@ export type hotPlaceResDto = {
   placeType: string,
   likeCount: number,
   visitorCount: number,
-  _links: any
+  tier: number
+  myLike: boolean
 }
 
