@@ -15,10 +15,10 @@ export async function postMyHotLocation(data: Position) {
 }
 
 // 핫플레이스 id로 사용자 위치 조회
-export async function getHoplaceUsers(id: string) {
+export async function getHotplaceUsers(id: number) {
   const token = await getToken();
   return await axios({
-    method: 'post',
+    method: 'get',
     url: `${BASE_URL}/hot-place/${id}/position`,
     headers: { 'Access-Token': token }
    }).then((res) => res)

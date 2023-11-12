@@ -46,6 +46,8 @@ import axios from 'axios';
 import EntranceBox from './PlaceOptionBox/EntranceBox';
 import { userInfoState } from './recoil/userState';
 
+import HotplaceUsers from './HotplaceUsers/HotplaceUsers'
+
 type Here = {
   granted: string
   y: string
@@ -68,7 +70,7 @@ interface HotPlace {
 const MapScreen: React.FC = () => {
   const route = useRoute();
   const [location, setLocation] = useRecoilState<Here>(locationState);
-  const [spaceInfo, setSpaceInfo] = useState<SpaceInfo|null>(null)
+  const [spaceInfo, setSpaceInfo] = useState<SpaceInfo>({})
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
 
@@ -83,11 +85,60 @@ const MapScreen: React.FC = () => {
   const [myHotPlaceId, setMyHotPlaceId] = useState<string>('');
   const userInfo = useRecoilValue(userInfoState);
 
+  // setLocation -> granted
+  useEffect(() => {
+    requestPermission().then(result => {
+      setLocation(prev => ({...prev, granted: result as string}))
+    })
+  }, [])
+
+  // 전체 핫플레이스 검색에서 지도로 이동시, 장소 data 이동
   useEffect(() => {
     const data: any = route.params;
-    if (data) {
-      setSpaceId(data.data.id)
+    if (data && data.data) {
+      getIdHotplace(data.data.id)
+      .then((res) => {
+        const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
+        console.log(y, x)
+        const loc: { y: string, x: string } = {y: y, x: x}
+        const locationData: { type: string, data: { y: string, x: string } } = {type: 'pickHotPlace', data: loc}
+        // console.log(locationData, '~!~!~!~!~!~!~!~!~!~')
+        if (webRef.current) {
+          handlePresentModalPress();
+          setSpaceInfo({
+            id,
+            place_name: placeName,
+            address_name: addressName,
+            road_address_name: roadAddressName,
+            category_group_name: category,
+            likeCount: likeCount,
+            phone,
+            placeType,
+            visitorCount,
+            y,
+            x,
+            tier,
+            myLike,
+          })
+          setSpaceLike(myLike)
+          setSpaceLikeCount(likeCount)
+          webRef.current.injectJavaScript(`
+          window.postMessage(${JSON.stringify(locationData)}, '*')
+          `);
+        }
+        let distance = getDistance(location.x, location.y, x, y)
+        console.log("distance: ", distance)
+        if (distance <= 500) {
+          setInDistance(true)
+        } else {
+          setInDistance(false)
+        }
+      })
     }
+    // if (data) {
+    //   setSpaceId(data.data.id)
+    //   console.log('전체 검색 데이터 들어왔스비다')
+    // }
   }, [route.params])
 
   // 내 핫플레이스 조회   
@@ -107,6 +158,7 @@ const MapScreen: React.FC = () => {
   useEffect(() => {
     getIdHotplace(spaceId)
     .then((res) => {
+      console.log(res.data)
       const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
   
       const loc: { y: string, x: string } = {y: y, x: x}
@@ -131,9 +183,9 @@ const MapScreen: React.FC = () => {
         })
         setSpaceLike(myLike)
         setSpaceLikeCount(likeCount)
-        webRef.current.injectJavaScript(`
-        window.postMessage(${JSON.stringify(locationData)}, '*')
-        `);
+        // webRef.current.injectJavaScript(`
+        // window.postMessage(${JSON.stringify(locationData)}, '*')
+        // `);
         let distance = getDistance(location.x, location.y, x, y)
         console.log("distance: ", distance)
         if (distance <= 500) {
@@ -142,9 +194,9 @@ const MapScreen: React.FC = () => {
           setInDistance(false)
         }
       }
-    }).catch(() => console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.'))
-    
-
+    }).catch(() => {
+      // console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.')
+    })
   }, [spaceId])
   
   const openModal = () => {
@@ -177,12 +229,6 @@ const MapScreen: React.FC = () => {
 
     }
     getChatroomId(); 
-  }, [])
-
-  useEffect(() => {
-    requestPermission().then(result => {
-      setLocation(prev => ({...prev, granted: result as string}))
-    })
   }, [])
 
   // 현재 표시된 장소 정보가 변경되면, 핫플레이스 화면에 띄우는 정보 변경해달라고 요청
@@ -319,6 +365,7 @@ const MapScreen: React.FC = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1}}>
+      <HotplaceUsers id={12026995}/>
       <BottomSheetModalProvider>
       <View style={styles.container}>
         <BottomSheetModal
@@ -464,14 +511,15 @@ const MapScreen: React.FC = () => {
           onMessage={(event) => {
             const data: any = JSON.parse(event.nativeEvent.data)
             if (data.type=="test") {
+              console.log(data)
             } else if (data.type=="relocation") {
               native_to_web();
             } else {
               handlePresentModalPress();
               setSpaceInfo(data.data)
               setSpaceId(data.data.id)
-              setSpaceLike(data.data.myLike)
-              setSpaceLikeCount(data.data.likeCount)
+              // setSpaceLike(data.data.myLike)
+              // setSpaceLikeCount(data.data.likeCount)
             }
           }}
         />
