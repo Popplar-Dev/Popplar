@@ -1,4 +1,4 @@
-package com.popplar.livechat.fco
+package com.popplar.livechat.factory
 
 import com.popplar.livechat.entity.ChattingMember
 import com.popplar.livechat.repository.ChattingMemberRepository
