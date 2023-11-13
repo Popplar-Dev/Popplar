@@ -28,7 +28,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { locationState } from './recoil/locationState'
 import { chatroomState } from './recoil/chatroomState';
 
-import { getIdHotplace, getMyInfo, updateMyHotPlaceId } from './services/getHotplace'
+import { getIdHotplace, getMyInfo, updateMyHotPlaceId, getStamp } from './services/getHotplace'
 import { likeHotplace, delLikeHotplace } from './services/postHotplace'
 import { previousDay } from 'date-fns';
 
@@ -74,17 +74,17 @@ const MapScreen: React.FC = () => {
   const [spaceInfo, setSpaceInfo] = useState<SpaceInfo>({})
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
-
   const [chatroomId, setChatroomId] = useRecoilState<number|null>(chatroomState); 
-
   const [spaceLike, setSpaceLike] = useState<boolean>(false)
   const [spaceLikeCount, setSpaceLikeCount] = useState<number>(0)
   const [spaceId, setSpaceId] = useState<string>('')
-
   const [isInHotPlace, setIsInHotPlace] = useState<boolean>(false);
   const [inDistance, setInDistance] = useState<boolean>(false);
   const [myHotPlaceId, setMyHotPlaceId] = useState<number>(0);
+  const [stamp, setStamp] = useState<string>('false');
+  const [stampload, setStampload] = useState<boolean>(true);
   const userInfo = useRecoilValue(userInfoState);
+  
 
   const [bottomSheetStatus, setBottomSheetStatus] = useState<number>(-2)
 
@@ -144,6 +144,29 @@ const MapScreen: React.FC = () => {
     // }
   }, [route.params])
 
+  // 스탬프 여부 확인
+  useEffect(() => {
+    getStamp(spaceId)
+    .then((res) => {
+      console.log('맵스크린:',res.data, spaceId)
+      if (res.data===true) {
+        setStamp('true')
+        setStampload(false)
+      } else if (res.data==false){
+        setStamp('false')
+        setStampload(false)
+      }
+    })
+    .catch((err) => {
+      console.log("스탬프 에러 메시지 :", err);
+    })
+   
+  }, [spaceId])
+
+  const handleStampUpdate = (newStamp: string) => {
+    setStamp(newStamp);
+  };
+
   // 내 핫플레이스 조회   
   useEffect(() => {
     if (userInfo.id != 0) {
@@ -155,8 +178,9 @@ const MapScreen: React.FC = () => {
           console.log("에러 메시지 ::", err);
         })
     }
+
   }, [userInfo.id])
-  
+
   // 전체 핫플레이스 검색 클릭 시, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
   useEffect(() => {
     getIdHotplace(spaceId)
@@ -190,6 +214,7 @@ const MapScreen: React.FC = () => {
         // window.postMessage(${JSON.stringify(locationData)}, '*')
         // `);
         let distance = getDistance(location.x, location.y, x, y)
+        // console.log("location.x, location.y: ", location.x, location.y)
         console.log("distance: ", distance)
         if (distance <= 500) {
           setInDistance(true)
@@ -207,7 +232,7 @@ const MapScreen: React.FC = () => {
   };
 
   function goqna() {
-    navigation.navigate('QnaList' , {spaceId: spaceInfo.id, spacename: spaceInfo.place_name} )
+    navigation.navigate('QnaList', {spaceId: spaceInfo.id, spacename: spaceInfo.place_name} )
   }
   // function goQna(space) {
   //   navigation.navigate('QnaList' , {spaceId: space.spaceId, spacename: space.spacename} )
@@ -227,9 +252,7 @@ const MapScreen: React.FC = () => {
         } catch (e) {
           console.error(e); 
         }
-
       } 
-
     }
     getChatroomId(); 
   }, [])
@@ -272,7 +295,7 @@ const MapScreen: React.FC = () => {
           }
         },
         error => {
-          // console.log(error);
+          console.log(error);
         },
         {
           enableHighAccuracy: true,
@@ -530,7 +553,13 @@ const MapScreen: React.FC = () => {
             myHotPlaceId === spaceId ? ( // 내가 입장한 핫플레이스라면
               <>
                 <View style={styles.stampcontainer}>
-                  <StampButton spaceId={spaceInfo.id}/>
+                  {!stampload ? (
+                    <>
+                      <StampButton spaceId={spaceInfo.id} type={stamp} onStampUpdate={handleStampUpdate} />
+                    </>
+                  ) : (
+                    null
+                  )}
                 </View>
                 <View style={styles.placeBottomContainer}>
                   <PlaceOptionBox spaceId={parseInt(spaceInfo.id)} type="chat"/>
@@ -765,8 +794,8 @@ const styles = StyleSheet.create({
   },
   stampcontainer: {
     alignItems:'center',
-    marginTop:10,
-    marginBottom:20,
+    marginTop:20,
+    // marginBottom:20,
   },
   stampbutton: {
     width:200,

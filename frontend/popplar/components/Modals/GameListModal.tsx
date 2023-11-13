@@ -86,7 +86,7 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
               {gameinfo!.hasConqueror ? (
                 <View style={styles.conquerorbox}> 
                   <Text style={styles.headtext}>오늘의 정복자 : {gameinfo!.conquerorInfo.name}</Text>
-                  <Text style={styles.headtext}>정복자 점수 : {gameinfo!.conquerorPoints} 점</Text>
+                  <Text style={styles.headtext}>정복자 점수 : {(gameinfo!.conquerorPoints).toFixed(3)} 점</Text>
                 </View>
               ):(
                 <View>
