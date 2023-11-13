@@ -75,8 +75,20 @@ function SpeedTouch({route}: spaceparam) {
               .then((response)=>{
                 setMybestscore(response.data.maxReflexesPoints/(-100))
               })
-
-            // console.log(response.data);
+            if (response.data.conqueror===true) {
+              const body = {
+                chattingRoomId : gameinfo.spaceId,
+              }
+              axios.post(`https://k9a705.p.ssafy.io:8000/live-chat/chatting-member/conqueror`,
+                body,
+                {headers: {'Access-Token': userAccessToken}}
+              )
+              .then((res)=>{
+              })
+              .catch((err) => {
+                console.log("에러 메시지 :", err);
+              })
+            }
             })
             .catch((err) => {
               console.log("에러 메시지 :", err);
