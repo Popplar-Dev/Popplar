@@ -11,6 +11,7 @@ class MemberProfileResDto(
     val profileImage: String,
     val exp: Int,
     var jwt: String? = null,
+    val myHotPlaceId: Long?
 ) {
 
     fun insertJWT(jwt: String): MemberProfileResDto {
@@ -25,7 +26,8 @@ class MemberProfileResDto(
                 name = member.name,
                 socialType = member.socialType,
                 profileImage = member.profileImage,
-                exp = member.exp
+                exp = member.exp,
+                myHotPlaceId = member.myHotPlaceId
             )
         }
     }

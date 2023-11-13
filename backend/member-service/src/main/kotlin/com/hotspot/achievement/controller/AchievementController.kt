@@ -22,11 +22,19 @@ class AchievementController(
 
     @PostMapping("/{memberId}")
     fun createStamp(
-        @RequestHeader("Member-Id") myId: String,
+        @RequestHeader("Member-Id") myId: Long,
         @PathVariable memberId: Long,
         @RequestBody stampReqDto: StampReqDto
     ): StampResDto {
         authService.checkAuth(memberId, myId)
         return achievementService.createStamp(memberId, stampReqDto)
+    }
+
+    @GetMapping("/hot-place/{hotPlaceId}")
+    fun getIsStampChecked(
+        @RequestHeader("Member-Id") myId: Long,
+        @PathVariable hotPlaceId: Long
+    ): Boolean {
+        return achievementService.getIsStampChecked(myId, hotPlaceId)
     }
 }

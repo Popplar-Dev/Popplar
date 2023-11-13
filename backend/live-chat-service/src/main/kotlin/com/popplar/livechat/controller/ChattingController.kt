@@ -12,12 +12,10 @@ import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor
-import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -57,8 +55,11 @@ class ChattingController(
     }
 
     @GetMapping("/chatting-room/{chattingRoomId}")
-    fun getChattingByChattingRoomId(@PathVariable chattingRoomId: Long): List<ChattingResDto> {
-        return chattingService.getChattingByChattingRoomId(chattingRoomId)
+    fun getChattingByChattingRoomId(
+        @RequestHeader("Member-Id") memberId: Long,
+        @PathVariable chattingRoomId: Long
+    ): List<ChattingResDto> {
+        return chattingService.getChattingByChattingRoomId(memberId, chattingRoomId)
     }
 
     @PostMapping("/chatting-room/{chattingRoomId}")
@@ -82,7 +83,11 @@ class ChattingController(
     //  채팅 어디까지 읽었는지
     //  또 뭐있지
 
-    // TODO
-    //  내가 속해있는 채팅방 알려주기
+    @GetMapping("/chatting-room")
+    fun getMyChattingRoom(
+        @RequestHeader("Member-Id") memberId: Long
+    ): ResponseEntity<Long> {
+        return ResponseEntity<Long>(chattingService.getMyChattingRoomId(memberId), HttpStatus.OK)
+    }
 
 }

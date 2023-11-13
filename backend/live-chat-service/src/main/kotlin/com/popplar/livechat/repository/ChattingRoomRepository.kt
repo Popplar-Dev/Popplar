@@ -5,5 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface ChattingRoomRepository : JpaRepository<ChattingRoom, Long> {
 
-    fun findByChattingRoomIdAndMemberId(chattingRoomId: Long, memberId: Long): ChattingRoom?
+    fun findByMemberIdAndDeletedFalse(memberId: Long): ChattingRoom?
+
+    fun findByChattingRoomIdAndMemberIdAndDeletedFalse(chattingRoomId: Long, memberId: Long): ChattingRoom?
 }
