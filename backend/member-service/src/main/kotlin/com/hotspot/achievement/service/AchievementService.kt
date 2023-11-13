@@ -69,7 +69,9 @@ class AchievementService(
         val memberCategoryCount =
             memberCategoryCountRepository.findByMemberIdAndCategory(stamp.memberId, stamp.category)
                 ?: memberCategoryCountRepository.save(MemberCategoryCount.create(stamp))
-        memberCategoryCount.increaseVisitedSet()
+
+        if (stamp.createdAt.toLocalDate() != LocalDate.now())
+            memberCategoryCount.increaseVisitedSet()
 
         return StampResDto.create(stamp)
     }
