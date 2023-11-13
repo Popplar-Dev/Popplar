@@ -36,9 +36,12 @@ class ChattingService(
     }
 
     fun getChattingByChattingRoomId(memberId: Long, chattingRoomId: Long): List<ChattingResDto> {
-        val member = findChattingMemberByMemberId(memberId)
+
+        val chattingRoom = chattingRoomRepository.findByChattingRoomIdAndMemberIdAndDeletedFalse(chattingRoomId, memberId)
+            ?: throw RuntimeException("채팅방에 참여하지 않았습니다.")
+
         val chattingList = chattingRepository.findAllByChattingRoomId(chattingRoomId)
-            .filter { it.createdAt > member.createdAt }
+            .filter { it.createdAt > chattingRoom.createdAt }
 
         return chattingList.map {
             val chattingMember = findChattingMemberByMemberId(it.memberId)
