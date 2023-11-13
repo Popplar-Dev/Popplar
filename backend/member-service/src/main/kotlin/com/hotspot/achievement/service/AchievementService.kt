@@ -70,7 +70,7 @@ class AchievementService(
             memberCategoryCountRepository.findByMemberIdAndCategory(stamp.memberId, stamp.category)
                 ?: memberCategoryCountRepository.save(MemberCategoryCount.create(stamp))
 
-        if (stamp.createdAt.toLocalDate() != LocalDate.now())
+        if (stamp.createdAt.toLocalDate() == LocalDate.now())
             memberCategoryCount.increaseVisitedSet()
 
         return StampResDto.create(stamp)
