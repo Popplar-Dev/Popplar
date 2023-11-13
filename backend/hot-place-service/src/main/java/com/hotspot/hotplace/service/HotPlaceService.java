@@ -134,7 +134,6 @@ public class HotPlaceService {
     public String checkCategory(String category) {
         ArrayList<String> categoryList = new ArrayList<>(
             List.of("문화시설", "관광명소", "음식점", "카페"));
-
         if (categoryList.contains(category)) {
             return category;
         } else {
