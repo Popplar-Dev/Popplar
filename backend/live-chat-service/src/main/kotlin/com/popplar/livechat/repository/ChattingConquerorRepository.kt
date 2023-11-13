@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface ChattingConquerorRepository : JpaRepository<ChattingConqueror, Long> {
 
     fun findByChattingRoomId(chattingRoomId: Long): ChattingConqueror?
+
+    fun findByChattingRoomIdAndMemberId(chattingRoomId: Long, memberId: Long): ChattingConqueror?
 }

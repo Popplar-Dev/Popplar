@@ -5,6 +5,7 @@ import com.popplar.livechat.dto.ChattingResDto
 import com.popplar.livechat.entity.Chatting
 import com.popplar.livechat.entity.ChattingMember
 import com.popplar.livechat.entity.ChattingRoom
+import com.popplar.livechat.repository.ChattingConquerorRepository
 import com.popplar.livechat.repository.ChattingMemberRepository
 import com.popplar.livechat.repository.ChattingRepository
 import com.popplar.livechat.repository.ChattingRoomRepository
@@ -19,6 +20,7 @@ class ChattingService(
     private val chattingRepository: ChattingRepository,
     private val chattingMemberRepository: ChattingMemberRepository,
     private val chattingRoomRepository: ChattingRoomRepository,
+    private val chattingConquerorRepository: ChattingConquerorRepository,
 ) {
 
     @Transactional
@@ -32,7 +34,10 @@ class ChattingService(
                 content = chattingReqDto.chattingContent
             )
         )
-        return ChattingResDto.create(cryptService, chatting, chattingMember)
+
+        val isConqueror = chattingConquerorRepository.findByChattingRoomIdAndMemberId(chattingRoomId, decryptedId) != null
+
+        return ChattingResDto.create(cryptService, chatting, chattingMember, isConqueror)
     }
 
     fun getChattingByChattingRoomId(memberId: Long, chattingRoomId: Long): List<ChattingResDto> {
@@ -45,7 +50,8 @@ class ChattingService(
 
         return chattingList.map {
             val chattingMember = findChattingMemberByMemberId(it.memberId)
-            ChattingResDto.create(cryptService, it, chattingMember)
+            val isConqueror = chattingConquerorRepository.findByChattingRoomIdAndMemberId(chattingRoomId, it.memberId) != null
+            ChattingResDto.create(cryptService, it, chattingMember, isConqueror)
         }.toList().reversed()
     }
 
