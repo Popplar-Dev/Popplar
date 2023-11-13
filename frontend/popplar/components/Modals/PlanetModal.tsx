@@ -29,7 +29,6 @@ function PlanetModal({ visible, onClose, planetName, planetImage, visit }:Planet
         {headers: {'Access-Token': userAccessToken}}
         )
           .then((response) => {
-            console.log(response.data)
             setStamp(response.data.stampResDtoList);
             setLoading(false); 
           })
