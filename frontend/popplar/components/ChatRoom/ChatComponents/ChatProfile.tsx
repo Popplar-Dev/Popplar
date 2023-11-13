@@ -97,17 +97,17 @@ export default function ChatProfile({imgUrl, memberId}: ChatProfileProps) {
 
 const styles = StyleSheet.create({
   container: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     // borderWidth: 1,
     // borderColor: 'white',
     alignItems: 'center',
     justifyContent: 'space-around',
   },
   profilePicContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 15,
+    width: 37,
+    height: 37,
+    borderRadius: 13,
     // borderWidth: 1,
     // borderColor: 'white',
     overflow: 'hidden',
