@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   profileContainer: {
     // borderColor: 'red',
     // borderWidth:1,
-    width: 50,
+    width: 40,
   },
   messageContainer: {
     // borderColor: 'blue',

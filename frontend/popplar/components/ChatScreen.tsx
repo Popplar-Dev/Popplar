@@ -15,12 +15,11 @@ const ChatScreen = () => {
   const [chatroomId, setChatroomId] = useRecoilState<number | null>(
     chatroomState,
   );
-  console.log('chatscreen')
 
   const checkChatroom = useCallback(() => {
-    console.log('chatroomId ', chatroomId)
-    console.log('navigation', navigation)
-    console.log(navigation.getState())
+    // console.log('chatroomId ', chatroomId)
+    // console.log('navigation', navigation)
+    // console.log(navigation.getState())
     if (chatroomId) {
       navigation.setOptions({tabBarStyle: {display: 'none'}});
     } else {
