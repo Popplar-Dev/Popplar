@@ -55,8 +55,11 @@ class ChattingController(
     }
 
     @GetMapping("/chatting-room/{chattingRoomId}")
-    fun getChattingByChattingRoomId(@PathVariable chattingRoomId: Long): List<ChattingResDto> {
-        return chattingService.getChattingByChattingRoomId(chattingRoomId)
+    fun getChattingByChattingRoomId(
+        @RequestHeader("Member-Id") memberId: Long,
+        @PathVariable chattingRoomId: Long
+    ): List<ChattingResDto> {
+        return chattingService.getChattingByChattingRoomId(memberId, chattingRoomId)
     }
 
     @PostMapping("/chatting-room/{chattingRoomId}")
