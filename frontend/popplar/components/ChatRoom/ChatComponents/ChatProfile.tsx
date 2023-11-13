@@ -11,6 +11,7 @@ type ChatProfileProps = {
 export default function ChatProfile({imgUrl, memberId}: ChatProfileProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+
   return (
     <View style={styles.container}>
       <Menu
@@ -41,7 +42,8 @@ export default function ChatProfile({imgUrl, memberId}: ChatProfileProps) {
           </Pressable>
           <Pressable
             style={styles.buttonInnerContainer}
-            android_ripple={{color: '#464646'}}>
+            android_ripple={{color: '#464646'}}
+            >
             <Icon name="ban-outline" size={23} color="#8B90F7"></Icon>
             <Text style={styles.buttonText}>차단하기</Text>
           </Pressable>

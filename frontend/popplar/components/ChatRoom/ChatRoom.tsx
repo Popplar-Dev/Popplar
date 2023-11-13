@@ -98,7 +98,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
             },
           );
 
-          setMessages(messageHistory);
+          setMessages(messageHistory.reverse());
         } catch (e) {
           console.error(e);
         }
@@ -157,7 +157,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
                 time: formattedTime,
               };
 
-              setMessages((prev: ChatMessageType[]) => [...prev, newMessage]);
+              setMessages((prev: ChatMessageType[]) => [newMessage, ...prev]);
               // You can also acknowledge the message if needed
               // message.ack();
             } else {
@@ -205,6 +205,11 @@ export default function ChatRoom({roomId}: {roomId: number}) {
   );
 
   const sendMessage = (messageBody: string) => {
+
+    if (messageBody.trim() === "") {
+      return; 
+    }
+
     if (clientRef.current && clientRef.current.connected) {
       const destination = `/live-chat/chat/${roomId}`;
 
@@ -225,7 +230,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
 
   const scrollToEnd = () => {
     if (flatListRef.current) {
-      flatListRef.current.scrollToEnd({animated: true});
+      flatListRef.current.scrollToIndex({index: 0, animated: true, viewPosition: 0});
     }
   };
 
@@ -243,20 +248,20 @@ export default function ChatRoom({roomId}: {roomId: number}) {
     index: number;
   }) => {
     const currentMsg = messages[index];
-    const prevMsg = messages[index - 1];
-    const nextMsg = messages[index + 1];
+    const prevMsg = messages[index + 1];
+    const nextMsg = messages[index - 1];
 
     const msgStart =
-      index === 0 ||
+      index === messages.length - 1 ||
       prevMsg.memberId !== currentMsg.memberId ||
       prevMsg.time !== currentMsg.time;
 
     const showTime =
-      index === messages.length - 1 ||
+      index === 0 ||
       currentMsg.memberId !== nextMsg.memberId ||
       currentMsg.time !== nextMsg.time;
 
-    const showDate = index === 0 || prevMsg.date !== currentMsg.date;
+    const showDate = index === messages.length - 1 || prevMsg.date !== currentMsg.date;
 
     let messageComponent;
 
@@ -314,6 +319,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
             keyExtractor={(item: ChatMessageType) => item.chattingId.toString()}
             ref={flatListRef}
             initialNumToRender={30}
+            inverted={true}
           />
         </View>
         <ChatInput onSend={sendMessage} onScrollToEnd={scrollToEnd} />

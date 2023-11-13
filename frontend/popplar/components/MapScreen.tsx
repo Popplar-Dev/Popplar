@@ -45,7 +45,6 @@ import { getDistance } from './utils/GetDistance'
 import { getToken } from './services/getAccessToken'
 import axios from 'axios';
 import EntranceBox from './PlaceOptionBox/EntranceBox';
-import { getDistance } from './utils/GetDistance';
 import { userInfoState } from './recoil/userState';
 
 type Here = {
