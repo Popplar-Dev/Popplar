@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 15,
     borderColor: 'black',
-    borderEndWidth: 1.5,
-    borderBottomWidth: 1.5,
+    borderEndWidth: 1,
+    borderBottomWidth: 1,
   },
   bubbleText: {
     color: 'white',
