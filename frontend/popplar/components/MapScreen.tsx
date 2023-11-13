@@ -445,7 +445,9 @@ const MapScreen: React.FC = () => {
     <UserModal 
     visible={isMemberModalVisible}
     onClose={() => setMemberModalVisible(false)}
-    memberId={userId}/>
+    memberId={userId}
+    placeName={spaceInfo.place_name}
+    />
     <GestureHandlerRootView style={{ flex: 1}}>
       <BottomSheetModalProvider>
       {/* {spaceInfo && (bottomSheetStatus===0 ) &&

@@ -11,6 +11,7 @@ interface Props {
   visible: boolean;
   onClose: () => void;
   memberId: number;
+  placeName: string
 }
 
 type user = {
@@ -39,7 +40,7 @@ type markers = {
   }
 }
 
-export default function UserModal({ visible, onClose, memberId }: Props) {
+export default function UserModal({ visible, onClose, memberId, placeName }: Props) {
   // const [userCount, setUserCount] = useState<number>(0)
   const navigation = useNavigation();
   const [memberInfo, setMemberInfo] = useState<member>({});
@@ -48,7 +49,7 @@ export default function UserModal({ visible, onClose, memberId }: Props) {
   useEffect(() => {
     getMembersInfo(memberId)
     .then((res) => {
-      console.log('response', res.data)
+      // console.log('response', res.data)
       setMemberInfo(res.data)
     })
   }, [memberId]);
@@ -83,6 +84,13 @@ return (
         >
 
         <View style={styles.modalContent}>
+
+          <View style={styles.spaceContent}>
+            <Text style={styles.spaceText}>현재</Text> 
+            <Text style={styles.spaceBigText}>{placeName}</Text>
+            <Text style={styles.spaceText}>에 있는 사용자</Text>
+          </View>
+
           <View style={styles.memberContent}>
             <Image
             style={styles.image}
@@ -106,8 +114,27 @@ return (
 
 
 const styles = StyleSheet.create({  
+  spaceContent: {
+    // backgroundColor: 'rgba(161, 161, 161, 0.20);',
+    padding: 15,
+    paddingBottom: 18,
+    borderRadius: 20,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  spaceBigText: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#8B90F7',
+    marginLeft: 2,
+    marginRight: 2,
+  },
+  spaceText: {
+    color: 'white',
+  },
   memberContent: {
-    height: 130,
+    height: 140,
     width: 295,
     flexDirection: 'row',
     // justifyContent: 'space-between',
