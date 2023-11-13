@@ -60,13 +60,10 @@ class MessageController(
     ): ResponseEntity<MutableList<MessageResDto>> {
         authService.checkAuth(memberId, myId)
         return ResponseEntity<MutableList<MessageResDto>>(
-            messageService.getMyMessageList(myId.toLong()),
+            messageService.getMyMessageList(myId),
             HttpStatus.OK
         )
     }
-
-    // TODO
-    //  일괄 삭제 API 필요
 
     @DeleteMapping("/multi")
     fun deleteMultiMessage(

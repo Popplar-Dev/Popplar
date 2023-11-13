@@ -3,6 +3,7 @@ package com.hotspot.member.service
 import com.hotspot.member.dto.MessageResDto
 import com.hotspot.member.entity.Member
 import com.hotspot.member.entity.Message
+import com.hotspot.member.repository.BlockedMemberRepository
 import com.hotspot.member.repository.MemberRepository
 import com.hotspot.member.repository.MessageRepository
 import org.springframework.stereotype.Service
@@ -15,6 +16,7 @@ class MessageService(
     private val messageRepository: MessageRepository,
     private val memberRepository: MemberRepository,
     private val cryptService: CryptService,
+    private val blockedMemberRepository: BlockedMemberRepository,
 ) {
 
     @Transactional
@@ -60,8 +62,16 @@ class MessageService(
     }
 
     fun getMyMessageList(receivedMemberId: Long): MutableList<MessageResDto> {
+
+        val blockedMemberSet =
+            blockedMemberRepository.findAllByMemberId(receivedMemberId).map { it.blockedMemberId }
+                .toSet()
+
+        println(blockedMemberSet)
+
         val messageList =
             messageRepository.findAllByReceivedMemberIdAndDeletedFalse(receivedMemberId)
+                .filter { it.sentMemberId !in blockedMemberSet }
 
         return messageList.map {
             val sentMember = findMember(it.sentMemberId)

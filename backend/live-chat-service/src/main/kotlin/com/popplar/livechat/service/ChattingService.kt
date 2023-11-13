@@ -5,6 +5,7 @@ import com.popplar.livechat.dto.ChattingResDto
 import com.popplar.livechat.entity.Chatting
 import com.popplar.livechat.entity.ChattingMember
 import com.popplar.livechat.entity.ChattingRoom
+import com.popplar.livechat.fco.ChattingMemberFactory
 import com.popplar.livechat.repository.ChattingConquerorRepository
 import com.popplar.livechat.repository.ChattingMemberRepository
 import com.popplar.livechat.repository.ChattingRepository
@@ -20,6 +21,7 @@ class ChattingService(
     private val chattingRepository: ChattingRepository,
     private val chattingMemberRepository: ChattingMemberRepository,
     private val chattingRoomRepository: ChattingRoomRepository,
+    private val chattingMemberFactory: ChattingMemberFactory,
     private val chattingConquerorRepository: ChattingConquerorRepository,
 ) {
 
@@ -84,8 +86,9 @@ class ChattingService(
     }
 
     fun findChattingMemberByMemberId(memberId: Long): ChattingMember {
-        return chattingMemberRepository.findByMemberId(memberId)
-            ?: throw RuntimeException("해당하는 회원이 없습니다.")
+//        return chattingMemberRepository.findByMemberId(memberId)
+        return chattingMemberFactory.getChattingMember(memberId)
+//            ?: throw RuntimeException("해당하는 회원이 없습니다.")
     }
 
     fun findChattingRoomByChattingRoomIdAndMemberId(
