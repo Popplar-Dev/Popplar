@@ -44,12 +44,12 @@ class ChattingMemberService(
     }
 
     @Transactional
-    fun updateConqueror(conquerorReqDto: ConquerorReqDto) {
+    fun updateConqueror(memberId: Long, conquerorReqDto: ConquerorReqDto) {
         val chattingConqueror =
             chattingConquerorRepository.findByChattingRoomId(conquerorReqDto.chattingRoomId)
         if (chattingConqueror != null) {
             chattingConquerorRepository.delete(chattingConqueror)
         }
-        chattingConquerorRepository.save(ChattingConqueror.create(conquerorReqDto))
+        chattingConquerorRepository.save(ChattingConqueror.create(conquerorReqDto, memberId))
     }
 }

@@ -3,6 +3,7 @@ package com.hotspot.hotplace.controller;
 
 import com.hotspot.hotplace.dto.HotPlaceResDto;
 import com.hotspot.hotplace.dto.HotPlaceReqDto;
+import com.hotspot.hotplace.dto.MemberPositionDto;
 import com.hotspot.hotplace.entity.MemberPosition;
 import com.hotspot.hotplace.service.HotPlaceService;
 import java.util.List;
@@ -78,7 +79,7 @@ public class HotPlaceController {
     }
 
     @GetMapping("{hotPlaceId}/position")
-    public ResponseEntity<List<MemberPosition>> findAllMemberPosition(
+    public ResponseEntity<List<MemberPositionDto>> findAllMemberPosition(
         @PathVariable Long hotPlaceId) {
 
         return new ResponseEntity<>(hotPlaceService.findAllMemberPosition(

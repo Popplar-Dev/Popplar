@@ -34,9 +34,9 @@ public class MemberPosition implements Serializable {
         this.y = y;
     }
 
-    public void memberUpdate(MemberPosition memberPosition){
-        this.hotPlaceId=memberPosition.getHotPlaceId();
-        this.x=memberPosition.getX();
-        this.y=memberPosition.getY();
+    public void memberUpdate(MemberPosition memberPosition) {
+        this.hotPlaceId = memberPosition.getHotPlaceId();
+        this.x = memberPosition.getX();
+        this.y = memberPosition.getY();
     }
 }
