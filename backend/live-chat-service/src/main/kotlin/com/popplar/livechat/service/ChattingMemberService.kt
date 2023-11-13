@@ -59,6 +59,7 @@ class ChattingMemberService(
 //        return chattingMemberRepository.findByMemberId(memberId)
         return chattingMemberFactory.getChattingMember(memberId)
 //            ?: throw RuntimeException("해당하는 회원이 없습니다.")
+    }
 
     @Transactional
     fun updateConqueror(memberId: Long, conquerorReqDto: ConquerorReqDto) {
