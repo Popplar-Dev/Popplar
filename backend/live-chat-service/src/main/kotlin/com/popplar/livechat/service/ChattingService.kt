@@ -5,6 +5,8 @@ import com.popplar.livechat.dto.ChattingResDto
 import com.popplar.livechat.entity.Chatting
 import com.popplar.livechat.entity.ChattingMember
 import com.popplar.livechat.entity.ChattingRoom
+import com.popplar.livechat.fco.ChattingMemberFactory
+import com.popplar.livechat.repository.ChattingConquerorRepository
 import com.popplar.livechat.repository.ChattingMemberRepository
 import com.popplar.livechat.repository.ChattingRepository
 import com.popplar.livechat.repository.ChattingRoomRepository
@@ -19,6 +21,8 @@ class ChattingService(
     private val chattingRepository: ChattingRepository,
     private val chattingMemberRepository: ChattingMemberRepository,
     private val chattingRoomRepository: ChattingRoomRepository,
+    private val chattingMemberFactory: ChattingMemberFactory,
+    private val chattingConquerorRepository: ChattingConquerorRepository,
 ) {
 
     @Transactional
@@ -32,16 +36,25 @@ class ChattingService(
                 content = chattingReqDto.chattingContent
             )
         )
-        return ChattingResDto.create(cryptService, chatting, chattingMember)
+
+        val isConqueror = chattingConquerorRepository.findByChattingRoomIdAndMemberId(chattingRoomId, decryptedId) != null
+
+        return ChattingResDto.create(cryptService, chatting, chattingMember, isConqueror)
     }
 
-    fun getChattingByChattingRoomId(chattingRoomId: Long): List<ChattingResDto> {
+    fun getChattingByChattingRoomId(memberId: Long, chattingRoomId: Long): List<ChattingResDto> {
+
+        val chattingRoom = chattingRoomRepository.findByChattingRoomIdAndMemberIdAndDeletedFalse(chattingRoomId, memberId)
+            ?: throw RuntimeException("채팅방에 참여하지 않았습니다.")
+
         val chattingList = chattingRepository.findAllByChattingRoomId(chattingRoomId)
+            .filter { it.createdAt > chattingRoom.createdAt }
 
         return chattingList.map {
             val chattingMember = findChattingMemberByMemberId(it.memberId)
-            ChattingResDto.create(cryptService, it, chattingMember)
-        }.toList()
+            val isConqueror = chattingConquerorRepository.findByChattingRoomIdAndMemberId(chattingRoomId, it.memberId) != null
+            ChattingResDto.create(cryptService, it, chattingMember, isConqueror)
+        }.toList().reversed()
     }
 
     fun getMyChattingRoomId(memberId: Long): Long {
@@ -73,15 +86,19 @@ class ChattingService(
     }
 
     fun findChattingMemberByMemberId(memberId: Long): ChattingMember {
-        return chattingMemberRepository.findByMemberId(memberId)
-            ?: throw RuntimeException("해당하는 회원이 없습니다.")
+//        return chattingMemberRepository.findByMemberId(memberId)
+        return chattingMemberFactory.getChattingMember(memberId)
+//            ?: throw RuntimeException("해당하는 회원이 없습니다.")
     }
 
     fun findChattingRoomByChattingRoomIdAndMemberId(
         chattingRoomId: Long,
         memberId: Long
     ): ChattingRoom {
-        return chattingRoomRepository.findByChattingRoomIdAndMemberIdAndDeletedFalse(chattingRoomId, memberId)
+        return chattingRoomRepository.findByChattingRoomIdAndMemberIdAndDeletedFalse(
+            chattingRoomId,
+            memberId
+        )
             ?: throw RuntimeException("채팅방에 참여하지 않은 회원입니다")
     }
 }
