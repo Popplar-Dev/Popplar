@@ -6,6 +6,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 type Props = {
     type: 'possible' | 'impossible';
     spaceId: number;
+    onEnterPress: (spaceId: number) => void
 };
 
 export default function EntranceBox({type, spaceId, onEnterPress}: Props) {

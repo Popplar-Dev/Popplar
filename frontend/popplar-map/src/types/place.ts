@@ -29,3 +29,8 @@ export type hotPlaceResDto = {
   myLike: boolean
 }
 
+export type Position = {
+  hotPlaceId: string
+  x: string
+  y: string
+}

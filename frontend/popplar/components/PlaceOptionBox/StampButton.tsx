@@ -31,6 +31,8 @@ export default function StampButton({spaceId, type, onStampUpdate }:stampbuttonP
         .then((response) => {
           setStamp(response.data.stampResDtoList);
           setLoading(false); 
+					// console.log('111:',response.data)
+          // console.log('1:',stamp)
         })
         .catch((err) => {
           console.log("에러 메시지 ::", err);
