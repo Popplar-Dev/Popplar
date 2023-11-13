@@ -3,6 +3,7 @@ package com.hotspot.hotplace.service;
 import com.hotspot.global.exception.exceptions.BadRequestException;
 import com.hotspot.hotplace.dto.HotPlaceResDto;
 import com.hotspot.hotplace.dto.HotPlaceReqDto;
+import com.hotspot.hotplace.dto.MemberPositionDto;
 import com.hotspot.hotplace.entity.HotPlace;
 import com.hotspot.hotplace.entity.HotPlaceType;
 import com.hotspot.hotplace.entity.Like;
@@ -110,9 +111,17 @@ public class HotPlaceService {
         memberPositionRepository.save(memberPosition);
     }
 
-    public List<MemberPosition> findAllMemberPosition(Long hotPlaceId) {
-        return memberPositionRepository.findAllByHotPlaceId(
+    public List<MemberPositionDto> findAllMemberPosition(Long hotPlaceId) {
+        List<MemberPosition> memberPositionList = memberPositionRepository.findAllByHotPlaceId(
             hotPlaceId);
+        List<MemberPositionDto> memberPositionDtoList = new ArrayList<>();
+
+        for (MemberPosition memberPosition : memberPositionList) {
+            MemberPositionDto memberPositionDto = MemberPositionDto.from(memberPosition);
+            memberPositionDtoList.add(memberPositionDto);
+        }
+
+        return memberPositionDtoList;
     }
 
     // -- 예외 처리용 코드 -- //
