@@ -101,8 +101,9 @@ const MapScreen: React.FC = () => {
           console.log("에러 메시지 ::", err);
         })
     }
+
   }, [userInfo.id])
-  
+
   // 전체 핫플레이스 검색 클릭 시, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
   useEffect(() => {
     getIdHotplace(spaceId)
@@ -135,6 +136,7 @@ const MapScreen: React.FC = () => {
         window.postMessage(${JSON.stringify(locationData)}, '*')
         `);
         let distance = getDistance(location.x, location.y, x, y)
+        // console.log("location.x, location.y: ", location.x, location.y)
         console.log("distance: ", distance)
         if (distance <= 500) {
           setInDistance(true)
@@ -145,14 +147,14 @@ const MapScreen: React.FC = () => {
     }).catch(() => console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.'))
     
 
-  }, [spaceId])
+  }, [spaceId, location])
   
   const openModal = () => {
     setModalVisible(true);
   };
 
   function goqna() {
-    navigation.navigate('QnaList' , {spaceId: spaceInfo.id, spacename: spaceInfo.place_name} )
+    navigation.navigate('QnaList', {spaceId: spaceInfo.id, spacename: spaceInfo.place_name} )
   }
   // function goQna(space) {
   //   navigation.navigate('QnaList' , {spaceId: space.spaceId, spacename: space.spacename} )
@@ -172,9 +174,7 @@ const MapScreen: React.FC = () => {
         } catch (e) {
           console.error(e); 
         }
-
       } 
-
     }
     getChatroomId(); 
   }, [])
@@ -194,13 +194,6 @@ const MapScreen: React.FC = () => {
   //   }
   // }, [spaceInfo])
 
-  const getHotplaceLocation = async () => {
-    const accessToken = await getToken(); 
-    if (!accessToken) {
-      return; 
-    }
-  }
-
 
   async function get_location(type: string) {
     // return new Promise((resolve, reject) => {
@@ -209,7 +202,7 @@ const MapScreen: React.FC = () => {
         pos => {
           const lat = pos.coords.latitude.toString()
           const lng = pos.coords.longitude.toString()
-
+          // console.log("lat, lng: ", lat, lng)
           setLocation(prev => ({...prev, y: lat, x: lng }))
 
           // 로드시, accessToken web으로 전송해서 사용
@@ -225,11 +218,11 @@ const MapScreen: React.FC = () => {
           }
         },
         error => {
-          // console.log(error);
+          console.log(error);
         },
         {
           enableHighAccuracy: true,
-          timeout: 3600,
+          timeout: 5000,
           maximumAge: 3600,
         },
       );
