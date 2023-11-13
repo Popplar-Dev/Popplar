@@ -14,11 +14,17 @@ class ChattingResDto(
     val memberId: Long,
     val memberName: String,
     val memberProfileImage: String,
+    val isConqueror: Boolean
 ) {
 
     companion object {
 
-        fun create(cryptService: CryptService, chatting: Chatting, chattingMember: ChattingMember): ChattingResDto {
+        fun create(
+            cryptService: CryptService,
+            chatting: Chatting,
+            chattingMember: ChattingMember,
+            isConqueror: Boolean
+        ): ChattingResDto {
             return ChattingResDto(
                 chattingId = chatting.id!!,
                 chattingRoomId = chatting.chattingRoomId,
@@ -26,7 +32,8 @@ class ChattingResDto(
                 chattingCreatedAt = chatting.createdAt,
                 memberId = cryptService.encrypt(chattingMember.memberId),
                 memberName = chattingMember.memberName,
-                memberProfileImage = chattingMember.memberProfileImage
+                memberProfileImage = chattingMember.memberProfileImage,
+                isConqueror = isConqueror
             )
         }
     }
