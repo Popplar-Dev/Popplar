@@ -103,10 +103,10 @@ function MyPageScreen() {
               style={styles.profileImage}
             />
           </View>
-          <View style={{marginBottom:10}}>
-						<Text style={styles.t}>
+          <View style={{marginBottom:40}}>
+						{/* <Text style={styles.t}>
               {userinfo.exp} xp
-            </Text>
+            </Text> */}
 					</View>
           {/* <Pressable onPress={loadToDos} android_ripple={{color: '#464646'}}>
             <Text>ㅇㅇㅇ</Text>
@@ -126,7 +126,7 @@ function MyPageScreen() {
                       onPress={() => {
                         setSelectedPlanet({
                           name: item.categoryName,
-                          image: images[index].uri,
+                          image: item.visitedSet < 10 ? require('../assets/mark/question.png') : images[index].uri,
                           visit: `${item.visitedSet}`
                         });
                         setModalVisible(true);
@@ -134,7 +134,7 @@ function MyPageScreen() {
                       style={styles.planetItem} 
                     >
                       <Image
-                        source={images[index].uri}
+                        source={item.visitedSet < 10 ? require('../assets/mark/question.png') : images[index].uri}
                         style={styles.planetimage}
                       />
                       <Text style={styles.t}>{item.categoryName}</Text>
@@ -260,6 +260,8 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   planetimage: {
+    width: 90,
+    height: 90,
     marginBottom: 5,
     marginTop:5
   },
