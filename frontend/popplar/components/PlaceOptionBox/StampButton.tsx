@@ -9,7 +9,7 @@ import { userInfoState } from '../recoil/userState';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 interface stampbuttonProps {
-  spaceId:number
+  spaceId: number
 }
 
 export default function StampButton({spaceId}:stampbuttonProps) {
@@ -29,8 +29,8 @@ export default function StampButton({spaceId}:stampbuttonProps) {
         .then((response) => {
           setStamp(response.data.stampResDtoList);
           setLoading(false); 
-					console.log('111:',response.data)
-          console.log('1:',stamp)
+					// console.log('111:',response.data)
+          // console.log('1:',stamp)
         })
         .catch((err) => {
           console.log("에러 메시지 ::", err);
@@ -56,7 +56,7 @@ export default function StampButton({spaceId}:stampbuttonProps) {
 						{headers: {'Access-Token': userAccessToken}}
 					)
 					.then((response) => {
-						console.log(response.data)
+						// console.log(response.data)
             Alert.alert(
               `오늘의 스탬프를 찍었습니다!`
             )

@@ -1,10 +1,10 @@
 const generateRandomPosition = () => {
-  const topPercent = Math.random() * 65 + 15;
-  const leftPercent = Math.random() * 65 + 15;
+  const top = Math.random() * (480 - 160) + 175;
+  const left = Math.random() * (310 - 60) + 90; 
 
   const position = {
-    top: `${topPercent.toString().slice(0, 6)}%`,
-    left: `${leftPercent.toString().slice(0, 6)}%`,
+    top: top.toString().slice(0, 6),
+    left: left.toString().slice(0, 6),
   };
   return position;
 };

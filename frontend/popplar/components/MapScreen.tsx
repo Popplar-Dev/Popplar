@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { View, Text, Button, StyleSheet, Dimensions, Alert, TouchableOpacity, Pressable} from 'react-native';
+import { View, Text, Button, StyleSheet, Dimensions, Alert, TouchableOpacity, TouchableWithoutFeedback, Pressable} from 'react-native';
 import { Platform, PermissionsAndroid } from "react-native";
 import { Linking } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
@@ -42,6 +42,7 @@ const windowHeight = Dimensions.get('window').height;
 
 import { getDistance } from './utils/GetDistance'
 import { getToken } from './services/getAccessToken'
+import { postMyHotLocation } from './services/postLocation'
 import axios from 'axios';
 import EntranceBox from './PlaceOptionBox/EntranceBox';
 import { userInfoState } from './recoil/userState';
@@ -82,8 +83,10 @@ const MapScreen: React.FC = () => {
 
   const [isInHotPlace, setIsInHotPlace] = useState<boolean>(false);
   const [inDistance, setInDistance] = useState<boolean>(false);
-  const [myHotPlaceId, setMyHotPlaceId] = useState<string>('');
+  const [myHotPlaceId, setMyHotPlaceId] = useState<number>(0);
   const userInfo = useRecoilValue(userInfoState);
+
+  const [bottomSheetStatus, setBottomSheetStatus] = useState<number>(-2)
 
   // setLocation -> granted
   useEffect(() => {
@@ -99,7 +102,7 @@ const MapScreen: React.FC = () => {
       getIdHotplace(data.data.id)
       .then((res) => {
         const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
-        console.log(y, x)
+        // console.log(y, x)
         const loc: { y: string, x: string } = {y: y, x: x}
         const locationData: { type: string, data: { y: string, x: string } } = {type: 'pickHotPlace', data: loc}
         // console.log(locationData, '~!~!~!~!~!~!~!~!~!~')
@@ -255,7 +258,6 @@ const MapScreen: React.FC = () => {
         pos => {
           const lat = pos.coords.latitude.toString()
           const lng = pos.coords.longitude.toString()
-
           setLocation(prev => ({...prev, y: lat, x: lng }))
 
           // 로드시, accessToken web으로 전송해서 사용
@@ -275,7 +277,7 @@ const MapScreen: React.FC = () => {
         },
         {
           enableHighAccuracy: true,
-          timeout: 3600,
+          timeout: 5000,
           maximumAge: 3600,
         },
       );
@@ -332,6 +334,8 @@ const MapScreen: React.FC = () => {
     bottomSheetModalRef.current?.present();
   }, [spaceInfo]);
   const handleSheetChanges = useCallback((index: number) => {
+    setBottomSheetStatus(index)
+    console.log('index', index)
     // bottomSheetModalRef.current?.present();
 
   }, []);
@@ -356,18 +360,55 @@ const MapScreen: React.FC = () => {
   }
 
   // 입장하기 버튼
-  const handleEnterPress = (spaceId) => {
+  const handleEnterPress = (spaceId: number) => {
     updateMyHotPlaceId(spaceId, userInfo.id)
     setMyHotPlaceId(spaceId)
+    handle_entrance()
+  };
+  
+  const startInterval = (data) => {
+    let intervalId = setInterval(() => {
+      // console.log('location 정보 update');
+      let distance = getDistance(location.x, location.y, spaceInfo.x, spaceInfo.y)
+      if (distance <= 500) {
+        postMyHotLocation(data)
+        .then((res) => res)
+      } else {
+        clearInterval(intervalId);
+      }
+    }, 5000);
+  }
+
+  async function handle_entrance () {
+    // 현재 입장한 핫플레이스에 5초마다 / 500미터 내에 있으면 위치 정보 전송
+    const data = {hotPlaceId: spaceInfo.id, x: location.x, y: location.y}
+    // console.log('data--------', data)
+    startInterval(data)
+
+    // 해당 장소에 있는 다른 사람들 정보 출력하기 위해 webview로 데이터 전송
+    const spaceData: { type: string, data: {id: string} } = {type: 'entrance', data: { id: spaceInfo.id }}
+    console.log('spaceData', spaceData)
+    if (webRef.current) {
+      webRef.current.injectJavaScript(`
+      window.postMessage(${JSON.stringify(spaceData)}, '*')
+      `)
+    }
+  }
+
+  const handleOutsideClick = (event) => {
+    const { locationY } = event.nativeEvent;
+    console.log('Touched Y Coordinate:', locationY);
   };
 
   let webRef = useRef<WebView | null>(null);
 
   return (
     <GestureHandlerRootView style={{ flex: 1}}>
-      <HotplaceUsers id={12026995}/>
       <BottomSheetModalProvider>
-      <View style={styles.container}>
+      {/* {spaceInfo && (bottomSheetStatus===0 ) &&
+        <HotplaceUsers id={Number(spaceInfo.id)}/>
+      } */}
+      <View style={[styles.container]}>
         <BottomSheetModal
           ref={bottomSheetModalRef}
           index={0}
@@ -375,11 +416,13 @@ const MapScreen: React.FC = () => {
           onChange={handleSheetChanges}
           backdropComponent={renderBackdrop}
           backgroundStyle={{ backgroundColor: '#2C2C2C' }}
-        >
+          >
 
         {spaceInfo && spaceInfo.place_name &&
           <View style={styles.spaceName}>
-            <NameBox h={38} text={spaceInfo.place_name} />
+            <TouchableWithoutFeedback handleLongPress={handleOutsideClick}>
+              <NameBox h={38} text={spaceInfo.place_name} />
+            </TouchableWithoutFeedback>
             {!spaceInfo.placeType ? (
               <>
               <HotRegisterButton 
@@ -498,7 +541,6 @@ const MapScreen: React.FC = () => {
           )
         }
         </View>
-
         </BottomSheetModal>
 
         <WebView 
@@ -532,6 +574,15 @@ const MapScreen: React.FC = () => {
 export default MapScreen;
 
 const styles = StyleSheet.create({
+  userMarker: {
+    position: 'absolute',
+    top: 160, // 상단 여백
+    left: 60, // 좌측 여백
+    width: 300,
+    height: 520,
+    backgroundColor: 'rgba(255, 0, 0, 0.5)', // 반투명 빨간 배경
+    zIndex: 1, // 웹뷰 위에 보이도록 함
+  },
   container: {
     flex: 1,
     alignItems: 'center',
