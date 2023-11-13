@@ -10,26 +10,31 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/member")
 class MemberController(
-        private val memberService: MemberService,
-        private val authService: AuthService,
+    private val memberService: MemberService,
+    private val authService: AuthService,
 ) {
 
     @GetMapping("/{memberId}")
     fun getMemberProfile(@PathVariable memberId: Long): ResponseEntity<MemberProfileResDto> {
-        return ResponseEntity<MemberProfileResDto>(memberService.getMemberProfile(memberId), HttpStatus.OK)
+        return ResponseEntity<MemberProfileResDto>(
+            memberService.getMemberProfile(memberId),
+            HttpStatus.OK
+        )
     }
 
     @PatchMapping("/{memberId}")
     fun updateMemberProfile(
-            @RequestHeader("Member-Id") myId: Long,
-            @PathVariable memberId: Long,
-            @RequestBody memberUpdateReqDto: MemberUpdateReqDto
+        @RequestHeader("Member-Id") myId: Long,
+        @PathVariable memberId: Long,
+        @RequestBody memberUpdateReqDto: MemberUpdateReqDto
     ): ResponseEntity<MemberProfileResDto> {
         authService.checkAuth(memberId, myId)
-        return ResponseEntity<MemberProfileResDto>(memberService.updateMemberProfile(
+        return ResponseEntity<MemberProfileResDto>(
+            memberService.updateMemberProfile(
                 memberId,
                 memberUpdateReqDto
-        ), HttpStatus.OK)
+            ), HttpStatus.OK
+        )
     }
 
     @DeleteMapping("/{memberId}")
@@ -40,22 +45,25 @@ class MemberController(
 
     @PostMapping("/block/{blockedMemberId}")
     fun blockMember(
-            @RequestHeader("Member-Id") myId: Long,
-            @PathVariable memberId: Long,
-            @PathVariable blockedMemberId: Long
+        @RequestHeader("Member-Id") myId: Long,
+        @PathVariable blockedMemberId: Long
     ) {
-        authService.checkAuth(memberId, myId)
-        memberService.blockMember(memberId, blockedMemberId)
+        memberService.blockMember(myId, blockedMemberId)
     }
 
-    @DeleteMapping("/block/{memberId}/{blockedMemberId}")
-    fun unBlockMember(@RequestHeader("Member-Id") myId: Long, @PathVariable memberId: Long, @PathVariable blockedMemberId: Long) {
-        authService.checkAuth(memberId, myId)
-        memberService.unBlockMember(memberId, blockedMemberId)
+    @DeleteMapping("/block/{blockedMemberId}")
+    fun unBlockMember(
+        @RequestHeader("Member-Id") myId: Long,
+        @PathVariable blockedMemberId: Long
+    ) {
+        memberService.unBlockMember(myId, blockedMemberId)
     }
 
     @PostMapping("/info")
     fun getMemberInfoList(@RequestBody memberIdList: List<Long>): ResponseEntity<MemberInfoResponseDto> {
-        return ResponseEntity<MemberInfoResponseDto>(memberService.getMemberInfo(memberIdList),HttpStatus.OK)
+        return ResponseEntity<MemberInfoResponseDto>(
+            memberService.getMemberInfo(memberIdList),
+            HttpStatus.OK
+        )
     }
 }

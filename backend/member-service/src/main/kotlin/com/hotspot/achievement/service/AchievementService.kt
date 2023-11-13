@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Service
 @Transactional(readOnly = true)
@@ -52,9 +53,18 @@ class AchievementService(
         stamp.increaseVisitCount()
         stamp = stampRepository.saveAndFlush(stamp)
 
-        val hotPlaceResDto = retryWithBackoff(webClient, HttpMethod.POST, "$hotPlaceURL/visitor", VisitorReqDto.create(stamp), 5, HotPlaceResDto::class.java)
+        val hotPlaceResDto = webClient.get()
+            .uri("$hotPlaceURL/$hotPlaceId")
+            .header("Member-Id", decryptedMemberId.toString())
+            .retrieve()
+            .bodyToMono(HotPlaceResDto::class.java)
+            .block()!!
 
-        stamp.update(hotPlaceResDto as HotPlaceResDto)
+        stamp.update(hotPlaceResDto)
+
+//        val hotPlaceResDto = retryWithBackoff(webClient, HttpMethod.GET, "$hotPlaceURL/$hotPlaceId", VisitorReqDto.create(stamp), 5, HotPlaceResDto::class.java)
+
+//        stamp.update(hotPlaceResDto!! as HotPlaceResDto)
 
         val memberCategoryCount =
             memberCategoryCountRepository.findByMemberIdAndCategory(stamp.memberId, stamp.category)
@@ -82,6 +92,16 @@ class AchievementService(
                     )
                 })
 
+        stampRepository.findAllByMemberId(decryptedId).forEach {
+            achievementResDto.stampResDtoList.add(StampResDto.create(it))
+        }
+
         return achievementResDto
+    }
+
+    fun getIsStampChecked(memberId: Long, hotPlaceId: Long): Boolean {
+        val stamp = stampRepository.findByMemberIdAndHotPlaceId(memberId, hotPlaceId) ?: return false
+        return stamp.updatedAt.toLocalDate() == LocalDate.now()
+
     }
 }
