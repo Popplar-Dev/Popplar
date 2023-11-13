@@ -85,6 +85,13 @@ class MemberService(
         member.delete()
     }
 
+    fun getBlockedMember(memberId: Long): List<MemberProfileResDto> {
+        return blockedMemberRepository.findAllByMemberId(memberId).map {
+            val blockedMember = findMemberByDecryptedId(it.blockedMemberId)
+            MemberProfileResDto.create(cryptService, blockedMember)
+        }.toList()
+    }
+
     @Transactional
     fun blockMember(memberId: Long, blockedMemberId: Long) {
         val decryptedBlockedMemberId = cryptService.decrypt(blockedMemberId)
@@ -115,9 +122,14 @@ class MemberService(
         blockedMemberRepository.delete(blockedMember)
     }
 
+    fun findMemberByDecryptedId(decryptedId: Long): Member {
+        return memberRepository.findById(decryptedId)
+            .orElseThrow { throw RuntimeException("사용자 정보가 없습니다.") }
+    }
+
     fun findMemberByEncryptedId(encryptedId: Long): Member {
         return memberRepository.findById(cryptService.decrypt(encryptedId))
-            .orElseThrow { throw ArithmeticException("사용자 정보가 없습니다.") }
+            .orElseThrow { throw RuntimeException("사용자 정보가 없습니다.") }
     }
 
     fun getMemberInfo(memberIdList: List<Long>): MemberInfoResponseDto {
