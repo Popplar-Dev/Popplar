@@ -11,24 +11,36 @@ import { CenterLatState } from "../recoil/centerLat/index"
 import { CenterLngState } from "../recoil/centerLng/index"
 import { CurrLocation, Location } from "../recoil/currLocation/index"
 
-import { LatLng } from '../types/LatLng'
+import { LatLng, nonFlaggedLatLng } from '../types/LatLng'
 
 import { getAllHotplace, getIdHotplace } from '../api/getHotplace'
 
-import flag from '../assets/images/flag-iso-color.png'
+import HotPlaceUsers from '../components/HotPlaceUsers/HotPlaceUsers'
+import { getHotplaceUsers } from '../api/postLocation'
 
 const { kakao } = window;
+
+type user = {
+  hotPlaceId: number
+  id: string
+  memberId: number
+  x: number
+  y: number
+}
 
 export default function Map () {
   const [visibleMap, setVisibleMap] = useState<any | null>(null)
   const [hotplaceList, setHotplaceList] = useState<hotPlaceResDto[]>([])
   
   const [hotPlaceLatLng, sethotPlaceLatLng] = useRecoilState<LatLng>(HotLatLngState);
-  const [centerLat, setCenterLat] = useRecoilState<string>(CenterLatState);
-  const [centerLng, setCenterLng] = useRecoilState<string>(CenterLngState);
+  const [searchHotPlace, setSearchHotPlace] = useState<nonFlaggedLatLng>({x: "", y: ""})
+  // const [centerLat, setCenterLat] = useRecoilState<string>(CenterLatState);
+  // const [centerLng, setCenterLng] = useRecoilState<string>(CenterLngState);
   const [currLocation, setCurrLocation] = useRecoilState<Location>(CurrLocation);
 
-  const [event, setEvent] = useState<any>({})
+  const [currSpaceId, setCurrSpaceId] = useState<number>(0)
+  const [showHotPlaceUsers, setShowHotPlaceUsers] = useState(false);
+  const [hotplaceUsers, setHotplaceUsers] = useState<user[]>([])
 
   // 최초 마운트 시, 전체 hotplace 조회
   useEffect(() => {
@@ -47,6 +59,15 @@ export default function Map () {
     });
   }, [])
 
+  async function movemove(x: string, y: string) {
+    var moveLatLon = new kakao.maps.LatLng(x, y);
+    visibleMap.panTo(moveLatLon); 
+
+    setTimeout(() => {
+      visibleMap.setLevel(4); 
+    }, 400)    
+  }
+
   const myMessageHandler = (event: any) => {
     const sample = event.data
     const data = event.data.data;
@@ -55,6 +76,7 @@ export default function Map () {
       const Lat = data.y.toString().slice(0, 8)
       const Lng = data.x.toString().slice(0, 8)
       setCurrLocation(prev => ({...prev, Lat: Lat, Lng: Lng}))
+      // movemove(Lat, Lng)
       if (typeof window !== 'undefined' && window.ReactNativeWebView) {
         window.ReactNativeWebView.postMessage(
           JSON.stringify({ 
@@ -67,9 +89,28 @@ export default function Map () {
       // getAllHotplace()
       // .then((res) => setHotplaceList(res.data))
     } else if (type=="pickHotPlace") {
-      const Lat = data.y.toString().slice(0, 8)
-      const Lng = data.x.toString().slice(0, 8)
-      sethotPlaceLatLng({x: Lng, y: Lat, flagged: true})   
+      const Lat = data.y.toString().slice(0, -8)
+      const Lng = data.x.toString().slice(0, -8)
+      setSearchHotPlace({x: Lng, y: Lat})
+      // movemove(Lat, Lng)   
+      if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({ 
+            type: 'test',
+            data: { data: `지금 장난 ?, ${Lat}, ${Lng}` }
+          })
+        );
+      }
+    } else if (type=="entrance") {
+      setCurrSpaceId(data.id)
+      if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({ 
+          type: 'test',
+          data: { data: `이번에야말로 정말?, ${data.id}` }
+        })
+      );
+      }
     }
   }
 
@@ -82,6 +123,14 @@ export default function Map () {
     window.removeEventListener("message", (event: any) => myMessageHandler(event))
   )
   }, [])
+
+  // 현재 입장한 spaceId 갱신 시
+  useEffect(() => {
+    getHotplaceUsers(currSpaceId)
+    .then((res) => {
+      setHotplaceUsers(res.data)
+    })
+  }, [currSpaceId])
 
   // 내 위치 돌아가기 버튼 선택시, web- > native 에 내 위치 데이터 보내달라고 요청
   const requestLocation = () => {
@@ -107,20 +156,13 @@ export default function Map () {
     }
   }
 
-  async function movemove() {
-    var moveLatLon = new kakao.maps.LatLng(currLocation.Lat, currLocation.Lng);
-    visibleMap.panTo(moveLatLon); 
-
-    setTimeout(() => {
-      visibleMap.setLevel(4); 
-    }, 400)    
-  }
-
   // 내 위치로 돌아가기
   async function moveToMypos() {
-    await sethotPlaceLatLng({x: "", y: "", flagged: false});
+    if (hotPlaceLatLng.x) {
+      await sethotPlaceLatLng({x: "", y: "", flagged: false});
+    }
     await requestLocation();
-    await movemove()  
+    // await movemove(currLocation.Lat, currLocation.Lng)  
   }
 
   // 마운트 시, 최초에 map을 그리는 작업 수행
@@ -147,54 +189,78 @@ export default function Map () {
           var map = new kakao.maps.Map(mapContainer, mapOptions); //지도 생성 및 객체 리턴
           setVisibleMap(map) 
         }
-        console.log('지도 그리기 완료~~')
-      }, 100)
+      }, 200)
       })
-  }, [])
+  }, [hotPlaceLatLng])
 
-  // 표시된 지도 위에, 마커 띄우는 로직
+  useEffect(() => {
+    movemove(currLocation.Lat, currLocation.Lng)  
+  }, [currLocation])
+
+  useEffect(() => {
+    movemove(searchHotPlace.y, searchHotPlace.x)
+  }, [searchHotPlace])
+
+  // 지도 위에, 내 위치 마커 띄우기
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     const Lat = currLocation.Lat
+  //     const Lng = currLocation.Lng
+  //     var markerPosition = new kakao.maps.LatLng(Lat, Lng);
+
+  //     var imageSize = new kakao.maps.Size(40, 45);
+  //     var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/8f938ed7-61cf-450d-b3fe-4e8ebbf070c9";
+  //     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
+
+  //     // 마커를 생성합니다
+  //     var marker = new kakao.maps.Marker({
+  //       // map: visibleMap,
+  //       position: markerPosition,
+  //       image: markerImage
+  //     });
+
+  //     // 마커가 지도 위에 표시되도록 설정합니다
+  //     marker.setMap(visibleMap);
+  //     }, 600)  
+  //   }, [visibleMap])
+
+  // 검색 시, 지도위에 검색위치 마커 띄우기
   useEffect(() => {
     setTimeout(() => {
-      console.log('마커 표시 시작함')
-      if (hotPlaceLatLng.x) {
-        if (!hotPlaceLatLng.flagged) {
-          // 내 위치 마커
-          // 마커가 표시될 위치입니다 
-          const Lat = hotPlaceLatLng.y.slice(0, -8)
-          const Lng = hotPlaceLatLng.x.slice(0, -8)
-          var markerPosition = new kakao.maps.LatLng(Lat, Lng);
-
-          var imageSize = new kakao.maps.Size(45, 50);
-          var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/8f938ed7-61cf-450d-b3fe-4e8ebbf070c9";
-          } else {
-            var imageSize = new kakao.maps.Size(45, 50);
-            var imageSrc = "";
-          }
-      } else {
-        const Lat = currLocation.Lat
-        const Lng = currLocation.Lng
+      if (!hotPlaceLatLng.flagged) {
+        // 내 위치 마커
+        // 마커가 표시될 위치입니다 
+        const Lat = hotPlaceLatLng.y.slice(0, -8)
+        const Lng = hotPlaceLatLng.x.slice(0, -8)
         var markerPosition = new kakao.maps.LatLng(Lat, Lng);
 
-        var imageSize = new kakao.maps.Size(40, 45);
-        var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/8f938ed7-61cf-450d-b3fe-4e8ebbf070c9";
-      }
+        var imageSize = new kakao.maps.Size(23, 35);
+        var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/e396e77d-3d6c-4eb0-b169-de888a738092";
+        } else {
+          var imageSize = new kakao.maps.Size(45, 50);
+          var imageSrc = "";
+        }
 
-    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
+      var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
 
-    // 마커를 생성합니다
-    var marker = new kakao.maps.Marker({
-      // map: visibleMap,
-      position: markerPosition,
-      image: markerImage
-    });
+      // 마커를 생성합니다
+      var marker = new kakao.maps.Marker({
+        // map: visibleMap,
+        position: markerPosition,
+        image: markerImage
+      });
 
-    // 마커가 지도 위에 표시되도록 설정합니다
-    marker.setMap(visibleMap);
+      // 마커가 지도 위에 표시되도록 설정합니다
+      marker.setMap(visibleMap);
+      }, 600)  
+  }, [visibleMap])
 
+  // 표시된 지도 위에, 핫플레이스 마커 띄우는 로직
+  useEffect(() => {
+    setTimeout(() => {
     // 핫플 마커 띄우기
     var positions = hotplaceList
 
-    
     if (positions) {
       
       for (var i = 0; i < positions.length; i ++) {
@@ -233,6 +299,8 @@ export default function Map () {
             image : markerImage // 마커 이미지 
         });
 
+        hotMarker.setMap(visibleMap);
+
         const place_name = positions[i].placeName
         const road_address_name = positions[i].roadAddressName
         const category_group_name = positions[i].category
@@ -251,7 +319,7 @@ export default function Map () {
           getIdHotplace(id)
           .then((res) => res.data)
           // .then((res) => console.log(res))
-          .then((res) => requestPermission({
+          .then((res) => {requestPermission({
             id, 
             place_name, 
             road_address_name, 
@@ -265,7 +333,9 @@ export default function Map () {
             x: res.x,
             tier: res.tier,
             myLike: res.myLike
-          }))
+          })
+        }
+          )
         })
       }
     }
@@ -275,6 +345,9 @@ export default function Map () {
         // 이동할 위도 경도 위치를 생성합니다 \
         var moveLatLon = new kakao.maps.LatLng(La, Ma);
         
+        console.log(La, Ma)
+        const test = '127.123456'
+        console.log('test', test.slice(0, 8))
         // 지도 중심을 부드럽게 이동시킵니다
         // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
         visibleMap.panTo(moveLatLon);
@@ -282,25 +355,25 @@ export default function Map () {
           visibleMap.setLevel(2); 
         }, 400)             
       } 
-    }, 700)  
+    }, 600)  
 
     // setTimeout(() => {
     //   // visibleMap.setMap(null);
     //   setVisibleMap(null);
     //   console.log('맵 마커 갱신 완료~~')
     //  } , 700)
-}, [currLocation, hotPlaceLatLng, hotplaceList])
+}, [visibleMap, hotplaceList])
+useEffect(() => {
+  if (currSpaceId !== 0) {
+    const timeoutId = setTimeout(() => {
+      setShowHotPlaceUsers(true);
+    }, 700);
 
-// useEffect(() => {
-//   window.kakao.maps.load(() => {
-//   var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-//     mapOption = { 
-//         center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-//         level: 3 // 지도의 확대 레벨
-//     };
-//     var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-//   })
-// }, [])
+    return () => clearTimeout(timeoutId); // Cleanup on component unmount or when currSpaceId changes
+  } else {
+    setShowHotPlaceUsers(false); // Reset showHotPlaceUsers when currSpaceId is 0
+  }
+}, [currSpaceId]);
 
   return (
   <div className={`container`}>
@@ -312,13 +385,21 @@ export default function Map () {
     <div className={`Box`} id={`bottom`}></div>
 
 
+    {showHotPlaceUsers && 
+     <HotPlaceUsers hotplaceUsers={hotplaceUsers} />
+    }
+
     <div id="map" className={styles.container}></div>
 
     <button className={styles.mypos} onClick={() => {
       moveToMypos();
+      setCurrSpaceId(0);
+      setHotplaceUsers([])
     }}>
       <BiSolidRocket size={25} color={'#8B90F7'}/>
     </button>
+
+    
   </div>
   )
 }

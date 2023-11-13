@@ -3,3 +3,8 @@ export type LatLng = {
   y: string
   flagged?: boolean
 }
+
+export type nonFlaggedLatLng = {
+  x: string
+  y: string
+}
