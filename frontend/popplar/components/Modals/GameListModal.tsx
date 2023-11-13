@@ -34,7 +34,8 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
   const [loading, setLoading] = useState(true);
 
 	function gospeedtouchgame() {
-    navigation.navigate('SpeedTouch' , {spaceId: spaceid, mybestscore:gameinfo.myMaxReflexesPoints/(-100)})
+    // navigation.navigate('SpeedTouch' , {spaceId: spaceid, mybestscore:gameinfo.myMaxReflexesPoints/(-100)})
+    navigation.navigate('FiveGame' , {spaceId: spaceid, mybestscore:gameinfo.myMaxReflexesPoints/(-100)})
   }
 
 	function goClickGame() {
@@ -86,7 +87,7 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
               {gameinfo!.hasConqueror ? (
                 <View style={styles.conquerorbox}> 
                   <Text style={styles.headtext}>오늘의 정복자 : {gameinfo!.conquerorInfo.name}</Text>
-                  <Text style={styles.headtext}>정복자 점수 : {(gameinfo!.conquerorPoints).toFixed(3)} 점</Text>
+                  <Text style={styles.headtext}>정복자 점수 : {gameinfo!.conquerorPoints} 점</Text>
                 </View>
               ):(
                 <View>
@@ -100,7 +101,7 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
                   <View style={styles.gameinfo}>
                   {gameinfo ? (
                     <View style={styles.gameinfotitle}>
-                      <Text style={styles.text}>오늘 나의 최고 기록 : {(gameinfo.myMaxReflexesPoints/(-100)).toFixed(3)} 초</Text>
+                      <Text style={styles.text}>나의 최고 기록 : {(gameinfo.myMaxReflexesPoints/(-100)).toFixed(3)} 초</Text>
                       <Text style={styles.text}>전체 최고 기록 : {(gameinfo.maxReflexesPoints/(-100)).toFixed(3)} 초</Text>
                     </View>
                     ):(
@@ -118,7 +119,7 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
                   <View style={styles.gameinfo}>
                   {gameinfo ? (
                     <View style={styles.gameinfotitle}>
-                      <Text style={styles.text}>오늘 나의 최고 기록 : {gameinfo.myMaxFightingPoints} 회</Text>
+                      <Text style={styles.text}>나의 최고 기록 : {gameinfo.myMaxFightingPoints} 회</Text>
                       <Text style={styles.text}>전체 최고 기록 : {gameinfo.maxFightingPoints} 회</Text>
                     </View>
                     ):(
