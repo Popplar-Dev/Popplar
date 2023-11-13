@@ -19,7 +19,7 @@ class ChattingConqueror(
 ) : BaseEntity() {
 
     companion object {
-        fun create(conquerorReqDto: ConquerorReqDto): ChattingConqueror {
+        fun create(conquerorReqDto: ConquerorReqDto, memberId: Long): ChattingConqueror {
             return ChattingConqueror(
                 chattingRoomId = conquerorReqDto.chattingRoomId,
                 memberId = conquerorReqDto.memberId
