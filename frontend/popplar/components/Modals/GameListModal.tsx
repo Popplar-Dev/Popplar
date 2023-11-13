@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable, ActivityIndicator, Modal, TouchableWithoutFeedback } from 'react-native'; // SafeAreaView를 import합니다.
+import { View, Text, StyleSheet, Pressable, ActivityIndicator, Modal, TouchableWithoutFeedback, Image } from 'react-native'; // SafeAreaView를 import합니다.
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -82,12 +82,21 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
           <ActivityIndicator size="large" color="#ffffff" />
           ) : (
           <View style={styles.modalContent}>
+              <Text style={styles.text}>Game List</Text>
             <View style={styles.modalhead}>
-              <Text style={styles.headtext}>Game List</Text>
               {gameinfo!.hasConqueror ? (
                 <View style={styles.conquerorbox}> 
-                  <Text style={styles.headtext}>오늘의 정복자 : {gameinfo!.conquerorInfo.name}</Text>
-                  <Text style={styles.headtext}>정복자 점수 : {gameinfo!.conquerorPoints} 점</Text>
+                    <Text style={styles.text}>오늘의 정복자</Text>
+                  <View style={styles.conquerorboxdetail}>
+                    <View style={styles.conquerorprofile}>
+                      <Text style={styles.headtext}> {gameinfo!.conquerorInfo.name}</Text>
+                      <Text style={styles.headtext}>{(gameinfo!.conquerorPoints).toFixed(3)} 점</Text>
+                    </View>
+                      <Image
+                        source={{uri:gameinfo!.conquerorInfo.profileImage}}
+                        style={styles.profileImage}
+                      />
+                  </View>
                 </View>
               ):(
                 <View>
@@ -156,8 +165,8 @@ const styles = StyleSheet.create({
 	},
   headtext: {
     color:'white',
-		fontSize:15,
-    marginBottom:10
+		fontSize:18,
+    // marginBottom:10
   },
   textbig: {
     color:'white',
@@ -166,6 +175,7 @@ const styles = StyleSheet.create({
   },
   modalhead: {
     alignItems: 'center',
+    marginTop:10
   },
   modalContainer: {
     flex: 1,
@@ -174,7 +184,7 @@ const styles = StyleSheet.create({
   },
   blurContent: {
     width: '90%',
-		height:'50%',
+		height:470,
   },
   modalContent: {
     backgroundColor: 'rgba(161, 161, 161, 0.2)',
@@ -248,8 +258,27 @@ const styles = StyleSheet.create({
     // borderWidth:1, 
     paddingTop:10,
     paddingHorizontal:20,
-    paddingBottom:5,
+    paddingBottom:10,
     borderRadius:10,
-    backgroundColor:'#2c2c2c'
+    backgroundColor:'#2c2c2c',
+    alignItems:'center',
+    // flexDirection:'row'
+  },
+  conquerorboxdetail: {
+    flexDirection:'row',
+    marginTop:10
+  },
+  conquerorprofile: {
+    flexDirection:'column',
+    // alignItems:'center',
+    marginVertical:8
+    // justifyContent:'center'
+  },
+  profileImage: {
+    width: 70,
+    height: 70,
+    // borderRadius: 75,
+    marginLeft:30
+    
   }
 });

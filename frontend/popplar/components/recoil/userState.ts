@@ -13,3 +13,18 @@ export const userIdState = selector({
     return userInfo.id;
   },
 });
+
+type blockedUser = {
+  id: number; 
+  name: string; 
+  socialType: string; 
+  profileImage: string;
+  exp: number;
+  jwt: null;
+  myHotPlaceId: number; 
+}
+
+export const userBlockListState = atom<blockedUser[]>({
+  key: 'userBlockListState', 
+  default: []
+})

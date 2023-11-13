@@ -1,6 +1,12 @@
 import {useState} from 'react';
-import {View, Image, Pressable, Text, StyleSheet} from 'react-native';
+import {View, Image, Pressable, Text, Alert, StyleSheet} from 'react-native';
 import {Menu} from 'react-native-paper';
+
+import {useRecoilState} from 'recoil';
+import {userBlockListState} from '../../recoil/userState'; 
+
+import { getToken } from '../../services/getAccessToken';
+import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 type ChatProfileProps = {
@@ -10,6 +16,42 @@ type ChatProfileProps = {
 
 export default function ChatProfile({imgUrl, memberId}: ChatProfileProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [userBlockedList, setUserBlockedList] = useRecoilState(userBlockListState); 
+
+  const blocked = userBlockedList.some(user => user.id === memberId); 
+  const handleBlock = async () => {
+    const userAccessToken = await getToken();
+    if (userAccessToken === null) {
+      return;
+    }
+    const url = `https://k9a705.p.ssafy.io:8000/member/block/${memberId}`
+    try {
+      if (blocked) {
+        const res = await axios.delete(url, {
+          headers: {'Access-Token': userAccessToken}
+        })
+
+        // const newList = userBlockedList.filter(user => user.id !== memberId); 
+        // setUserBlockedList(newList); 
+
+      } else {
+        const res = await axios.post(url, null, {
+          headers: {'Access-Token': userAccessToken}
+        })
+      }
+
+      setIsMenuOpen(false);
+
+      const newres = await axios.get("https://k9a705.p.ssafy.io:8000/member/block", {
+        headers: {'Access-Token': userAccessToken}
+      })
+
+      setUserBlockedList(newres.data); 
+
+    } catch (e) {
+      console.error(e); 
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -41,9 +83,11 @@ export default function ChatProfile({imgUrl, memberId}: ChatProfileProps) {
           </Pressable>
           <Pressable
             style={styles.buttonInnerContainer}
-            android_ripple={{color: '#464646'}}>
+            android_ripple={{color: '#464646'}}
+            onPress={handleBlock}
+            >
             <Icon name="ban-outline" size={23} color="#8B90F7"></Icon>
-            <Text style={styles.buttonText}>차단하기</Text>
+            <Text style={styles.buttonText}>{blocked ? '차단해제': '차단하기'}</Text>
           </Pressable>
         </View>
       </Menu>
@@ -53,17 +97,17 @@ export default function ChatProfile({imgUrl, memberId}: ChatProfileProps) {
 
 const styles = StyleSheet.create({
   container: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     // borderWidth: 1,
     // borderColor: 'white',
     alignItems: 'center',
     justifyContent: 'space-around',
   },
   profilePicContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 15,
+    width: 37,
+    height: 37,
+    borderRadius: 13,
     // borderWidth: 1,
     // borderColor: 'white',
     overflow: 'hidden',

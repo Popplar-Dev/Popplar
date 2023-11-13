@@ -10,8 +10,8 @@ import {
 import {useFocusEffect} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 
-import {useRecoilValue} from 'recoil';
-import {userIdState} from '../recoil/userState';
+import {useRecoilState, useRecoilValue} from 'recoil';
+import {userIdState, userBlockListState} from '../recoil/userState';
 
 import {Client, IMessage, IFrame, wsErrorCallbackType} from '@stomp/stompjs';
 
@@ -33,6 +33,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const memberId = useRecoilValue(userIdState);
+  const [userBlockedList, setUserBlockedList] = useRecoilState(userBlockListState);
   const clientRef = useRef<Client | null>(null);
   const flatListRef = useRef<FlatList | null>(null);
 
@@ -54,6 +55,23 @@ export default function ChatRoom({roomId}: {roomId: number}) {
     }
     getRoomName();
   }, []);
+
+  useEffect(() => {
+    async function getBlockedUsers() {
+      const userAccessToken = await getToken(); 
+      try {
+        const url = `https://k9a705.p.ssafy.io:8000/member/block`;
+        const res = await axios.get(url, {
+          headers: {'Access-Token': userAccessToken}, 
+        })
+        setUserBlockedList(res.data);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    
+    getBlockedUsers();
+  }, [])
 
   useFocusEffect(
     useCallback(() => {
@@ -90,6 +108,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
                 messageType: memberId === chat.memberId ? 'me' : 'others',
                 memberId: chat.memberId,
                 memberName: chat.memberName,
+                memberProfileImage: chat.memberProfileImage,
                 chattingContent: chat.chattingContent,
                 date: formattedDate,
                 time: formattedTime,
@@ -97,7 +116,6 @@ export default function ChatRoom({roomId}: {roomId: number}) {
               return newMessage;
             },
           );
-
           setMessages(messageHistory);
         } catch (e) {
           console.error(e);
@@ -157,7 +175,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
                 time: formattedTime,
               };
 
-              setMessages((prev: ChatMessageType[]) => [...prev, newMessage]);
+              setMessages((prev: ChatMessageType[]) => [newMessage, ...prev]);
               // You can also acknowledge the message if needed
               // message.ack();
             } else {
@@ -205,6 +223,11 @@ export default function ChatRoom({roomId}: {roomId: number}) {
   );
 
   const sendMessage = (messageBody: string) => {
+
+    if (messageBody.trim() === "") {
+      return; 
+    }
+
     if (clientRef.current && clientRef.current.connected) {
       const destination = `/live-chat/chat/${roomId}`;
 
@@ -225,7 +248,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
 
   const scrollToEnd = () => {
     if (flatListRef.current) {
-      flatListRef.current.scrollToEnd({animated: true});
+      flatListRef.current.scrollToIndex({index: 0, animated: true, viewPosition: 0});
     }
   };
 
@@ -243,20 +266,20 @@ export default function ChatRoom({roomId}: {roomId: number}) {
     index: number;
   }) => {
     const currentMsg = messages[index];
-    const prevMsg = messages[index - 1];
-    const nextMsg = messages[index + 1];
+    const prevMsg = messages[index + 1];
+    const nextMsg = messages[index - 1];
 
     const msgStart =
-      index === 0 ||
+      index === messages.length - 1 ||
       prevMsg.memberId !== currentMsg.memberId ||
       prevMsg.time !== currentMsg.time;
 
     const showTime =
-      index === messages.length - 1 ||
+      index === 0 ||
       currentMsg.memberId !== nextMsg.memberId ||
       currentMsg.time !== nextMsg.time;
 
-    const showDate = index === 0 || prevMsg.date !== currentMsg.date;
+    const showDate = index === messages.length - 1 || prevMsg.date !== currentMsg.date;
 
     let messageComponent;
 
@@ -314,6 +337,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
             keyExtractor={(item: ChatMessageType) => item.chattingId.toString()}
             ref={flatListRef}
             initialNumToRender={30}
+            inverted={true}
           />
         </View>
         <ChatInput onSend={sendMessage} onScrollToEnd={scrollToEnd} />

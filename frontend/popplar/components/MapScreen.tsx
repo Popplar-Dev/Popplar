@@ -48,6 +48,7 @@ import EntranceBox from './PlaceOptionBox/EntranceBox';
 import { userInfoState } from './recoil/userState';
 
 import HotplaceUsers from './HotplaceUsers/HotplaceUsers'
+import UserModal from './Modals/UserModal'
 
 type Here = {
   granted: string
@@ -85,6 +86,8 @@ const MapScreen: React.FC = () => {
   const [stampload, setStampload] = useState<boolean>(true);
   const userInfo = useRecoilValue(userInfoState);
   
+  const [userId, setUserId] = useState<number>(0)
+  const [isMemberModalVisible, setMemberModalVisible] = useState(false);
 
   const [bottomSheetStatus, setBottomSheetStatus] = useState<number>(-2)
 
@@ -230,6 +233,10 @@ const MapScreen: React.FC = () => {
   const openModal = () => {
     setModalVisible(true);
   };
+
+  const openMemberModal = () => {
+    setMemberModalVisible(true);
+  }
 
   function goqna() {
     navigation.navigate('QnaList', {spaceId: spaceInfo.id, spacename: spaceInfo.place_name} )
@@ -434,6 +441,13 @@ const MapScreen: React.FC = () => {
   let webRef = useRef<WebView | null>(null);
 
   return (
+    <>
+    <UserModal 
+    visible={isMemberModalVisible}
+    onClose={() => setMemberModalVisible(false)}
+    memberId={userId}
+    placeName={spaceInfo.place_name}
+    />
     <GestureHandlerRootView style={{ flex: 1}}>
       <BottomSheetModalProvider>
       {/* {spaceInfo && (bottomSheetStatus===0 ) &&
@@ -593,6 +607,10 @@ const MapScreen: React.FC = () => {
               console.log(data)
             } else if (data.type=="relocation") {
               native_to_web();
+            } else if (data.type=="user") {
+              console.log("user~~~~~~", data.data.data)
+              setUserId(data.data.data)
+              openMemberModal()
             } else {
               handlePresentModalPress();
               setSpaceInfo(data.data)
@@ -604,7 +622,9 @@ const MapScreen: React.FC = () => {
         />
       </View>
     </BottomSheetModalProvider>
+
   </GestureHandlerRootView>
+  </>
   );
 };
 

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     marginBottom: 8, 
   }, 
   chatTime: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#7f7f7f' 
   }
 

@@ -83,8 +83,11 @@ export default function StampButton({spaceId, type, onStampUpdate }:stampbuttonP
             <ActivityIndicator size="large" color="#ffffff" />
           ) : (
             <>
-              <Pressable style={styles.stampbutton} onPress={() => addStamp(spaceId)}>
-                <Text style={styles.stamptext}>방문 스탬프 찍기</Text>
+              <Pressable style={styles.stampbuttonactivate} onPress={() => addStamp(spaceId)}>
+                <View style={styles.stampbuttoncontainer}>
+                  <Icon name="footsteps" size={11} color={'white'} style={styles.footstepsIcon}/>
+                  <Text style={styles.stamptext}>방문 스탬프 찍기</Text>
+                </View>
               </Pressable>
             </>
           )}
@@ -121,8 +124,23 @@ const styles = StyleSheet.create({
 		paddingTop:3,
 		paddingBottom:5
   },
+  stampbuttonactivate: {
+    width:250,
+    alignItems:'center',
+		backgroundColor:'#F5789E',
+		borderRadius:10,
+		paddingTop:3,
+		paddingBottom:5,
+  },
+  stampbuttoncontainer:{
+    flexDirection:'row',
+    alignItems:'center'
+  },
   stamptext: {
     color:"white"
+  },
+  footstepsIcon: {
+    marginRight:10,
+    fontSize:20
   }
-
 });
