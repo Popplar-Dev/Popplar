@@ -32,7 +32,7 @@ class MessageResDto(
                 sentMemberId = cryptService.encrypt(sentMember.id!!),
                 sentMemberName = if (sentMember.deleted) "탈퇴 회원" else sentMember.name,
                 sentMemberProfileImage = sentMember.profileImage,
-                receivedMemberId = receivedMember.id!!,
+                receivedMemberId = cryptService.encrypt(receivedMember.id!!),
                 receivedMemberName = receivedMember.name,
                 messageId = message.id!!,
                 content = message.content,

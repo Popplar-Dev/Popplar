@@ -22,7 +22,7 @@ class ChattingConqueror(
         fun create(conquerorReqDto: ConquerorReqDto, memberId: Long): ChattingConqueror {
             return ChattingConqueror(
                 chattingRoomId = conquerorReqDto.chattingRoomId,
-                memberId = conquerorReqDto.memberId
+                memberId = memberId
             )
         }
     }

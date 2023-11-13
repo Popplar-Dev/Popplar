@@ -4,5 +4,5 @@ class ConquerorReqDto (
 
     val chattingRoomId: Long,
 
-//    val memberId: Long
+    val memberId: Long
 )
