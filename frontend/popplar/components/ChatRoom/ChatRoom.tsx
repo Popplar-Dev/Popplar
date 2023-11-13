@@ -10,8 +10,8 @@ import {
 import {useFocusEffect} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 
-import {useRecoilValue} from 'recoil';
-import {userIdState} from '../recoil/userState';
+import {useRecoilState, useRecoilValue} from 'recoil';
+import {userIdState, userBlockListState} from '../recoil/userState';
 
 import {Client, IMessage, IFrame, wsErrorCallbackType} from '@stomp/stompjs';
 
@@ -33,6 +33,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const memberId = useRecoilValue(userIdState);
+  const [userBlockedList, setUserBlockedList] = useRecoilState(userBlockListState);
   const clientRef = useRef<Client | null>(null);
   const flatListRef = useRef<FlatList | null>(null);
 
@@ -54,6 +55,23 @@ export default function ChatRoom({roomId}: {roomId: number}) {
     }
     getRoomName();
   }, []);
+
+  useEffect(() => {
+    async function getBlockedUsers() {
+      const userAccessToken = await getToken(); 
+      try {
+        const url = `https://k9a705.p.ssafy.io:8000/member/block`;
+        const res = await axios.get(url, {
+          headers: {'Access-Token': userAccessToken}, 
+        })
+        setUserBlockedList(res.data);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    
+    getBlockedUsers();
+  }, [])
 
   useFocusEffect(
     useCallback(() => {
@@ -90,6 +108,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
                 messageType: memberId === chat.memberId ? 'me' : 'others',
                 memberId: chat.memberId,
                 memberName: chat.memberName,
+                memberProfileImage: chat.memberProfileImage,
                 chattingContent: chat.chattingContent,
                 date: formattedDate,
                 time: formattedTime,
@@ -97,8 +116,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
               return newMessage;
             },
           );
-
-          setMessages(messageHistory.reverse());
+          setMessages(messageHistory);
         } catch (e) {
           console.error(e);
         }
