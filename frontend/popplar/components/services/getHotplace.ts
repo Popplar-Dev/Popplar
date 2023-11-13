@@ -56,3 +56,13 @@ export async function updateMyHotPlaceId(hotPlaceId, memberId) {
     headers: { 'Access-Token': token }
    }).then((res) => res)
 }
+
+// 스탬프 여부 확인
+export async function getStamp(hotPlaceId) {
+  const token = await getToken();
+  return await axios({
+    method: 'get',
+    url: `${BASE_URL}/member/achievement/hot-place/${hotPlaceId}`,
+    headers: { 'Access-Token': token }
+   }).then((res) => res)
+}
