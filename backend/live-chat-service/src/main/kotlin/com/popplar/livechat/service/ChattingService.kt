@@ -35,13 +35,15 @@ class ChattingService(
         return ChattingResDto.create(cryptService, chatting, chattingMember)
     }
 
-    fun getChattingByChattingRoomId(chattingRoomId: Long): List<ChattingResDto> {
+    fun getChattingByChattingRoomId(memberId: Long, chattingRoomId: Long): List<ChattingResDto> {
+        val member = findChattingMemberByMemberId(memberId)
         val chattingList = chattingRepository.findAllByChattingRoomId(chattingRoomId)
+            .filter { it.createdAt > member.createdAt }
 
         return chattingList.map {
             val chattingMember = findChattingMemberByMemberId(it.memberId)
             ChattingResDto.create(cryptService, it, chattingMember)
-        }.toList()
+        }.toList().reversed()
     }
 
     fun getMyChattingRoomId(memberId: Long): Long {
@@ -81,7 +83,10 @@ class ChattingService(
         chattingRoomId: Long,
         memberId: Long
     ): ChattingRoom {
-        return chattingRoomRepository.findByChattingRoomIdAndMemberIdAndDeletedFalse(chattingRoomId, memberId)
+        return chattingRoomRepository.findByChattingRoomIdAndMemberIdAndDeletedFalse(
+            chattingRoomId,
+            memberId
+        )
             ?: throw RuntimeException("채팅방에 참여하지 않은 회원입니다")
     }
 }

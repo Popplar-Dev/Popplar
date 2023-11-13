@@ -1,5 +1,6 @@
 package com.popplar.gameservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.popplar.gameservice.dto.ConquerorInfoDto;
 import com.popplar.gameservice.dto.GameBoardDto;
 import com.popplar.gameservice.dto.GameDto;
@@ -58,5 +59,11 @@ public class GameController {
     @GetMapping("/get-conqueror-info/{hotPlaceId}")
     public ResponseEntity<ConquerorInfoDto> getConquerorInfo(@PathVariable Long hotPlaceId) {
         return new ResponseEntity<>(gameService.getConquerorInfo(hotPlaceId), HttpStatus.OK);
+    }
+
+    //카프카 테스트
+    @GetMapping("/kafka-test")
+    public void testKafka() throws JsonProcessingException {
+        gameService.testKafka();
     }
 }

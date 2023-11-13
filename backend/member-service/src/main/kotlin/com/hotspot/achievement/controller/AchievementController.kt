@@ -29,4 +29,12 @@ class AchievementController(
         authService.checkAuth(memberId, myId)
         return achievementService.createStamp(memberId, stampReqDto)
     }
+
+    @GetMapping("/hot-place/{hotPlaceId}")
+    fun getIsStampChecked(
+        @RequestHeader("Member-Id") myId: Long,
+        @PathVariable hotPlaceId: Long
+    ): Boolean {
+        return achievementService.getIsStampChecked(myId, hotPlaceId)
+    }
 }

@@ -26,17 +26,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GameService {
+
     //TODO: 1. 등수 계산 로직 개발
     //TODO: 2. 시간 범위 처리 로직 메서드화로 코드 중복 감소
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     private final CryptService cryptService;
     private final WebClientService webClientService;
@@ -233,5 +240,19 @@ public class GameService {
             .myMaxReflexesPoints(pointList.get(1))
             .maxFightingPoints(pointList.get(2))
             .maxReflexesPoints(pointList.get(3)).build();
+    }
+
+    public void testKafka() {
+        System.out.println("test kafka");
+        log.info("test kafka");
+        this.kafkaTemplate.send("TOPIC", "test kafka");
+        System.out.println();
+        log.info("test kafka end");
+    }
+
+    @KafkaListener(topics = "TEST_RETURN", groupId = "foo")
+    public void getTestKafka(ConsumerRecord temp) {
+        log.info((String) temp.value());
+        log.info(temp.toString());
     }
 }
