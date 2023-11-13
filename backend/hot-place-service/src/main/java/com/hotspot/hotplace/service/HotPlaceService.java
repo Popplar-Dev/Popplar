@@ -133,8 +133,7 @@ public class HotPlaceService {
     // -- 기타 카테고리 처리용 코드 -- //
     public String checkCategory(String category) {
         ArrayList<String> categoryList = new ArrayList<>(
-            List.of("학교", "문화시설", "관광명소", "음식점", "카페"));
-
+            List.of("문화시설", "관광명소", "음식점", "카페"));
         if (categoryList.contains(category)) {
             return category;
         } else {
