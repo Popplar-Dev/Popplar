@@ -1,24 +1,48 @@
 import React from 'react';
-import { Modal, View, Text, Pressable, StyleSheet, TouchableWithoutFeedback,Image, ScrollView  } from 'react-native';
+import { Modal, View, Text, Pressable, StyleSheet, TouchableWithoutFeedback,Image, Button, FlatList, ActivityIndicator } from 'react-native';
 import { BlurView } from "@react-native-community/blur";
 import { useState, useEffect } from 'react';
 import axios from "axios";
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../recoil/userState';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 interface PlanetModalProps {
   visible: boolean;
   onClose: () => void;
   planetName: string;
-  visit: string
+  visit: any
   planetImage: any; 
 }
 
 function PlanetModal({ visible, onClose, planetName, planetImage, visit }:PlanetModalProps) {
   const userinfo = useRecoilValue(userInfoState);
   const [stamp, setStamp] = useState<Array<{ categoryName: string, hotPlaceId: number, visitedCount: number, hotPlaceName:string }>>([]);
+  const [specificstamp, setSpecificstamp] = useState<Array<{ categoryName: string, hotPlaceId: number, visitedCount: number, hotPlaceName:string }>>([]);
   const [loading, setLoading] = useState(true);
+  const [visibleItems, setVisibleItems] = useState(1);
+
+  const renderItem = ({ item, index }: { item: { hotPlaceName: string, visitedCount: number }, index: number }) => {
+    if (index === visibleItems - 1) {
+      return (
+        <View style={styles.stampinfolist}>
+          <View style={styles.stampinfodetailtext}>
+            <Text style={styles.modalTextsmall}>{item.hotPlaceName}</Text>
+            <Text style={styles.modalTextsmall}>방문 횟수: {item.visitedCount}</Text>
+          </View>
+        </View>
+      );
+    }
+    return null;
+  };
+
+  const nextItem = () => {
+    setVisibleItems((prevVisibleItems) => (prevVisibleItems < specificstamp.length ? prevVisibleItems + 1 : 1));
+  };
+  const backItem = () => {
+    setVisibleItems((prevVisibleItems) => (prevVisibleItems > 1 ? prevVisibleItems - 1 : specificstamp.length))
+  };
 
   useEffect(() => {
     const isLogin = async () => {
@@ -30,6 +54,8 @@ function PlanetModal({ visible, onClose, planetName, planetImage, visit }:Planet
         )
           .then((response) => {
             setStamp(response.data.stampResDtoList);
+            const filteredStamp = response.data.stampResDtoList.filter(item => item.categoryName === planetName);
+            setSpecificstamp(filteredStamp)
             setLoading(false); 
           })
           .catch((err) => {
@@ -39,7 +65,10 @@ function PlanetModal({ visible, onClose, planetName, planetImage, visit }:Planet
         }
       }
     isLogin()  
-  }, []);
+    return () => {
+      setVisibleItems(1);
+    };
+  }, [planetName]);
   
   return (
     <Modal
@@ -73,24 +102,28 @@ function PlanetModal({ visible, onClose, planetName, planetImage, visit }:Planet
                 </Text>
                 <Text style={styles.modalText}>{visit} 곳의 <Text style={styles.focusText}>{planetName}</Text>에 첫 발을 디뎠습니다</Text>
               </View>
-                <View style={styles.stampinfo}>
-                  <ScrollView horizontal={true}>
-                      {stamp.map((item, index) => (
-                        <View style={styles.stampinfolist} key={index}>
-                          {item.categoryName === planetName ? (
-                            <View style={styles.stampinfodetail}>
-                              <View style={styles.stampinfodetailtext}>
-                                <Text style={styles.modalTextsmall}>{item.hotPlaceName}</Text>
-                              </View>
-                              <View style={styles.stampinfodetailtext}>
-                                <Text style={styles.modalTextsmall}>방문 횟수: {item.visitedCount}</Text>
-                              </View>
-                            </View>
-                          ) : null}
-                        </View>
-                      ))}
-                  </ScrollView>
-                </View>
+              <View style={styles.stampinfo}>
+                {!loading ? (
+                  <>
+                  <Pressable style={styles.nextButtonContainer}>
+                    <Text onPress={backItem}><Icon name="chevron-back-outline" color="#8B90F7" size={25} /></Text>
+                  </Pressable>
+                  <FlatList
+                    // horizontal
+                    data={stamp.filter(item => item.categoryName === planetName)}
+                    renderItem={({ item, index }) => renderItem({ item, index })}
+                    keyExtractor={(item, index) => index.toString()}
+                    pagingEnabled
+                    showsHorizontalScrollIndicator={false}
+                  />
+                  <Pressable style={styles.nextButtonContainer}>
+                    <Text onPress={nextItem}><Icon name="chevron-forward-outline" color="#8B90F7" size={25} /></Text>
+                  </Pressable>
+                  </>
+                ) : (
+                  <ActivityIndicator size="large" color="#ffffff" />
+                )}
+              </View>
             </View>
           </BlurView>
 				</View>
@@ -157,29 +190,37 @@ const styles = StyleSheet.create({
   },
   modalTextsmall: {
     fontSize: 15,
-    color: 'white'
+    color: 'black',
+    fontWeight:'bold'
+  },
+  stampinfobox: {
   },
   stampinfo: {
     alignItems:'center',
     flexDirection:'row',
     // borderWidth:2,
     marginTop:10,
+    padding:5,
+    height:140
     // width:'90%',
 
   },
   stampinfolist: {
-    marginLeft:10,
+    // marginLeft:10,
   },
-  stampinfodetail:{
-    // borderWidth:2,
+  stampinfodetailtext: {
+    marginVertical:3,
     borderRadius:10,
     paddingBottom:10,
     paddingTop:4,
     paddingHorizontal:10,
-    backgroundColor:'#8B90F7'
+    backgroundColor:'#8B90F7',
+    flexDirection:'row',
+    justifyContent:'space-between',
+    marginBottom:5
   },
-  stampinfodetailtext: {
-    marginVertical:3
+  nextButtonContainer: {
+
   }
 });
 

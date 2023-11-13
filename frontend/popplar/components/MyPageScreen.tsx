@@ -32,6 +32,7 @@ function MyPageScreen() {
     { name: "5", uri: require("../assets/planet/5.png") },
     { name: "6", uri: require("../assets/planet/6.png") },
   ];
+  const [visitcount, setVisitcount] = useState(0); 
 
 	useEffect(() => {
     const isLogin = async () => {
@@ -44,6 +45,10 @@ function MyPageScreen() {
         )
         .then((response) => {
           setStamp(response.data.memberCategoryResDtoList);
+          const totalVisitedCount = response.data.stampResDtoList.reduce((total, stamp) => {
+            return total + stamp.visitedCount;
+          }, 0);
+          setVisitcount(totalVisitedCount)
           setLoading(false); 
         })
         .catch((err) => {
@@ -126,7 +131,7 @@ function MyPageScreen() {
                       onPress={() => {
                         setSelectedPlanet({
                           name: item.categoryName,
-                          image: item.visitedSet < 10 ? require('../assets/mark/question.png') : images[index].uri,
+                          image: item.visitedSet < 5 ? require('../assets/mark/question.png') : images[index].uri,
                           visit: `${item.visitedSet}`
                         });
                         setModalVisible(true);
@@ -134,14 +139,34 @@ function MyPageScreen() {
                       style={styles.planetItem} 
                     >
                       <Image
-                        source={item.visitedSet < 10 ? require('../assets/mark/question.png') : images[index].uri}
+                        source={item.visitedSet < 5 ? require('../assets/mark/question.png') : images[index].uri}
                         style={styles.planetimage}
                       />
                       <Text style={styles.t}>{item.categoryName}</Text>
-                      <Text style={styles.t}>{item.visitedSet}/10</Text>
+                      <Text style={styles.t}><Text style={styles.colort}>{item.visitedSet}</Text>/5</Text>
                     </Pressable>
                   </View>
                 ))}
+                <View style={styles.planet}>
+                    <Pressable
+                      onPress={() => {
+                        setSelectedPlanet({
+                          name: '핫플',
+                          image: visitcount < 10 ? require('../assets/mark/question.png') : images[5].uri,
+                          visit: `${visitcount}`
+                        });
+                        setModalVisible(true);
+                      }}
+                      style={styles.planetItem} 
+                    >
+                      <Image
+                        source={visitcount < 10 ? require('../assets/mark/question.png') : images[5].uri}
+                        style={styles.planetimage}
+                      />
+                      <Text style={styles.t}>스탬프 횟수</Text>
+                      <Text style={styles.t}><Text style={styles.colort}>{visitcount}</Text>/10</Text>
+                    </Pressable>
+                  </View>
               </View>
             </View>
           )}
@@ -225,8 +250,12 @@ const styles = StyleSheet.create({
   },
 	t:{
 		color:'white',
+    fontWeight:'bold'
     // fontSize:30
 	},
+  colort: {
+    color:'orange'
+  },
   setting : {
     position: 'absolute',
     top: 20, 
@@ -237,7 +266,7 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderColor: '#8B90F7',
     borderRadius:20,
-    width:'96%'
+    width:'96%',
   },
   planetcontainer: {
     flexDirection:'row',
