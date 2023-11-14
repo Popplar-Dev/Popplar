@@ -1,6 +1,6 @@
 package com.hotspot.visitor.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.Data;
 
 @Data
@@ -10,5 +10,5 @@ public class VisitorReqDto {
 
     Long memberId;
 
-    LocalDateTime visitedDate;
+    LocalDate visitedDate;
 }

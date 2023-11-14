@@ -10,8 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.util.Optional;
+import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,10 +34,10 @@ public class Visitor {
     Long memberId;
 
     @NotNull
-    LocalDateTime visitedDate;
+    LocalDate visitedDate;
 
     @Builder
-    public Visitor(HotPlace hotPlace, Long memberId, LocalDateTime visitedDate) {
+    public Visitor(HotPlace hotPlace, Long memberId, LocalDate visitedDate) {
         this.hotPlace = hotPlace;
         this.memberId = memberId;
         this.visitedDate = visitedDate;

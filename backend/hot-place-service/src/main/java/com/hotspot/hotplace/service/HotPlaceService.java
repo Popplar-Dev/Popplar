@@ -14,7 +14,7 @@ import com.hotspot.hotplace.repository.LikeRepository;
 import com.hotspot.hotplace.repository.MemberPositionRepository;
 import com.hotspot.visitor.repository.VisitorRepository;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -143,7 +143,7 @@ public class HotPlaceService {
         Long memberId) {
         // 2주간 사용자 방문 횟수 체크
         int twoWeeksVisitorCount = visitorRepository.countByVisitedDateAfterAndHotPlaceId(
-            LocalDateTime.now().minus(
+            LocalDate.now().minus(
                 Duration.ofDays(14)), hotPlace.getId());
         hotPlaceResDto.setVisitorCount(twoWeeksVisitorCount);
         // 핫플 티어 생성
