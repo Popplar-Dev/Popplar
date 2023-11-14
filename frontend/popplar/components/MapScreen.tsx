@@ -28,7 +28,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { locationState } from './recoil/locationState'
 import { chatroomState } from './recoil/chatroomState';
 
-import { getIdHotplace, getMyInfo, updateMyHotPlaceId, getStamp } from './services/getHotplace'
+import { getIdHotplace, getMyInfo, updateMyHotPlaceId, getStamp, insertVisitor } from './services/getHotplace'
 import { likeHotplace, delLikeHotplace } from './services/postHotplace'
 import { previousDay } from 'date-fns';
 
@@ -395,6 +395,7 @@ const MapScreen: React.FC = () => {
   // 입장하기 버튼
   const handleEnterPress = async (spaceId: number) => {
     updateMyHotPlaceId(spaceId, userInfo.id)
+    insertVisitor(spaceId)
     if (chatroomId) {
       await deleteChatroom(chatroomId); 
       setChatroomId(null); 
