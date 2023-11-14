@@ -8,7 +8,7 @@ import com.hotspot.visitor.dto.VisitorResDto;
 import com.hotspot.visitor.entity.Visitor;
 import com.hotspot.visitor.mapper.VisitorMapper;
 import com.hotspot.visitor.repository.VisitorRepository;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -37,16 +37,18 @@ public class VisitorService {
     }
 
     @Transactional
-    public void insertVisitor(VisitorReqDto visitorReqDto) {
-        Long memberId = visitorReqDto.getMemberId();
+    public void insertVisitor(VisitorReqDto visitorReqDto, Long memberId) {
         Long hotPlaceId = visitorReqDto.getHotPlaceId();
-        LocalDateTime visitedDate = visitorReqDto.getVisitedDate();
+        LocalDate visitedDate = LocalDate.now();
 
+        // 이미 오늘 방문했다면 아무것도 처리하지 않고 return
         if (visitorRepository.findVistorsByMemberIdAndHotPlaceIdAndVisitedDate(memberId, hotPlaceId,
             visitedDate).isPresent()) {
-            throw new BadRequestException("이미 오늘 핫플레이스에 방문한 방문객입니다.");
+            return;
         }
 
+        visitorReqDto.setMemberId(memberId);
+        visitorReqDto.setVisitedDate(visitedDate);
         Visitor visitor = VisitorMapper.INSTANCE.VisitorReqDtoToEntity(visitorReqDto);
         HotPlace hotPlace = hotPlaceRepository.findById(hotPlaceId)
             .orElseThrow(() -> new BadRequestException("핫플레이스가 존재하지 않습니다."));

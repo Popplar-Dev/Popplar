@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,8 +34,9 @@ public class VisitorController {
     }
 
     @PostMapping("/visitor")
-    public ResponseEntity<Void> insertVisitor(@RequestBody VisitorReqDto visitorReqDto) {
-        visitorService.insertVisitor(visitorReqDto);
+    public ResponseEntity<Void> insertVisitor(@RequestHeader("Member-Id") Long memberId,
+        @RequestBody VisitorReqDto visitorReqDto) {
+        visitorService.insertVisitor(visitorReqDto, memberId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
