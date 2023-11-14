@@ -23,18 +23,15 @@ class MessageService(
     fun getMessage(myId: Long, messageId: Long): MessageResDto {
         val message = findMessage(messageId)
 
-        message.check()
-
-        // TODO
-        //  내가 보낸 메세지 확인 하는 get 추가 필요
-
-        if (myId != message.sentMemberId) {
+        if (myId != message.sentMemberId && myId != message.receivedMemberId) {
             throw RuntimeException("쪽지 열람 권한이 없습니다.")
+        }
+        if (myId == message.receivedMemberId) {
+            message.check()
         }
 
         val sentMember = findMember(message.sentMemberId)
         val receivedMember = findMember(message.receivedMemberId)
-
 
         return MessageResDto.create(cryptService, message, sentMember, receivedMember)
     }
@@ -60,7 +57,7 @@ class MessageService(
         message.delete()
     }
 
-    fun getMyMessageList(receivedMemberId: Long): MutableList<MessageResDto> {
+    fun getMyReceivedMessageList(receivedMemberId: Long): MutableList<MessageResDto> {
 
         val blockedMemberSet =
             blockedMemberRepository.findAllByMemberId(receivedMemberId).map { it.blockedMemberId }
@@ -69,6 +66,18 @@ class MessageService(
         val messageList =
             messageRepository.findAllByReceivedMemberIdAndDeletedFalse(receivedMemberId)
                 .filter { it.sentMemberId !in blockedMemberSet }
+
+        return messageList.map {
+            val sentMember = findMember(it.sentMemberId)
+            val receivedMember = findMember(it.receivedMemberId)
+
+            MessageResDto.create(cryptService, it, sentMember, receivedMember)
+        }.toMutableList()
+    }
+
+    fun getMySentMessageList(sentMemberId: Long): MutableList<MessageResDto> {
+        val messageList =
+            messageRepository.findAllBySentMemberIdAndDeletedFalse(sentMemberId)
 
         return messageList.map {
             val sentMember = findMember(it.sentMemberId)
@@ -94,7 +103,7 @@ class MessageService(
             message.delete()
         }
 
-        return getMyMessageList(memberId)
+        return getMyReceivedMessageList(memberId)
     }
 
     fun findMessage(messageId: Long): Message {

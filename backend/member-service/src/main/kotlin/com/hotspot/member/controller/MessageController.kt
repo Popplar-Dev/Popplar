@@ -16,9 +16,6 @@ class MessageController(
     private val authService: AuthService,
 ) {
 
-    // TODO
-    //  messageResDto profileImg 추가 필요
-
     @GetMapping("/{messageId}")
     fun getMessage(
         @RequestHeader("Member-Id") myId: Long,
@@ -47,12 +44,22 @@ class MessageController(
         messageService.deleteMessage(myId, messageId)
     }
 
-    @GetMapping("/find-all")
-    fun getMyMessageList(
+    @GetMapping("/received-all")
+    fun getMyReceivedMessageList(
         @RequestHeader("Member-Id") myId: Long,
     ): ResponseEntity<MutableList<MessageResDto>> {
         return ResponseEntity<MutableList<MessageResDto>>(
-            messageService.getMyMessageList(myId),
+            messageService.getMyReceivedMessageList(myId),
+            HttpStatus.OK
+        )
+    }
+
+    @GetMapping("/sent-all")
+    fun getMySentMessageList(
+        @RequestHeader("Member-Id") myId: Long,
+    ): ResponseEntity<MutableList<MessageResDto>> {
+        return ResponseEntity<MutableList<MessageResDto>>(
+            messageService.getMySentMessageList(myId),
             HttpStatus.OK
         )
     }
