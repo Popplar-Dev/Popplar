@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "125510812778",
+    "project_id": "popplar-23e93",
+    "storage_bucket": "popplar-23e93.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:125510812778:android:54f46228952145a059f613",
+        "android_client_info": {
+          "package_name": "com.popplar.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdEmYqkmJQPCCcXTbJRC2kvBBoWEq3A7I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
