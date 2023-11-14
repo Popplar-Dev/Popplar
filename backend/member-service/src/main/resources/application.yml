@@ -6,7 +6,7 @@ server:
 spring:
   #카프카 설정
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_SERVER}
     consumer:
       group-id: foo
       auto-offset-reset: earliest

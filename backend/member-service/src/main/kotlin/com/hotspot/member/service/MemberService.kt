@@ -10,11 +10,11 @@ import com.hotspot.member.entity.BlockedMember
 import com.hotspot.member.entity.Member
 import com.hotspot.member.repository.BlockedMemberRepository
 import com.hotspot.member.repository.MemberRepository
+import org.apache.kafka.clients.producer.KafkaProducer
+import org.apache.kafka.clients.producer.ProducerRecord
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpMethod
-//import org.springframework.kafka.annotation.KafkaListener
-//import org.springframework.kafka.core.KafkaTemplate
-//import org.springframework.messaging.handler.annotation.Payload
+import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
@@ -28,7 +28,7 @@ class MemberService(
     private val memberRepository: MemberRepository,
     private val cryptService: CryptService,
     private val blockedMemberRepository: BlockedMemberRepository,
-//        private val kafkaTemplate: KafkaTemplate<String, Any>,
+    private val kafkaTemplate: KafkaTemplate<String, Any>,
     private val objectMapper: ObjectMapper,
 
     @Value("\${LIVE_CHAT_URL}")
@@ -38,6 +38,10 @@ class MemberService(
 
     fun createMember(oAuthMemberDto: OAuthMemberDto): Member {
         val member = memberRepository.save(Member.create(oAuthMemberDto))
+
+        val kafkaProducer: KafkaProducer<String, ChattingMemberReqDto>
+//        val record: ProducerRecord<String, ChattingMemberReqDto>("TEST", )
+
         val maxRetries = 3 // 최대 재시도 횟수
 
         retryWithBackoff(
@@ -144,5 +148,4 @@ class MemberService(
 //        kafkaTemplate.send("TEST_RETURN", jsonValue)
 //        return "Message: $data"
 //    }
-//
 }
