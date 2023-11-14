@@ -15,7 +15,8 @@ interface Props {
   visible: boolean;
   onClose: () => void;
   memberId: number;
-  placeName: string
+  placeName: string;
+  goToMessageDraft: Function;
 }
 
 type user = {
@@ -44,7 +45,7 @@ type markers = {
   }
 }
 
-export default function UserModal({ visible, onClose, memberId, placeName }: Props) {
+export default function UserModal({ visible, onClose, memberId, placeName, goToMessageDraft }: Props) {
   // const [userCount, setUserCount] = useState<number>(0)
   const navigation = useNavigation<NavigationProp<TabNavigatorParamList>>();
   const [memberInfo, setMemberInfo] = useState<member>({});
@@ -73,8 +74,9 @@ export default function UserModal({ visible, onClose, memberId, placeName }: Pro
   // }, [userCount])
 
   const handleReply = () => {
-    console.log(navigation.getState())
-    // navigation.navigate("MapScreen", {screen: "NotificationScreen", params: {screen: "MessageDraft", params: {memberId: memberId, memberName: memberInfo.name}});
+    // goToMessageDraft(memberId, memberInfo.name); 
+    // console.log(memberId, memberInfo)
+    navigation.navigate("Notifications", {screen: "Draft", params: {memberId: memberId, memberName: memberInfo.name}});
   }
 
 return (

@@ -444,6 +444,12 @@ const MapScreen: React.FC = () => {
     console.log('Touched Y Coordinate:', locationY);
   };
 
+  const goToMessageDraft = (memberId: number, memberName: string) => {
+    // console.log(navigation.getState())
+    navigation.navigate("Notifications", {screen: "MessageDraft", params: {memberId: memberId, memberName: memberName}})
+    return; 
+  } 
+
   let webRef = useRef<WebView | null>(null);
 
   return (
@@ -452,6 +458,7 @@ const MapScreen: React.FC = () => {
     visible={isMemberModalVisible}
     onClose={() => setMemberModalVisible(false)}
     memberId={userId}
+    goToMessageDraft={goToMessageDraft}
     placeName={spaceInfo.place_name}
     />
     <GestureHandlerRootView style={{ flex: 1}}>

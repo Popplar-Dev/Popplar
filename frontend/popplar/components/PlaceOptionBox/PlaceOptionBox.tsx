@@ -31,7 +31,6 @@ export default function PlaceOptionBox({type, spaceId}: Props) {
   const navigation = useNavigation<NavigationProp<TabNavigatorParamList>>();
   const [isModalVisible, setModalVisible] = useState(false);
   const [chatroom, setChatroom] = useRecoilState<number | null>(chatroomState);
-
   const openModal = () => {
     setModalVisible(true);
   };
