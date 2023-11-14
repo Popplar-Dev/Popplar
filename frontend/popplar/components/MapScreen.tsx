@@ -154,7 +154,7 @@ const MapScreen: React.FC = () => {
   useEffect(() => {
     getStamp(spaceId)
     .then((res) => {
-      console.log('맵스크린:',res.data, spaceId)
+      // console.log('맵스크린:',res.data, spaceId)
       if (res.data===true) {
         setStamp('true')
         setStampload(false)
@@ -189,48 +189,51 @@ const MapScreen: React.FC = () => {
 
   // 전체 핫플레이스 검색 클릭 시, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
   useEffect(() => {
-    getIdHotplace(spaceInfo.id)
-    .then((res) => {
-      console.log(res.data)
-      const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
-  
-      const loc: { y: string, x: string } = {y: y, x: x}
-      const locationData: { type: string, data: { y: string, x: string } } = {type: 'pickHotPlace', data: loc}
-      // console.log(locationData, '~!~!~!~!~!~!~!~!~!~')
-      if (webRef.current) {
-        handlePresentModalPress();
-        setSpaceInfo({
-          id,
-          place_name: placeName,
-          address_name: addressName,
-          road_address_name: roadAddressName,
-          category_group_name: category,
-          likeCount: likeCount,
-          phone,
-          placeType,
-          visitorCount,
-          y,
-          x,
-          tier,
-          myLike,
-        })
-        setSpaceLike(myLike)
-        setSpaceLikeCount(likeCount)
-        // webRef.current.injectJavaScript(`
-        // window.postMessage(${JSON.stringify(locationData)}, '*')
-        // `);
-        let distance = getDistance(location.x, location.y, x, y)
-        // console.log("location.x, location.y: ", location.x, location.y)
-        console.log("distance: ", distance)
-        if (distance <= 500) {
-          setInDistance(true)
-        } else {
-          setInDistance(false)
+    // console.log("spaceInfo.id: ", spaceInfo.id)
+    if (spaceInfo.id !== undefined) {
+      getIdHotplace(spaceInfo.id)
+      .then((res) => {
+        // console.log(res.data)
+        const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
+    
+        const loc: { y: string, x: string } = {y: y, x: x}
+        const locationData: { type: string, data: { y: string, x: string } } = {type: 'pickHotPlace', data: loc}
+        // console.log(locationData, '~!~!~!~!~!~!~!~!~!~')
+        if (webRef.current) {
+          handlePresentModalPress();
+          setSpaceInfo({
+            id,
+            place_name: placeName,
+            address_name: addressName,
+            road_address_name: roadAddressName,
+            category_group_name: category,
+            likeCount: likeCount,
+            phone,
+            placeType,
+            visitorCount,
+            y,
+            x,
+            tier,
+            myLike,
+          })
+          setSpaceLike(myLike)
+          setSpaceLikeCount(likeCount)
+          // webRef.current.injectJavaScript(`
+          // window.postMessage(${JSON.stringify(locationData)}, '*')
+          // `);
+          let distance = getDistance(location.x, location.y, x, y)
+          // console.log("location.x, location.y: ", location.x, location.y)
+          console.log("distance: ", distance)
+          if (distance <= 500) {
+            setInDistance(true)
+          } else {
+            setInDistance(false)
+          }
         }
-      }
-    }).catch(() => {
-      // console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.')
-    })
+      }).catch(() => {
+        // console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.')
+      })
+    }
   }, [spaceId, location])
   
   const openModal = () => {
@@ -612,11 +615,11 @@ const MapScreen: React.FC = () => {
           onMessage={(event) => {
             const data: any = JSON.parse(event.nativeEvent.data)
             if (data.type=="test") {
-              console.log(data)
+              // console.log(data)
             } else if (data.type=="relocation") {
               native_to_web();
             } else if (data.type=="user") {
-              console.log("user~~~~~~", data.data.data)
+              // console.log("user~~~~~~", data.data.data)
               setUserId(data.data.data)
               openMemberModal()
             } else {
