@@ -43,6 +43,7 @@ const windowHeight = Dimensions.get('window').height;
 import { getDistance } from './utils/GetDistance'
 import { getToken } from './services/getAccessToken'
 import { postMyHotLocation } from './services/postLocation'
+import { deleteChatroom } from './services/deleteChatroom'
 import axios from 'axios';
 import EntranceBox from './PlaceOptionBox/EntranceBox';
 import { userInfoState } from './recoil/userState';
@@ -249,14 +250,15 @@ const MapScreen: React.FC = () => {
     async function getChatroomId() {
       const userAccessToken = await getToken();
       if (userAccessToken) {
+        const url = `https://k9a705.p.ssafy.io:8000/live-chat/chatting-room`;
         try {
-          const url = `https://k9a705.p.ssafy.io:8000/live-chat/chatting-room`;
           const res = await axios.get(url, {
             headers: {'Access-Token': `${userAccessToken}`}
           }); 
           setChatroomId(res.data);           
 
         } catch (e) {
+          console.log(url);
           console.error(e); 
         }
       } 
@@ -389,8 +391,12 @@ const MapScreen: React.FC = () => {
   }
 
   // 입장하기 버튼
-  const handleEnterPress = (spaceId: number) => {
+  const handleEnterPress = async (spaceId: number) => {
     updateMyHotPlaceId(spaceId, userInfo.id)
+    if (chatroomId) {
+      await deleteChatroom(chatroomId); 
+      setChatroomId(null); 
+    }
     setMyHotPlaceId(spaceId)
     handle_entrance()
   };
@@ -576,13 +582,13 @@ const MapScreen: React.FC = () => {
                   )}
                 </View>
                 <View style={styles.placeBottomContainer}>
-                  <PlaceOptionBox spaceId={parseInt(spaceInfo.id)} type="chat"/>
-                  <PlaceOptionBox spaceId={parseInt(spaceInfo.id)} type="game"/> 
+                  <PlaceOptionBox spaceId={spaceInfo.id} type="chat"/>
+                  <PlaceOptionBox spaceId={spaceInfo.id} type="game"/> 
                 </View>
               </>
             ) : (
               <View style={styles.placeBottomContainer}>
-                <EntranceBox onEnterPress={handleEnterPress} spaceId={parseInt(spaceInfo.id)} type="possible"/>
+                <EntranceBox onEnterPress={handleEnterPress} spaceId={spaceInfo.id} type="possible"/>
               </View>
             )
           ) : (

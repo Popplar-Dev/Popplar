@@ -18,6 +18,7 @@ import {chatroomState} from '../recoil/chatroomState';
 
 import axios from 'axios';
 import {getToken} from '../services/getAccessToken';
+import {deleteChatroom} from '../services/deleteChatroom';
 
 type Props = {
   type: 'chat' | 'game';
@@ -36,33 +37,33 @@ export default function PlaceOptionBox({type, spaceId}: Props) {
   };
 
   const gochat = async () => {
-    if (chatroom) {
-      if (chatroom !== spaceId) {
-        Alert.alert('이미 입장하신 채팅방이 있습니다.');
-      } else {
-        navigation.navigate('Chat');
+    if (chatroom && chatroom === spaceId) {
+      navigation.navigate('Chat');
+      return;
+    }
+    if (chatroom && chatroom !== spaceId) {
+      await deleteChatroom(chatroom);
+      setChatroom(null);
+      // Alert.alert('이미 입장하신 채팅방이 있습니다.');
+    }
+    try {
+      const accessToken = await getToken();
+      if (!accessToken) {
+        Alert.alert('인증에 실패하셨습니다.');
+        return;
       }
-    } else {
-      try {
-        const accessToken = await getToken();
-        if (!accessToken) {
-          Alert.alert('인증에 실패하셨습니다.');
-          return;
-        }
 
-        const url = `https://k9a705.p.ssafy.io:8000/live-chat/chatting-room/${spaceId}`;
-        console.log(url);
-        const res = await axios.post(url, null, {
-          headers: {
-            'Access-Token': accessToken,
-          },
-        });
+      const url = `https://k9a705.p.ssafy.io:8000/live-chat/chatting-room/${spaceId}`;
+      const res = await axios.post(url, null, {
+        headers: {
+          'Access-Token': accessToken,
+        },
+      });
 
-        setChatroom(spaceId);
-        navigation.navigate('Chat');
-      } catch (e) {
-        console.error(e);
-      }
+      setChatroom(spaceId);
+      navigation.navigate('Chat');
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -78,20 +79,20 @@ export default function PlaceOptionBox({type, spaceId}: Props) {
     <View style={dynamicStyles.placeOptionBox}>
       <View style={styles.placeOptionTitle}>
         <Icon
-          name={type == 'game' ? 'gamepad' : 'comments'}
+          name={type === 'game' ? 'gamepad' : 'comments'}
           size={22}
           color={'white'}
           style={styles.qnaIcon}
         />
         <Text style={styles.placeOptionName}>
-          {type == 'game' ? 'GAME' : 'CHAT'}
+          {type === 'game' ? 'GAME' : 'CHAT'}
         </Text>
       </View>
       <View style={styles.placeOptionContent}>
         <Text style={styles.placeFirstContent}>Let's start!</Text>
         <Text style={styles.placeContent}>
           Popplar의 사람들과
-          {type == 'game' ? '게임을 통해 경쟁하세요' : '채팅을 시작하세요'}
+          {type === 'game' ? '게임을 통해 경쟁하세요' : '채팅을 시작하세요'}
         </Text>
         <TouchableOpacity
           onPress={() => {

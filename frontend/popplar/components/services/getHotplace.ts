@@ -10,7 +10,7 @@ export async function getAllHotplace() {
     method: 'get',
     url: `${BASE_URL}/hot-place`,
     headers: { 'Access-Token': token }
-   }).then((res) => res)
+   }).then((res) => res).catch((e)=>console.error(e))
 }
 
 // id로 핫플레이스 조회
@@ -20,7 +20,7 @@ export async function getIdHotplace(id: string) {
     method: 'get',
     url: `${BASE_URL}/hot-place/${id}`,
     headers: { 'Access-Token': token }
-   }).then((res) => res)
+   }).then((res) => res).catch((e)=>console.error(e))
   //  .catch((err) => console.log(err))
 }
 
@@ -54,7 +54,7 @@ export async function updateMyHotPlaceId(hotPlaceId, memberId) {
       myHotPlaceId: hotPlaceId
     },
     headers: { 'Access-Token': token }
-   }).then((res) => res)
+   }).then((res) => res).catch((e)=>{console.log(e)})
 }
 
 // 스탬프 여부 확인
@@ -64,5 +64,5 @@ export async function getStamp(hotPlaceId) {
     method: 'get',
     url: `${BASE_URL}/member/achievement/hot-place/${hotPlaceId}`,
     headers: { 'Access-Token': token }
-   }).then((res) => res)
+   }).then((res) => res).catch((e)=>console.log(e))
 }
