@@ -66,3 +66,16 @@ export async function getStamp(hotPlaceId) {
     headers: { 'Access-Token': token }
    }).then((res) => res).catch((e)=>console.log(e))
 }
+
+// 방문자 추가
+export async function insertVisitor(hotPlaceId) {
+  const token = await getToken();
+  return await axios({
+    method: 'patch',
+    url: `${BASE_URL}/member//hot-place/visitor`,
+    data: {
+      myHotPlaceId: hotPlaceId
+    },
+    headers: { 'Access-Token': token }
+   }).then((res) => res).catch((e)=>{console.log(e)})
+}
