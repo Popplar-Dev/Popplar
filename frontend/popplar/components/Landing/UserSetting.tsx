@@ -28,8 +28,7 @@ export default function UserSetting() {
   const saveNickname = () => {
 			setNickname(newNickname);
 			const updatedInfo = {
-				name: newNickname,
-				profileImage: "url",
+				name: newNickname
 			};
 			// console.log(userinfo)
 			const isLogin = async () => {
