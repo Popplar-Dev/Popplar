@@ -35,7 +35,7 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
 
 	function gospeedtouchgame() {
     // navigation.navigate('SpeedTouch' , {spaceId: spaceid, mybestscore:gameinfo.myMaxReflexesPoints/(-100)})
-    navigation.navigate('FiveGame' , {spaceId: spaceid, mybestscore:gameinfo.myMaxReflexesPoints/(-100)})
+    navigation.navigate('FiveGame' , {spaceId: spaceid, gameInfo:gameinfo})
   }
 
 	function goClickGame() {
@@ -106,12 +106,16 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
             </View>
               <View style={styles.gamecontainer}>
                 <View style={styles.gametop}>
-                  <Text style={styles.textbig}>반응 속도 테스트</Text>
+                  <Text style={styles.textbig}>행성 잡기 게임</Text>
                   <View style={styles.gameinfo}>
                   {gameinfo ? (
                     <View style={styles.gameinfotitle}>
-                      <Text style={styles.text}>나의 최고 기록 : {(gameinfo.myMaxReflexesPoints/(-100)).toFixed(3)} 초</Text>
-                      <Text style={styles.text}>전체 최고 기록 : {(gameinfo.maxReflexesPoints/(-100)).toFixed(3)} 초</Text>
+                      <Text style={styles.text}>
+                        나의 최고 기록 : {gameinfo.myMaxReflexesPoints === 0 ? '없음' : (30 / gameinfo.myMaxReflexesPoints).toFixed(3) + '초'} 
+                      </Text>
+                      <Text style={styles.text}>
+                        전체 최고 기록 : {gameinfo.maxReflexesPoints === 0 ? '없음' : (30 / gameinfo.maxReflexesPoints).toFixed(3) + '초'}
+                      </Text>
                     </View>
                     ):(
                       <View style={styles.gameinfotitle}>
@@ -124,12 +128,17 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
                   </View>
                 </View>
                 <View style={styles.gamebottom}>
-                  <Text style={styles.textbig}>최대한 많이 클릭해보슈</Text>
+                  <Text style={styles.textbig}>빠르게 클릭해보세요!</Text>
                   <View style={styles.gameinfo}>
                   {gameinfo ? (
                     <View style={styles.gameinfotitle}>
-                      <Text style={styles.text}>나의 최고 기록 : {gameinfo.myMaxFightingPoints} 회</Text>
-                      <Text style={styles.text}>전체 최고 기록 : {gameinfo.maxFightingPoints} 회</Text>
+                      <Text style={styles.text}>
+                        나의 최고 기록 : {gameinfo.myMaxFightingPoints === 0 ? '없음' : `${gameinfo.myMaxFightingPoints} 회`}
+                      </Text>
+                      <Text style={styles.text}>
+                        전체 최고 기록 : {gameinfo.maxFightingPoints === 0 ? '없음' : `${gameinfo.maxFightingPoints} 회`}
+                      </Text>
+
                     </View>
                     ):(
                       <View style={styles.gameinfotitle}>

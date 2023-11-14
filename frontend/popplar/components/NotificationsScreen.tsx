@@ -7,11 +7,19 @@ import ReceivedMessages from './Messages/ReceivedMessages';
 import SentMessages from './Messages/SentMessages';
 import MessageDetail from './Messages/MessageDetail';
 import {messageType} from './types/message';
+import MessageDraft from './Messages/MessageDraft';
 
 type RootStackParamList = {
   Home: undefined;
   Detail: {message: messageType, tab: 'received'|'sent'};
+  Draft: {memberId: number, memberName: string}; 
 };
+
+type SentMessagesStackParamList = {
+  Home: undefined;
+  Detail: {message: messageType, tab: 'received'|'sent'}; 
+
+}
 
 const ReceivedMessagesStack = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -27,6 +35,25 @@ const ReceivedMessagesStack = () => {
       }}>
       <Stack.Screen name="Home" component={ReceivedMessages} options={{title: '쪽지함'}}/>
       <Stack.Screen name="Detail" component={MessageDetail} options={{title: '쪽지 내용'}}/>
+      <Stack.Screen name="Draft" component={MessageDraft} options={{title: '쪽지 작성'}}/>
+    </Stack.Navigator>
+  );
+};
+
+const SentMessagesStack = () => {
+  const Stack = createNativeStackNavigator<SentMessagesStackParamList>();
+
+  return (
+    <Stack.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerTintColor: '#8B90F7',
+        headerStyle: {backgroundColor: 'transparent'},
+        headerShadowVisible: false,
+        
+      }}>
+      <Stack.Screen name="Home" component={SentMessages} options={{title: '쪽지함'}}/>
+      <Stack.Screen name="Detail" component={MessageDetail} options={{title: '쪽지 내용'}}/>
     </Stack.Navigator>
   );
 };
@@ -38,7 +65,7 @@ const NotificationsScreen = () => {
     <View style={styles.container}>
       <Tab.Navigator>
         <Tab.Screen name="받은 쪽지함" component={ReceivedMessagesStack} />
-        <Tab.Screen name="보낸 쪽지함" component={SentMessages} />
+        <Tab.Screen name="보낸 쪽지함" component={SentMessagesStack} />
       </Tab.Navigator>
     </View>
   );

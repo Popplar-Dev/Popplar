@@ -8,6 +8,7 @@ import {userBlockListState} from '../../recoil/userState';
 import { getToken } from '../../services/getAccessToken';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
+import FastImage from 'react-native-fast-image';
 
 type ChatProfileProps = {
   imgUrl: string;
@@ -61,14 +62,8 @@ export default function ChatProfile({imgUrl, memberId}: ChatProfileProps) {
         anchor={
           <View style={styles.profilePicContainer}>
             <Pressable onPress={()=>{setIsMenuOpen(prev=>!prev)}}>
-              <Image
-                source={{
-                  uri: imgUrl,
-                }}
-                style={styles.profilePic}
-                alt="profilepic"
-                resizeMode="cover"
-              />
+              <FastImage style={{width: "100%", height: "100%"}}
+              source={{uri: imgUrl}} resizeMode={FastImage.resizeMode.cover}/>
             </Pressable>
           </View>
         }

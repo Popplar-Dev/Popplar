@@ -40,12 +40,14 @@ import { useRoute } from '@react-navigation/native';
 import { getDistance } from './utils/GetDistance'
 import { getToken } from './services/getAccessToken'
 import { postMyHotLocation } from './services/postLocation'
+import { deleteChatroom } from './services/deleteChatroom'
 import axios from 'axios';
 import EntranceBox from './PlaceOptionBox/EntranceBox';
 import { userInfoState } from './recoil/userState';
 
 import HotplaceUsers from './HotplaceUsers/HotplaceUsers'
 import UserModal from './Modals/UserModal'
+import { BackHandler } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -97,6 +99,7 @@ const MapScreen: React.FC = () => {
       setLocation(prev => ({...prev, granted: result as string}))
     })
   }, [])
+
 
   // 전체 핫플레이스 검색에서 지도로 이동시, 장소 data 이동
   useEffect(() => {
@@ -152,6 +155,7 @@ const MapScreen: React.FC = () => {
 
   // 스탬프 여부 확인
   useEffect(() => {
+<<<<<<< frontend/popplar/components/MapScreen.tsx
     handlePresentModalClose()
     if (spaceId) {
       getStamp(spaceId)
@@ -235,7 +239,8 @@ const MapScreen: React.FC = () => {
         // console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.')
       })
     }
-  }, [spaceId])
+  }, [spaceId, location])
+
   
   const openModal = () => {
     setModalVisible(true);
@@ -256,14 +261,15 @@ const MapScreen: React.FC = () => {
     async function getChatroomId() {
       const userAccessToken = await getToken();
       if (userAccessToken) {
+        const url = `https://k9a705.p.ssafy.io:8000/live-chat/chatting-room`;
         try {
-          const url = `https://k9a705.p.ssafy.io:8000/live-chat/chatting-room`;
           const res = await axios.get(url, {
             headers: {'Access-Token': `${userAccessToken}`}
           }); 
           setChatroomId(res.data);           
 
         } catch (e) {
+          console.log(url);
           console.error(e); 
         }
       } 
@@ -394,8 +400,12 @@ const MapScreen: React.FC = () => {
   }
 
   // 입장하기 버튼
-  const handleEnterPress = (spaceId: number) => {
+  const handleEnterPress = async (spaceId: number) => {
     updateMyHotPlaceId(spaceId, userInfo.id)
+    if (chatroomId) {
+      await deleteChatroom(chatroomId); 
+      setChatroomId(null); 
+    }
     setMyHotPlaceId(spaceId)
     handle_entrance()
   };
@@ -568,7 +578,7 @@ const MapScreen: React.FC = () => {
 
         {spaceInfo &&
           inDistance ? ( // 거리 내에 있으면
-            myHotPlaceId === spaceId ? ( // 내가 입장한 핫플레이스라면
+            myHotPlaceId === spaceInfo.id ? ( // 내가 입장한 핫플레이스라면
               <>
                 <View style={styles.stampcontainer}>
                   {!stampload ? (
@@ -580,13 +590,13 @@ const MapScreen: React.FC = () => {
                   )}
                 </View>
                 <View style={styles.placeBottomContainer}>
-                  <PlaceOptionBox spaceId={parseInt(spaceInfo.id)} type="chat"/>
-                  <PlaceOptionBox spaceId={parseInt(spaceInfo.id)} type="game"/> 
+                  <PlaceOptionBox spaceId={spaceInfo.id} type="chat"/>
+                  <PlaceOptionBox spaceId={spaceInfo.id} type="game"/> 
                 </View>
               </>
             ) : (
               <View style={styles.placeBottomContainer}>
-                <EntranceBox onEnterPress={handleEnterPress} spaceId={parseInt(spaceInfo.id)} type="possible"/>
+                <EntranceBox onEnterPress={handleEnterPress} spaceId={spaceInfo.id} type="possible"/>
               </View>
             )
           ) : (
