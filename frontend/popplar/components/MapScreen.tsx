@@ -50,6 +50,7 @@ import { userInfoState } from './recoil/userState';
 
 import HotplaceUsers from './HotplaceUsers/HotplaceUsers'
 import UserModal from './Modals/UserModal'
+import { BackHandler } from 'react-native';
 
 type Here = {
   granted: string
@@ -98,6 +99,7 @@ const MapScreen: React.FC = () => {
       setLocation(prev => ({...prev, granted: result as string}))
     })
   }, [])
+
 
   // 전체 핫플레이스 검색에서 지도로 이동시, 장소 data 이동
   useEffect(() => {
@@ -162,7 +164,7 @@ const MapScreen: React.FC = () => {
       }
     })
     .catch((err) => {
-      console.log("스탬프 에러 메시지 :", err);
+      // console.log("스탬프 에러 메시지 :", err);
     })
    
   }, [spaceId])
