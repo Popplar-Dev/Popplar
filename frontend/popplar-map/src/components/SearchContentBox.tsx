@@ -65,10 +65,18 @@ export default function SearchContentBox({ place, placePosHandler }: Props) {
       </div>
     </div>
 
-    {/* <div className={styles.name}>{place.category_name}</div> */}
-    <div className={styles["address-name"]}>{place.road_address_name}</div>
-    {/* <div className={styles.name}>{place.address_name}</div> */}
-    <div className={styles["phone-number"]}>{place.phone}</div>
+    
+    {place.road_address_name ? (
+      <div className={styles["address-name"]}>{place.road_address_name}</div>
+    ): (
+      <div className={styles["address-name"]}>등록된 주소가 없습니다.</div>
+    )}
+    
+    {place.phone ? (
+      <div className={styles["phone-number"]}>{place.phone}</div>
+    ): (
+      <div className={styles["phone-number"]}>등록된 번호가 없습니다.</div>
+    )}
   </button>
   )
 }
