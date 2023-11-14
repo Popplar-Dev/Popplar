@@ -10,11 +10,11 @@ import com.hotspot.member.entity.BlockedMember
 import com.hotspot.member.entity.Member
 import com.hotspot.member.repository.BlockedMemberRepository
 import com.hotspot.member.repository.MemberRepository
+import org.apache.kafka.clients.producer.KafkaProducer
+import org.apache.kafka.clients.producer.ProducerRecord
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpMethod
-//import org.springframework.kafka.annotation.KafkaListener
-//import org.springframework.kafka.core.KafkaTemplate
-//import org.springframework.messaging.handler.annotation.Payload
+import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
@@ -28,7 +28,7 @@ class MemberService(
     private val memberRepository: MemberRepository,
     private val cryptService: CryptService,
     private val blockedMemberRepository: BlockedMemberRepository,
-//        private val kafkaTemplate: KafkaTemplate<String, Any>,
+    private val kafkaTemplate: KafkaTemplate<String, Any>,
     private val objectMapper: ObjectMapper,
 
     @Value("\${LIVE_CHAT_URL}")
@@ -36,8 +36,14 @@ class MemberService(
 
     ) : WebClientService() {
 
+    fun test(memberId: Long) {
+        val member = findMemberByDecryptedId(memberId)
+        kafkaTemplate.send("TEST", "TEST", ChattingMemberReqDto.create(member))
+    }
+
     fun createMember(oAuthMemberDto: OAuthMemberDto): Member {
         val member = memberRepository.save(Member.create(oAuthMemberDto))
+
         val maxRetries = 3 // 최대 재시도 횟수
 
         retryWithBackoff(
@@ -85,6 +91,13 @@ class MemberService(
         member.delete()
     }
 
+    fun getBlockedMember(memberId: Long): List<MemberProfileResDto> {
+        return blockedMemberRepository.findAllByMemberId(memberId).map {
+            val blockedMember = findMemberByDecryptedId(it.blockedMemberId)
+            MemberProfileResDto.create(cryptService, blockedMember)
+        }.toList()
+    }
+
     @Transactional
     fun blockMember(memberId: Long, blockedMemberId: Long) {
         val decryptedBlockedMemberId = cryptService.decrypt(blockedMemberId)
@@ -115,9 +128,14 @@ class MemberService(
         blockedMemberRepository.delete(blockedMember)
     }
 
+    fun findMemberByDecryptedId(decryptedId: Long): Member {
+        return memberRepository.findById(decryptedId)
+            .orElseThrow { throw RuntimeException("사용자 정보가 없습니다.") }
+    }
+
     fun findMemberByEncryptedId(encryptedId: Long): Member {
         return memberRepository.findById(cryptService.decrypt(encryptedId))
-            .orElseThrow { throw ArithmeticException("사용자 정보가 없습니다.") }
+            .orElseThrow { throw RuntimeException("사용자 정보가 없습니다.") }
     }
 
     fun getMemberInfo(memberIdList: List<Long>): MemberInfoResponseDto {
@@ -132,5 +150,4 @@ class MemberService(
 //        kafkaTemplate.send("TEST_RETURN", jsonValue)
 //        return "Message: $data"
 //    }
-//
 }

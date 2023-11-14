@@ -43,6 +43,13 @@ class MemberController(
         memberService.deleteMember(memberId)
     }
 
+    @GetMapping("/block")
+    fun getBlockedMember(
+        @RequestHeader("Member-Id") myId: Long
+    ): List<MemberProfileResDto> {
+        return memberService.getBlockedMember(myId)
+    }
+
     @PostMapping("/block/{blockedMemberId}")
     fun blockMember(
         @RequestHeader("Member-Id") myId: Long,
@@ -65,5 +72,10 @@ class MemberController(
             memberService.getMemberInfo(memberIdList),
             HttpStatus.OK
         )
+    }
+
+    @GetMapping("/test")
+    fun test(@RequestHeader("Member-Id") memberId: Long) {
+        memberService.test(memberId)
     }
 }

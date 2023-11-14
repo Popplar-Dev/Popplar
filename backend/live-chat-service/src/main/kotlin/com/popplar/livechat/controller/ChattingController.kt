@@ -2,6 +2,7 @@ package com.popplar.livechat.controller
 
 import com.popplar.livechat.dto.ChattingReqDto
 import com.popplar.livechat.dto.ChattingResDto
+import com.popplar.livechat.factory.ChattingMemberFactory
 import com.popplar.livechat.service.ChattingService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -26,6 +27,8 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent
 @RestController
 @RequestMapping("/live-chat")
 class ChattingController(
+
+    private val chattingMemberFactory: ChattingMemberFactory,
     private val logger: Logger = LoggerFactory.getLogger(ChattingController::class.java),
     private val chattingService: ChattingService,
 ) {

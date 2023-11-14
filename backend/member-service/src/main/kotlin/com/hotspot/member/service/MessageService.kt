@@ -3,6 +3,7 @@ package com.hotspot.member.service
 import com.hotspot.member.dto.MessageResDto
 import com.hotspot.member.entity.Member
 import com.hotspot.member.entity.Message
+import com.hotspot.member.repository.BlockedMemberRepository
 import com.hotspot.member.repository.MemberRepository
 import com.hotspot.member.repository.MessageRepository
 import org.springframework.stereotype.Service
@@ -15,35 +16,32 @@ class MessageService(
     private val messageRepository: MessageRepository,
     private val memberRepository: MemberRepository,
     private val cryptService: CryptService,
+    private val blockedMemberRepository: BlockedMemberRepository,
 ) {
 
     @Transactional
     fun getMessage(myId: Long, messageId: Long): MessageResDto {
         val message = findMessage(messageId)
 
-        message.check()
-
-        // TODO
-        //  내가 보낸 메세지 확인 하는 get 추가 필요
-
-        if (myId != message.sentMemberId) {
+        if (myId != message.sentMemberId && myId != message.receivedMemberId) {
             throw RuntimeException("쪽지 열람 권한이 없습니다.")
+        }
+        if (myId == message.receivedMemberId) {
+            message.check()
         }
 
         val sentMember = findMember(message.sentMemberId)
         val receivedMember = findMember(message.receivedMemberId)
-
 
         return MessageResDto.create(cryptService, message, sentMember, receivedMember)
     }
 
     @Transactional
     fun postMessage(sentMemberId: Long, receivedMemberId: Long, content: String) {
-        val decryptedSentMemberId = cryptService.decrypt(sentMemberId)
         val decryptedReceivedMemberId = cryptService.decrypt(receivedMemberId)
         messageRepository.save(
             Message.create(
-                decryptedSentMemberId,
+                sentMemberId,
                 decryptedReceivedMemberId,
                 content
             )
@@ -59,9 +57,27 @@ class MessageService(
         message.delete()
     }
 
-    fun getMyMessageList(receivedMemberId: Long): MutableList<MessageResDto> {
+    fun getMyReceivedMessageList(receivedMemberId: Long): MutableList<MessageResDto> {
+
+        val blockedMemberSet =
+            blockedMemberRepository.findAllByMemberId(receivedMemberId).map { it.blockedMemberId }
+                .toSet()
+
         val messageList =
             messageRepository.findAllByReceivedMemberIdAndDeletedFalse(receivedMemberId)
+                .filter { it.sentMemberId !in blockedMemberSet }
+
+        return messageList.map {
+            val sentMember = findMember(it.sentMemberId)
+            val receivedMember = findMember(it.receivedMemberId)
+
+            MessageResDto.create(cryptService, it, sentMember, receivedMember)
+        }.toMutableList()
+    }
+
+    fun getMySentMessageList(sentMemberId: Long): MutableList<MessageResDto> {
+        val messageList =
+            messageRepository.findAllBySentMemberIdAndDeletedFalse(sentMemberId)
 
         return messageList.map {
             val sentMember = findMember(it.sentMemberId)
@@ -87,7 +103,7 @@ class MessageService(
             message.delete()
         }
 
-        return getMyMessageList(memberId)
+        return getMyReceivedMessageList(memberId)
     }
 
     fun findMessage(messageId: Long): Message {
