@@ -5,7 +5,7 @@ import com.popplar.livechat.dto.ChattingResDto
 import com.popplar.livechat.entity.Chatting
 import com.popplar.livechat.entity.ChattingMember
 import com.popplar.livechat.entity.ChattingRoom
-import com.popplar.livechat.fco.ChattingMemberFactory
+import com.popplar.livechat.factory.ChattingMemberFactory
 import com.popplar.livechat.repository.ChattingConquerorRepository
 import com.popplar.livechat.repository.ChattingMemberRepository
 import com.popplar.livechat.repository.ChattingRepository
