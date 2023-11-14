@@ -37,9 +37,6 @@ import { useNavigation } from '@react-navigation/native';
 import GameListModal from './Modals/GameListModal';
 import { useRoute } from '@react-navigation/native';
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
 import { getDistance } from './utils/GetDistance'
 import { getToken } from './services/getAccessToken'
 import { postMyHotLocation } from './services/postLocation'
@@ -49,6 +46,9 @@ import { userInfoState } from './recoil/userState';
 
 import HotplaceUsers from './HotplaceUsers/HotplaceUsers'
 import UserModal from './Modals/UserModal'
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 type Here = {
   granted: string
@@ -191,8 +191,8 @@ const MapScreen: React.FC = () => {
       console.log(res.data)
       const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
   
-      const loc: { y: string, x: string } = {y: y, x: x}
-      const locationData: { type: string, data: { y: string, x: string } } = {type: 'pickHotPlace', data: loc}
+      // const loc: { y: string, x: string } = {y: y, x: x}
+      // const locationData: { type: string, data: { y: string, x: string } } = {type: 'pickHotPlace', data: loc}
       // console.log(locationData, '~!~!~!~!~!~!~!~!~!~')
       if (webRef.current) {
         handlePresentModalPress();
@@ -416,7 +416,7 @@ const MapScreen: React.FC = () => {
 
     // 해당 장소에 있는 다른 사람들 정보 출력하기 위해 webview로 데이터 전송
     const spaceData: { type: string, data: {id: string} } = {type: 'entrance', data: { id: spaceInfo.id }}
-    console.log('spaceData', spaceData)
+    // console.log('spaceData', spaceData)
     if (webRef.current) {
       webRef.current.injectJavaScript(`
       window.postMessage(${JSON.stringify(spaceData)}, '*')
@@ -428,6 +428,7 @@ const MapScreen: React.FC = () => {
   useEffect(() => {
     if (bottomSheetStatus==0) {
       if (myHotPlaceId==spaceInfo.id) {
+        console.log('이미 입장한 핫플이네용')
         handle_entrance()
       }
     }
@@ -604,11 +605,11 @@ const MapScreen: React.FC = () => {
           onMessage={(event) => {
             const data: any = JSON.parse(event.nativeEvent.data)
             if (data.type=="test") {
-              console.log(data)
+              // console.log(data)
             } else if (data.type=="relocation") {
               native_to_web();
             } else if (data.type=="user") {
-              console.log("user~~~~~~", data.data.data)
+              // console.log("user~~~~~~", data.data.data)
               setUserId(data.data.data)
               openMemberModal()
             } else {
