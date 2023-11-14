@@ -16,51 +16,50 @@ class MessageController(
     private val authService: AuthService,
 ) {
 
-    // TODO
-    //  messageResDto profileImg 추가 필요
-
-    @GetMapping("/{memberId}/{messageId}")
+    @GetMapping("/{messageId}")
     fun getMessage(
         @RequestHeader("Member-Id") myId: Long,
-        @PathVariable memberId: Long,
         @PathVariable messageId: Long
     ): ResponseEntity<MessageResDto> {
-        authService.checkAuth(memberId, myId)
         return ResponseEntity<MessageResDto>(
             messageService.getMessage(myId, messageId),
             HttpStatus.OK
         )
     }
 
-    @PostMapping("/{sentMemberId}/{receivedMemberId}")
+    @PostMapping("/{receivedMemberId}")
     fun postMessage(
         @RequestHeader("Member-Id") myId: Long,
-        @PathVariable sentMemberId: Long,
         @PathVariable receivedMemberId: Long,
         @RequestBody messageReqDto: MessageReqDto,
     ) {
-        authService.checkAuth(sentMemberId, myId)
-        messageService.postMessage(sentMemberId, receivedMemberId, messageReqDto.content)
+        messageService.postMessage(myId, receivedMemberId, messageReqDto.content)
     }
 
-    @DeleteMapping("/{memberId}/{messageId}")
+    @DeleteMapping("/{messageId}")
     fun deleteMessage(
         @RequestHeader("Member-Id") myId: Long,
-        @PathVariable memberId: Long,
         @PathVariable messageId: Long
     ) {
-        authService.checkAuth(memberId, myId)
         messageService.deleteMessage(myId, messageId)
     }
 
-    @GetMapping("/find-all/{memberId}")
-    fun getMyMessageList(
+    @GetMapping("/received-all")
+    fun getMyReceivedMessageList(
         @RequestHeader("Member-Id") myId: Long,
-        @PathVariable memberId: Long,
     ): ResponseEntity<MutableList<MessageResDto>> {
-        authService.checkAuth(memberId, myId)
         return ResponseEntity<MutableList<MessageResDto>>(
-            messageService.getMyMessageList(myId),
+            messageService.getMyReceivedMessageList(myId),
+            HttpStatus.OK
+        )
+    }
+
+    @GetMapping("/sent-all")
+    fun getMySentMessageList(
+        @RequestHeader("Member-Id") myId: Long,
+    ): ResponseEntity<MutableList<MessageResDto>> {
+        return ResponseEntity<MutableList<MessageResDto>>(
+            messageService.getMySentMessageList(myId),
             HttpStatus.OK
         )
     }

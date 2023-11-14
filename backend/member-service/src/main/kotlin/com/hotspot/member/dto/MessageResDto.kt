@@ -19,6 +19,8 @@ class MessageResDto(
 
     val receivedMemberName: String,
 
+    val receivedMemberProfile: String,
+
     val content: String,
 
     val checked: Boolean,
@@ -34,6 +36,7 @@ class MessageResDto(
                 sentMemberProfileImage = sentMember.profileImage,
                 receivedMemberId = cryptService.encrypt(receivedMember.id!!),
                 receivedMemberName = receivedMember.name,
+                receivedMemberProfile = receivedMember.profileImage,
                 messageId = message.id!!,
                 content = message.content,
                 checked = message.checked,

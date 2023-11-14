@@ -5,9 +5,11 @@ import com.popplar.livechat.dto.ChattingMemberResDto
 import com.popplar.livechat.dto.ConquerorReqDto
 import com.popplar.livechat.entity.ChattingConqueror
 import com.popplar.livechat.entity.ChattingMember
-import com.popplar.livechat.fco.ChattingMemberFactory
+import com.popplar.livechat.factory.ChattingMemberFactory
 import com.popplar.livechat.repository.ChattingConquerorRepository
 import com.popplar.livechat.repository.ChattingMemberRepository
+import org.springframework.kafka.annotation.KafkaListener
+import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -69,5 +71,10 @@ class ChattingMemberService(
             chattingConquerorRepository.delete(chattingConqueror)
         }
         chattingConquerorRepository.save(ChattingConqueror.create(conquerorReqDto, memberId))
+    }
+
+    @KafkaListener(topics = ["TEST"])
+    fun consumeTest(@Payload data: Any) {
+        print(data)
     }
 }
