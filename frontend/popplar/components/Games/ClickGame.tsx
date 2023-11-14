@@ -91,8 +91,21 @@ export default function ClickGame({ route }) {
           { headers: {'Access-Token': userAccessToken} }
           )
           .then((response) => {
-            console.log("infiunfi",response.data)
             setGameInfo(response.data)
+            if (response.data.conqueror === true) {
+              const body = {
+                chattingRoomId : spaceId,
+              }
+              axios.post(`https://k9a705.p.ssafy.io:8000/live-chat/chatting-member/conqueror`,
+                body,
+                {headers: {'Access-Token': userAccessToken}}
+              )
+              .then((response) => {
+              })
+              .catch((err) => {
+                console.log("에러 메시지 :", err);
+              })
+            }
           })
           .catch((err) => {
             console.log("gameInfo ERROR :", err)
