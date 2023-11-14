@@ -73,4 +73,9 @@ class MemberController(
             HttpStatus.OK
         )
     }
+
+    @GetMapping("/test")
+    fun test(@RequestHeader("Member-Id") memberId: Long) {
+        memberService.test(memberId)
+    }
 }
