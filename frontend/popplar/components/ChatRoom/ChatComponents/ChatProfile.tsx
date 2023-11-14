@@ -1,6 +1,8 @@
 import {useState} from 'react';
 import {View, Image, Pressable, Text, Alert, StyleSheet} from 'react-native';
 import {Menu} from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import {useRecoilState} from 'recoil';
 import {userBlockListState} from '../../recoil/userState'; 
@@ -13,11 +15,24 @@ import FastImage from 'react-native-fast-image';
 type ChatProfileProps = {
   imgUrl: string;
   memberId: number;
+  memberName: string; 
 };
 
-export default function ChatProfile({imgUrl, memberId}: ChatProfileProps) {
+type RootStackParamList = {
+  Chat: undefined;
+  Draft: {memberId: number; memberName: string};
+};
+
+type DraftScreenRouteProp = NativeStackScreenProps<
+  RootStackParamList,
+  'Draft'
+>;
+
+export default function ChatProfile({imgUrl, memberId, memberName}: ChatProfileProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [userBlockedList, setUserBlockedList] = useRecoilState(userBlockListState); 
+  const [userBlockedList, setUserBlockedList] = useRecoilState(userBlockListState);
+  const {navigation} = useNavigation<DraftScreenRouteProp>(); 
+
 
   const blocked = userBlockedList.some(user => user.id === memberId); 
   const handleBlock = async () => {
@@ -54,6 +69,9 @@ export default function ChatProfile({imgUrl, memberId}: ChatProfileProps) {
     }
   }
 
+  const handleMessage = () => {
+    navigation.navigate("Draft",{memberId: memberId, memberName: memberName});
+  }
   return (
     <View style={styles.container}>
       <Menu
@@ -72,7 +90,8 @@ export default function ChatProfile({imgUrl, memberId}: ChatProfileProps) {
         <View style={styles.buttonOuterContainer}>
           <Pressable
             style={styles.buttonInnerContainer}
-            android_ripple={{color: '#464646'}}>
+            android_ripple={{color: '#464646'}}
+            onPress={handleMessage}>
             <Icon name="chatbubbles-outline" size={23} color="#8B90F7"></Icon>
             <Text style={styles.buttonText}>쪽지하기</Text>
           </Pressable>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, Button, Pressable, ActivityIndicator, Modal, TouchableWithoutFeedback } from 'react-native';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { TabNavigatorParamList } from '../types/tabNavigatorParams';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { BlurView } from "@react-native-community/blur";
@@ -47,7 +47,7 @@ type markers = {
 
 export default function UserModal({ visible, onClose, memberId, placeName, goToMessageDraft }: Props) {
   // const [userCount, setUserCount] = useState<number>(0)
-  const navigation = useNavigation<NavigationProp<TabNavigatorParamList>>();
+  const navigation = useNavigation();
   const [memberInfo, setMemberInfo] = useState<member>({});
   const [loading, setLoading] = useState(true);
 
@@ -76,7 +76,7 @@ export default function UserModal({ visible, onClose, memberId, placeName, goToM
   const handleReply = () => {
     // goToMessageDraft(memberId, memberInfo.name); 
     // console.log(memberId, memberInfo)
-    navigation.navigate("Notifications", {screen: "Draft", params: {memberId: memberId, memberName: memberInfo.name}});
+    navigation.navigate("Draft", {memberId: memberId, memberName: memberInfo.name});
   }
 
 return (

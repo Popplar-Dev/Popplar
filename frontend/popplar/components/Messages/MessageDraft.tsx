@@ -10,6 +10,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import {messageType} from '../types/message';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {getToken} from '../services/getAccessToken';
@@ -23,10 +24,8 @@ type RootStackParamList = {
 
 type DraftScreenRouteProp = NativeStackScreenProps<RootStackParamList, 'Draft'>;
 
-export default function MessageDraft({
-  navigation,
-  route,
-}: DraftScreenRouteProp) {
+export default function MessageDraft() {
+  const { navigation, route} = useNavigation<DraftScreenRouteProp>(); 
   const {memberId, memberName} = route.params;
   const [inputText, setInputText] = useState('');
   const [showWarning, setShowWarning] = useState(false);
