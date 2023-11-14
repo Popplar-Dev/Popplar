@@ -89,7 +89,7 @@ const MapScreen: React.FC = () => {
   const [userId, setUserId] = useState<number>(0)
   const [isMemberModalVisible, setMemberModalVisible] = useState(false);
 
-  const [bottomSheetStatus, setBottomSheetStatus] = useState<number>(-2)
+  const [bottomSheetStatus, setBottomSheetStatus] = useState<number>(0)
 
   // setLocation -> granted
   useEffect(() => {
@@ -100,10 +100,13 @@ const MapScreen: React.FC = () => {
 
   // 전체 핫플레이스 검색에서 지도로 이동시, 장소 data 이동
   useEffect(() => {
+    handlePresentModalClose()
     const data: any = route.params;
     if (data && data.data) {
+      // handlePresentModalClose();
       getIdHotplace(data.data.id)
       .then((res) => {
+        console.log('1111111111111111')
         const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
         // console.log(y, x)
         const loc: { y: string, x: string } = {y: y, x: x}
@@ -149,6 +152,7 @@ const MapScreen: React.FC = () => {
 
   // 스탬프 여부 확인
   useEffect(() => {
+    handlePresentModalClose()
     if (spaceId) {
       getStamp(spaceId)
       .then((res) => {
@@ -185,7 +189,7 @@ const MapScreen: React.FC = () => {
 
   }, [userInfo.id])
 
-  // 전체 핫플레이스 검색 클릭 시, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
+  // 새 space 정보 부여될 경우, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
   useEffect(() => {
     if (spaceId) {
       getIdHotplace(spaceId)
@@ -357,6 +361,11 @@ const MapScreen: React.FC = () => {
   // callbacks
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
+    console.log('bottom sheet 열려요')
+  }, [spaceInfo]);
+  const handlePresentModalClose = useCallback(() => {
+    bottomSheetModalRef.current?.close();
+    console.log('bottom sheet 닫혀요')
   }, [spaceInfo]);
   const handleSheetChanges = useCallback((index: number) => {
     setBottomSheetStatus(index)
@@ -425,7 +434,7 @@ const MapScreen: React.FC = () => {
     if (bottomSheetStatus==0) {
       handle_entrance()
     }
-  }, [bottomSheetStatus])
+  }, [spaceInfo, bottomSheetStatus])
 
   const handleOutsideClick = (event) => {
     const { locationY } = event.nativeEvent;
@@ -606,8 +615,11 @@ const MapScreen: React.FC = () => {
               // console.log("user~~~~~~", data.data.data)
               setUserId(data.data.data)
               openMemberModal()
+            } else if (data.type=="handleBottomSheet") {
+              handlePresentModalClose();
             } else {
               handlePresentModalPress();
+              // setBottomSheetStatus(0)
               setSpaceInfo(data.data)
               setSpaceId(data.data.id)
               // setSpaceLike(data.data.myLike)
