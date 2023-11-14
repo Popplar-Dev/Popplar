@@ -149,21 +149,22 @@ const MapScreen: React.FC = () => {
 
   // 스탬프 여부 확인
   useEffect(() => {
-    getStamp(spaceId)
-    .then((res) => {
-      console.log('맵스크린:',res.data, spaceId)
-      if (res.data===true) {
-        setStamp('true')
-        setStampload(false)
-      } else if (res.data==false){
-        setStamp('false')
-        setStampload(false)
-      }
-    })
-    .catch((err) => {
-      console.log("스탬프 에러 메시지 :", err);
-    })
-   
+    if (spaceId) {
+      getStamp(spaceId)
+      .then((res) => {
+        console.log('맵스크린:',res.data, spaceId)
+        if (res.data===true) {
+          setStamp('true')
+          setStampload(false)
+        } else if (res.data==false){
+          setStamp('false')
+          setStampload(false)
+        }
+      })
+      .catch((err) => {
+        console.log("스탬프 에러 메시지 :", err);
+      })
+    }
   }, [spaceId])
 
   const handleStampUpdate = (newStamp: string) => {
@@ -186,48 +187,50 @@ const MapScreen: React.FC = () => {
 
   // 전체 핫플레이스 검색 클릭 시, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
   useEffect(() => {
-    getIdHotplace(spaceId)
-    .then((res) => {
-      console.log(res.data)
-      const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
-  
-      // const loc: { y: string, x: string } = {y: y, x: x}
-      // const locationData: { type: string, data: { y: string, x: string } } = {type: 'pickHotPlace', data: loc}
-      // console.log(locationData, '~!~!~!~!~!~!~!~!~!~')
-      if (webRef.current) {
-        handlePresentModalPress();
-        setSpaceInfo({
-          id,
-          place_name: placeName,
-          address_name: addressName,
-          road_address_name: roadAddressName,
-          category_group_name: category,
-          likeCount: likeCount,
-          phone,
-          placeType,
-          visitorCount,
-          y,
-          x,
-          tier,
-          myLike,
-        })
-        setSpaceLike(myLike)
-        setSpaceLikeCount(likeCount)
-        // webRef.current.injectJavaScript(`
-        // window.postMessage(${JSON.stringify(locationData)}, '*')
-        // `);
-        let distance = getDistance(location.x, location.y, x, y)
-        // console.log("location.x, location.y: ", location.x, location.y)
-        console.log("distance: ", distance)
-        if (distance <= 500) {
-          setInDistance(true)
-        } else {
-          setInDistance(false)
+    if (spaceId) {
+      getIdHotplace(spaceId)
+      .then((res) => {
+        console.log(res.data)
+        const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
+    
+        // const loc: { y: string, x: string } = {y: y, x: x}
+        // const locationData: { type: string, data: { y: string, x: string } } = {type: 'pickHotPlace', data: loc}
+        // console.log(locationData, '~!~!~!~!~!~!~!~!~!~')
+        if (webRef.current) {
+          handlePresentModalPress();
+          setSpaceInfo({
+            id,
+            place_name: placeName,
+            address_name: addressName,
+            road_address_name: roadAddressName,
+            category_group_name: category,
+            likeCount: likeCount,
+            phone,
+            placeType,
+            visitorCount,
+            y,
+            x,
+            tier,
+            myLike,
+          })
+          setSpaceLike(myLike)
+          setSpaceLikeCount(likeCount)
+          // webRef.current.injectJavaScript(`
+          // window.postMessage(${JSON.stringify(locationData)}, '*')
+          // `);
+          let distance = getDistance(location.x, location.y, x, y)
+          // console.log("location.x, location.y: ", location.x, location.y)
+          console.log("distance: ", distance)
+          if (distance <= 500) {
+            setInDistance(true)
+          } else {
+            setInDistance(false)
+          }
         }
-      }
-    }).catch(() => {
-      // console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.')
-    })
+      }).catch(() => {
+        // console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.')
+      })
+    }
   }, [spaceId])
   
   const openModal = () => {
@@ -272,13 +275,6 @@ const MapScreen: React.FC = () => {
   //     `);
   //   }
   // }, [spaceInfo])
-
-  const getHotplaceLocation = async () => {
-    const accessToken = await getToken(); 
-    if (!accessToken) {
-      return; 
-    }
-  }
 
   async function get_location(type: string) {
     // return new Promise((resolve, reject) => {
