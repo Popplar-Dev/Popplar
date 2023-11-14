@@ -186,7 +186,7 @@ const MapScreen: React.FC = () => {
 
   // 전체 핫플레이스 검색 클릭 시, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
   useEffect(() => {
-    getIdHotplace(spaceId)
+    getIdHotplace(spaceInfo.id)
     .then((res) => {
       console.log(res.data)
       const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
@@ -228,7 +228,7 @@ const MapScreen: React.FC = () => {
     }).catch(() => {
       // console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.')
     })
-  }, [spaceId])
+  }, [spaceId, location])
   
   const openModal = () => {
     setModalVisible(true);
@@ -564,7 +564,7 @@ const MapScreen: React.FC = () => {
 
         {spaceInfo &&
           inDistance ? ( // 거리 내에 있으면
-            myHotPlaceId === spaceId ? ( // 내가 입장한 핫플레이스라면
+            myHotPlaceId === spaceInfo.id ? ( // 내가 입장한 핫플레이스라면
               <>
                 <View style={styles.stampcontainer}>
                   {!stampload ? (

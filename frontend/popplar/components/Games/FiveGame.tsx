@@ -65,7 +65,7 @@ const FiveGame = ({ route }) => {
     const reactionTime = ((endTime.getTime() - startTime!.getTime()) / 1000 - 5) / 5;
     setResult(parseFloat(reactionTime.toFixed(3)));
     setNewImagePosition(false);
-
+    
     const AccessToken = await AsyncStorage.getItem('userAccessToken');
     console.log(AccessToken)
     if (AccessToken !== null) {
@@ -120,7 +120,8 @@ const FiveGame = ({ route }) => {
   return (
     <View style={styles.container}>
       <View style={styles.gamecontainer}>
-        {gameStarted ? (
+      {gameStarted ? (
+        imagesClicked < 5 ? (
           <Pressable
             onPress={handleImageClick}
             style={[
@@ -131,21 +132,23 @@ const FiveGame = ({ route }) => {
           >
             <Image source={images[imagesClicked]} style={styles.image}/>
           </Pressable>
-        ) : (
+        ) : null
+      ) : (
+        <Pressable onPress={resetGame} style={styles.button}>
+          <Text style={styles.buttonText}>게임 시작</Text>
+        </Pressable>
+      )}
+
+      {imagesClicked >= 5 && (
+        <View>
+            <Text style={styles.text}>
+              평균 반응 속도: {result}초
+            </Text>
           <Pressable onPress={resetGame} style={styles.button}>
-            <Text style={styles.buttonText}>게임 시작</Text>
+            <Text style={styles.buttonText}>게임 재시작</Text>
           </Pressable>
-        )}
-        {imagesClicked >= 5 && (
-          <View>
-              <Text style={styles.text}>
-                평균 반응 속도: {result}초
-              </Text>
-            <Pressable onPress={resetGame} style={styles.button}>
-              <Text style={styles.buttonText}>게임 재시작</Text>
-            </Pressable>
-          </View>
-        )}
+        </View>
+      )}
       </View>
     </View>
   );
