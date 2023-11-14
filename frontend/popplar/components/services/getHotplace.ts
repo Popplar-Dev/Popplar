@@ -66,3 +66,17 @@ export async function getStamp(hotPlaceId) {
     headers: { 'Access-Token': token }
    }).then((res) => res).catch((e)=>console.log(e))
 }
+
+// 방문자 추가
+export async function insertVisitor(hotPlaceId) {
+  const token = await getToken();
+  console.log("hotPlaceId: ", hotPlaceId)
+  return await axios({
+    method: 'post',
+    url: `${BASE_URL}/hot-place/visitor`,
+    data: {
+      hotPlaceId: hotPlaceId
+    },
+    headers: { 'Access-Token': token }
+   }).then((res) => res).catch((e)=>{console.log("방문자 등록 error: ", e)})
+}

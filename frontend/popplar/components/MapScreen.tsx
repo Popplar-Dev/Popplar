@@ -28,7 +28,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { locationState } from './recoil/locationState'
 import { chatroomState } from './recoil/chatroomState';
 
-import { getIdHotplace, getMyInfo, updateMyHotPlaceId, getStamp } from './services/getHotplace'
+import { getIdHotplace, getMyInfo, updateMyHotPlaceId, getStamp, insertVisitor } from './services/getHotplace'
 import { likeHotplace, delLikeHotplace } from './services/postHotplace'
 import { previousDay } from 'date-fns';
 
@@ -36,9 +36,6 @@ import { SpaceInfo } from './types/place'
 import { useNavigation } from '@react-navigation/native';
 import GameListModal from './Modals/GameListModal';
 import { useRoute } from '@react-navigation/native';
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 
 import { getDistance } from './utils/GetDistance'
 import { getToken } from './services/getAccessToken'
@@ -50,6 +47,10 @@ import { userInfoState } from './recoil/userState';
 
 import HotplaceUsers from './HotplaceUsers/HotplaceUsers'
 import UserModal from './Modals/UserModal'
+import { BackHandler } from 'react-native';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 type Here = {
   granted: string
@@ -90,7 +91,7 @@ const MapScreen: React.FC = () => {
   const [userId, setUserId] = useState<number>(0)
   const [isMemberModalVisible, setMemberModalVisible] = useState(false);
 
-  const [bottomSheetStatus, setBottomSheetStatus] = useState<number>(-2)
+  const [bottomSheetStatus, setBottomSheetStatus] = useState<number>(0)
 
   // setLocation -> granted
   useEffect(() => {
@@ -99,12 +100,16 @@ const MapScreen: React.FC = () => {
     })
   }, [])
 
+
   // 전체 핫플레이스 검색에서 지도로 이동시, 장소 data 이동
   useEffect(() => {
+    handlePresentModalClose()
     const data: any = route.params;
     if (data && data.data) {
+      // handlePresentModalClose();
       getIdHotplace(data.data.id)
       .then((res) => {
+        console.log('1111111111111111')
         const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
         // console.log(y, x)
         const loc: { y: string, x: string } = {y: y, x: x}
@@ -150,21 +155,23 @@ const MapScreen: React.FC = () => {
 
   // 스탬프 여부 확인
   useEffect(() => {
-    getStamp(spaceId)
-    .then((res) => {
-      console.log('맵스크린:',res.data, spaceId)
-      if (res.data===true) {
-        setStamp('true')
-        setStampload(false)
-      } else if (res.data==false){
-        setStamp('false')
-        setStampload(false)
-      }
-    })
-    .catch((err) => {
-      console.log("스탬프 에러 메시지 :", err);
-    })
-   
+    handlePresentModalClose()
+    if (spaceId) {
+      getStamp(spaceId)
+      .then((res) => {
+        console.log('맵스크린:',res.data, spaceId)
+        if (res.data===true) {
+          setStamp('true')
+          setStampload(false)
+        } else if (res.data==false){
+          setStamp('false')
+          setStampload(false)
+        }
+      })
+      .catch((err) => {
+        console.log("스탬프 에러 메시지 :", err);
+      })
+    }
   }, [spaceId])
 
   const handleStampUpdate = (newStamp: string) => {
@@ -185,51 +192,55 @@ const MapScreen: React.FC = () => {
 
   }, [userInfo.id])
 
-  // 전체 핫플레이스 검색 클릭 시, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
+  // 새 space 정보 부여될 경우, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
   useEffect(() => {
-    getIdHotplace(spaceId)
-    .then((res) => {
-      console.log(res.data)
-      const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
-  
-      const loc: { y: string, x: string } = {y: y, x: x}
-      const locationData: { type: string, data: { y: string, x: string } } = {type: 'pickHotPlace', data: loc}
-      // console.log(locationData, '~!~!~!~!~!~!~!~!~!~')
-      if (webRef.current) {
-        handlePresentModalPress();
-        setSpaceInfo({
-          id,
-          place_name: placeName,
-          address_name: addressName,
-          road_address_name: roadAddressName,
-          category_group_name: category,
-          likeCount: likeCount,
-          phone,
-          placeType,
-          visitorCount,
-          y,
-          x,
-          tier,
-          myLike,
-        })
-        setSpaceLike(myLike)
-        setSpaceLikeCount(likeCount)
-        // webRef.current.injectJavaScript(`
-        // window.postMessage(${JSON.stringify(locationData)}, '*')
-        // `);
-        let distance = getDistance(location.x, location.y, x, y)
-        // console.log("location.x, location.y: ", location.x, location.y)
-        console.log("distance: ", distance)
-        if (distance <= 500) {
-          setInDistance(true)
-        } else {
-          setInDistance(false)
+    // console.log("spaceInfo.id: ", spaceInfo.id)
+    if (spaceInfo.id !== undefined) {
+      getIdHotplace(spaceInfo.id)
+      .then((res) => {
+        // console.log(res.data)
+        const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
+    
+        const loc: { y: string, x: string } = {y: y, x: x}
+        const locationData: { type: string, data: { y: string, x: string } } = {type: 'pickHotPlace', data: loc}
+        // console.log(locationData, '~!~!~!~!~!~!~!~!~!~')
+        if (webRef.current) {
+          handlePresentModalPress();
+          setSpaceInfo({
+            id,
+            place_name: placeName,
+            address_name: addressName,
+            road_address_name: roadAddressName,
+            category_group_name: category,
+            likeCount: likeCount,
+            phone,
+            placeType,
+            visitorCount,
+            y,
+            x,
+            tier,
+            myLike,
+          })
+          setSpaceLike(myLike)
+          setSpaceLikeCount(likeCount)
+          // webRef.current.injectJavaScript(`
+          // window.postMessage(${JSON.stringify(locationData)}, '*')
+          // `);
+          let distance = getDistance(location.x, location.y, x, y)
+          // console.log("location.x, location.y: ", location.x, location.y)
+          console.log("distance: ", distance)
+          if (distance <= 500) {
+            setInDistance(true)
+          } else {
+            setInDistance(false)
+          }
         }
-      }
-    }).catch(() => {
-      // console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.')
-    })
-  }, [spaceId])
+      }).catch(() => {
+        // console.log('핫플레이스 등록된 id가 들어오지 않았으므로, 미출력 또는 검색한 장소를 출력합니다.')
+      })
+    }
+  }, [spaceId, location])
+
   
   const openModal = () => {
     setModalVisible(true);
@@ -274,13 +285,6 @@ const MapScreen: React.FC = () => {
   //     `);
   //   }
   // }, [spaceInfo])
-
-  const getHotplaceLocation = async () => {
-    const accessToken = await getToken(); 
-    if (!accessToken) {
-      return; 
-    }
-  }
 
   async function get_location(type: string) {
     // return new Promise((resolve, reject) => {
@@ -363,6 +367,11 @@ const MapScreen: React.FC = () => {
   // callbacks
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
+    console.log('bottom sheet 열려요')
+  }, [spaceInfo]);
+  const handlePresentModalClose = useCallback(() => {
+    bottomSheetModalRef.current?.close();
+    console.log('bottom sheet 닫혀요')
   }, [spaceInfo]);
   const handleSheetChanges = useCallback((index: number) => {
     setBottomSheetStatus(index)
@@ -393,6 +402,7 @@ const MapScreen: React.FC = () => {
   // 입장하기 버튼
   const handleEnterPress = async (spaceId: number) => {
     updateMyHotPlaceId(spaceId, userInfo.id)
+    insertVisitor(spaceId)
     if (chatroomId) {
       await deleteChatroom(chatroomId); 
       setChatroomId(null); 
@@ -422,7 +432,7 @@ const MapScreen: React.FC = () => {
 
     // 해당 장소에 있는 다른 사람들 정보 출력하기 위해 webview로 데이터 전송
     const spaceData: { type: string, data: {id: string} } = {type: 'entrance', data: { id: spaceInfo.id }}
-    console.log('spaceData', spaceData)
+    // console.log('spaceData', spaceData)
     if (webRef.current) {
       webRef.current.injectJavaScript(`
       window.postMessage(${JSON.stringify(spaceData)}, '*')
@@ -433,11 +443,9 @@ const MapScreen: React.FC = () => {
   // 입장하기 누른 핫플레이스와, 현재 들어온 핫플레이스가 동일하다면 주변 사람들 정보 띄워줌
   useEffect(() => {
     if (bottomSheetStatus==0) {
-      if (myHotPlaceId==spaceInfo.id) {
-        handle_entrance()
-      }
+      handle_entrance()
     }
-  }, [bottomSheetStatus])
+  }, [spaceInfo, bottomSheetStatus])
 
   const handleOutsideClick = (event) => {
     const { locationY } = event.nativeEvent;
@@ -481,6 +489,7 @@ const MapScreen: React.FC = () => {
               setSpaceInfo={setSpaceInfo} 
               setSpaceLike={setSpaceLike}
               setSpaceLikeCount={setSpaceLikeCount}
+              webRef={webRef}
               />
             </>
             ): (
@@ -570,7 +579,7 @@ const MapScreen: React.FC = () => {
 
         {spaceInfo &&
           inDistance ? ( // 거리 내에 있으면
-            myHotPlaceId === spaceId ? ( // 내가 입장한 핫플레이스라면
+            myHotPlaceId === spaceInfo.id ? ( // 내가 입장한 핫플레이스라면
               <>
                 <View style={styles.stampcontainer}>
                   {!stampload ? (
@@ -610,15 +619,18 @@ const MapScreen: React.FC = () => {
           onMessage={(event) => {
             const data: any = JSON.parse(event.nativeEvent.data)
             if (data.type=="test") {
-              console.log(data)
+              // console.log(data)
             } else if (data.type=="relocation") {
               native_to_web();
             } else if (data.type=="user") {
-              console.log("user~~~~~~", data.data.data)
+              // console.log("user~~~~~~", data.data.data)
               setUserId(data.data.data)
               openMemberModal()
+            } else if (data.type=="handleBottomSheet") {
+              handlePresentModalClose();
             } else {
               handlePresentModalPress();
+              // setBottomSheetStatus(0)
               setSpaceInfo(data.data)
               setSpaceId(data.data.id)
               // setSpaceLike(data.data.myLike)

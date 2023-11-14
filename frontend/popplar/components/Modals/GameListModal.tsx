@@ -111,10 +111,10 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
                   {gameinfo ? (
                     <View style={styles.gameinfotitle}>
                       <Text style={styles.text}>
-                        나의 최고 기록 : {gameinfo.myMaxReflexesPoints === 0 ? '없음' : (30 / gameinfo.myMaxReflexesPoints).toFixed(3)} 초
+                        나의 최고 기록 : {gameinfo.myMaxReflexesPoints === 0 ? '없음' : (30 / gameinfo.myMaxReflexesPoints).toFixed(3) + '초'} 
                       </Text>
                       <Text style={styles.text}>
-                        전체 최고 기록 : {gameinfo.maxReflexesPoints === 0 ? '없음' : (30 / gameinfo.maxReflexesPoints).toFixed(3)} 초
+                        전체 최고 기록 : {gameinfo.maxReflexesPoints === 0 ? '없음' : (30 / gameinfo.maxReflexesPoints).toFixed(3) + '초'}
                       </Text>
                     </View>
                     ):(

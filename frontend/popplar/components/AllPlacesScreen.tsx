@@ -137,15 +137,18 @@ export default function AllPlacesScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>전체 핫플 목록</Text>
+      <Text style={styles.titletext}>전체 핫플 목록</Text>
       <View style={styles.searchbox}>
-        <Text style={styles.text}>핫플 검색</Text>
-        <TextInput
-          ref={textInputRef}
-          style={styles.input}
-          value={searchQuery}
-          onChangeText={handleSearchInputChange}
-        />
+        <View style={styles.searchboxtop}>
+          <Text style={styles.text}>검색</Text>
+          <TextInput
+            ref={textInputRef}
+            style={styles.input}
+            value={searchQuery}
+            onChangeText={handleSearchInputChange}
+          />
+
+        </View>
         <View>
           <Pressable
             style={[styles.filterButton, selectedFilter === '전체' && styles.selectedFilter]}
@@ -220,7 +223,7 @@ export default function AllPlacesScreen() {
                   <Text style={styles.text}>{item.roadAddressName}</Text>
                 </View>
                 <View style={styles.hotplaceinfo}>
-                  <Text style={styles.text}>{item.visitorCount}명의 유저가 방문하였습니다</Text>
+                  <Text style={styles.text}><Text style={styles.focustext}>{item.visitorCount}</Text>명의 유저가 방문하였습니다</Text>
                 </View>
               </View>
               <View style={styles.hotplaceright}>
@@ -246,10 +249,14 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   searchbox: {
-    margin: 10,
+    marginbottom: 10,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  searchboxtop: {
+    flexDirection:'row',
+    alignItems:'center'
   },
   input: {
     color: 'white',
@@ -261,8 +268,17 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     margin: 10,
   },
+  titletext: {
+    fontWeight:'bold',
+    fontSize:18,
+    color: 'white',
+    marginTop:10
+  },
   text: {
     color: 'white',
+  },
+  focustext: {
+    color:'pink'
   },
   textbig: {
     fontSize: 20,

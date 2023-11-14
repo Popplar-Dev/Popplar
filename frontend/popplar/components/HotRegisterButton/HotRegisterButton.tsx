@@ -16,9 +16,10 @@ type Props = {
   setSpaceInfo: (space: SpaceInfo) => void
   setSpaceLike: (status: boolean) => void
   setSpaceLikeCount: (count: number) => void
+  webRef: any
 }
 
-export default function HotRegisterButton({ props, setSpaceInfo, setSpaceLike, setSpaceLikeCount }: Props) {
+export default function HotRegisterButton({ props, setSpaceInfo, setSpaceLike, setSpaceLikeCount, webRef }: Props) {
 
   const handlePostHotplace = () => {
     const data = {
@@ -54,6 +55,11 @@ export default function HotRegisterButton({ props, setSpaceInfo, setSpaceLike, s
       setSpaceInfo(space)
       setSpaceLike(true)
       setSpaceLikeCount(1)
+      const locationData: { type: string, data: { } } = {type: 'postHotplace', data: data}
+
+      webRef.current.injectJavaScript(`
+      window.postMessage(${JSON.stringify(locationData)}, '*')
+      `);
       })
     )
   }

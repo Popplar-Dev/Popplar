@@ -47,11 +47,13 @@ export default function UserModal({ visible, onClose, memberId, placeName }: Pro
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getMembersInfo(memberId)
-    .then((res) => {
-      // console.log('response', res.data)
-      setMemberInfo(res.data)
-    })
+    if (memberId) {
+      getMembersInfo(memberId)
+      .then((res) => {
+        // console.log('response', res.data)
+        setMemberInfo(res.data)
+      }).catch((res) => console.log('usermodal 에러'))
+    }
   }, [memberId]);
     
       // const markers = generateRandomMarkers(res.data.length)
@@ -92,14 +94,20 @@ return (
           </View>
 
           <View style={styles.memberContent}>
-            <Image
-            style={styles.image}
-            source={{ uri: memberInfo.profileImage }}
-            />
+            {memberInfo.profileImage && (
+              <Image
+              style={styles.image}
+              source={{ uri: memberInfo.profileImage }}
+              />
+            )}
 
             <View style={styles.nameContent}>
-              <Text style={styles.textname}>{memberInfo.name}</Text>
-              <Text style={styles.textbig}>{memberInfo.socialType}</Text>
+            {memberInfo && (
+              <>
+                <Text style={styles.textname}>{memberInfo.name}</Text>
+                <Text style={styles.textbig}>{memberInfo.socialType}</Text>
+              </>
+            )}
             </View>
           </View>
         </View>
