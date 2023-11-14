@@ -1,10 +1,15 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
 
-const FiveGame = () => {
+const FiveGame = ({ route }) => {
+  const spaceId = route.params.spaceId;
+  const [gameInfo, setGameInfo] = useState(route.params.gameInfo);
   const [gameStarted, setGameStarted] = useState(false);
   const [imagesClicked, setImagesClicked] = useState(0);
   const [result, setResult] = useState(0);
+  const [disable, setDisable] = useState(false)
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [images, setImages] = useState([
     require('../../assets/planet/1.png'),
@@ -12,7 +17,6 @@ const FiveGame = () => {
     require('../../assets/planet/3.png'),
     require('../../assets/planet/4.png'),
     require('../../assets/planet/5.png'),
-    // ...
   ]);
 
   const [imagePosition, setImagePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -32,7 +36,7 @@ const FiveGame = () => {
 
   const setNewImagePosition = (type) => {
     let x = -100000;
-    let y = -100000;    
+    let y = -100000;
     if (type) {
         x = Math.floor(Math.random() * (300 - 50) + 50); 
         y = Math.floor(Math.random() * (500 - 100) + 100);
@@ -42,20 +46,66 @@ const FiveGame = () => {
 
   const handleImageClick = () => {
     if (gameStarted) {
-      setImagesClicked(imagesClicked + 1);
+      setDisable(true)
       setNewImagePosition(false);
       setTimeout(() => {
+        setImagesClicked(imagesClicked + 1);
         setNewImagePosition(true);
+        setDisable(false)
       }, 1000);
 
       if (imagesClicked === 4) {
-        const endTime = new Date();
-        const reactionTime = ((endTime.getTime() - startTime!.getTime()) / 1000 - 5) / 5;
-        setResult(parseFloat(reactionTime.toFixed(3)));
-        setNewImagePosition(false);
+        gameEnd()
       }
     }
   };
+
+  const gameEnd = async () => {
+    const endTime = new Date();
+    const reactionTime = ((endTime.getTime() - startTime!.getTime()) / 1000 - 5) / 5;
+    setResult(parseFloat(reactionTime.toFixed(3)));
+    setNewImagePosition(false);
+
+    const AccessToken = await AsyncStorage.getItem('userAccessToken');
+    console.log(AccessToken)
+    if (AccessToken !== null) {
+      const userAccessToken = JSON.parse(AccessToken);
+      const insertscore = {
+        type:"REFLEXES",
+        hotPlaceId: spaceId,
+        points: (30 / reactionTime).toFixed(3)
+      }
+      axios.post(`https://k9a705.p.ssafy.io:8000/game/insert-result`,
+        insertscore,
+        {headers: {'Access-Token': userAccessToken}}
+      )
+      .then((response) => {
+        axios.get(`https://k9a705.p.ssafy.io:8000/game/info/${spaceId}`,
+        {headers: {'Access-Token': userAccessToken}}
+        )
+        .then((response) => {
+          // setMybestscore(response.data.maxReflexesPoints/(-100))
+          if (response.data.conqueror === true) {
+            const body = {
+              chattingRoomId : spaceId,
+            }
+            axios.post(`https://k9a705.p.ssafy.io:8000/live-chat/chatting-member/conqueror`,
+              body,
+              {headers: {'Access-Token': userAccessToken}}
+            )
+            .then((response) => {
+            })
+            .catch((err) => {
+              console.log("에러 메시지 :", err);
+            })
+          }
+        })
+      })
+      .catch((err) => {
+        console.log("에러 메시지 :", err);
+      })
+    }
+  }
 
   const resetGame = () => {
     setGameStarted(true);
@@ -77,8 +127,9 @@ const FiveGame = () => {
               styles.imageContainer,
               { left: imagePosition.x, top: imagePosition.y },
             ]}
+            disabled={disable}
           >
-            <Image source={images[imagesClicked]} style={styles.image} />
+            <Image source={images[imagesClicked]} style={styles.image}/>
           </Pressable>
         ) : (
           <Pressable onPress={resetGame} style={styles.button}>
