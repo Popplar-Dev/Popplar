@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, Button, Pressable, ActivityIndicator, Modal, TouchableWithoutFeedback } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { TabNavigatorParamList } from '../types/tabNavigatorParams';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { BlurView } from "@react-native-community/blur";
 
 import { getHotplaceUsers } from '../services/postLocation'
 
 import { getMembersInfo } from '../services/getMember'
+import { messageType } from '../types/message';
+import Icon from 'react-native-vector-icons/Ionicons'
 
 interface Props {
   visible: boolean;
@@ -42,14 +46,14 @@ type markers = {
 
 export default function UserModal({ visible, onClose, memberId, placeName }: Props) {
   // const [userCount, setUserCount] = useState<number>(0)
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<TabNavigatorParamList>>();
   const [memberInfo, setMemberInfo] = useState<member>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getMembersInfo(memberId)
     .then((res) => {
-      // console.log('response', res.data)
+      //console.log('response', res.data)
       setMemberInfo(res.data)
     })
   }, [memberId]);
@@ -67,6 +71,11 @@ export default function UserModal({ visible, onClose, memberId, placeName }: Pro
   //   console.log('markers', markers[0] )
   //   setMarkerPositions(markers)
   // }, [userCount])
+
+  const handleReply = () => {
+    console.log(navigation.getState())
+    // navigation.navigate("MapScreen", {screen: "NotificationScreen", params: {screen: "MessageDraft", params: {memberId: memberId, memberName: memberInfo.name}});
+  }
 
 return (
   <>
@@ -100,6 +109,15 @@ return (
             <View style={styles.nameContent}>
               <Text style={styles.textname}>{memberInfo.name}</Text>
               <Text style={styles.textbig}>{memberInfo.socialType}</Text>
+              <View style={styles.replyButtonContainerOuter}>
+                <Pressable
+                  onPress={handleReply}
+                  style={styles.replyButtonContainerInner}
+                  android_ripple={{color: '#464646'}}>
+                  <Icon name="chatbubbles-outline" size={23} color="white" />
+                </Pressable>
+              </View>
+
             </View>
           </View>
         </View>
@@ -178,5 +196,17 @@ const styles = StyleSheet.create({
     color:'white',
 		fontSize:18,
     marginBottom:20,
+  },
+  replyButtonContainerOuter: {
+    width: 40,
+    height: 40,
+    overflow: 'hidden',
+    borderRadius: 20,
+  },
+  replyButtonContainerInner: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

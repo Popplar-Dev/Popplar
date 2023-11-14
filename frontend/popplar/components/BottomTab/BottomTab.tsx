@@ -21,6 +21,7 @@ import ClickGame from '../Games/ClickGame';
 import QnaList from '../QnA/QnaList';
 import QnaDetail from '../QnA/QnaDetail';
 import FiveGame from '../Games/FiveGame';
+import MessageDraft from '../Messages/MessageDraft';
 
 const Tab = createBottomTabNavigator<TabNavigatorParamList>();
 const Stack = createNativeStackNavigator();
