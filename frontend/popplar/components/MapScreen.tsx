@@ -427,10 +427,7 @@ const MapScreen: React.FC = () => {
   // 입장하기 누른 핫플레이스와, 현재 들어온 핫플레이스가 동일하다면 주변 사람들 정보 띄워줌
   useEffect(() => {
     if (bottomSheetStatus==0) {
-      if (myHotPlaceId==spaceInfo.id) {
-        console.log('이미 입장한 핫플이네용')
-        handle_entrance()
-      }
+      handle_entrance()
     }
   }, [bottomSheetStatus])
 
@@ -476,6 +473,7 @@ const MapScreen: React.FC = () => {
               setSpaceInfo={setSpaceInfo} 
               setSpaceLike={setSpaceLike}
               setSpaceLikeCount={setSpaceLikeCount}
+              webRef={webRef}
               />
             </>
             ): (
