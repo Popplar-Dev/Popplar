@@ -36,11 +36,13 @@ class MemberService(
 
     ) : WebClientService() {
 
+    fun test(memberId: Long) {
+        val member = findMemberByDecryptedId(memberId)
+        kafkaTemplate.send("TEST", "TEST", ChattingMemberReqDto.create(member))
+    }
+
     fun createMember(oAuthMemberDto: OAuthMemberDto): Member {
         val member = memberRepository.save(Member.create(oAuthMemberDto))
-
-        val kafkaProducer: KafkaProducer<String, ChattingMemberReqDto>
-//        val record: ProducerRecord<String, ChattingMemberReqDto>("TEST", )
 
         val maxRetries = 3 // 최대 재시도 횟수
 
