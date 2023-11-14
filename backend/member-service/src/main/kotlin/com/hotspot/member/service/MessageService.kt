@@ -41,11 +41,10 @@ class MessageService(
 
     @Transactional
     fun postMessage(sentMemberId: Long, receivedMemberId: Long, content: String) {
-        val decryptedSentMemberId = cryptService.decrypt(sentMemberId)
         val decryptedReceivedMemberId = cryptService.decrypt(receivedMemberId)
         messageRepository.save(
             Message.create(
-                decryptedSentMemberId,
+                sentMemberId,
                 decryptedReceivedMemberId,
                 content
             )
@@ -66,8 +65,6 @@ class MessageService(
         val blockedMemberSet =
             blockedMemberRepository.findAllByMemberId(receivedMemberId).map { it.blockedMemberId }
                 .toSet()
-
-        println(blockedMemberSet)
 
         val messageList =
             messageRepository.findAllByReceivedMemberIdAndDeletedFalse(receivedMemberId)

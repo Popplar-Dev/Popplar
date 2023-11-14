@@ -19,46 +19,38 @@ class MessageController(
     // TODO
     //  messageResDto profileImg 추가 필요
 
-    @GetMapping("/{memberId}/{messageId}")
+    @GetMapping("/{messageId}")
     fun getMessage(
         @RequestHeader("Member-Id") myId: Long,
-        @PathVariable memberId: Long,
         @PathVariable messageId: Long
     ): ResponseEntity<MessageResDto> {
-        authService.checkAuth(memberId, myId)
         return ResponseEntity<MessageResDto>(
             messageService.getMessage(myId, messageId),
             HttpStatus.OK
         )
     }
 
-    @PostMapping("/{sentMemberId}/{receivedMemberId}")
+    @PostMapping("/{receivedMemberId}")
     fun postMessage(
         @RequestHeader("Member-Id") myId: Long,
-        @PathVariable sentMemberId: Long,
         @PathVariable receivedMemberId: Long,
         @RequestBody messageReqDto: MessageReqDto,
     ) {
-        authService.checkAuth(sentMemberId, myId)
-        messageService.postMessage(sentMemberId, receivedMemberId, messageReqDto.content)
+        messageService.postMessage(myId, receivedMemberId, messageReqDto.content)
     }
 
-    @DeleteMapping("/{memberId}/{messageId}")
+    @DeleteMapping("/{messageId}")
     fun deleteMessage(
         @RequestHeader("Member-Id") myId: Long,
-        @PathVariable memberId: Long,
         @PathVariable messageId: Long
     ) {
-        authService.checkAuth(memberId, myId)
         messageService.deleteMessage(myId, messageId)
     }
 
-    @GetMapping("/find-all/{memberId}")
+    @GetMapping("/find-all")
     fun getMyMessageList(
         @RequestHeader("Member-Id") myId: Long,
-        @PathVariable memberId: Long,
     ): ResponseEntity<MutableList<MessageResDto>> {
-        authService.checkAuth(memberId, myId)
         return ResponseEntity<MutableList<MessageResDto>>(
             messageService.getMyMessageList(myId),
             HttpStatus.OK
