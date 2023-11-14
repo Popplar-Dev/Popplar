@@ -34,3 +34,14 @@
 
   margin: 0 0 5px 7px;
 }
+
+.user {
+  position: absolute;
+  top: 50px;
+  left: 30px;
+  /* width: 200px;
+  height: 200px; */
+  /* border: 1px dotted red; */
+  /* background-color: red; */
+  z-index: 999;
+}

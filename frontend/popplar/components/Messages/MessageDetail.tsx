@@ -1,15 +1,19 @@
 import {useEffect} from 'react';
-import {Text, View, Image, StyleSheet} from 'react-native';
+import {Text, View, Image, Pressable, StyleSheet} from 'react-native';
 
+import {useNavigation} from '@react-navigation/native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { getToken } from '../services/getAccessToken';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import {messageType} from '../types/message';
 
 type RootStackParamList = {
   Home: undefined;
   Detail: {message: messageType; tab: 'received' | 'sent'};
+  Draft: {memberId: number; memberName: string};
 };
 
 type DetailScreenRouteProp = NativeStackScreenProps<
@@ -17,20 +21,22 @@ type DetailScreenRouteProp = NativeStackScreenProps<
   'Detail'
 >;
 
-export default function MessageDetail({route}: DetailScreenRouteProp) {
+export default function MessageDetail({
+  navigation,
+  route,
+}: DetailScreenRouteProp) {
   const {message, tab} = route.params;
   // console.log(route);
   const imgUrl =
-  'https://i.pinimg.com/736x/4c/7b/63/4c7b63eac0e1645c5c3b9e3bcf706074.jpg';
+    'https://i.pinimg.com/736x/4c/7b/63/4c7b63eac0e1645c5c3b9e3bcf706074.jpg';
 
   useEffect(() => {
     async function getMessageDetail() {
-      const accessToken = await AsyncStorage.getItem('userAccessToken');
-      if (!accessToken) return;
-      const userAccessToken = JSON.parse(accessToken);
+      const userAccessToken = await getToken();
+      if (!userAccessToken) return;
       try {
         //const url = `https://k9a705.p.ssafy.io:8000/member/message/${message.sentMemberId}/${message.messageId}`
-        const url = `https://k9a705.p.ssafy.io:8000/member/message/356931964684/7`;
+        const url = `https://k9a705.p.ssafy.io:8000/member/message/${message.messageId}`;
         await axios.get(url, {
           headers: {'Access-Token': userAccessToken},
         });
@@ -41,26 +47,47 @@ export default function MessageDetail({route}: DetailScreenRouteProp) {
     getMessageDetail();
   }, []);
 
+  const handleReply = () => {
+    navigation.navigate('Draft', {
+      memberId: message.sentMemberId,
+      memberName: message.sentMemberName,
+    });
+    return;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.messageContainer}>
-        <View style={styles.usernameContainer}>
-          <View style={styles.profilePicContainer}>
-            <Image
-              source={{
-                uri: imgUrl,
-              }}
-              style={styles.profilePic}
-              alt="profilepic"
-              resizeMode="cover"
-            />
+        <View style={styles.header}>
+          <View style={styles.userProfileContainer}>
+            <View style={styles.profilePicContainer}>
+              <Image
+                source={{
+                  uri: tab === 'received' ? message.sentMemberProfileImage:message.sentMemberProfileImage,
+                }}
+                style={styles.profilePic}
+                alt="profilepic"
+                resizeMode="cover"
+              />
+            </View>
+            <Text style={styles.username}>
+              {tab === 'received'
+                ? message.sentMemberName
+                : message.receivedMemberName}
+            </Text>
           </View>
-          <Text style={styles.username}>
-            {tab === 'received'
-              ? message.sentMemberName
-              : message.receivedMemberName}
-            이름
-          </Text>
+          <View style={styles.iconContainer}>
+            {tab === 'received' && (
+              <View style={styles.replyButtonContainerOuter}>
+                <Pressable
+                  onPress={handleReply}
+                  style={styles.replyButtonContainerInner}
+                  android_ripple={{color: '#464646'}}>
+                  <Icon name="chatbubbles-outline" size={23} color="white" />
+                </Pressable>
+              </View>
+            )}
+          </View>
         </View>
         <View style={styles.messageContentContainer}>
           <Text style={styles.content}>{message.content}</Text>
@@ -80,16 +107,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   messageContainer: {
+    borderRadius: 20,
+    borderStyle: 'solid',
+    padding: 20,
+    backgroundColor: 'rgba(139, 144, 247, 0.3)',
+    marginVertical: 10,
     marginTop: 30,
-    borderColor: '#8B90F7',
-    borderWidth: 1,
-    borderStyle: 'dashed',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     borderBottomRightRadius: 25,
     width: '95%',
-    padding: 25,
-    minHeight: 200,
+    minHeight: 160,
   },
   profilePicContainer: {
     width: 40,
@@ -98,19 +126,38 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: 'white',
     overflow: 'hidden',
-    marginEnd: 12
+    marginEnd: 12,
   },
   profilePic: {
     width: '100%',
     height: '100%',
   },
-  usernameContainer: {
-    paddingBottom: 12,
-    borderBottomColor: '#8B90F7',
-    borderBottomWidth: 1,
-    borderStyle: 'dashed',
+  header: {
+    marginBottom: 12,
+    // borderWidth: 1,
+    // borderColor: 'white',
     flexDirection: 'row',
-    alignItems: 'center', 
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  userProfileContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconContainer: {
+    flexDirection: 'row',
+  },
+  replyButtonContainerOuter: {
+    width: 40,
+    height: 40,
+    overflow: 'hidden',
+    borderRadius: 20,
+  },
+  replyButtonContainerInner: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   username: {
     fontSize: 18,
@@ -118,7 +165,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   messageContentContainer: {
-    paddingTop: 12,
+    paddingTop: 5,
   },
   content: {
     color: 'white',

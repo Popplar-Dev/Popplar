@@ -25,7 +25,7 @@ export type hotPlaceResDto = {
 }
 
 export type SpaceInfo = {
-  id: string
+  id: number
   place_name: string
   address_name: string
   road_address_name: string
@@ -39,4 +39,10 @@ export type SpaceInfo = {
   tier: number
   myLike: boolean
   // place_url: string
+}
+
+export type Position = {
+  hotPlaceId: string
+  x: string
+  y: string
 }

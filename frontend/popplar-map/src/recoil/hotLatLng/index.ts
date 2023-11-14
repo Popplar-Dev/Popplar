@@ -5,6 +5,7 @@ export const HotLatLngState= atom<LatLng>({
   key: 'HotLatLngState',
   default: {
     x: "",
-    y: ""
+    y: "",
+    flagged: false
   },
 });

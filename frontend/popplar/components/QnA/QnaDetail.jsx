@@ -49,7 +49,7 @@ export default function QnaDetail({ route }) {
     const postUrl = `https://k9a705.p.ssafy.io:8000/member/qna/answer/${qnaId}`;
 
     const requestBody = {
-      memberId: userid,
+      memberId: userinfo.id,
       content: newAnswerText, 
     };
     const isLogin = async () => {
@@ -61,7 +61,8 @@ export default function QnaDetail({ route }) {
         )
         .then((response) => {
           const newAnswerItem = {
-            memberName: username, 
+            memberProfileImage: userinfo.profileImage,
+            memberName: userinfo.name, 
             content: newAnswerText,
           };
           setAnswerDetail([...answerDetail, newAnswerItem]);

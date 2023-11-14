@@ -19,7 +19,9 @@ export default function Message({
   message,
 }: messageProp) {
   const imgUrl =
-    'https://i.pinimg.com/736x/4c/7b/63/4c7b63eac0e1645c5c3b9e3bcf706074.jpg';
+    msgType === 'received'
+      ? message.sentMemberProfileImage
+      : message.sentMemberProfileImage;
 
   return (
     <View
@@ -46,7 +48,9 @@ export default function Message({
               ? [styles.nickname, styles.checkedTextColor]
               : styles.nickname
           }>
-          {msgType === "received" ? message.sentMemberName: message.receivedMemberName}
+          {msgType === 'received'
+            ? message.sentMemberName
+            : message.receivedMemberName}
         </Text>
         <Text
           style={

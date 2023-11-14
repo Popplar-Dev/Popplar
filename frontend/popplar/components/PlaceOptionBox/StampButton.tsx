@@ -10,26 +10,29 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 interface stampbuttonProps {
   spaceId:number
+  type: 'true' | 'false';
+  onStampUpdate: (newStamp: string) => void;
 }
 
-export default function StampButton({spaceId}:stampbuttonProps) {
+export default function StampButton({spaceId, type, onStampUpdate }:stampbuttonProps) {
 	const [userinfo, setUserInfo] = useRecoilState(userInfoState);
 	const [stamp, setStamp] = useState<Array<{ category: string, hotPlaceId: number, visitedCount: number }>>([]);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
+    console.log('스탬프:',type, spaceId)
     const isLogin = async () => {
       const AccessToken = await AsyncStorage.getItem('userAccessToken');
       if (AccessToken !== null) {
         const userAccessToken = JSON.parse(AccessToken);
-        console.log(userAccessToken)
         axios.get(`https://k9a705.p.ssafy.io:8000/member/achievement/${userinfo.id}`,
           {headers: {'Access-Token': userAccessToken}}
         )
         .then((response) => {
           setStamp(response.data.stampResDtoList);
           setLoading(false); 
-					console.log(response.data)
+					// console.log('111:',response.data)
+          // console.log('1:',stamp)
         })
         .catch((err) => {
           console.log("에러 메시지 ::", err);
@@ -56,9 +59,16 @@ export default function StampButton({spaceId}:stampbuttonProps) {
 					)
 					.then((response) => {
 						console.log(response.data)
+            onStampUpdate('true');
+            Alert.alert(
+              `오늘의 스탬프를 찍었습니다!`
+            )
           })
 					.catch((err) => {
-						console.error("실패...", err);
+						// console.error("실패...", err);
+            Alert.alert(
+              '오늘의 스탬프를 이미 찍었습니다. 내일 다시 시도해주세요!'
+            )
 					}); 
 				}
 			}
@@ -67,15 +77,29 @@ export default function StampButton({spaceId}:stampbuttonProps) {
 
     return(
 			<>
-			{loading ? (
-				<ActivityIndicator size="large" color="#ffffff" />
-			) : (
-				<>
-					<Pressable style={styles.stampbutton} onPress={() => addStamp(spaceId)}>
-						<Text style={styles.stamptext}>방문 스탬프 찍기</Text>
-					</Pressable>
-				</>
-			)}
+      {type === 'false' && (
+        <>
+          {loading ? (
+            <ActivityIndicator size="large" color="#ffffff" />
+          ) : (
+            <>
+              <Pressable style={styles.stampbuttonactivate} onPress={() => addStamp(spaceId)}>
+                <View style={styles.stampbuttoncontainer}>
+                  <Icon name="footsteps" size={11} color={'white'} style={styles.footstepsIcon}/>
+                  <Text style={styles.stamptext}>방문 스탬프 찍기</Text>
+                </View>
+              </Pressable>
+            </>
+          )}
+        </>
+      )}
+      {type === 'true' && (
+        <>
+          <View style={styles.stampbutton}>
+            <Text style={styles.stamptext}>오늘의 스탬프를 이미 찍으셨습니다!</Text>
+          </View>
+        </>
+      )}
 			</>
       
     )
@@ -93,15 +117,30 @@ const styles = StyleSheet.create({
     marginBottom:20,
   },
   stampbutton: {
-    width:200,
+    width:250,
     alignItems:'center',
 		backgroundColor:'grey',
 		borderRadius:10,
 		paddingTop:3,
 		paddingBottom:5
   },
+  stampbuttonactivate: {
+    width:250,
+    alignItems:'center',
+		backgroundColor:'#F5789E',
+		borderRadius:10,
+		paddingTop:3,
+		paddingBottom:5,
+  },
+  stampbuttoncontainer:{
+    flexDirection:'row',
+    alignItems:'center'
+  },
   stamptext: {
     color:"white"
+  },
+  footstepsIcon: {
+    marginRight:10,
+    fontSize:20
   }
-
 });

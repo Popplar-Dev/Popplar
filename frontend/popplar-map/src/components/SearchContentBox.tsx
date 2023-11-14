@@ -7,7 +7,7 @@ import { getIdHotplace } from '../api/getHotplace'
 
 type Props = {
   place: Place
-  placePosHandler: (x: string, y: string) => void
+  placePosHandler: (x: string, y: string, status: boolean) => void
 }
 
 export default function SearchContentBox({ place, placePosHandler }: Props) {
@@ -26,10 +26,10 @@ export default function SearchContentBox({ place, placePosHandler }: Props) {
 
   function placeSelectHandler() {
     // setHotPlaceInfo(place);
-    placePosHandler(place.x, place.y);
     getIdHotplace(place.id)
     .then((res) => {
-      const place = {
+      placePosHandler(place.x, place.y, true);
+      const placeData = {
         id: res.data.id,
         place_name: res.data.placeName,
         address_name: res.data.addressName,
@@ -44,12 +44,13 @@ export default function SearchContentBox({ place, placePosHandler }: Props) {
         tier: res.data.tier,
         myLike: res.data.myLike
       }
-      requestPermission(place)
+      requestPermission(placeData)
       console.log('여기에 정보 들어와요', res.data)
     })
     .catch((error) => {
       if (error.response && error.response.status === 400) {
         console.log('정보 이쪽으로!', place)
+        placePosHandler(place.x, place.y, false);
         requestPermission(place)
     }});
   }

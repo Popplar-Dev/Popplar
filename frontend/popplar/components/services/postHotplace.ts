@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Place } from '../types/place'
-import {BASE_URL} from './baseUrl'
+import { BASE_URL } from './baseUrl'
 import { getToken } from './getAccessToken'
 
 // 핫플레이스 등록
@@ -8,7 +8,7 @@ export async function postHotplace(data: Place) {
   const token = await getToken();
   return await axios({
     method: 'post',
-    url: `https://k9a705.p.ssafy.io:8000/hot-place`,
+    url: `${BASE_URL}/hot-place`,
     data,
     headers: { 'Access-Token': token }
    }).then((res) => res)

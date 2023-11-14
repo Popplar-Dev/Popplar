@@ -16,6 +16,8 @@ import { IoTelescopeSharp } from 'react-icons/io5'
 import { RiCloseCircleFill } from 'react-icons/ri'
 import { Place } from './types/place'
 
+import HotPlaceUsers from './components/HotPlaceUsers/HotPlaceUsers'
+
 const { kakao } = window;
 
 function App() {
@@ -25,9 +27,9 @@ function App() {
   // 검색시 선택된 hotplace의 위도 경도 정보 recoil로 저장
   const [hotPlaceLatLng, sethotPlaceLatLng] = useRecoilState<LatLng>(HotLatLngState);
 
-  function placeSelectClick (x: string, y: string) {
+  function placeSelectClick (x: string, y: string, status: boolean) {
     setPlaceKeyword("")
-    const LatLngInfo = {x: x, y: y}
+    const LatLngInfo = {x: x, y: y, flagged: status}
     sethotPlaceLatLng(LatLngInfo)
   }
   
@@ -146,6 +148,7 @@ function App() {
         : (
         <Search result={searchResult} placeSelectClick={placeSelectClick}/>
         )}
+
       </div>
     </div>
   );

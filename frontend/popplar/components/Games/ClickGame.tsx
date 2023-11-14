@@ -69,11 +69,24 @@ export default function ClickGame({ route }) {
 
     if (AccessToken !== null) {
       const userAccessToken = JSON.parse(AccessToken);
-      console.log(AccessToken);
       axios.post(`https://k9a705.p.ssafy.io:8000/game/insert-result`, requestData,
         { headers: {'Access-Token': userAccessToken} }
         )
-        .then(() => {
+        .then((res) => {
+          if (res.data.conqueror===true) {
+            const body = {
+              chattingRoomId : spaceId,
+            }
+            axios.post(`https://k9a705.p.ssafy.io:8000/live-chat/chatting-member/conqueror`,
+              body,
+              {headers: {'Access-Token': userAccessToken}}
+            )
+            .then((res)=>{
+            })
+            .catch((err) => {
+              console.log("에러 메시지 :", err);
+            })
+          }
           axios.get(`https://k9a705.p.ssafy.io:8000/game/info/${spaceId}`,
           { headers: {'Access-Token': userAccessToken} }
           )

@@ -1,0 +1,25 @@
+.fall-and-rebound {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fallAndRebound 1s infinite;
+}
+
+.icon {
+  margin-left: 1px;
+  margin-top: 1px;
+}
+
+.map-marker-icon {
+  font-size: 28px;
+  color: red;
+}
+
+@keyframes fallAndRebound {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
