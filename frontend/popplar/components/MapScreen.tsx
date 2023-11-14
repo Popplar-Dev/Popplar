@@ -155,7 +155,6 @@ const MapScreen: React.FC = () => {
 
   // 스탬프 여부 확인
   useEffect(() => {
-<<<<<<< frontend/popplar/components/MapScreen.tsx
     handlePresentModalClose()
     if (spaceId) {
       getStamp(spaceId)
@@ -195,14 +194,15 @@ const MapScreen: React.FC = () => {
 
   // 새 space 정보 부여될 경우, 지도 이동 및 bottomSheet 출력 // spaceId 변경시에도
   useEffect(() => {
-    if (spaceId) {
-      getIdHotplace(spaceId)
+    // console.log("spaceInfo.id: ", spaceInfo.id)
+    if (spaceInfo.id !== undefined) {
+      getIdHotplace(spaceInfo.id)
       .then((res) => {
-        console.log(res.data)
+        // console.log(res.data)
         const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
     
-        // const loc: { y: string, x: string } = {y: y, x: x}
-        // const locationData: { type: string, data: { y: string, x: string } } = {type: 'pickHotPlace', data: loc}
+        const loc: { y: string, x: string } = {y: y, x: x}
+        const locationData: { type: string, data: { y: string, x: string } } = {type: 'pickHotPlace', data: loc}
         // console.log(locationData, '~!~!~!~!~!~!~!~!~!~')
         if (webRef.current) {
           handlePresentModalPress();
