@@ -11,7 +11,6 @@ type Props = {
 
 type user = {
   hotPlaceId: number
-  id: string
   memberId: number
   x: number
   y: number
@@ -45,7 +44,7 @@ export default function HotPlaceUsers({ hotplaceUsers }: Props) {
       {(hotplaceUsers && markerPositions.length > 0) &&
       hotplaceUsers.map((user, i) => (
         <div key={i} className="point" style={{top: markerPositions[i].position.top, left: markerPositions[i].position.left}}>
-          <UserMarker />
+          <UserMarker user={user}/>
         </div>
       ))}
     </>

@@ -1,14 +1,18 @@
 .container {
   position: relative;
   height: calc(var(--vh, 1vh) * 100);
-  background-color: #2C2C2C;
+  width: calc(var(--vw, 1vw) * 100);
+  background-color: red;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .searchInput {
   position: absolute;
   width: 70%;
 
-  top: 11.5%;
+  top: 83px;
   left: 13%;
   z-index: 999;
 }
@@ -44,7 +48,7 @@
 .earth-icon {
   z-index: 1000;
   position: absolute;
-  top: 4.4%;
+  top: 28px;
   left: 13%;
 
   width: 38px;
@@ -54,8 +58,8 @@
 .search {
   z-index: 1000;
   position: absolute;
-  top: 6.4%;
-  left: 21%;
+  top: 45px;
+  left: 22%;
 
   background-color: transparent;
   color: #8B90F7;
@@ -114,7 +118,7 @@
 .message {
   z-index: 1000;
   position: absolute;
-  top: 3%;
+  top: 22px;
   left: 40%;
 
   background-color: transparent;

@@ -35,9 +35,9 @@ function App() {
   
   function setScreenSize() {
     let vh = window.innerHeight * 0.01;
-    // let vw = window.innerWidth * 0.01
+    let vw = window.innerWidth * 0.01
     document.documentElement.style.setProperty("--vh", `${vh}px`);
-    // document.documentElement.style.setProperty("--vw", `${vw}px`);
+    document.documentElement.style.setProperty("--vw", `${vw}px`);
   }
   useEffect(() => {
     setScreenSize();
@@ -55,26 +55,7 @@ function App() {
     if (status === kakao.maps.services.Status.OK) {
 
         setSearchResult(data)
-
-        // 정상적으로 검색이 완료됐으면
-        // 검색 목록과 마커를 표출합니다
-        // displayPlaces(data);
-
-        // 페이지 번호를 표출합니다
-        // displayPagination(pagination);
-
     } 
-    // else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-
-    //     alert('검색 결과가 존재하지 않습니다.');
-    //     return;
-
-    // } else if (status === kakao.maps.services.Status.ERROR) {
-
-    //     alert('검색 결과 중 오류가 발생했습니다.');
-    //     return;
-
-    // }
   }
 
   // 키워드 검색을 요청하는 함수입니다
@@ -84,17 +65,6 @@ function App() {
     if (keywordInput) {
       const keyword: string = keywordInput.value.trim();
     
-      // if (!keyword.replace(/^\s+|\s+$/g, '')) {
-      //   alert('키워드를 입력해주세요!');
-      //   return false;
-      // }
-      
-      // if (!keyword.replace(/^\s+|\s+$/g, '')) {
-      //   alert('키워드를 입력해주세요!');
-      //   return false;
-      // }
-
-      // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
       if (searchPlaceObj && keyword) {
         searchPlaceObj.keywordSearch(keyword, placesSearchCB)
       }
@@ -104,12 +74,12 @@ function App() {
   return (
     <div className={styles.container}>
       {/* <NeonFrame /> */}
-      <IoTelescopeSharp size="28" className={styles.telescope}/>
+      {/* <IoTelescopeSharp size="28" className={styles.telescope}/> */}
       {/* <div className={styles["telescope-background"]}></div> */}
       <img src={earthRocket} className={styles["earth-icon"]} alt="Earth Icon"/>
 
       {!placeKeyword ?
-      (<div className={styles.message}>4 spaces detected...</div>)
+      (<div className={styles.message}>all spaces detected...</div>)
       :(<div className={styles.message}>search mode connected...</div>)
       }
 
