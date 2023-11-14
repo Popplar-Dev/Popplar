@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { View, Text, StyleSheet, Button, Pressable, Image, Alert  } from "react-native";
 import { WebView } from 'react-native-webview';
 import axios from 'axios';
@@ -6,13 +6,32 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../recoil/userState';
+import { userLoginState } from '../recoil/userState';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LocationPermission from './LocationPermission'
+import { BackHandler } from 'react-native';
 
 export default function Home() {
 
 	const navigation = useNavigation();
 	const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+	const [isuserLogin, setisuserLogin] = useRecoilState(userLoginState);
+
+	useEffect(() => {
+		const backAction = () => {
+			Alert.alert('앱 종료', '앱을 종료하시겠습니까?', [
+				{ text: '취소', onPress: () => null },
+				{ text: '확인', onPress: () => BackHandler.exitApp() },
+			]);
+			return true;
+		};
+	
+		const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+	
+		return () => {
+			backHandler.remove();
+		};
+	}, []);
 
 	const Logout = () => {
 		AsyncStorage.clear();
@@ -41,6 +60,7 @@ export default function Home() {
 							socialType: response.data.socialType,
 						}
 						setUserInfo(user)
+						setisuserLogin({isLogin:true})
           })
           .catch((err) => {
             console.log("에러 메시지 :", err)
@@ -80,6 +100,7 @@ export default function Home() {
 							socialType: response.data.socialType,
 						}
 						setUserInfo(user)
+						setisuserLogin({isLogin:true})
           })
           .catch((err) => {
             console.log("에러 메시지 :", err)

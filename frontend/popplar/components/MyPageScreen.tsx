@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import SettingScreen from './Settings/SettingScreen';
 import PlanetModal from '../components/Modals/PlanetModal'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRoute } from '@react-navigation/native';
 
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from './recoil/userState';
@@ -33,6 +34,7 @@ function MyPageScreen() {
     { name: "6", uri: require("../assets/planet/6.png") },
   ];
   const [visitcount, setVisitcount] = useState(0); 
+  const route = useRoute();
 
 	useEffect(() => {
     const isLogin = async () => {
