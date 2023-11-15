@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet,Image, ImageBackground, TextInput, Button,Pressable,Switch } from 'react-native';
+import { Modal, View, Text, StyleSheet,Image, ImageBackground, TextInput, Button,Pressable,Switch } from 'react-native';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import axios from "axios";
 import * as ImagePicker from 'react-native-image-picker';
@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../recoil/userState';
 import { useRecoilState } from 'recoil';
+import ProfileImageSelectModal from '../Modals/ProfileImageSelectModal'
 
 function ProfileSetting() {
 	const [nickname, setNickname] = useState('') 
@@ -19,25 +20,27 @@ function ProfileSetting() {
   const [userinfo, setUserInfo] = useRecoilState(userInfoState);
   const user = useRecoilValue(userInfoState);
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
 	const startEditing = () => {
     setIsEditing(true);
     setNewNickname(nickname);
-    console.log(user)
   };
 
   const saveNickname = () => {
-    console.log(user)
 			setNickname(newNickname);
 			const updatedInfo = {
 				name: newNickname,
-				profileImage: "url",
 			};
 			const isLogin = async () => {
         const AccessToken = await AsyncStorage.getItem('userAccessToken');
         if (AccessToken !== null) {
 					const userAccessToken = JSON.parse(AccessToken);
-          console.log(userAccessToken)
-          console.log(userinfo.id)
 					axios.patch(`https://k9a705.p.ssafy.io:8000/member/${userinfo.id}`, updatedInfo, 
 						{headers: {'Access-Token': userAccessToken}}
 					)
@@ -91,25 +94,13 @@ function ProfileSetting() {
           )}
           <View style={styles.profileImageContainer}>
             <Image
-              source={require('popplar/assets/profile.png')}
+              source={{uri:userinfo.profileImage}}
               style={styles.profileImage}
             />
           </View>
-          <Pressable onPress={() =>
-            ImagePicker.launchImageLibrary({
-                mediaType: 'photo',
-                includeBase64: false,
-                maxHeight: 200,
-                maxWidth: 200,
-              },
-              (response) => {
-                console.log(response);
-                // this.setState({
-                //   resourcePath: response
-                // });
-              },
-            )}>
-            {/* <View style={styles.edit}>
+          <Pressable 
+            onPress={openModal}>
+            <View style={styles.edit}>
               <Text style={styles.text}>프로필 사진 수정</Text>
             </View> */}
           </Pressable>
@@ -134,8 +125,11 @@ function ProfileSetting() {
             />
           </View> */}
         </View>
-        
-        {/* <Text style={styles.delete}>계정 삭제</Text> */}
+        <ProfileImageSelectModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+        />
+        <Text style={styles.delete}>계정 삭제</Text>
         </View>
 			</ImageBackground>
     </View>
@@ -187,8 +181,8 @@ const styles = StyleSheet.create({
 		marginTop:20
   },
   profileImage: {
-    width: 100,
-    height: 100,
+    width: 145,
+    height: 145,
     borderRadius: 75, 
   },
 	buttonImage: {
@@ -234,7 +228,7 @@ const styles = StyleSheet.create({
   delete: {
     color:'red',
     margin:30
-  }
+  },
 });
 
 export default ProfileSetting;

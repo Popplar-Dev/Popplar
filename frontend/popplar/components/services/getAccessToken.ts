@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const getToken = () => { 
+export const getToken = async () => { 
   return AsyncStorage.getItem('userAccessToken')
     .then((value) => {
       if (value !== null) {
-        console.log('userAccessToken:', value);
-        return value
+        const userAccessToken = JSON.parse(value);
+        return userAccessToken
       } else {
         console.log('userAccessToken is not set or an error occurred.');
         return null

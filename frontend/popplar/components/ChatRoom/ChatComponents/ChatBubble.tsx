@@ -35,18 +35,18 @@ const styles = StyleSheet.create({
     minHeight: 30,
     marginStart: 10,
     marginEnd: 4,
-    marginTop: 4,
-    marginBottom: 8,
+    marginTop: 3,
+    marginBottom: 7,
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 15,
     borderColor: 'black',
-    borderEndWidth: 2,
-    borderBottomWidth: 2,
+    borderEndWidth: 1,
+    borderBottomWidth: 1,
   },
   bubbleText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
 
   },
   myStartMsg: {

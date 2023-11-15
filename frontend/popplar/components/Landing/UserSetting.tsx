@@ -21,17 +21,14 @@ export default function UserSetting() {
 
 	const startEditing = () => {
     setIsEditing(true);
-		console.log(userinfo)
     setNewNickname(nickname);
   };
 
   const saveNickname = () => {
 			setNickname(newNickname);
 			const updatedInfo = {
-				name: newNickname,
-				profileImage: "url",
+				name: newNickname
 			};
-			// console.log(userinfo)
 			const isLogin = async () => {
         const AccessToken = await AsyncStorage.getItem('userAccessToken');
         if (AccessToken !== null) {
@@ -61,7 +58,6 @@ export default function UserSetting() {
 					.catch((err) => {
 						console.error("실패...", err);
 					});
-					// console.log(AsyncStorage.getItem('userInfo'))
 				}
 			}
 			isLogin()

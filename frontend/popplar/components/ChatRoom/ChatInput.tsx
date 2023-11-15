@@ -13,7 +13,7 @@ export default function ChatInput({onSend, onScrollToEnd}: ChatInputProps) {
   const handleSend = () => {
     onSend(inputText);
     setInputText('');
-    onScrollToEnd();
+    // onScrollToEnd();
     Keyboard.dismiss();
   };
 

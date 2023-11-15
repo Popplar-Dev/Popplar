@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useRef, useCallback} from 'react';
 import {
   View,
   TouchableWithoutFeedback,
@@ -7,15 +7,13 @@ import {
   Keyboard,
   KeyboardAvoidingView,
 } from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {
-  Client,
-  IMessage,
-  IFrame,
-  wsErrorCallbackType,
-} from '@stomp/stompjs';
+import {useRecoilState, useRecoilValue} from 'recoil';
+import {userIdState, userBlockListState} from '../recoil/userState';
+
+import {Client, IMessage, IFrame, wsErrorCallbackType} from '@stomp/stompjs';
 
 import ChatHeader from './ChatHeader';
 import ReceivedChatMessage from './ReceivedChatMesasge';
@@ -23,195 +21,264 @@ import SentChatMessage from './SentChatMessage';
 import ChatDate from './ChatComponents/ChatDate';
 import ChatInput from './ChatInput';
 
-
 import {ChatMessageType} from '../../types/chatType';
+import {getToken} from '../services/getAccessToken';
+import {getDateAndTime} from '../utils/chat';
 
-export default function ChatRoom() {
+import axios from 'axios';
+
+export default function ChatRoom({roomId}: {roomId: number}) {
   const navigation = useNavigation();
-  const [memberId, setMemberId] = useState(4);
-  const [client, setClient] = useState<Client | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
-  const [messages, setMessages] = useState<ChatMessageType[]>([
-    {
-      'message-id': '3333',
-      chattingRoomId: 1,
-      messageType: 'others',
-      memberId: 4,
-      memberName: 'nickname',  
-      chattingContent: '하이',
-      date: '2023년 11월 3일 목요일',
-      time: '오전 11:20',
-    }
-
-  ]);
-  const [userAccessToken, setUserAccessToken] = useState('');
-  const [isMenuOpen, setIsMenuOpen] = useState(false); 
-
+  const [roomName, setRoomName] = useState('');
+  const [messages, setMessages] = useState<ChatMessageType[]>([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const memberId = useRecoilValue(userIdState);
+  const [userBlockedList, setUserBlockedList] = useRecoilState(userBlockListState);
+  const clientRef = useRef<Client | null>(null);
   const flatListRef = useRef<FlatList | null>(null);
 
+  // console.log('mount 몇 번?')
+
   useEffect(() => {
-    async function connectChatSocket() {
-      const accessToken = await AsyncStorage.getItem('userAccessToken');
-      if (accessToken !== null) {
-        setUserAccessToken(JSON.parse(accessToken));
-      } else {
-        return;
-      }
-      const stompConfig = {
-        connectHeaders: {
-          'Access-Token': userAccessToken,
-        },
-        brokerURL: 'ws://k9a705.p.ssafy.io:8203/gs-guide-websocket/websocket',
-        debug: (str: string) => {
-          console.log('STOMP: ' + str);
-        },
-        reconnectDelay: 2000,
-        forceBinaryWSFrames: true,
-        appendMissingNULLonIncoming: true,
-      };
-      const stompClient = new Client(stompConfig);
-
-      stompClient.onConnect = (frame: IFrame) => {
-        console.log('STOMP WebSocket connected');
-
-        setIsConnected(true);
-
-        stompClient.subscribe('/topic/greetings', (message: IMessage) => {
-          if (message.body) {
-            console.log('Received message: ', message.body);
-            console.log('Message headers:', message.headers);
-
-            const messageId = message.headers['message-id'];
-            const messageBody = JSON.parse(message.body);
-            const today = new Date();
-
-            const dateOptions: Intl.DateTimeFormatOptions = {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            };
-
-            const timeOptions: Intl.DateTimeFormatOptions = {
-              dayPeriod: 'long',
-              hour: '2-digit',
-              minute: '2-digit',
-            };
-
-            const formattedDate = today.toLocaleDateString(
-              'ko-KR',
-              dateOptions,
-            );
-            const formattedTime = today.toLocaleTimeString(
-              'ko-KR',
-              timeOptions,
-            );
-
-            console.log(memberId, messageBody.memberId);
-
-            const newMessage: ChatMessageType = {
-              'message-id': messageId,
-              chattingRoomId: messageBody.chattingRoomId,
-              messageType:
-                memberId === parseInt(messageBody.memberId) ? 'me' : 'others',
-              memberId: messageBody.memberId,
-              memberName: messageBody.memberName,
-              chattingContent: messageBody.chattingContent,
-              date: formattedDate,
-              time: formattedTime,
-            };
-
-            setMessages((prev: ChatMessageType[]) => [...prev, newMessage]);
-            // You can also acknowledge the message if needed
-            // message.ack();
-          } else {
-            console.log('got empty message');
-          }
+    async function getRoomName() {
+      const userAccessToken = await getToken();
+      try {
+        const url = `https://k9a705.p.ssafy.io:8000/hot-place/${roomId}`;
+        const res = await axios.get(url, {
+          headers: {'Access-Token': userAccessToken},
         });
-      };
 
-      stompClient.onStompError = (frame: IFrame) => {
-        console.log('Broker reported error:' + frame.headers['message']);
-        console.log('Additional details: ' + frame.body);
-      };
-
-      stompClient.onWebSocketError = (error: wsErrorCallbackType) => {
-        console.log(error);
-      };
-
-      stompClient.onDisconnect = () => {
-        console.log('STOMP WebSocket disconnected');
-        setIsConnected(false);
-      };
-
-      stompClient.activate();
-      setClient(stompClient);
-    }
-
-    connectChatSocket();
-
-    return () => {
-      if (client) {
-        client.deactivate();
+        setRoomName(res.data.placeName);
+      } catch (e) {
+        console.error(e);
       }
-    };
+    }
+    getRoomName();
   }, []);
 
+  useEffect(() => {
+    async function getBlockedUsers() {
+      const userAccessToken = await getToken(); 
+      try {
+        const url = `https://k9a705.p.ssafy.io:8000/member/block`;
+        const res = await axios.get(url, {
+          headers: {'Access-Token': userAccessToken}, 
+        })
+        setUserBlockedList(res.data);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    
+    getBlockedUsers();
+  }, [])
+
+  useFocusEffect(
+    useCallback(() => {
+      async function connectChatSocket() {
+        const userAccessToken = await getToken();
+        if (userAccessToken === null) {
+          return;
+        }
+
+        const chatHistoryUrl = `https://k9a705.p.ssafy.io:8000/live-chat/chatting-room/${roomId}`;
+        try {
+          const res = await axios.get(chatHistoryUrl, {
+            headers: {'Access-Token': userAccessToken},
+          });
+          const chatData = res.data;
+
+          const messageHistory = chatData.map(
+            (chat: {
+              chattingId: number;
+              chattingRoomId: number;
+              chattingContent: string;
+              chattingCreatedAt: string;
+              memberId: number;
+              memberName: string;
+              memberProfileImage: string;
+            }) => {
+              const [formattedDate, formattedTime] = getDateAndTime(
+                chat.chattingCreatedAt,
+              );
+
+              const newMessage: ChatMessageType = {
+                chattingId: chat.chattingId,
+                chattingRoomId: chat.chattingRoomId,
+                messageType: memberId === chat.memberId ? 'me' : 'others',
+                memberId: chat.memberId,
+                memberName: chat.memberName,
+                memberProfileImage: chat.memberProfileImage,
+                chattingContent: chat.chattingContent,
+                date: formattedDate,
+                time: formattedTime,
+              };
+              return newMessage;
+            },
+          );
+          setMessages(messageHistory);
+        } catch (e) {
+          console.error(e);
+        }
+
+        if (clientRef.current && clientRef.current.connected) {
+          console.log('WebSocket already connected');
+          return;
+        }
+
+        // console.log(clientRef.current);
+        // if (clientRef.current) {
+        //   console.log('client active? 1', clientRef.current.active);
+        //   console.log('client connected? 1', clientRef.current.connected);
+        // }
+
+        const stompConfig = {
+          connectHeaders: {
+            'Access-Token': userAccessToken,
+          },
+          brokerURL: 'ws://k9a705.p.ssafy.io:8203/gs-guide-websocket/websocket',
+          // debug: (str: string) => {
+          //   console.log('STOMP: ' + str);
+          // },
+          reconnectDelay: 2000,
+          forceBinaryWSFrames: true,
+          appendMissingNULLonIncoming: true,
+        };
+
+        const stompClient = new Client(stompConfig);
+
+        stompClient.onConnect = (frame: IFrame) => {
+          console.log('STOMP WebSocket connected');
+
+          stompClient.subscribe(`/room/${roomId}`, (message: IMessage) => {
+            if (message.body) {
+              // console.log('Received message: ', message.body);
+              // console.log('Message headers:', message.headers);
+
+              const messageBody = JSON.parse(message.body);
+
+              const [formattedDate, formattedTime] = getDateAndTime(
+                messageBody.chattingCreatedAt,
+              );
+
+              const newMessage: ChatMessageType = {
+                chattingId: messageBody.chattingId,
+                chattingRoomId: messageBody.chattingRoomId,
+                messageType:
+                  memberId === parseInt(messageBody.memberId) ? 'me' : 'others',
+                memberId: messageBody.memberId,
+                memberName: messageBody.memberName,
+                memberProfileImage: messageBody.memberProfileImage, 
+                chattingContent: messageBody.chattingContent,
+                date: formattedDate,
+                time: formattedTime,
+              };
+
+              setMessages((prev: ChatMessageType[]) => [newMessage, ...prev]);
+              // You can also acknowledge the message if needed
+              // message.ack();
+            } else {
+              console.log('got empty message');
+            }
+          });
+        };
+
+        stompClient.onStompError = (frame: IFrame) => {
+          console.log('Broker reported error:' + frame.headers['message']);
+          console.log('Additional details: ' + frame.body);
+        };
+
+        stompClient.onWebSocketError = (error: wsErrorCallbackType) => {
+          console.log(error);
+        };
+
+        stompClient.onDisconnect = () => {
+          // console.log('STOMP WebSocket disconnected');
+        };
+
+        stompClient.onWebSocketClose = () => {
+          // console.log('STOMP WebSocket closed');
+        };
+
+        stompClient.activate();
+        clientRef.current = stompClient;
+        // console.log(stompClient)
+
+        // if (stompClient) {
+        //   console.log('client active? 2', stompClient.active);
+        //   console.log('client connected? 2', stompClient.connected);
+        // }
+      }
+
+      connectChatSocket();
+
+      return () => {
+        if (clientRef.current) {
+          // console.log('deactivating');
+          clientRef.current.deactivate();
+        }
+      };
+    }, []),
+  );
+
   const sendMessage = (messageBody: string) => {
-    if (client && client.connected) {
-      const destination = '/app/hello';
+
+    if (messageBody.trim() === "") {
+      return; 
+    }
+
+    if (clientRef.current && clientRef.current.connected) {
+      const destination = `/live-chat/chat/${roomId}`;
 
       const message = JSON.stringify({
-        chattingRoomId: 1,
+        chattingRoomId: roomId,
         memberId: memberId,
         chattingContent: messageBody,
       });
 
-      client
-        .publish({
-          destination: destination,
-          body: message,
-        })
+      // console.log(message);
+
+      clientRef.current.publish({
+        destination: destination,
+        body: message,
+      });
     }
   };
 
   const scrollToEnd = () => {
     if (flatListRef.current) {
-      flatListRef.current.scrollToEnd({animated: true});
+      flatListRef.current.scrollToIndex({index: 0, animated: true, viewPosition: 0});
     }
   };
 
-  type flatListItem = {item: ChatMessageType; index: number};
-  const renderChatMessageItem = ({item, index}: flatListItem) => {
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     scrollToEnd();
+  //   }, [flatListRef]),
+  // );
 
-    const currentMsg = messages[index]
-    const prevMsg = messages[index - 1]
-    const nextMsg = messages[index + 1]
+  const renderChatMessageItem = ({
+    item,
+    index,
+  }: {
+    item: ChatMessageType;
+    index: number;
+  }) => {
+    const currentMsg = messages[index];
+    const prevMsg = messages[index + 1];
+    const nextMsg = messages[index - 1];
 
-    let msgStart = false;
-    if (
-      index === 0 ||
-      prevMsg.memberId !== currentMsg.memberId ||
-      prevMsg.time !== currentMsg.time
-    ) {
-      msgStart = true;
-    }
-
-    let showTime = false;
-    if (
+    const msgStart =
       index === messages.length - 1 ||
-      currentMsg.memberId !== nextMsg.memberId ||
-      currentMsg.time !== nextMsg.time
-    ) {
-      showTime = true;
-    } 
+      prevMsg.memberId !== currentMsg.memberId ||
+      prevMsg.time !== currentMsg.time;
 
-    let showDate = false; 
-    if (
-      index === 0 || prevMsg.date !== currentMsg.date
-    ) {
-      showDate = true; 
-    }
+    const showTime =
+      index === 0 ||
+      currentMsg.memberId !== nextMsg.memberId ||
+      currentMsg.time !== nextMsg.time;
+
+    const showDate = index === messages.length - 1 || prevMsg.date !== currentMsg.date;
 
     let messageComponent;
 
@@ -234,38 +301,46 @@ export default function ChatRoom() {
     }
 
     return (
-      <>
-        <View onStartShouldSetResponder={() => true}>{
+      <View
+        onStartShouldSetResponder={() => true}
+        style={styles.flatlistContainer}>
+        {
           <>
-          {showDate && item.date && <ChatDate>{`${item.date}`}</ChatDate>}
-          {messageComponent}
-        </>}</View>
-      </>
+            {showDate && item.date && <ChatDate>{`${item.date}`}</ChatDate>}
+            {messageComponent}
+          </>
+        }
+      </View>
     );
   };
+  // console.log(roomName);
 
   const pressScreen = () => {
     setIsMenuOpen(false);
-    Keyboard.dismiss(); 
-
-  }
-
+    Keyboard.dismiss();
+  };
   return (
-    <TouchableWithoutFeedback
-      onPress={pressScreen}>
-      <KeyboardAvoidingView style={styles.rootContainer}>
-        <ChatHeader isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+    <TouchableWithoutFeedback onPress={pressScreen}>
+      <View style={styles.rootContainer}>
+        <ChatHeader
+          roomId={roomId}
+          roomName={roomName}
+          isMenuOpen={isMenuOpen}
+          setIsMenuOpen={setIsMenuOpen}
+        />
+
         <View style={styles.chatBubblesContainer}>
           <FlatList
             data={messages}
             renderItem={renderChatMessageItem}
-            keyExtractor={(item: ChatMessageType) => item['message-id']}
-            initialScrollIndex={messages.length > 0 ? messages.length - 1 : 0}
+            keyExtractor={(item: ChatMessageType) => item.chattingId.toString()}
             ref={flatListRef}
+            initialNumToRender={30}
+            inverted={true}
           />
         </View>
         <ChatInput onSend={sendMessage} onScrollToEnd={scrollToEnd} />
-      </KeyboardAvoidingView>
+      </View>
     </TouchableWithoutFeedback>
   );
 }
@@ -283,5 +358,10 @@ const styles = StyleSheet.create({
     // borderColor: 'white',
     paddingVertical: 12,
     paddingHorizontal: 12,
+  },
+  flatlistContainer: {
+    // borderWidth: 1,
+    // borderColor: 'white',
+    flex: 1,
   },
 });

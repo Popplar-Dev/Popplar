@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable, TextInput, FlatList, SafeAreaView } from 'react-native'; // SafeAreaView를 import합니다.
+import { View, Text, StyleSheet, Pressable, TextInput, FlatList, SafeAreaView,Image } from 'react-native'; // SafeAreaView를 import합니다.
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useIsFocused } from '@react-navigation/native';
 import QnaCreateModal from '../Modals/QnaCreateModal';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,15 +10,15 @@ import { userInfoState } from '../recoil/userState';
 import { useRecoilState } from 'recoil';
 
 export default function QnaList({ route }) {
+  const isFocused = useIsFocused();
   const {spaceId, spacename} = route.params;
-  console.log(spaceId, spacename)
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
   const [qnaData, setQnaData] = useState('');
   const [userinfo, setUserInfo] = useRecoilState(userInfoState);
 
   const handleItemPress = (qna) => {
-    navigation.navigate('QnaDetail', { qnaId: qna, userid: userinfo.id, username: userinfo.name });
+    navigation.navigate('QnaDetail', { qnaId: qna.id, userid: qna.memberId, username: qna.memberName, profileimage: qna.memberProfileImage});
   };
 
   const openModal = () => {
@@ -37,20 +37,12 @@ export default function QnaList({ route }) {
       if (AccessToken !== null) {
         const userAccessToken = JSON.parse(AccessToken);
         axios.post(`https://k9a705.p.ssafy.io:8000/member/qna/question`, requestData,
-          {
-            headers: {
-              'Access-Token': userAccessToken,
-            },
-          }
+          {headers: {'Access-Token': userAccessToken}}
         )
           .then((response) => {
             setModalVisible(false);
             axios.get(`https://k9a705.p.ssafy.io:8000/member/qna/hotplace/${spaceId}`, 
-              {
-                headers: {
-                  'Access-Token': userAccessToken,
-                },
-              }
+              {headers: {'Access-Token': userAccessToken}}
             )
             .then((response) => {
               setQnaData(response.data.reverse())
@@ -74,11 +66,7 @@ export default function QnaList({ route }) {
       if (AccessToken !== null) {
         const userAccessToken = JSON.parse(AccessToken);
         axios.get(`https://k9a705.p.ssafy.io:8000/member/qna/hotplace/${spaceId}`, 
-          {
-            headers: {
-              'Access-Token': userAccessToken,
-            },
-          }
+          {headers: {'Access-Token': userAccessToken}}
         )
           .then((response) => {
             setQnaData(response.data.reverse())
@@ -89,7 +77,7 @@ export default function QnaList({ route }) {
         }
       }
     isLogin()
-  }, []);
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -107,10 +95,16 @@ export default function QnaList({ route }) {
           data={qnaData}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
-          <Pressable style={styles.qnabox} key={index} onPress={() => handleItemPress(item.questionResDto.id)}>
+          <Pressable style={styles.qnabox} key={index} onPress={() => handleItemPress(item.questionResDto)}>
             <View style={styles.questionbox}>
               <View style={styles.questionboxtop}>
-                <Text style={styles.text}>{item.questionResDto.memberName}</Text>
+                <View style={styles.questionboxprofile}>
+                  <Image
+                    source={{uri:item.questionResDto.memberProfileImage}}
+                    style={styles.profileImage}
+                  />
+                  <Text style={styles.text}>{item.questionResDto.memberName}</Text>
+                </View>
                 <Text style={styles.text}>{item.questionResDto.createdAt.slice(0,10)}</Text>
               </View>
               <View style={styles.questionboxbottom}>
@@ -176,6 +170,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   questionboxbottom: {},
+  questionboxprofile: {
+    flexDirection:'row',
+    alignItems:'center',
+  },
   answerbox: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -201,5 +199,11 @@ const styles = StyleSheet.create({
   nodata: {
     flex:1,
     justifyContent:'center',
+  },
+  profileImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 75,
+    marginRight:5
   }
 });

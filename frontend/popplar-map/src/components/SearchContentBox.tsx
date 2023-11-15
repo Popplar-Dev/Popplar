@@ -3,9 +3,11 @@ import { Place } from '../types/place'
 
 import flag from '../assets/images/flag-iso-color.png'
 
+import { getIdHotplace } from '../api/getHotplace'
+
 type Props = {
   place: Place
-  placePosHandler: (x: string, y: string) => void
+  placePosHandler: (x: string, y: string, status: boolean) => void
 }
 
 export default function SearchContentBox({ place, placePosHandler }: Props) {
@@ -23,10 +25,34 @@ export default function SearchContentBox({ place, placePosHandler }: Props) {
   }
 
   function placeSelectHandler() {
-    placePosHandler(place.x, place.y)
-    console.log(place)
-    requestPermission(place)
-    // setHotPlaceInfo(place)
+    // setHotPlaceInfo(place);
+    getIdHotplace(place.id)
+    .then((res) => {
+      placePosHandler(place.x, place.y, true);
+      const placeData = {
+        id: res.data.id,
+        place_name: res.data.placeName,
+        address_name: res.data.addressName,
+        road_address_name: res.data.roadAddressName,
+        category_group_name: res.data.category,
+        likeCount: res.data.likeCount,
+        phone: res.data.phone,
+        placeType: res.data.placeType,
+        visitorCount: res.data.visitorCount,
+        y: res.data.y,
+        x: res.data.x,
+        tier: res.data.tier,
+        myLike: res.data.myLike
+      }
+      requestPermission(placeData)
+      console.log('여기에 정보 들어와요', res.data)
+    })
+    .catch((error) => {
+      if (error.response && error.response.status === 400) {
+        console.log('정보 이쪽으로!', place)
+        placePosHandler(place.x, place.y, false);
+        requestPermission(place)
+    }});
   }
   
   return(
@@ -39,10 +65,18 @@ export default function SearchContentBox({ place, placePosHandler }: Props) {
       </div>
     </div>
 
-    {/* <div className={styles.name}>{place.category_name}</div> */}
-    <div className={styles["address-name"]}>{place.road_address_name}</div>
-    {/* <div className={styles.name}>{place.address_name}</div> */}
-    <div className={styles["phone-number"]}>{place.phone}</div>
+    
+    {place.road_address_name ? (
+      <div className={styles["address-name"]}>{place.road_address_name}</div>
+    ): (
+      <div className={styles["address-name"]}>등록된 주소가 없습니다.</div>
+    )}
+    
+    {place.phone ? (
+      <div className={styles["phone-number"]}>{place.phone}</div>
+    ): (
+      <div className={styles["phone-number"]}>등록된 번호가 없습니다.</div>
+    )}
   </button>
   )
 }

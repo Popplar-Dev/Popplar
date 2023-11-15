@@ -16,12 +16,12 @@ const styles = StyleSheet.create({
   nicknameContainer: {
     // borderColor: 'yellow',
     // borderWidth: 1,
-    height: 30,
+    height: 20,
     paddingHorizontal: 10,
     justifyContent: 'flex-end',
   },
   nickname: {
     color: 'white',
-    fontSize: 14,
+    fontSize: 12,
   },
 });

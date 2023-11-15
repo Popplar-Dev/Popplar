@@ -19,7 +19,31 @@ export default function Message({
   message,
 }: messageProp) {
   const imgUrl =
-    'https://i.pinimg.com/736x/4c/7b/63/4c7b63eac0e1645c5c3b9e3bcf706074.jpg';
+    msgType === 'received'
+      ? message.sentMemberProfileImage
+      : message.receivedMemberProfile;
+    
+      const createdDate = new Date(message.createdAt)
+      const dateOptions: Intl.DateTimeFormatOptions = {
+        month: 'long',
+        day: 'numeric',
+      };
+    
+      const timeOptions: Intl.DateTimeFormatOptions = {
+        hour: '2-digit',
+        minute: '2-digit',
+      };
+    
+      const formattedDate = createdDate.toLocaleDateString(
+        'ko-KR',
+        dateOptions,
+      );
+      const formattedTime = createdDate.toLocaleTimeString(
+        'ko-KR',
+        timeOptions,
+      );
+
+      const dateTime = `${formattedDate} ${formattedTime}`
 
   return (
     <View
@@ -46,7 +70,9 @@ export default function Message({
               ? [styles.nickname, styles.checkedTextColor]
               : styles.nickname
           }>
-          {msgType === "received" ? message.sentMemberName: message.receivedMemberName}
+          {msgType === 'received'
+            ? message.sentMemberName
+            : message.receivedMemberName}
         </Text>
         <Text
           style={
@@ -64,7 +90,7 @@ export default function Message({
               ? [styles.date, styles.checkedTextColor]
               : styles.date
           }>
-          11월 6일
+          { dateTime }
         </Text>
       </View>
 

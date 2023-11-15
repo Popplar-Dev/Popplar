@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { Place } from '../types/place'
 import { getToken } from './getAccessToken'
-import {BASE_URL} from './baseUrl'
-const accessToken = process.env.REACT_APP_ACCESS_TOKEN;
+import { BASE_URL } from './baseUrl'
 
 // 전체 핫플레이스 조회
 export async function getAllHotplace() {
@@ -10,24 +9,73 @@ export async function getAllHotplace() {
   return await axios({
     method: 'get',
     url: `${BASE_URL}/hot-place`,
-    headers: { "access-token" : token }
-   }).then((res) => res)
+    headers: { 'Access-Token': token }
+   }).then((res) => res).catch((e)=>console.error(e))
 }
 
 // id로 핫플레이스 조회
 export async function getIdHotplace(id: string) {
+  const token = await getToken();
   return await axios({
     method: 'get',
     url: `${BASE_URL}/hot-place/${id}`,
-    headers: { "access-token" : accessToken }
-   }).then((res) => res)
+    headers: { 'Access-Token': token }
+   }).then((res) => res).catch((e)=>console.error(e))
+  //  .catch((err) => console.log(err))
 }
 
 // 특정 핫플레이스 모든 방문객 조회
 export async function getHotplaceVisitors(id: string) {
+  const token = await getToken();
   return await axios({
     method: 'get',
     url: `${BASE_URL}/visitor/${id}`,
-    // headers: addAccessTokenToHeaders(),
+    headers: { 'Access-Token': token }
    }).then((res) => res)
+}
+
+// 내 정보 조회
+export async function getMyInfo(id: string) {
+  const token = await getToken();
+  return await axios({
+    method: 'get',
+    url: `${BASE_URL}/member/${id}`,
+    headers: { 'Access-Token': token }
+   }).then((res) => res)
+}
+
+// 내 정보 수정
+export async function updateMyHotPlaceId(hotPlaceId, memberId) {
+  const token = await getToken();
+  return await axios({
+    method: 'patch',
+    url: `${BASE_URL}/member/${memberId}`,
+    data: {
+      myHotPlaceId: hotPlaceId
+    },
+    headers: { 'Access-Token': token }
+   }).then((res) => res).catch((e)=>{console.log(e)})
+}
+
+// 스탬프 여부 확인
+export async function getStamp(hotPlaceId) {
+  const token = await getToken();
+  return await axios({
+    method: 'get',
+    url: `${BASE_URL}/member/achievement/hot-place/${hotPlaceId}`,
+    headers: { 'Access-Token': token }
+   }).then((res) => res).catch((e)=>console.log(e))
+}
+
+// 방문자 추가
+export async function insertVisitor(hotPlaceId) {
+  const token = await getToken();
+  return await axios({
+    method: 'post',
+    url: `${BASE_URL}/hot-place/visitor`,
+    data: {
+      hotPlaceId: hotPlaceId
+    },
+    headers: { 'Access-Token': token }
+   }).then((res) => res).catch((e)=>{console.log("방문자 등록 error: ", e)})
 }

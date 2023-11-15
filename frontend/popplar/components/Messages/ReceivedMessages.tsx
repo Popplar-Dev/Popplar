@@ -10,25 +10,22 @@ import {
 } from 'react-native';
 
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import { ReceivedMessageStackParamList } from '../types/NavigatorParams';
 import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 import {messageType} from '../types/message';
+import { getToken } from '../services/getAccessToken';
 
 import Message from './Message';
-import {check} from 'react-native-permissions';
-
-type RootStackParamList = {
-  Home: undefined;
-  Detail: {message: messageType, tab: 'received'|'sent'};
-};
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'Home'
+ReceivedMessageStackParamList,
+  'MessageHome'
 >;
 
 export default function ReceivedMessages({
@@ -39,25 +36,24 @@ export default function ReceivedMessages({
   const [messages, setMessages] = useState<messageType[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
+  const tabBarHeight = useBottomTabBarHeight();
 
   useFocusEffect(
     useCallback(() => {
       async function getReceivedMessages() {
-        const accessToken = await AsyncStorage.getItem('userAccessToken');
-        if (!accessToken) return;
-        const userAccessToken = JSON.parse(accessToken);
+        const userAccessToken = await getToken();
+        if (!userAccessToken) return; 
         try {
-          const url = `https://k9a705.p.ssafy.io:8000/member/message/find-all/356931964684`;
-
+          const url = `https://k9a705.p.ssafy.io:8000/member/message/received-all`;
           const res = await axios.get(url, {
             headers: {
               'Access-Token': userAccessToken,
             },
           });
 
-          if (res.status === 200) {
-            setMessages(res.data);
-          }
+
+          setMessages(res.data.reverse());
+
         } catch (e) {
           console.error(e);
         }
@@ -123,8 +119,22 @@ export default function ReceivedMessages({
   };
 
   const deleteItems = async () => {
-    // console.log(`delete ${checkedItems}`);
-    setCheckedItems([]); 
+    const userAccessToken = await getToken();
+    if (!userAccessToken) return;
+
+    try {
+      const url = `https://k9a705.p.ssafy.io:8000/member/message/multi`
+      const data = checkedItems.map(item => item.toString()) 
+      const res = await axios.delete(url, {
+        headers: { 'Access-Token': userAccessToken, 'Id-List': data}
+      })
+      const newMessages = messages.filter(item => !checkedItems.includes(item.messageId))
+      setMessages(newMessages);
+    } catch (e) {
+      console.error(e); 
+    }
+    setIsDeleting(false);
+    setCheckedItems([]);
   };
 
   const cancelDeletion = () => {
@@ -134,7 +144,7 @@ export default function ReceivedMessages({
 
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {marginBottom: tabBarHeight}]}>
       <FlatList
         data={messages}
         keyExtractor={item => item.messageId.toString()}
