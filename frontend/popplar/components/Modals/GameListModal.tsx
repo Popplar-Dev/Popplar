@@ -106,7 +106,7 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
             </View>
               <View style={styles.gamecontainer}>
                 <View style={styles.gametop}>
-                  <Text style={styles.textbig}>행성 잡기 게임</Text>
+                  <Text style={styles.textbig}>행성 잡기 미니게임</Text>
                   <View style={styles.gameinfo}>
                   {gameinfo ? (
                     <View style={styles.gameinfotitle}>
@@ -128,7 +128,7 @@ export default function GameListModal({ visible, onClose,spaceid}:GameListModalP
                   </View>
                 </View>
                 <View style={styles.gamebottom}>
-                  <Text style={styles.textbig}>빠르게 클릭해보세요!</Text>
+                  <Text style={styles.textbig}>행성 도달 미니게임</Text>
                   <View style={styles.gameinfo}>
                   {gameinfo ? (
                     <View style={styles.gameinfotitle}>

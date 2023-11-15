@@ -13,7 +13,8 @@ export default function ClickGame({ route }) {
   const [clickCount, setClickCount] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(10); // 5 seconds
   const [modalVisible, setModalVisible] = useState(false);
-  const [planetImage, setPlanetImage] = useState(require('../../assets/planet/1.png')); // 초기 이미지
+  const [planetImage, setPlanetImage] = useState(require('../../assets/planet/game_planet1.png')); // 초기 이미지
+  const [planetSize, setPlanetSize] = useState({ width: 10, height: 10 });
 
   
   useEffect(() => {
@@ -30,31 +31,29 @@ export default function ClickGame({ route }) {
       handleGameEnd();
     }
 
-    // 클릭 횟수가 10, 20, 30, 40, 50일 때 이미지 업데이트
-    if (clickCount < 10) {
-      setPlanetImage(require('../../assets/planet/1.png'));
-    } else if (clickCount < 20) {
-      setPlanetImage(require('../../assets/planet/2.png'));
-    } else if (clickCount < 30) {
-      setPlanetImage(require('../../assets/planet/3.png'));
-    } else if (clickCount < 40) {
-      setPlanetImage(require('../../assets/planet/4.png'));
-    } else if (clickCount < 50) {
-      setPlanetImage(require('../../assets/planet/5.png'));
-    } else {
-      setPlanetImage(require('../../assets/planet/6.png'));
-    }
-
     return () => {
       clearInterval(timer);
     };
   }, [gameStarted, timeRemaining]);
 
   const handleGameStart = () => {
+    console.log("gameInfo:", gameInfo)
     setGameStarted(true);
     setTimeRemaining(10); // Reset the timer
     setClickCount(0); // Reset click count
     setModalVisible(false);
+    
+    setPlanetSize({ width: 10, height: 10 });
+    let index = Math.floor(Math.random() * 4) + 1
+    if (index == 1) {
+      setPlanetImage(require('../../assets/planet/game_planet1.png'));
+    } else if (index == 2) {
+      setPlanetImage(require('../../assets/planet/game_planet2.png'));
+    } else if (index == 3) {
+      setPlanetImage(require('../../assets/planet/game_planet3.png'));
+    } else if (index == 4) {
+      setPlanetImage(require('../../assets/planet/game_planet4.png'));
+    }
   };
 
   const handleGameEnd = async () => {
@@ -120,6 +119,7 @@ export default function ClickGame({ route }) {
   const handleButtonClick = () => {
     if (gameStarted && timeRemaining > 0) {
       setClickCount(prevCount => prevCount + 1);
+      setPlanetSize({ width: 10 + 5 * clickCount, height: 10 + 5 * clickCount });
     }
   };
 
@@ -129,7 +129,6 @@ export default function ClickGame({ route }) {
 
   const handleModalClose = () => {
     setModalVisible(false);
-    setPlanetImage(require('../../assets/planet/1.png'));
   };
 
   BackHandler.addEventListener('hardwareBackPress', () => {
@@ -146,14 +145,14 @@ export default function ClickGame({ route }) {
         <View style={styles.gameContainer}>
           <Text style={styles.text}>나의 최고 점수 : {gameInfo.myMaxFightingPoints}</Text>
           <Text style={styles.text}>전체 최고 점수 : {gameInfo.maxFightingPoints}</Text>
-          <Image source={planetImage} style={styles.planetImage} />
+          <Image source={planetImage} style={{ ...styles.planetImage, width: planetSize.width, height: planetSize.height }} />
           <Text style={styles.text}> CLICK : {clickCount}</Text>
           <Text style={styles.text}> 남은 시간 : {timeRemaining} 초</Text>
         </View>
       )}
       {gameStarted && timeRemaining > 0 && (
         <Pressable onPress={handleButtonClick} style={styles.buttonContainer}>
-          <Text style={styles.buttonText}>클릭!</Text>
+          <Text style={styles.buttonText}>BOOST!</Text>
         </Pressable>
       )}
       {!gameStarted && (
