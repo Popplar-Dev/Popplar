@@ -33,14 +33,11 @@ export default function HotplaceUsers({ id }: Props) {
 
   // 현재 핫플레이스에 몇명 있는지 불러오기
   useEffect(() => {
-    console.log(id)
     getHotplaceUsers(id)
     .then((res) => {
-      console.log('user 정보', res.data)
       setHotplaceUsers(res.data)
     
       const markers = generateRandomMarkers(res.data.length)
-      console.log('markers', markers[0])
       setMarkerPositions(markers)
     }
     )

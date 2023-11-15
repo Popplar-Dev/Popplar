@@ -25,28 +25,22 @@ function ProfileSetting() {
 
   const openModal = () => {
     setModalVisible(true);
-    console.log(modalVisible)
   };
 
 	const startEditing = () => {
     setIsEditing(true);
     setNewNickname(nickname);
-    console.log(user)
   };
 
   const saveNickname = () => {
-    console.log(user)
 			setNickname(newNickname);
 			const updatedInfo = {
 				name: newNickname,
-				profileImage: "url",
 			};
 			const isLogin = async () => {
         const AccessToken = await AsyncStorage.getItem('userAccessToken');
         if (AccessToken !== null) {
 					const userAccessToken = JSON.parse(AccessToken);
-          console.log(userAccessToken)
-          console.log(userinfo.id)
 					axios.patch(`https://k9a705.p.ssafy.io:8000/member/${userinfo.id}`, updatedInfo, 
 						{headers: {'Access-Token': userAccessToken}}
 					)

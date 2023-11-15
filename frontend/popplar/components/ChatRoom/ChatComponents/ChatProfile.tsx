@@ -90,13 +90,13 @@ export default function ChatProfile({
         anchorPosition="bottom"
         contentStyle={styles.menuContainer}>
         <View style={styles.buttonOuterContainer}>
-          <Pressable
+          {/* <Pressable
             style={styles.buttonInnerContainer}
             android_ripple={{color: '#464646'}}
             onPress={handleMessage}>
             <Icon name="chatbubbles-outline" size={23} color="#8B90F7"></Icon>
             <Text style={styles.buttonText}>쪽지하기</Text>
-          </Pressable>
+          </Pressable> */}
           <Pressable
             style={styles.buttonInnerContainer}
             android_ripple={{color: '#464646'}}

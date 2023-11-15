@@ -5,6 +5,12 @@ export const userInfoState = atom({
   default: {name: '', exp: 0, id: 0, socialType: '', profileImage: ''},
 });
 
+export const userLoginState = atom({
+  key: 'userLoginState',
+  default: {isLogin: false},
+});
+
+
 export const userIdState = selector({
   key: 'userIdState',
   get: ({get}) => {

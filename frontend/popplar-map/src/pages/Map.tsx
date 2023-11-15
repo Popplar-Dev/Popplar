@@ -18,11 +18,16 @@ import { getAllHotplace, getIdHotplace } from '../api/getHotplace'
 import HotPlaceUsers from '../components/HotPlaceUsers/HotPlaceUsers'
 import { getHotplaceUsers } from '../api/postLocation'
 
+import { BsFire } from 'react-icons/bs'
+
+import rocket from '../assets/images/rocket.png';
+import Star2 from '../assets/images/Star2.png';
+import stars from '../assets/images/stars.png';
+
 const { kakao } = window;
 
 type user = {
   hotPlaceId: number
-  id: string
   memberId: number
   x: number
   y: number
@@ -93,24 +98,24 @@ export default function Map () {
       const Lng = data.x.toString().slice(0, -8)
       setSearchHotPlace({x: Lng, y: Lat})
       // movemove(Lat, Lng)   
-      if (typeof window !== 'undefined' && window.ReactNativeWebView) {
-        window.ReactNativeWebView.postMessage(
-          JSON.stringify({ 
-            type: 'test',
-            data: { data: `지금 장난 ?, ${Lat}, ${Lng}` }
-          })
-        );
-      }
+      // if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+      //   window.ReactNativeWebView.postMessage(
+      //     JSON.stringify({ 
+      //       type: 'test',
+      //       data: { data: `지금 장난 ?, ${Lat}, ${Lng}` }
+      //     })
+      //   );
+      // }
     } else if (type=="entrance") {
       setCurrSpaceId(data.id)
-      if (typeof window !== 'undefined' && window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage(
-        JSON.stringify({ 
-          type: 'test',
-          data: { data: `이번에야말로 정말?, ${data.id}` }
-        })
-      );
-      }
+      // if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+      // window.ReactNativeWebView.postMessage(
+      //   JSON.stringify({ 
+      //     type: 'test',
+      //     data: { data: `이번에야말로 정말?, ${data.id}` }
+      //   })
+      // );
+      // }
     }
   }
 
@@ -126,10 +131,12 @@ export default function Map () {
 
   // 현재 입장한 spaceId 갱신 시
   useEffect(() => {
-    getHotplaceUsers(currSpaceId)
-    .then((res) => {
-      setHotplaceUsers(res.data)
-    })
+    if (currSpaceId !== 0) {
+      getHotplaceUsers(currSpaceId)
+      .then((res) => {
+        setHotplaceUsers(res.data)
+      })
+    }
   }, [currSpaceId])
 
   // 내 위치 돌아가기 버튼 선택시, web- > native 에 내 위치 데이터 보내달라고 요청
@@ -197,8 +204,17 @@ export default function Map () {
     movemove(currLocation.Lat, currLocation.Lng)  
   }, [currLocation])
 
+  function setDraggable(draggable: boolean) {
+    // 마우스 드래그로 지도 이동 가능여부를 설정합니다
+    if (visibleMap) {
+      visibleMap.setDraggable(draggable);    
+    }
+  }
+
   useEffect(() => {
     movemove(searchHotPlace.y, searchHotPlace.x)
+    setCurrSpaceId(0)
+    setDraggable(false)
   }, [searchHotPlace])
 
   // 지도 위에, 내 위치 마커 띄우기
@@ -319,7 +335,9 @@ export default function Map () {
           getIdHotplace(id)
           .then((res) => res.data)
           // .then((res) => console.log(res))
-          .then((res) => {requestPermission({
+          .then((res) => {
+            setDraggable(false)
+            requestPermission({
             id, 
             place_name, 
             road_address_name, 
@@ -345,9 +363,6 @@ export default function Map () {
         // 이동할 위도 경도 위치를 생성합니다 \
         var moveLatLon = new kakao.maps.LatLng(La, Ma);
         
-        console.log(La, Ma)
-        const test = '127.123456'
-        console.log('test', test.slice(0, 8))
         // 지도 중심을 부드럽게 이동시킵니다
         // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
         visibleMap.panTo(moveLatLon);
@@ -367,7 +382,7 @@ useEffect(() => {
   if (currSpaceId !== 0) {
     const timeoutId = setTimeout(() => {
       setShowHotPlaceUsers(true);
-    }, 700);
+    }, 550);
 
     return () => clearTimeout(timeoutId); // Cleanup on component unmount or when currSpaceId changes
   } else {
@@ -378,16 +393,72 @@ useEffect(() => {
   return (
   <div className={`container`}>
     {/* <div className={styles.search}>Search...</div> */}
-
-    <div className={`Box`} id={`top`}></div>
-    <div className={`Box`} id={`left`}></div>
+    
+    {/* <div className={`Box`} id={`top`}></div> */}
+    {/* <div className={`Box`} id={`left`}></div>
     <div className={`Box`} id={`right`}></div>
-    <div className={`Box`} id={`bottom`}></div>
+    <div className={`Box`} id={`bottom`}></div> */}
+
+    <img
+        className={`Box`} id={`top`}
+        src={stars} 
+        alt="top"
+      />
+    <img
+        className={`Box`} id={`left`}
+        src={stars}
+        alt="left"
+      />
+    <img
+        className={`Box`} id={`right`}
+        src={stars}
+        alt="right"
+      />
+    <img
+        className={`Box`} id={`bottom`}
+        src={stars}
+        alt="bottom"
+      />
+
+    <img
+        className="sideRocket"
+        src={rocket} 
+        alt="sideRocket"
+      />
+    <img
+        className="sideStar"
+        src={Star2} 
+        alt="sideStar"
+      />
 
 
     {showHotPlaceUsers && 
-     <HotPlaceUsers hotplaceUsers={hotplaceUsers} />
+    <>
+      <HotPlaceUsers hotplaceUsers={hotplaceUsers} />
+
+    </>
     }
+
+    {currSpaceId && (
+      <button onClick={() => {
+        setDraggable(true)
+        setCurrSpaceId(0);
+        setHotplaceUsers([])
+        }} className={styles.draggable}>
+        <div style={{marginTop: '3px'}}><BsFire color={'#8B90F7'}/></div>
+        <div className={styles.draggableText}>다른 핫플레이스로 이동</div>
+      </button>
+    )}
+
+    {/* <button onClick={() => {
+      // setDraggable(true)
+      setCurrSpaceId(0);
+      setCurrSpaceId(currSpaceId);
+      // setHotplaceUsers([])
+      }} className={styles.refreshUser}>
+      <div style={{marginTop: '3px'}}><BsFire color={'#8B90F7'}/></div>
+      <div className={styles.refreshUserText}>사용자 정보 갱신</div>
+    </button> */}
 
     <div id="map" className={styles.container}></div>
 
@@ -395,6 +466,7 @@ useEffect(() => {
       moveToMypos();
       setCurrSpaceId(0);
       setHotplaceUsers([])
+      setDraggable(true)
     }}>
       <BiSolidRocket size={25} color={'#8B90F7'}/>
     </button>

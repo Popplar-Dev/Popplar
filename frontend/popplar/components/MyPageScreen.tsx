@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import SettingScreen from './Settings/SettingScreen';
 import PlanetModal from '../components/Modals/PlanetModal'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRoute } from '@react-navigation/native';
 
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from './recoil/userState';
@@ -25,21 +26,21 @@ function MyPageScreen() {
   });
   const [loading, setLoading] = useState(true);
   const images = [
-    { name: "CAFE", uri: require("../assets/planet/1.png") },
     { name: "RESTAURANT", uri: require("../assets/planet/2.png") },
-    { name: "STORE", uri: require("../assets/planet/3.png") },
+    { name: "CAFE", uri: require("../assets/planet/1.png") },
     { name: "4", uri: require("../assets/planet/4.png") },
-    { name: "5", uri: require("../assets/planet/5.png") },
     { name: "6", uri: require("../assets/planet/6.png") },
+    { name: "STORE", uri: require("../assets/planet/3.png") },
+    { name: "5", uri: require("../assets/planet/5.png") },
   ];
   const [visitcount, setVisitcount] = useState(0); 
+  const route = useRoute();
 
 	useEffect(() => {
     const isLogin = async () => {
       const AccessToken = await AsyncStorage.getItem('userAccessToken');
       if (AccessToken !== null) {
         const userAccessToken = JSON.parse(AccessToken);
-        console.log(userAccessToken)
         axios.get(`https://k9a705.p.ssafy.io:8000/member/achievement/${userinfo.id}`,
           {headers: {'Access-Token': userAccessToken}}
         )
@@ -149,14 +150,14 @@ function MyPageScreen() {
                 ))}
                 <View style={styles.planet}>
                     <Pressable
-                      onPress={() => {
-                        setSelectedPlanet({
-                          name: '핫플',
-                          image: visitcount < 10 ? require('../assets/mark/question.png') : images[5].uri,
-                          visit: `${visitcount}`
-                        });
-                        setModalVisible(true);
-                      }}
+                      // onPress={() => {
+                      //   setSelectedPlanet({
+                      //     name: '핫플',
+                      //     image: visitcount < 10 ? require('../assets/mark/question.png') : images[5].uri,
+                      //     visit: `${visitcount}`
+                      //   });
+                      //   setModalVisible(true);
+                      // }}
                       style={styles.planetItem} 
                     >
                       <Image

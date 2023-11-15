@@ -102,29 +102,42 @@ function PlanetModal({ visible, onClose, planetName, planetImage, visit }:Planet
                 </Text>
                 <Text style={styles.modalText}>{visit} 곳의 <Text style={styles.focusText}>{planetName}</Text>에 첫 발을 디뎠습니다</Text>
               </View>
-              <View style={styles.stampinfo}>
+              {/* <View style={styles.stampinfo}> */}
                 {!loading ? (
                   <>
-                  <Pressable style={styles.nextButtonContainer}>
-                    <Text onPress={backItem}><Icon name="chevron-back-outline" color="#8B90F7" size={25} /></Text>
-                  </Pressable>
-                  <FlatList
-                    // horizontal
-                    data={stamp.filter(item => item.categoryName === planetName)}
-                    renderItem={({ item, index }) => renderItem({ item, index })}
-                    keyExtractor={(item, index) => index.toString()}
-                    pagingEnabled
-                    showsHorizontalScrollIndicator={false}
-                  />
-                  <Pressable style={styles.nextButtonContainer}>
-                    <Text onPress={nextItem}><Icon name="chevron-forward-outline" color="#8B90F7" size={25} /></Text>
-                  </Pressable>
+                  {specificstamp.length===0 ? (
+                    <View style={styles.stampinfo}>
+                      <Text style={styles.Textsmall}>{planetName}에 방문해 업적을 달성해보세요!</Text>
+                    </View>
+                  ):(
+                    <>
+                      <View style={styles.stampinfo}>
+                        <Pressable style={styles.nextButtonContainer}>
+                          <Text onPress={backItem}><Icon name="chevron-back-outline" color="#8B90F7" size={25} /></Text>
+                        </Pressable>
+                        <FlatList
+                          // horizontal
+                          data={stamp.filter(item => item.categoryName === planetName)}
+                          renderItem={({ item, index }) => renderItem({ item, index })}
+                          keyExtractor={(item, index) => index.toString()}
+                          pagingEnabled
+                          showsHorizontalScrollIndicator={false}
+                        />
+                        <Pressable style={styles.nextButtonContainer}>
+                          <Text onPress={nextItem}><Icon name="chevron-forward-outline" color="#8B90F7" size={25} /></Text>
+                        </Pressable>
+                      </View>
+                      <View>
+                        <Text style={styles.Textsmall}><Text style={styles.focusText}>{visibleItems}</Text>/{specificstamp.length}</Text>
+                      </View>
+                    </>
+                  )}
                   </>
                 ) : (
                   <ActivityIndicator size="large" color="#ffffff" />
                 )}
               </View>
-            </View>
+            {/* </View> */}
           </BlurView>
 				</View>
 			</TouchableWithoutFeedback>
@@ -193,17 +206,20 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight:'bold'
   },
+  Textsmall: {
+    fontSize: 15,
+    color:'white',
+    fontWeight:'bold'
+  },
   stampinfobox: {
   },
   stampinfo: {
     alignItems:'center',
     flexDirection:'row',
-    // borderWidth:2,
-    marginTop:10,
+    marginTop:20,
     padding:5,
-    height:140
-    // width:'90%',
-
+    justifyContent:'center',
+    marginVertical:10
   },
   stampinfolist: {
     // marginLeft:10,

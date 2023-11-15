@@ -1,9 +1,12 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Alert} from 'react-native';
+import { useNavigation, useRoute  } from '@react-navigation/native';
+import { TabNavigatorParamList } from '../types/tabNavigatorParams';
 
-import {TabNavigatorParamList} from '../types/NavigatorParams';
+import React, {useEffect} from "react";
+import { BackHandler } from 'react-native';
 
 //스크린 컴포넌트
 import MapScreen from '../MapScreen';
@@ -153,6 +156,8 @@ const MyPageStack = () => {
 };
 
 export default function BottomTab() {
+
+
   return (
     <Tab.Navigator
       initialRouteName="Map"

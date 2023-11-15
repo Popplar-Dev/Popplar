@@ -1,9 +1,19 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './userMarker.css'
 
 import { FaMapMarkerAlt } from 'react-icons/fa'
 
-export default function UserMarker() {
+type Props = {
+  user: {
+    hotPlaceId: number
+    memberId: number
+    x: number
+    y: number
+  }
+}
+
+export default function UserMarker({ user }: Props) {
+  // const [selectUser, setSelectUser] = useState<boolean>(false)
   const translateYRef = useRef(0);
 
   const fallAndRebound = () => {
@@ -18,8 +28,19 @@ export default function UserMarker() {
     fallAndRebound();
   }, []); // Similar to componentDidMount
 
+  const handleUserInfo = () => {
+    if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({ 
+          type: 'user',
+          data: { data: user.memberId }
+        })
+      );
+    }
+  }
+
   return (
-    <div className="animated-container">
+    <div className="animated-container" onClick={() => handleUserInfo()}>
       <div className="fall-and-rebound" style={{ transform: `translateY(${translateYRef.current}px)` }}>
         <i className="icon" style={{ color: "red"}}>▼</i>
       </div>

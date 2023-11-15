@@ -13,6 +13,7 @@ import Home from './components/Landing/Home';
 import UserSetting from './components/Landing/UserSetting';
 import LocationPermission from './components/Landing/LocationPermission';
 
+
 function App() {
   const navTheme = {
     ...DefaultTheme,

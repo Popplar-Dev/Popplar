@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../recoil/userState';
+import { userLoginState } from '../recoil/userState';
 import LocationPermission from './LocationPermission'
 
 const REST_API_KEY = '0da056655f3ed1ec3ebd8325d19ac9f6';
@@ -15,6 +16,7 @@ const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage('message from
 export default function Login() {
   const navigation = useNavigation();
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const [isuserLogin, setisuserLogin] = useRecoilState(userLoginState);
 
   function KakaoLoginWebView (data: string) {
     const exp = "code=";
@@ -52,14 +54,12 @@ export default function Login() {
       },
     }).then((response) => {
       AccessToken = response.data.access_token;
-      console.log(response.data);
       const requestData = {
         accessToken : AccessToken,
         loginType : "KAKAO"
       };
       axios.post(`https://k9a705.p.ssafy.io:8000/auth/login`, requestData)
         .then((response) => {
-          console.log(response.data)
           const jwt = response.data.jwt
           const userInfo = {
             exp: response.data.exp,
@@ -69,6 +69,7 @@ export default function Login() {
             socialType: response.data.socialType,
           }
           storeUserInfo(userInfo)
+          setisuserLogin({isLogin:true})
           storeData(jwt);
           if (response.data.name === '새 유저') {
           navigation.navigate('FirstLanding' as never);

@@ -62,10 +62,13 @@ export default function UserModal({
     useNavigation<NavigationProp<MapStackParamList, 'MapScreen'>>();
 
   useEffect(() => {
-    getMembersInfo(memberId).then(res => {
-      //console.log('response', res.data)
-      setMemberInfo(res.data);
-    });
+    if (memberId) {
+      getMembersInfo(memberId)
+        .then(res => {
+          setMemberInfo(res.data);
+        })
+        .catch(res => console.log('usermodal 에러'));
+    }
   }, [memberId]);
 
   // const markers = generateRandomMarkers(res.data.length)
@@ -109,28 +112,36 @@ export default function UserModal({
                 </View>
 
                 <View style={styles.memberContent}>
-                  <Image
-                    style={styles.image}
-                    source={{uri: memberInfo.profileImage}}
-                  />
+                  {memberInfo.profileImage && (
+                    <Image
+                      style={styles.image}
+                      source={{uri: memberInfo.profileImage}}
+                    />
+                  )}
 
                   <View style={styles.nameContent}>
-                    <Text style={styles.textname}>{memberInfo.name}</Text>
-                    <Text style={styles.textbig}>{memberInfo.socialType}</Text>
+                    {memberInfo && (
+                      <>
+                        <Text style={styles.textname}>{memberInfo.name}</Text>
+                        <Text style={styles.textbig}>
+                          {memberInfo.socialType}
+                        </Text>
 
-                    <View style={styles.replyButtonContainerOuter}>
-                      <Pressable
-                        onPress={handleReply}
-                        style={styles.replyButtonContainerInner}
-                        android_ripple={{color: '#464646'}}>
-                        <Icon
-                          name="chatbubbles-outline"
-                          size={23}
-                          color="white"
-                        />
-                        <Text style={styles.textbig}>쪽지 보내기</Text>
-                      </Pressable>
-                    </View>
+                        <View style={styles.replyButtonContainerOuter}>
+                          <Pressable
+                            onPress={handleReply}
+                            style={styles.replyButtonContainerInner}
+                            android_ripple={{color: '#464646'}}>
+                            <Icon
+                              name="chatbubbles-outline"
+                              size={23}
+                              color="white"
+                            />
+                            <Text style={styles.textbig}>쪽지 보내기</Text>
+                          </Pressable>
+                        </View>
+                      </>
+                    )}
                   </View>
                 </View>
               </View>

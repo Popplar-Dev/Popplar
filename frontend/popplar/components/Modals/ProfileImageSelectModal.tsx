@@ -43,13 +43,10 @@ export default function ProfileImageSelectModal({ visible, onClose }:ImageSelect
         const AccessToken = await AsyncStorage.getItem('userAccessToken');
         if (AccessToken !== null) {
 					const userAccessToken = JSON.parse(AccessToken);
-          console.log(userinfo)
-          console.log(avatar)
 					axios.patch(`https://k9a705.p.ssafy.io:8000/member/${userinfo.id}`, updatedimage, 
 						{headers: {'Access-Token': userAccessToken}}
 					)
 					.then((response) => {
-            console.log(response.data)
 						setUserInfo({ ...userinfo, profileImage: avatar});
             onClose()
           })

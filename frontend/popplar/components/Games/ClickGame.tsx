@@ -51,7 +51,6 @@ export default function ClickGame({ route }) {
   }, [gameStarted, timeRemaining]);
 
   const handleGameStart = () => {
-    console.log("gameInfo:", gameInfo)
     setGameStarted(true);
     setTimeRemaining(10); // Reset the timer
     setClickCount(0); // Reset click count

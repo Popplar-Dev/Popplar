@@ -11,7 +11,6 @@ type spaceparam = {
 
 function SpeedTouch({route}: spaceparam) {
   const gameinfo = route.params;
-  // console.log(gameinfo)
 
 	const [mybestscore, setMybestscore] = useState<number | null>(null);
 	const [gameStarted, setGameStarted] = useState(false);
@@ -52,7 +51,6 @@ function SpeedTouch({route}: spaceparam) {
         const endTime = new Date();
         const reactionTime = (endTime.getTime() - startTime.getTime()) / 1000;
         setReactionTime(reactionTime);
-        // console.log(reactionTime)
         const isLogin = async () => {
           const AccessToken = await AsyncStorage.getItem('userAccessToken');
           if (AccessToken !== null) {
