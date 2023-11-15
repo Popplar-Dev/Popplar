@@ -47,7 +47,7 @@ export default function MessageDraft() {
 
       Alert.alert('쪽지가 전송되었습니다.', '');
 
-      navigation.navigate('MessageHome');
+      navigation.goBack();
     } catch (e) {
       console.error(e);
     }

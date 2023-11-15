@@ -73,23 +73,23 @@ export default function ReceivedMessages({
       },
     );
 
-    if (isDeleting) {
-      navigation.setOptions({
-        headerRight: () => {
-          return (
-            <Pressable onPress={deleteItems}>
-              <View style={styles.deleteButtonContainer}>
-                <Icon name="trash-outline" size={23} color="#8B90F7" />
-              </View>
-            </Pressable>
-          );
-        },
-      });
-    } else {
-      navigation.setOptions({
-        headerRight: undefined,
-      });
-    }
+    // if (isDeleting) {
+    //   navigation.setOptions({
+    //     headerRight: () => {
+    //       return (
+    //         <Pressable onPress={deleteItems}>
+    //           <View style={styles.deleteButtonContainer}>
+    //             <Icon name="trash-outline" size={23} color="#8B90F7" />
+    //           </View>
+    //         </Pressable>
+    //       );
+    //     },
+    //   });
+    // } else {
+    //   navigation.setOptions({
+    //     headerRight: undefined,
+    //   });
+    // }
 
     return () => backHandler.remove();
   }, [isDeleting, checkedItems]);

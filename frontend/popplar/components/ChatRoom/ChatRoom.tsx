@@ -96,7 +96,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
               chattingCreatedAt: string;
               memberId: number;
               memberName: string;
-              memberProfileImage?: string;
+              memberProfileImage: string;
             }) => {
               const [formattedDate, formattedTime] = getDateAndTime(
                 chat.chattingCreatedAt,
@@ -170,6 +170,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
                   memberId === parseInt(messageBody.memberId) ? 'me' : 'others',
                 memberId: messageBody.memberId,
                 memberName: messageBody.memberName,
+                memberProfileImage: messageBody.memberProfileImage, 
                 chattingContent: messageBody.chattingContent,
                 date: formattedDate,
                 time: formattedTime,
