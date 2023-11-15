@@ -91,7 +91,7 @@ const MapScreen: React.FC = () => {
   
   const [userId, setUserId] = useState<number>(0)
   const [isMemberModalVisible, setMemberModalVisible] = useState(false);
-
+  const [intervalId, setIntervalId] = useState(null)
   const [bottomSheetStatus, setBottomSheetStatus] = useState<number>(0)
 
   // setLocation -> granted
@@ -101,6 +101,15 @@ const MapScreen: React.FC = () => {
     })
   }, [])
 
+  // 내 위치 5초마다 입력
+  useEffect(() => {
+    if (myHotPlaceId !== 0) {
+      if (intervalId !== null) {
+        clearInterval(intervalId);
+      }
+      startInterval()
+    }
+  }, [myHotPlaceId])
 
   // 전체 핫플레이스 검색에서 지도로 이동시, 장소 data 이동
   useEffect(() => {
@@ -396,33 +405,42 @@ const MapScreen: React.FC = () => {
       setChatroomId(null); 
     }
     setMyHotPlaceId(spaceId)
-    handle_entrance()
+    // handle_entrance()
   };
   
   // 핫플레이스 입장 후, 5초마다 내위치 서버에 전송하는 로직
-  const startInterval = (data) => {
-    let intervalId = setInterval(() => {
-      // console.log('location 정보 update');
-      let distance = getDistance(location.x, location.y, spaceInfo.x, spaceInfo.y)
-      if (distance <= 500) {
-        postMyHotLocation(data)
-        .then((res) => res)
-      } else {
-        clearInterval(intervalId);
-        const out = {hotPlaceId: 0, x: location.x, y: location.y}
-        postMyHotLocation(out)
-        .then((res) => res)
+  const startInterval = () => {
+    let data = {hotPlaceId: myHotPlaceId, x: location.x, y: location.y}
+    let pos = {x: 0, y: 0}
+    getIdHotplace(myHotPlaceId)
+    .then((res) => {
+      pos.x = res.data.x
+      pos.y = res.data.y
+    })
+    .catch((e)=>console.error("핫플 아이디가 없음"))
+    
+    let id = setInterval(() => {  
+      let distance = getDistance(location.x, location.y, pos.x, pos.y)
+
+      // redis에 내 위치 정보 저장
+      if (distance > 500) {
+        updateMyHotPlaceId(0, userInfo.id)
+        data.hotPlaceId = 0
       }
+      postMyHotLocation(data)
+      .then((res) => res)
     }, 5000);
+
+    setIntervalId(id)
   }
 
   // 내가 핫플레이스 내에 있다는 정보 전송
-  async function handle_entrance () {
-    // 현재 입장한 핫플레이스에 5초마다 / 500미터 내에 있으면 위치 정보 전송
-    const data = {hotPlaceId: myHotPlaceId, x: location.x, y: location.y}
-    // console.log('data--------', data)
-    startInterval(data)
-  }
+  // async function handle_entrance () {
+  //   // 현재 입장한 핫플레이스에 5초마다 / 500미터 내에 있으면 위치 정보 전송
+  //   const data = {hotPlaceId: myHotPlaceId, x: location.x, y: location.y}
+  //   // console.log('data--------', data)
+  //   startInterval(data)
+  // }
 
   // 해당 장소에 있는 다른 사람들 정보 출력하기 위해 webview로 데이터 전송
   async function handle_hot_users () {
@@ -439,9 +457,9 @@ const MapScreen: React.FC = () => {
   // 입장하기 누른 핫플레이스와, 현재 들어온 핫플레이스가 동일하다면 주변 사람들 정보 띄워줌
   useEffect(() => {
     handle_hot_users()
-    if (myHotPlaceId==spaceInfo.id) {
-      handle_entrance()
-    }
+    // if (myHotPlaceId==spaceInfo.id) {
+    //   handle_entrance()
+    // }
   }, [spaceInfo])
 
   const closeUserModal = useCallback(() => {

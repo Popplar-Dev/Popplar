@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, Pressable, Modal, Image, BackHandler } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function ClickGame({ route }) {
   const spaceId = route.params.spaceId; // 이런 방식으로 사용 가능
@@ -37,7 +37,6 @@ export default function ClickGame({ route }) {
   }, [gameStarted, timeRemaining]);
 
   const handleGameStart = () => {
-    console.log("gameInfo:", gameInfo)
     setGameStarted(true);
     setTimeRemaining(10); // Reset the timer
     setClickCount(0); // Reset click count
@@ -143,24 +142,41 @@ export default function ClickGame({ route }) {
     <View style={styles.container}>
       {gameStarted && (
         <View style={styles.gameContainer}>
-          <Text style={styles.text}>나의 최고 점수 : {gameInfo.myMaxFightingPoints}</Text>
-          <Text style={styles.text}>전체 최고 점수 : {gameInfo.maxFightingPoints}</Text>
+          <View style={styles.gameContainerTop}>
+            <Text style={styles.text}>나의 최고 점수 : {gameInfo.myMaxFightingPoints}</Text>
+            <Text style={styles.text}>전체 최고 점수 : {gameInfo.maxFightingPoints}</Text>
+          </View>
           <Image source={planetImage} style={{ ...styles.planetImage, width: planetSize.width, height: planetSize.height }} />
-          <Text style={styles.text}> CLICK : {clickCount}</Text>
-          <Text style={styles.text}> 남은 시간 : {timeRemaining} 초</Text>
+          <View style={styles.gameContainerBottom}>
+            <Text style={styles.text}> CLICK : {clickCount}</Text>
+            <Text style={styles.text}> 남은 시간 : {timeRemaining} 초</Text>
+          </View>
         </View>
       )}
       {gameStarted && timeRemaining > 0 && (
-        <Pressable onPress={handleButtonClick} style={styles.buttonContainer}>
-          <Text style={styles.buttonText}>BOOST!</Text>
+        <Pressable onPress={handleButtonClick} style={styles.boostbuttonContainer}>
+          <Icon style={styles.icons} name='rocket' size={25} color='#000000'/>
+          <Text style={styles.buttonText}>
+            BOOST!
+          </Text>
         </Pressable>
       )}
       {!gameStarted && (
         <>
-          <Image source={planetImage} style={styles.planetImage} />
-          <Pressable onPress={handleGameStart} style={styles.buttonContainer}>
-            <Text style={styles.buttonText}>게임 시작</Text>
-          </Pressable>
+        <View style={styles.start}>
+          {/* <Image source={planetImage} style={styles.planetImagebefore} /> */}
+          <View style={styles.planetImagebefore}>
+            <Text style={styles.text}>
+              게임이 시작되면 BOOST 버튼을 눌러
+            </Text>
+            <Text style={styles.text}>
+              행성에 최대한 가까이 도달하세요!
+            </Text>
+            <Pressable onPress={handleGameStart} style={styles.buttonContainer}>
+              <Text style={styles.buttonText}>게임 시작</Text>
+            </Pressable>
+          </View>
+        </View>
         </>
       )}
       <Modal
@@ -189,7 +205,7 @@ export default function ClickGame({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   gameContainer: {
@@ -197,13 +213,41 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  gameContainerTop: {
+    position: 'absolute',
+    top: 0,
+    // left: 0,
+    // right: 0,
+    padding: 10,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems:'center',
+    width: '100%',
+  },
   planetImage: {
-    width: 200, // 이미지의 폭을 조절합니다.
-    height: 200, // 이미지의 높이를 조절합니다.
-    marginBottom: 100,
+    width: 200, 
+    height: 200, 
+    top:'10%',
+    position: 'absolute',
+  },
+  planetImagebefore: {
+    // width: 350, 
+    // height: 200, 
+    marginBottom: 200,
+    borderWidth:2,
+    padding:10,
+    borderRadius:10,
+    borderColor:'#717BF0',
+    alignItems:'center',
+    justifyContent:'flex-end'
+  },
+  gameContainerBottom: {
+    position: 'absolute',
+    top: '85%',
+    
   },
   text: {
-    fontSize: 25,
+    fontSize: 20,
     color: 'white',
     fontWeight: 'bold',
     justifyContent: 'flex-end',
@@ -218,8 +262,20 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 10,
     alignItems: 'center',
+    marginTop: 50,
+    width:300
+    // justifyContent: 'flex-end', 
+  },
+  boostbuttonContainer: {
+    backgroundColor: '#717BF0',
+    padding: 20,
+    borderRadius: 10,
+    margin: 10,
+    alignItems: 'center',
     marginBottom: 100,
-    justifyContent: 'flex-end', // 클릭 버튼을 아래로 이동
+    width:300,
+    flexDirection:'row',
+    justifyContent:'center'
   },
   startButton: {
     backgroundColor: '#717BF0',
@@ -228,8 +284,9 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonText: {
-    color: 'white',
-    fontSize: 18,
+    color: 'black',
+    fontSize: 20,
+    fontWeight:'bold'
   },
   modalContainer: {
     flex: 1,
@@ -256,4 +313,10 @@ const styles = StyleSheet.create({
     margin: 10,
     alignItems: 'center',
   },
+  start: {
+    width:350,
+  },
+  icons: {
+		marginRight:20,
+	},
 });

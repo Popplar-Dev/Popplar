@@ -133,9 +133,16 @@ const FiveGame = ({ route }) => {
           </Pressable>
         ) : null
       ) : (
-        <Pressable onPress={resetGame} style={styles.button}>
-          <Text style={styles.buttonText}>게임 시작</Text>
-        </Pressable>
+          <View style={styles.start}> 
+            <View style={styles.planetImagebefore}>
+              <Text style={styles.text}>
+                게임이 시작되면 나타나는 행성을 최대한 빠르게 잡아보세요!
+              </Text>
+              <Pressable onPress={resetGame} style={styles.button}>
+                <Text style={styles.buttonText}>게임 시작</Text>
+              </Pressable>
+            </View>
+          </View>
       )}
 
       {imagesClicked >= 5 && (
@@ -173,7 +180,7 @@ const styles = StyleSheet.create({
       fontSize: 20,
     },
     button: {
-      backgroundColor: 'blue',
+      backgroundColor: '#717BF0',
       padding: 20,
       borderRadius: 10,
       margin: 10,
@@ -191,6 +198,21 @@ const styles = StyleSheet.create({
       width: 50,
       height: 50,
     },
+    planetImagebefore: {
+      // width: 350, 
+      // height: 200, 
+      marginBottom: 200,
+      borderWidth:2,
+      padding:10,
+      borderRadius:10,
+      borderColor:'#717BF0',
+      alignItems:'center',
+      justifyContent:'flex-end'
+    },
+    start:{
+      position:'absolute',
+      top:'50%'
+    }
   });
 
 export default FiveGame;
