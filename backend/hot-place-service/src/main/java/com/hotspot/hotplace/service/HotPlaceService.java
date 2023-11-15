@@ -97,6 +97,7 @@ public class HotPlaceService {
 
 
     //레디스 관련 로직
+    @Transactional
     public void insertMemberPosition(MemberPosition memberPosition) {
         MemberPosition memberPos = memberPositionRepository.findByMemberId(
             memberPosition.getMemberId());
