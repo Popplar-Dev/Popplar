@@ -11,6 +11,8 @@ import lombok.Getter;
 import org.springframework.data.redis.core.RedisKeyValueAdapter;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Getter
 @Configuration
@@ -39,5 +41,9 @@ public class RedisConfig {
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         return redisTemplate;
+    }
+    @Bean
+    public PlatformTransactionManager transactionManager() { // <=
+        return new JpaTransactionManager(); // <=
     }
 }
