@@ -19,6 +19,8 @@ services:
       - .env
     ports:
       - "8201:8201"
+    environment:
+      - TZ=Asia/Seoul
     build:
       dockerfile: Dockerfile
 
