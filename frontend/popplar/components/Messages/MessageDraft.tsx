@@ -9,23 +9,16 @@ import {
   Keyboard,
   StyleSheet,
 } from 'react-native';
-import {messageType} from '../types/message';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { useNavigation, useRoute, NavigationProp, RouteProp } from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import { ReceivedMessageStackParamList } from '../types/NavigatorParams';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {getToken} from '../services/getAccessToken';
 import axios from 'axios';
 
-type RootStackParamList = {
-  Home: undefined;
-  Detail: {message: messageType; tab: 'received' | 'sent'};
-  Draft: {memberId: number; memberName: string};
-};
-
-type DraftScreenRouteProp = NativeStackScreenProps<RootStackParamList, 'Draft'>;
-
 export default function MessageDraft() {
-  const { navigation, route} = useNavigation<DraftScreenRouteProp>(); 
+  const route = useRoute<RouteProp<ReceivedMessageStackParamList, "Draft">>(); 
+  const navigation = useNavigation<NavigationProp<ReceivedMessageStackParamList, 'Draft'>>(); 
   const {memberId, memberName} = route.params;
   const [inputText, setInputText] = useState('');
   const [showWarning, setShowWarning] = useState(false);
@@ -54,7 +47,7 @@ export default function MessageDraft() {
 
       Alert.alert('쪽지가 전송되었습니다.', '');
 
-      navigation.navigate('Home');
+      navigation.navigate('MessageHome');
     } catch (e) {
       console.error(e);
     }

@@ -10,26 +10,22 @@ import {
 } from 'react-native';
 
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import { ReceivedMessageStackParamList } from '../types/NavigatorParams';
 import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 import {messageType} from '../types/message';
 import { getToken } from '../services/getAccessToken';
 
 import Message from './Message';
 
-type RootStackParamList = {
-  Home: undefined;
-  Detail: {message: messageType, tab: 'received'|'sent'};
-  Draft: {memberId: number, memberName: string}; 
-};
-
 type HomeScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'Home'
+ReceivedMessageStackParamList,
+  'MessageHome'
 >;
 
 export default function ReceivedMessages({
@@ -40,6 +36,7 @@ export default function ReceivedMessages({
   const [messages, setMessages] = useState<messageType[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
+  const tabBarHeight = useBottomTabBarHeight();
 
   useFocusEffect(
     useCallback(() => {
@@ -147,7 +144,7 @@ export default function ReceivedMessages({
 
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {marginBottom: tabBarHeight}]}>
       <FlatList
         data={messages}
         keyExtractor={item => item.messageId.toString()}

@@ -10,7 +10,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation} from '@react-navigation/native';
 import {NavigationProp} from '@react-navigation/native';
-import {TabNavigatorParamList} from '../types/tabNavigatorParams';
+import {TabNavigatorParamList} from '../types/NavigatorParams';
 import GameListModal from '../Modals/GameListModal';
 
 import {useRecoilState} from 'recoil';

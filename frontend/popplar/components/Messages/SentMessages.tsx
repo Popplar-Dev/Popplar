@@ -1,6 +1,5 @@
 import {useState, useEffect, useCallback} from 'react';
 import {
-  Text,
   View,
   FlatList,
   Pressable,
@@ -9,27 +8,22 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useFocusEffect} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {SentMessagesStackParamList} from '../types/NavigatorParams';
 import axios from 'axios';
-import { getToken } from '../services/getAccessToken';
+import {getToken} from '../services/getAccessToken';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 import {messageType} from '../types/message';
 
 import Message from './Message';
 
-type SentMessagesStackParamList = {
-  Home: undefined;
-  Detail: {message: messageType, tab: 'received'|'sent'}; 
-
-}
-
 type HomeScreenNavigationProp = NativeStackNavigationProp<
-SentMessagesStackParamList,
-  'Home'
+  SentMessagesStackParamList,
+  'MessageHome'
 >;
 
 export default function ReceivedMessages({
@@ -40,12 +34,12 @@ export default function ReceivedMessages({
   const [messages, setMessages] = useState<messageType[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
+  const tabBarHeight = useBottomTabBarHeight();
 
   useFocusEffect(
     useCallback(() => {
       async function getSentMessages() {
-
-        const userAccessToken = await getToken(); 
+        const userAccessToken = await getToken();
         if (!userAccessToken) return;
 
         try {
@@ -58,7 +52,6 @@ export default function ReceivedMessages({
           });
 
           setMessages(res.data.reverse());
-
         } catch (e) {
           console.error(e);
         }
@@ -118,14 +111,17 @@ export default function ReceivedMessages({
   const handleLongPressMessage = (item: messageType) => {
     Vibration.vibrate(100);
     if (!checkedItems.includes(item.messageId)) {
-      setCheckedItems((prevCheckedItems) => [...prevCheckedItems, item.messageId]);
+      setCheckedItems(prevCheckedItems => [
+        ...prevCheckedItems,
+        item.messageId,
+      ]);
     }
     setIsDeleting(true);
   };
 
   const deleteItems = async () => {
     // console.log(`delete ${checkedItems}`);
-    setCheckedItems([]); 
+    setCheckedItems([]);
   };
 
   const cancelDeletion = () => {
@@ -133,9 +129,8 @@ export default function ReceivedMessages({
     setIsDeleting(false);
   };
 
-
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {marginBottom: tabBarHeight}]}>
       <FlatList
         data={messages}
         keyExtractor={item => item.messageId.toString()}
@@ -169,4 +164,3 @@ const styles = StyleSheet.create({
     paddingEnd: 10,
   },
 });
-

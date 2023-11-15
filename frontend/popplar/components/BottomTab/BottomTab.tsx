@@ -3,7 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {View, StyleSheet} from 'react-native';
 
-import {TabNavigatorParamList} from '../types/tabNavigatorParams';
+import {TabNavigatorParamList} from '../types/NavigatorParams';
 
 //스크린 컴포넌트
 import MapScreen from '../MapScreen';
@@ -77,11 +77,14 @@ const MapScreenStack = () => {
 const ChatScreenStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName='ChatScreen'
-      screenOptions={{
-        headerShown: false,
-      }}>
-      <Stack.Screen name="ChatScreen" component={ChatScreen} />
+      initialRouteName="ChatScreen">
+      <Stack.Screen
+        name="ChatScreen"
+        component={ChatScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen
         name="Draft"
         component={MessageDraft}

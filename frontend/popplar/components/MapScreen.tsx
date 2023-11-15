@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { View, Text, Button, StyleSheet, Dimensions, Alert, TouchableOpacity, TouchableWithoutFeedback, Pressable} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { Platform, PermissionsAndroid } from "react-native";
 import { Linking } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
@@ -439,16 +440,17 @@ const MapScreen: React.FC = () => {
     }
   }, [bottomSheetStatus])
 
+  const closeUserModal = useCallback(() => {
+    setMemberModalVisible(false); 
+  },[])
+
+  useFocusEffect(closeUserModal);
+
   const handleOutsideClick = (event) => {
     const { locationY } = event.nativeEvent;
     console.log('Touched Y Coordinate:', locationY);
   };
 
-  const goToMessageDraft = (memberId: number, memberName: string) => {
-    // console.log(navigation.getState())
-    navigation.navigate("Notifications", {screen: "MessageDraft", params: {memberId: memberId, memberName: memberName}})
-    return; 
-  } 
 
   let webRef = useRef<WebView | null>(null);
 
@@ -458,7 +460,6 @@ const MapScreen: React.FC = () => {
     visible={isMemberModalVisible}
     onClose={() => setMemberModalVisible(false)}
     memberId={userId}
-    goToMessageDraft={goToMessageDraft}
     placeName={spaceInfo.place_name}
     />
     <GestureHandlerRootView style={{ flex: 1}}>

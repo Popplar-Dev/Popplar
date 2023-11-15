@@ -1,77 +1,73 @@
 import {useState} from 'react';
-import {View, Image, Pressable, Text, Alert, StyleSheet} from 'react-native';
+import {View, Pressable, Text, Alert, StyleSheet} from 'react-native';
 import {Menu} from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
+import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {ChatStackParamList} from '../../types/NavigatorParams';
 
 import {useRecoilState} from 'recoil';
-import {userBlockListState} from '../../recoil/userState'; 
+import {userBlockListState} from '../../recoil/userState';
 
-import { getToken } from '../../services/getAccessToken';
+import {getToken} from '../../services/getAccessToken';
 import axios from 'axios';
+
 import Icon from 'react-native-vector-icons/Ionicons';
 import FastImage from 'react-native-fast-image';
 
 type ChatProfileProps = {
   imgUrl: string;
   memberId: number;
-  memberName: string; 
+  memberName: string;
 };
 
-type RootStackParamList = {
-  Chat: undefined;
-  Draft: {memberId: number; memberName: string};
-};
-
-type DraftScreenRouteProp = NativeStackScreenProps<
-  RootStackParamList,
-  'Draft'
->;
-
-export default function ChatProfile({imgUrl, memberId, memberName}: ChatProfileProps) {
+export default function ChatProfile({
+  imgUrl,
+  memberId,
+  memberName,
+}: ChatProfileProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [userBlockedList, setUserBlockedList] = useRecoilState(userBlockListState);
-  const {navigation} = useNavigation<DraftScreenRouteProp>(); 
+  const [userBlockedList, setUserBlockedList] =
+    useRecoilState(userBlockListState);
+  const navigation = useNavigation<NavigationProp<ChatStackParamList>>();
 
-
-  const blocked = userBlockedList.some(user => user.id === memberId); 
+  const blocked = userBlockedList.some(user => user.id === memberId);
   const handleBlock = async () => {
     const userAccessToken = await getToken();
     if (userAccessToken === null) {
       return;
     }
-    const url = `https://k9a705.p.ssafy.io:8000/member/block/${memberId}`
+    const url = `https://k9a705.p.ssafy.io:8000/member/block/${memberId}`;
     try {
       if (blocked) {
         const res = await axios.delete(url, {
-          headers: {'Access-Token': userAccessToken}
-        })
-
-        // const newList = userBlockedList.filter(user => user.id !== memberId); 
-        // setUserBlockedList(newList); 
-
+          headers: {'Access-Token': userAccessToken},
+        });
       } else {
         const res = await axios.post(url, null, {
-          headers: {'Access-Token': userAccessToken}
-        })
+          headers: {'Access-Token': userAccessToken},
+        });
       }
 
       setIsMenuOpen(false);
 
-      const newres = await axios.get("https://k9a705.p.ssafy.io:8000/member/block", {
-        headers: {'Access-Token': userAccessToken}
-      })
+      const newres = await axios.get(
+        'https://k9a705.p.ssafy.io:8000/member/block',
+        {
+          headers: {'Access-Token': userAccessToken},
+        },
+      );
 
-      setUserBlockedList(newres.data); 
-
+      setUserBlockedList(newres.data);
     } catch (e) {
-      console.error(e); 
+      console.error(e);
     }
-  }
+  };
 
   const handleMessage = () => {
-    navigation.navigate("Draft",{memberId: memberId, memberName: memberName});
-  }
+    setIsMenuOpen(false);
+    navigation.navigate('Draft', {memberId: memberId, memberName: memberName});
+  };
+
   return (
     <View style={styles.container}>
       <Menu
@@ -79,9 +75,15 @@ export default function ChatProfile({imgUrl, memberId, memberName}: ChatProfileP
         onDismiss={() => setIsMenuOpen(false)}
         anchor={
           <View style={styles.profilePicContainer}>
-            <Pressable onPress={()=>{setIsMenuOpen(prev=>!prev)}}>
-              <FastImage style={{width: "100%", height: "100%"}}
-              source={{uri: imgUrl}} resizeMode={FastImage.resizeMode.cover}/>
+            <Pressable
+              onPress={() => {
+                setIsMenuOpen(prev => !prev);
+              }}>
+              <FastImage
+                style={{width: '100%', height: '100%'}}
+                source={{uri: imgUrl}}
+                resizeMode={FastImage.resizeMode.cover}
+              />
             </Pressable>
           </View>
         }
@@ -98,10 +100,11 @@ export default function ChatProfile({imgUrl, memberId, memberName}: ChatProfileP
           <Pressable
             style={styles.buttonInnerContainer}
             android_ripple={{color: '#464646'}}
-            onPress={handleBlock}
-            >
+            onPress={handleBlock}>
             <Icon name="ban-outline" size={23} color="#8B90F7"></Icon>
-            <Text style={styles.buttonText}>{blocked ? '차단해제': '차단하기'}</Text>
+            <Text style={styles.buttonText}>
+              {blocked ? '차단해제' : '차단하기'}
+            </Text>
           </Pressable>
         </View>
       </Menu>
@@ -125,12 +128,10 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: 'white',
     overflow: 'hidden',
-    
   },
   profilePic: {
     width: '100%',
     height: '100%',
-    
   },
   menuContainer: {
     backgroundColor: '#0c072c',
