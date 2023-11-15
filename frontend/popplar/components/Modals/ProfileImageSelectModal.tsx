@@ -3,7 +3,6 @@ import { Modal, View, Text, Pressable, StyleSheet, TouchableWithoutFeedback,Imag
 import { BlurView } from "@react-native-community/blur";
 import { useState, useEffect } from 'react';
 import axios from "axios";
-import { S3_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { userInfoState } from '../recoil/userState';
 import { useRecoilState } from 'recoil';
@@ -15,6 +14,7 @@ interface ImageSelect {
 }
 
 export default function ProfileImageSelectModal({ visible, onClose }:ImageSelect) {
+  const S3_URL = "https://popplar-profile-image-bucket.s3.ap-northeast-2.amazonaws.com/"
 	const profileimages = [
     { avatar: S3_URL+'avatar1.png' },
     { avatar: S3_URL+'avatar2.png' },
