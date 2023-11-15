@@ -87,9 +87,6 @@ const ChatScreenStack = () => {
   );
 
   const checkChatroom = useCallback(() => {
-    console.log('chatroomId ', chatroomId)
-    console.log('navigation', navigation)
-    console.log(navigation.getState())
     if (chatroomId) {
       navigation.setOptions({tabBarStyle: {display: 'none'}});
     } else {

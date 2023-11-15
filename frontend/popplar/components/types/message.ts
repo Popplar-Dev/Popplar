@@ -5,6 +5,8 @@ export type messageType = {
   sentMemberProfileImage: string;
   receivedMemberId: number;
   receivedMemberName: string;
+  receivedMemberProfile: string; 
   content: string;
   checked: boolean;
+  createdAt: string; 
 };

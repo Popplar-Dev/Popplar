@@ -127,19 +127,19 @@ export default function ChatRoom({roomId}: {roomId: number}) {
         }
 
         // console.log(clientRef.current);
-        if (clientRef.current) {
-          console.log('client active? 1', clientRef.current.active);
-          console.log('client connected? 1', clientRef.current.connected);
-        }
+        // if (clientRef.current) {
+        //   console.log('client active? 1', clientRef.current.active);
+        //   console.log('client connected? 1', clientRef.current.connected);
+        // }
 
         const stompConfig = {
           connectHeaders: {
             'Access-Token': userAccessToken,
           },
           brokerURL: 'ws://k9a705.p.ssafy.io:8203/gs-guide-websocket/websocket',
-          debug: (str: string) => {
-            console.log('STOMP: ' + str);
-          },
+          // debug: (str: string) => {
+          //   console.log('STOMP: ' + str);
+          // },
           reconnectDelay: 2000,
           forceBinaryWSFrames: true,
           appendMissingNULLonIncoming: true,
@@ -152,16 +152,14 @@ export default function ChatRoom({roomId}: {roomId: number}) {
 
           stompClient.subscribe(`/room/${roomId}`, (message: IMessage) => {
             if (message.body) {
-              console.log('Received message: ', message.body);
-              console.log('Message headers:', message.headers);
+              // console.log('Received message: ', message.body);
+              // console.log('Message headers:', message.headers);
 
               const messageBody = JSON.parse(message.body);
 
               const [formattedDate, formattedTime] = getDateAndTime(
                 messageBody.chattingCreatedAt,
               );
-
-              console.log(memberId, messageBody.memberId);
 
               const newMessage: ChatMessageType = {
                 chattingId: messageBody.chattingId,
@@ -195,28 +193,28 @@ export default function ChatRoom({roomId}: {roomId: number}) {
         };
 
         stompClient.onDisconnect = () => {
-          console.log('STOMP WebSocket disconnected');
+          // console.log('STOMP WebSocket disconnected');
         };
 
         stompClient.onWebSocketClose = () => {
-          console.log('STOMP WebSocket closed');
+          // console.log('STOMP WebSocket closed');
         };
 
         stompClient.activate();
         clientRef.current = stompClient;
         // console.log(stompClient)
 
-        if (stompClient) {
-          console.log('client active? 2', stompClient.active);
-          console.log('client connected? 2', stompClient.connected);
-        }
+        // if (stompClient) {
+        //   console.log('client active? 2', stompClient.active);
+        //   console.log('client connected? 2', stompClient.connected);
+        // }
       }
 
       connectChatSocket();
 
       return () => {
         if (clientRef.current) {
-          console.log('deactivating');
+          // console.log('deactivating');
           clientRef.current.deactivate();
         }
       };
@@ -238,7 +236,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
         chattingContent: messageBody,
       });
 
-      console.log(message);
+      // console.log(message);
 
       clientRef.current.publish({
         destination: destination,
@@ -315,7 +313,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
       </View>
     );
   };
-  console.log(roomName);
+  // console.log(roomName);
 
   const pressScreen = () => {
     setIsMenuOpen(false);
