@@ -103,7 +103,7 @@ const MapScreen: React.FC = () => {
 
   // 전체 핫플레이스 검색에서 지도로 이동시, 장소 data 이동
   useEffect(() => {
-    handlePresentModalClose()
+    // handlePresentModalClose()
     const data: any = route.params;
     if (data && data.data) {
       // handlePresentModalClose();
@@ -112,8 +112,8 @@ const MapScreen: React.FC = () => {
         // console.log('1111111111111111')
         const {addressName, category, id, likeCount, myLike, phone, placeName, placeType, roadAddressName, tier, visitorCount, x, y} = res.data
         // console.log(y, x)
-        const loc: { y: string, x: string } = {y: y, x: x}
-        const locationData: { type: string, data: { y: string, x: string } } = {type: 'pickHotPlace', data: loc}
+        const loc: { id: number, y: string, x: string } = {id: id, y: y, x: x}
+        const locationData: { type: string, data: { id: number, y: string, x: string } } = {type: 'pickHotPlace', data: loc}
         // console.log(locationData, '~!~!~!~!~!~!~!~!~!~')
         if (webRef.current) {
           handlePresentModalPress();
@@ -408,17 +408,24 @@ const MapScreen: React.FC = () => {
         .then((res) => res)
       } else {
         clearInterval(intervalId);
+        const out = {hotPlaceId: 0, x: location.x, y: location.y}
+        postMyHotLocation(out)
+        .then((res) => res)
       }
     }, 5000);
   }
 
+  // 내가 핫플레이스 내에 있다는 정보 전송
   async function handle_entrance () {
     // 현재 입장한 핫플레이스에 5초마다 / 500미터 내에 있으면 위치 정보 전송
-    const data = {hotPlaceId: spaceInfo.id, x: location.x, y: location.y}
+    const data = {hotPlaceId: myHotPlaceId, x: location.x, y: location.y}
     // console.log('data--------', data)
     startInterval(data)
+  }
 
-    // 해당 장소에 있는 다른 사람들 정보 출력하기 위해 webview로 데이터 전송
+  // 해당 장소에 있는 다른 사람들 정보 출력하기 위해 webview로 데이터 전송
+  async function handle_hot_users () {
+
     const spaceData: { type: string, data: {id: string} } = {type: 'entrance', data: { id: spaceInfo.id }}
     // console.log('spaceData', spaceData)
     if (webRef.current) {
@@ -430,10 +437,11 @@ const MapScreen: React.FC = () => {
 
   // 입장하기 누른 핫플레이스와, 현재 들어온 핫플레이스가 동일하다면 주변 사람들 정보 띄워줌
   useEffect(() => {
-    if (bottomSheetStatus==0) {
+    handle_hot_users()
+    if (myHotPlaceId==spaceInfo.id) {
       handle_entrance()
     }
-  }, [spaceInfo, bottomSheetStatus])
+  }, [spaceInfo])
 
   const handleOutsideClick = (event) => {
     const { locationY } = event.nativeEvent;
