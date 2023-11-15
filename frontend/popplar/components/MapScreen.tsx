@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { View, Text, Button, StyleSheet, Dimensions, Alert, TouchableOpacity, TouchableWithoutFeedback, Pressable} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { Platform, PermissionsAndroid } from "react-native";
 import { Linking } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
@@ -428,9 +429,16 @@ const MapScreen: React.FC = () => {
     }
   }, [spaceInfo, bottomSheetStatus])
 
+  const closeUserModal = useCallback(() => {
+    setMemberModalVisible(false); 
+  },[])
+
+  useFocusEffect(closeUserModal);
+
   const handleOutsideClick = (event) => {
     const { locationY } = event.nativeEvent;
   };
+
 
   let webRef = useRef<WebView | null>(null);
 

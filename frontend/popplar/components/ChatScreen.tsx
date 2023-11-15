@@ -1,11 +1,15 @@
 import {useState, useEffect, useCallback} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {useFocusEffect, NavigationProp, useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  NavigationProp,
+  useNavigation,
+} from '@react-navigation/native';
 
 import {useRecoilState} from 'recoil';
 import {chatroomState} from './recoil/chatroomState';
 
-import {TabNavigatorParamList} from './types/tabNavigatorParams';
+import {TabNavigatorParamList} from './types/NavigatorParams';
 import ChatRoom from './ChatRoom/ChatRoom';
 import NoChatroom from './ChatRoom/NoChatroom';
 

@@ -1,23 +1,15 @@
 import {useEffect} from 'react';
 import {Text, View, Image, Pressable, StyleSheet} from 'react-native';
 
-import {useNavigation} from '@react-navigation/native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ReceivedMessageStackParamList } from '../types/NavigatorParams';
 import axios from 'axios';
 import { getToken } from '../services/getAccessToken';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import {messageType} from '../types/message';
-
-type RootStackParamList = {
-  Home: undefined;
-  Detail: {message: messageType; tab: 'received' | 'sent'};
-  Draft: {memberId: number; memberName: string};
-};
 
 type DetailScreenRouteProp = NativeStackScreenProps<
-  RootStackParamList,
+ReceivedMessageStackParamList,
   'Detail'
 >;
 

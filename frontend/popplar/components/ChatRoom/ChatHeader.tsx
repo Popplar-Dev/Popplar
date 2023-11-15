@@ -7,7 +7,7 @@ import {useRecoilState} from 'recoil';
 import {chatroomState} from '../recoil/chatroomState';
 
 import {NavigationProp} from '@react-navigation/native';
-import {TabNavigatorParamList} from '../types/tabNavigatorParams';
+import {TabNavigatorParamList} from '../types/NavigatorParams';
 import {getToken} from '../services/getAccessToken';
 import axios from 'axios';
 
@@ -71,7 +71,6 @@ export default function ChatHeader({
           onPress: async () => exitChatroom(),
           style: 'default',
         },
-
       ],
       {
         cancelable: true,

@@ -32,9 +32,10 @@ export default function ReceivedChatMessage({
             <ChatProfile
               imgUrl={chatData.memberProfileImage}
               memberId={chatData.memberId}
+              memberName={chatData.memberName}
             />
           ) : (
-            <ChatProfile imgUrl={imgUrl} memberId={chatData.memberId} />
+            <ChatProfile imgUrl={imgUrl} memberId={chatData.memberId} memberName={chatData.memberName}/>
           ))}
       </View>
       <View style={styles.messageContainer}>
