@@ -2,11 +2,14 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {View, StyleSheet, Alert} from 'react-native';
-import { useNavigation, useRoute  } from '@react-navigation/native';
-import { TabNavigatorParamList } from '../types/tabNavigatorParams';
+import { useNavigation, useRoute, NavigationProp, useFocusEffect  } from '@react-navigation/native';
+import { TabNavigatorParamList } from '../types/NavigatorParams';
 
-import React, {useEffect} from "react";
+import React, {useCallback} from "react";
 import { BackHandler } from 'react-native';
+
+import {useRecoilState} from 'recoil';
+import {chatroomState} from '../recoil/chatroomState';
 
 //스크린 컴포넌트
 import MapScreen from '../MapScreen';
@@ -78,6 +81,25 @@ const MapScreenStack = () => {
 };
 
 const ChatScreenStack = () => {
+  const navigation = useNavigation<NavigationProp<TabNavigatorParamList>>();
+  const [chatroomId, setChatroomId] = useRecoilState<number | null>(
+    chatroomState,
+  );
+
+  const checkChatroom = useCallback(() => {
+    console.log('chatroomId ', chatroomId)
+    console.log('navigation', navigation)
+    console.log(navigation.getState())
+    if (chatroomId) {
+      navigation.setOptions({tabBarStyle: {display: 'none'}});
+    } else {
+      navigation.setOptions({tabBarStyle: {display: 'flex'}});
+    }
+  }, [chatroomId]);
+
+  useFocusEffect(checkChatroom);
+
+
   return (
     <Stack.Navigator
       initialRouteName="ChatScreen">
