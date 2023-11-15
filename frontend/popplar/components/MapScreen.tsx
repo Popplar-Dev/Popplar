@@ -542,7 +542,8 @@ const MapScreen: React.FC = () => {
             <View style={styles.previewTopContainer}>
               <View style={styles.address}>
                 <Icon name="map-pin" size={11} color={'white'} style={styles.mapIcon}/>
-                <Text style={styles.bottomSheetAddress}>{spaceInfo.road_address_name}</Text>
+                {spaceInfo.road_address_name ? (<Text style={styles.bottomSheetAddress}>{spaceInfo.road_address_name}</Text>)
+                : (<Text style={styles.bottomSheetAddress}>등록된 주소가 없습니다.</Text>)}
               </View>
               <Text style={styles.bottomSheetCategory}>{spaceInfo.category_group_name}</Text>
             </View>
@@ -550,7 +551,7 @@ const MapScreen: React.FC = () => {
               <Icon name="phone" size={11} color={'white'} style={styles.phoneIcon}/>
               {spaceInfo.phone ? 
               (<Text style={styles.bottomSheetPhone}>{spaceInfo.phone}</Text>)
-              :(<Text style={styles.bottomSheetPhone}>번호가 없습니다</Text>)}
+              :(<Text style={styles.bottomSheetPhone}>등록된 번호가 없습니다</Text>)}
             </View>
           </View>
           </>
