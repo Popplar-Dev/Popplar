@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     planetImagebefore: {
       // width: 350, 
       // height: 200, 
-      marginBottom: 200,
+      marginBottom: 50,
       borderWidth:2,
       padding:10,
       borderRadius:10,
