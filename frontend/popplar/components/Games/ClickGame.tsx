@@ -130,13 +130,14 @@ export default function ClickGame({ route }) {
     setModalVisible(false);
   };
 
-  BackHandler.addEventListener('hardwareBackPress', () => {
-    if (gameStarted) {
-      setGameStarted(false);
-      return true;
-    }
-    return false;
-  });
+
+  // BackHandler.addEventListener('hardwareBackPress', () => {
+  //   if (gameStarted) {
+  //     setGameStarted(false);
+  //     return true;
+  //   }
+  //   return false;
+  // });
 
   return (
     <View style={styles.container}>
