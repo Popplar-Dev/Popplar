@@ -18,7 +18,7 @@ import { getAllHotplace, getIdHotplace } from '../api/getHotplace'
 import HotPlaceUsers from '../components/HotPlaceUsers/HotPlaceUsers'
 import { getHotplaceUsers } from '../api/postLocation'
 
-import { BsFire } from 'react-icons/bs'
+import { BsFire, BsExclamationDiamondFill } from 'react-icons/bs'
 
 import rocket from '../assets/images/rocket.png';
 import Star2 from '../assets/images/Star2.png';
@@ -69,7 +69,7 @@ export default function Map () {
     visibleMap.panTo(moveLatLon); 
 
     setTimeout(() => {
-      visibleMap.setLevel(4); 
+      visibleMap.setLevel(2); 
     }, 400)    
   }
 
@@ -91,12 +91,13 @@ export default function Map () {
         );
       }
     } else if (type=="postHotplace") {
-      // getAllHotplace()
-      // .then((res) => setHotplaceList(res.data))
+      getAllHotplace()
+      .then((res) => setHotplaceList(res.data))
     } else if (type=="pickHotPlace") {
       const Lat = data.y.toString().slice(0, -8)
       const Lng = data.x.toString().slice(0, -8)
       setSearchHotPlace({x: Lng, y: Lat})
+      setCurrSpaceId(data.id)
       // movemove(Lat, Lng)   
       // if (typeof window !== 'undefined' && window.ReactNativeWebView) {
       //   window.ReactNativeWebView.postMessage(
@@ -108,6 +109,11 @@ export default function Map () {
       // }
     } else if (type=="entrance") {
       setCurrSpaceId(data.id)
+      // getHotplaceUsers(data.id)
+      // .then((res) => {
+      //   console.log('###########', res.data)
+      //   setHotplaceUsers(res.data)
+      // })
       // if (typeof window !== 'undefined' && window.ReactNativeWebView) {
       // window.ReactNativeWebView.postMessage(
       //   JSON.stringify({ 
@@ -134,6 +140,7 @@ export default function Map () {
     if (currSpaceId !== 0) {
       getHotplaceUsers(currSpaceId)
       .then((res) => {
+        console.log('###########', res.data)
         setHotplaceUsers(res.data)
       })
     }
@@ -158,6 +165,18 @@ export default function Map () {
         JSON.stringify({ 
           type: 'place',
           data: data,
+        })
+      );
+    }
+  }
+
+  // 위치 이동하기 버튼 선택시, bottomSheet 닫는 요청
+  const requestBottomSheet = () => {
+  
+    if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({ 
+          type: 'handleBottomSheet',
         })
       );
     }
@@ -197,8 +216,10 @@ export default function Map () {
           setVisibleMap(map) 
         }
       }, 200)
+      setDraggable(false)
+      // setZoomable(false)
       })
-  }, [hotPlaceLatLng])
+  }, [hotPlaceLatLng, hotplaceList])
 
   useEffect(() => {
     movemove(currLocation.Lat, currLocation.Lng)  
@@ -209,12 +230,22 @@ export default function Map () {
     if (visibleMap) {
       visibleMap.setDraggable(draggable);    
     }
+    if (visibleMap) {
+      visibleMap.setZoomable(draggable);
+    }
   }
+
+  function setZoomable(zoomable: boolean) {
+    // 마우스 휠로 지도 확대,축소 가능여부를 설정합니다
+    if (visibleMap) {
+      visibleMap.setZoomable(zoomable);
+    }    
+}
 
   useEffect(() => {
     movemove(searchHotPlace.y, searchHotPlace.x)
-    setCurrSpaceId(0)
     setDraggable(false)
+    // setZoomable(false)
   }, [searchHotPlace])
 
   // 지도 위에, 내 위치 마커 띄우기
@@ -268,6 +299,8 @@ export default function Map () {
 
       // 마커가 지도 위에 표시되도록 설정합니다
       marker.setMap(visibleMap);
+      setDraggable(false)
+      // setZoomable(false)
       }, 600)  
   }, [visibleMap])
 
@@ -337,6 +370,7 @@ export default function Map () {
           // .then((res) => console.log(res))
           .then((res) => {
             setDraggable(false)
+            // setZoomable(false)
             requestPermission({
             id, 
             place_name, 
@@ -358,26 +392,26 @@ export default function Map () {
       }
     }
     
-      // 핫플 마커 클릭시 중심으로 이동
-      function panToHandler(La: string, Ma: string) {
-        // 이동할 위도 경도 위치를 생성합니다 \
-        var moveLatLon = new kakao.maps.LatLng(La, Ma);
-        
-        // 지도 중심을 부드럽게 이동시킵니다
-        // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
-        visibleMap.panTo(moveLatLon);
-        setTimeout(() => {
-          visibleMap.setLevel(2); 
-        }, 400)             
-      } 
-    }, 600)  
+    // 핫플 마커 클릭시 중심으로 이동
+    function panToHandler(La: string, Ma: string) {
+      // 이동할 위도 경도 위치를 생성합니다 \
+      var moveLatLon = new kakao.maps.LatLng(La, Ma);
+      
+      // 지도 중심을 부드럽게 이동시킵니다
+      // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+      visibleMap.panTo(moveLatLon);
+      setTimeout(() => {
+        visibleMap.setLevel(2); 
+      }, 400)             
+    } 
+  }, 600)  
 
     // setTimeout(() => {
     //   // visibleMap.setMap(null);
     //   setVisibleMap(null);
     //   console.log('맵 마커 갱신 완료~~')
     //  } , 700)
-}, [visibleMap, hotplaceList])
+}, [visibleMap])
 useEffect(() => {
   if (currSpaceId !== 0) {
     const timeoutId = setTimeout(() => {
@@ -435,19 +469,33 @@ useEffect(() => {
     {showHotPlaceUsers && 
     <>
       <HotPlaceUsers hotplaceUsers={hotplaceUsers} />
-
     </>
     }
 
-    {currSpaceId && (
+    {(currSpaceId) && (
+      <>
+      <div className={styles.draggableMessage}>
+        <BsExclamationDiamondFill color={'red'} className={styles.exclamationIcon}/>
+        <div>현재 위치가 고정되었습니다!</div>
+      </div>
+
       <button onClick={() => {
         setDraggable(true)
+        // setZoomable(true)
         setCurrSpaceId(0);
         setHotplaceUsers([])
+        requestBottomSheet()
         }} className={styles.draggable}>
         <div style={{marginTop: '3px'}}><BsFire color={'#8B90F7'}/></div>
-        <div className={styles.draggableText}>다른 핫플레이스로 이동</div>
+        <div className={styles.draggableText}>이동 허용하기</div>
       </button>
+
+      <button className={styles.hotplaceUsers}>
+
+        <div>현재 핫플 내 사용자</div>
+        <div style={{fontWeight: 600}}>: {hotplaceUsers.length}명</div>
+      </button>
+    </>
     )}
 
     {/* <button onClick={() => {
@@ -467,6 +515,7 @@ useEffect(() => {
       setCurrSpaceId(0);
       setHotplaceUsers([])
       setDraggable(true)
+      // setZoomable(true)
     }}>
       <BiSolidRocket size={25} color={'#8B90F7'}/>
     </button>
