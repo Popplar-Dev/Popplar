@@ -75,41 +75,6 @@ const MyPageStack = () => {
 
 export default function BottomTab() {
 
-// const route = useRoute();
-// const navigation = useNavigation();
-
-// useEffect(() => {
-//   const unsubscribe = navigation.addListener('state', (e) => {
-//     const isMapScreen = route.name;
-//     console.log(isMapScreen)
-//     console.log(':::1',e.data.state.routes)
-//     if (isMapScreen === 'BottomTab') {
-//       const previousRoute = e.data.state.routes[e.data.state.index - 1];
-//       const previousRoutes = navigation.getState().routes
-//       console.log(':::2',previousRoute)
-//       console.log(':::3',previousRoutes)
-//       if (previousRoute.name === 'LocationPermission') {
-//         console.log('뒤로가기 방지')
-//         const backAction = () => {
-//           Alert.alert('앱 종료', '앱을 종료하시겠습니까?', [
-//             { text: '취소', onPress: () => null },
-//             { text: '확인', onPress: () => BackHandler.exitApp() },
-//           ]);
-//           return true;
-//         };
-      
-//         const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
-      
-//         return () => {
-//           backHandler.remove();
-//         };
-//       }
-//     }
-//   });
-
-//   return unsubscribe;
-// }, [navigation, route]);
-
 
   return (
     <Tab.Navigator

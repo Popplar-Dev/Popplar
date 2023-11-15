@@ -67,7 +67,6 @@ const FiveGame = ({ route }) => {
     setNewImagePosition(false);
     
     const AccessToken = await AsyncStorage.getItem('userAccessToken');
-    console.log(AccessToken)
     if (AccessToken !== null) {
       const userAccessToken = JSON.parse(AccessToken);
       const insertscore = {

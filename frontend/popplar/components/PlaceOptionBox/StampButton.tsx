@@ -20,7 +20,6 @@ export default function StampButton({spaceId, type, onStampUpdate }:stampbuttonP
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-    console.log('스탬프:',type, spaceId)
     const isLogin = async () => {
       const AccessToken = await AsyncStorage.getItem('userAccessToken');
       if (AccessToken !== null) {
@@ -31,8 +30,6 @@ export default function StampButton({spaceId, type, onStampUpdate }:stampbuttonP
         .then((response) => {
           setStamp(response.data.stampResDtoList);
           setLoading(false); 
-					// console.log('111:',response.data)
-          // console.log('1:',stamp)
         })
         .catch((err) => {
           console.log("에러 메시지 ::", err);
@@ -51,14 +48,10 @@ export default function StampButton({spaceId, type, onStampUpdate }:stampbuttonP
         const AccessToken = await AsyncStorage.getItem('userAccessToken');
         if (AccessToken !== null) {
 					const userAccessToken = JSON.parse(AccessToken);
-					console.log(updatedInfo)
-          console.log(userAccessToken)
-          console.log(userinfo.id)
 					axios.post(`https://k9a705.p.ssafy.io:8000/member/achievement/${userinfo.id}`, updatedInfo, 
 						{headers: {'Access-Token': userAccessToken}}
 					)
 					.then((response) => {
-						console.log(response.data)
             onStampUpdate('true');
             Alert.alert(
               `오늘의 스탬프를 찍었습니다!`

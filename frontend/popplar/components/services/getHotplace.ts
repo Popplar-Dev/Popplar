@@ -70,7 +70,6 @@ export async function getStamp(hotPlaceId) {
 // 방문자 추가
 export async function insertVisitor(hotPlaceId) {
   const token = await getToken();
-  console.log("hotPlaceId: ", hotPlaceId)
   return await axios({
     method: 'post',
     url: `${BASE_URL}/hot-place/visitor`,

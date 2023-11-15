@@ -50,7 +50,6 @@ export default function UserModal({ visible, onClose, memberId, placeName }: Pro
     if (memberId) {
       getMembersInfo(memberId)
       .then((res) => {
-        // console.log('response', res.data)
         setMemberInfo(res.data)
       }).catch((res) => console.log('usermodal 에러'))
     }

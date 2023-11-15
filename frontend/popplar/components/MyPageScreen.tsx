@@ -26,12 +26,12 @@ function MyPageScreen() {
   });
   const [loading, setLoading] = useState(true);
   const images = [
-    { name: "CAFE", uri: require("../assets/planet/1.png") },
     { name: "RESTAURANT", uri: require("../assets/planet/2.png") },
-    { name: "STORE", uri: require("../assets/planet/3.png") },
+    { name: "CAFE", uri: require("../assets/planet/1.png") },
     { name: "4", uri: require("../assets/planet/4.png") },
-    { name: "5", uri: require("../assets/planet/5.png") },
     { name: "6", uri: require("../assets/planet/6.png") },
+    { name: "STORE", uri: require("../assets/planet/3.png") },
+    { name: "5", uri: require("../assets/planet/5.png") },
   ];
   const [visitcount, setVisitcount] = useState(0); 
   const route = useRoute();
@@ -41,7 +41,6 @@ function MyPageScreen() {
       const AccessToken = await AsyncStorage.getItem('userAccessToken');
       if (AccessToken !== null) {
         const userAccessToken = JSON.parse(AccessToken);
-        console.log(userAccessToken)
         axios.get(`https://k9a705.p.ssafy.io:8000/member/achievement/${userinfo.id}`,
           {headers: {'Access-Token': userAccessToken}}
         )

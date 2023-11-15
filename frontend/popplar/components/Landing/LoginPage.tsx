@@ -54,14 +54,12 @@ export default function Login() {
       },
     }).then((response) => {
       AccessToken = response.data.access_token;
-      console.log(response.data);
       const requestData = {
         accessToken : AccessToken,
         loginType : "KAKAO"
       };
       axios.post(`https://k9a705.p.ssafy.io:8000/auth/login`, requestData)
         .then((response) => {
-          console.log(response.data)
           const jwt = response.data.jwt
           const userInfo = {
             exp: response.data.exp,

@@ -124,7 +124,6 @@ export default function ReceivedMessages({
   };
 
   const deleteItems = async () => {
-    // console.log(`delete ${checkedItems}`);
     setCheckedItems([]); 
   };
 
