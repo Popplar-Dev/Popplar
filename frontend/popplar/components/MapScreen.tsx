@@ -158,7 +158,7 @@ const MapScreen: React.FC = () => {
 
   // 스탬프 여부 확인
   useEffect(() => {
-    handlePresentModalClose()
+    // handlePresentModalClose()
     if (spaceId) {
       getStamp(spaceId)
       .then((res) => {
@@ -400,6 +400,7 @@ const MapScreen: React.FC = () => {
   const handleEnterPress = async (spaceId: number) => {
     updateMyHotPlaceId(spaceId, userInfo.id)
     insertVisitor(spaceId)
+    // handle_hot_users()
     if (chatroomId) {
       await deleteChatroom(chatroomId); 
       setChatroomId(null); 

@@ -130,21 +130,22 @@ export default function ClickGame({ route }) {
     setModalVisible(false);
   };
 
-  BackHandler.addEventListener('hardwareBackPress', () => {
-    if (gameStarted) {
-      setGameStarted(false);
-      return true;
-    }
-    return false;
-  });
+
+  // BackHandler.addEventListener('hardwareBackPress', () => {
+  //   if (gameStarted) {
+  //     setGameStarted(false);
+  //     return true;
+  //   }
+  //   return false;
+  // });
 
   return (
     <View style={styles.container}>
       {gameStarted && (
         <View style={styles.gameContainer}>
           <View style={styles.gameContainerTop}>
-            <Text style={styles.text}>나의 최고 점수 : {gameInfo.myMaxFightingPoints}</Text>
-            <Text style={styles.text}>전체 최고 점수 : {gameInfo.maxFightingPoints}</Text>
+            <Text style={styles.scoreText}>나의 최고 점수 : {gameInfo.myMaxFightingPoints}</Text>
+            <Text style={styles.scoreText}>전체 최고 점수 : {gameInfo.maxFightingPoints}</Text>
           </View>
           <Image source={planetImage} style={{ ...styles.planetImage, width: planetSize.width, height: planetSize.height }} />
           <View style={styles.gameContainerBottom}>
@@ -165,6 +166,7 @@ export default function ClickGame({ route }) {
         <>
         <View style={styles.start}>
           {/* <Image source={planetImage} style={styles.planetImagebefore} /> */}
+          { !modalVisible && (
           <View style={styles.planetImagebefore}>
             <Text style={styles.text}>
               게임이 시작되면 BOOST 버튼을 눌러
@@ -176,6 +178,7 @@ export default function ClickGame({ route }) {
               <Text style={styles.buttonText}>게임 시작</Text>
             </Pressable>
           </View>
+          )}
         </View>
         </>
       )}
@@ -227,13 +230,13 @@ const styles = StyleSheet.create({
   planetImage: {
     width: 200, 
     height: 200, 
-    top:'10%',
+    top:'12%',
     position: 'absolute',
   },
   planetImagebefore: {
     // width: 350, 
     // height: 200, 
-    marginBottom: 200,
+    marginBottom: 50,
     borderWidth:2,
     padding:10,
     borderRadius:10,
@@ -250,6 +253,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'white',
     fontWeight: 'bold',
+    justifyContent: 'flex-end',
+  },
+  scoreText: {
+    fontSize: 20,
+    color: 'white',
+    // fontWeight: 'bold',
     justifyContent: 'flex-end',
   },
   largeText: {
