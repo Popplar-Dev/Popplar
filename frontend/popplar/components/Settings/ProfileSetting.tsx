@@ -36,7 +36,6 @@ function ProfileSetting() {
 			setNickname(newNickname);
 			const updatedInfo = {
 				name: newNickname,
-				profileImage: "url",
 			};
 			const isLogin = async () => {
         const AccessToken = await AsyncStorage.getItem('userAccessToken');

@@ -150,14 +150,14 @@ function MyPageScreen() {
                 ))}
                 <View style={styles.planet}>
                     <Pressable
-                      onPress={() => {
-                        setSelectedPlanet({
-                          name: '핫플',
-                          image: visitcount < 10 ? require('../assets/mark/question.png') : images[5].uri,
-                          visit: `${visitcount}`
-                        });
-                        setModalVisible(true);
-                      }}
+                      // onPress={() => {
+                      //   setSelectedPlanet({
+                      //     name: '핫플',
+                      //     image: visitcount < 10 ? require('../assets/mark/question.png') : images[5].uri,
+                      //     visit: `${visitcount}`
+                      //   });
+                      //   setModalVisible(true);
+                      // }}
                       style={styles.planetItem} 
                     >
                       <Image

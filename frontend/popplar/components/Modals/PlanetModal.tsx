@@ -105,25 +105,33 @@ function PlanetModal({ visible, onClose, planetName, planetImage, visit }:Planet
               {/* <View style={styles.stampinfo}> */}
                 {!loading ? (
                   <>
-                  <View style={styles.stampinfo}>
-                    <Pressable style={styles.nextButtonContainer}>
-                      <Text onPress={backItem}><Icon name="chevron-back-outline" color="#8B90F7" size={25} /></Text>
-                    </Pressable>
-                    <FlatList
-                      // horizontal
-                      data={stamp.filter(item => item.categoryName === planetName)}
-                      renderItem={({ item, index }) => renderItem({ item, index })}
-                      keyExtractor={(item, index) => index.toString()}
-                      pagingEnabled
-                      showsHorizontalScrollIndicator={false}
-                    />
-                    <Pressable style={styles.nextButtonContainer}>
-                      <Text onPress={nextItem}><Icon name="chevron-forward-outline" color="#8B90F7" size={25} /></Text>
-                    </Pressable>
-                  </View>
-                  <View>
-                    <Text style={styles.Textsmall}><Text style={styles.focusText}>{visibleItems}</Text>/{specificstamp.length}</Text>
-                  </View>
+                  {specificstamp.length===0 ? (
+                    <View style={styles.stampinfo}>
+                      <Text style={styles.Textsmall}>{planetName}에 방문해 업적을 달성해보세요!</Text>
+                    </View>
+                  ):(
+                    <>
+                      <View style={styles.stampinfo}>
+                        <Pressable style={styles.nextButtonContainer}>
+                          <Text onPress={backItem}><Icon name="chevron-back-outline" color="#8B90F7" size={25} /></Text>
+                        </Pressable>
+                        <FlatList
+                          // horizontal
+                          data={stamp.filter(item => item.categoryName === planetName)}
+                          renderItem={({ item, index }) => renderItem({ item, index })}
+                          keyExtractor={(item, index) => index.toString()}
+                          pagingEnabled
+                          showsHorizontalScrollIndicator={false}
+                        />
+                        <Pressable style={styles.nextButtonContainer}>
+                          <Text onPress={nextItem}><Icon name="chevron-forward-outline" color="#8B90F7" size={25} /></Text>
+                        </Pressable>
+                      </View>
+                      <View>
+                        <Text style={styles.Textsmall}><Text style={styles.focusText}>{visibleItems}</Text>/{specificstamp.length}</Text>
+                      </View>
+                    </>
+                  )}
                   </>
                 ) : (
                   <ActivityIndicator size="large" color="#ffffff" />
