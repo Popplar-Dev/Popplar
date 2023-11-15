@@ -31,6 +31,7 @@ dependencies {
 	implementation("org.webjars:jquery:3.1.1-1")
 	implementation("org.webjars:bootstrap:3.3.7")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+	implementation ("org.springframework.kafka:spring-kafka")
 	runtimeOnly("com.mysql:mysql-connector-j")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

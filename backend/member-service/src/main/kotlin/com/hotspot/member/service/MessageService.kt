@@ -48,14 +48,14 @@ class MessageService(
         )
     }
 
-    @Transactional
-    fun deleteMessage(myId: Long, messageId: Long) {
-        val message = findMessage(messageId)
-        if (myId != message.receivedMemberId) {
-            throw RuntimeException("쪽지 삭제 권한이 없습니다")
-        }
-        message.delete()
-    }
+//    @Transactional
+//    fun deleteMessage(myId: Long, messageId: Long) {
+//        val message = findMessage(messageId)
+//        if (myId != message.receivedMemberId) {
+//            throw RuntimeException("쪽지 삭제 권한이 없습니다")
+//        }
+//        message.delete()
+//    }
 
     fun getMyReceivedMessageList(receivedMemberId: Long): MutableList<MessageResDto> {
 
@@ -66,6 +66,7 @@ class MessageService(
         val messageList =
             messageRepository.findAllByReceivedMemberIdAndDeletedFalse(receivedMemberId)
                 .filter { it.sentMemberId !in blockedMemberSet }
+                .filter { !it.receivedMessageDeleted }
 
         return messageList.map {
             val sentMember = findMember(it.sentMemberId)
@@ -78,6 +79,7 @@ class MessageService(
     fun getMySentMessageList(sentMemberId: Long): MutableList<MessageResDto> {
         val messageList =
             messageRepository.findAllBySentMemberIdAndDeletedFalse(sentMemberId)
+                .filter { !it.sentMessageDeleted }
 
         return messageList.map {
             val sentMember = findMember(it.sentMemberId)
@@ -97,10 +99,11 @@ class MessageService(
 
         messageIdList.map {
             val message = findMessage(it)
-            if (member.id != message.receivedMemberId) {
-                throw RuntimeException("삭제 권한이 없습니다.")
+            when (member.id) {
+                message.receivedMemberId -> message.receivedMessageDelete()
+                message.sentMemberId -> message.sentMessageDelete()
+                else -> throw RuntimeException("삭제 권한이 없습니다.")
             }
-            message.delete()
         }
 
         return getMyReceivedMessageList(memberId)

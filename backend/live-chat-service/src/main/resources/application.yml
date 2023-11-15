@@ -29,7 +29,16 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 1000
-
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER}
+    consumer:
+      group-id: foo
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 eureka:
   instance:

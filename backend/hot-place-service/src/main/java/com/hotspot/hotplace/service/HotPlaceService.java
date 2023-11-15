@@ -14,12 +14,14 @@ import com.hotspot.hotplace.repository.LikeRepository;
 import com.hotspot.hotplace.repository.MemberPositionRepository;
 import com.hotspot.visitor.repository.VisitorRepository;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -83,9 +85,6 @@ public class HotPlaceService {
             throw new BadRequestException("이미 좋아요 누른 핫플레이스입니다.");
         }
         hotPlace.increaseLikeCount();
-        if (hotPlace.getLikeCount() >= 5) {
-            hotPlace.updatePlaceType(HotPlaceType.HOT_PLACE);
-        }
         likeRepository.save(Like.builder().memberId(memberId).hotPlace(hotPlace).build());
     }
 
@@ -100,6 +99,8 @@ public class HotPlaceService {
 
 
     //레디스 관련 로직
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Synchronized
     public void insertMemberPosition(MemberPosition memberPosition) {
         MemberPosition memberPos = memberPositionRepository.findByMemberId(
             memberPosition.getMemberId());
@@ -146,13 +147,22 @@ public class HotPlaceService {
         Long memberId) {
         // 2주간 사용자 방문 횟수 체크
         int twoWeeksVisitorCount = visitorRepository.countByVisitedDateAfterAndHotPlaceId(
-            LocalDateTime.now().minus(
+            LocalDate.now().minus(
                 Duration.ofDays(14)), hotPlace.getId());
         hotPlaceResDto.setVisitorCount(twoWeeksVisitorCount);
         // 핫플 티어 생성
-        int tier = checkTier(twoWeeksVisitorCount, hotPlace.getPlaceType());
+        int tier = checkTier(twoWeeksVisitorCount);
         hotPlaceResDto.setTier(tier);
         hotPlace.updateTier(hotPlaceResDto.getTier());
+
+        // 핫플 타입 지정
+        if (tier == 0) {
+            hotPlace.updatePlaceType(HotPlaceType.FLAG);
+            hotPlaceResDto.setPlaceType(HotPlaceType.FLAG);
+        } else {
+            hotPlace.updatePlaceType(HotPlaceType.HOT_PLACE);
+            hotPlaceResDto.setPlaceType(HotPlaceType.HOT_PLACE);
+        }
 
         // 내 인정 여부
         hotPlaceResDto.setMyLike(
@@ -162,12 +172,10 @@ public class HotPlaceService {
     }
 
     // -- 핫플레이스 랭크 체크용 코드 -- //
-    public int checkTier(int count, HotPlaceType type) {
-        if (type == HotPlaceType.FLAG) {
+    public int checkTier(int count) {
+        if (count < 5) {
             return 0;
-        }
-
-        if (count < 10) {
+        } else if (count < 10) {
             return 5;
         } else if (count < 50) {
             return 4;

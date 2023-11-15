@@ -2,8 +2,7 @@ package com.popplar.livechat.controller
 
 import com.popplar.livechat.dto.ChattingReqDto
 import com.popplar.livechat.dto.ChattingResDto
-import com.popplar.livechat.entity.ChattingMember
-import com.popplar.livechat.fco.ChattingMemberFactory
+import com.popplar.livechat.factory.ChattingMemberFactory
 import com.popplar.livechat.service.ChattingService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
