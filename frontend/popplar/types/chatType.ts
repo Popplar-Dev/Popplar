@@ -4,7 +4,7 @@ export type ChatMessageType = {
   messageType: 'me' | 'others';
   memberId: number;  
   memberName: string; 
-  memberProfileImage?: string;  
+  memberProfileImage: string;  
   chattingContent: string; 
   date?: string;
   time?: string; 
