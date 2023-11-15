@@ -543,7 +543,7 @@ const MapScreen: React.FC = () => {
               <View style={styles.address}>
                 <Icon name="map-pin" size={11} color={'white'} style={styles.mapIcon}/>
                 {spaceInfo.road_address_name ? (<Text style={styles.bottomSheetAddress}>{spaceInfo.road_address_name}</Text>)
-                :(<Text style={styles.bottomSheetAddress}>등록된 주소가 없습니다.</Text>)}
+                : (<Text style={styles.bottomSheetAddress}>등록된 주소가 없습니다.</Text>)}
               </View>
               <Text style={styles.bottomSheetCategory}>{spaceInfo.category_group_name}</Text>
             </View>
