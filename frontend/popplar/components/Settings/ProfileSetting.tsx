@@ -102,7 +102,7 @@ function ProfileSetting() {
             onPress={openModal}>
             <View style={styles.edit}>
               <Text style={styles.text}>프로필 사진 수정</Text>
-            </View> */}
+            </View>
           </Pressable>
         <View>
           <View style={styles.info}>
