@@ -47,6 +47,10 @@ export default function HotPlaceUsers({ hotplaceUsers }: Props) {
           <UserMarker user={user}/>
         </div>
       ))}
+
+      <div>
+        
+      </div>
     </>
   );
 }
