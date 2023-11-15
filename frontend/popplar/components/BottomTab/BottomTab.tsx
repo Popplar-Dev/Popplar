@@ -201,7 +201,7 @@ export default function BottomTab() {
           unmountOnBlur: true,
         }}
       />
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Chat"
         component={ChatScreenStack}
         options={{
@@ -213,7 +213,7 @@ export default function BottomTab() {
             />
           ),
         }}
-      /> */}
+      />
       <Tab.Screen
         name="Map"
         component={MapScreenStack}
@@ -239,7 +239,7 @@ export default function BottomTab() {
           ),
         }}
       />
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Notifications"
         component={NotificationsScreen}
         options={{
@@ -247,7 +247,7 @@ export default function BottomTab() {
             <Icon name="bell" size={25} color={focused ? '#613EEA' : 'white'} />
           ),
         }}
-      /> */}
+      />
       <Tab.Screen
         name="MyPage"
         component={MyPageStack}

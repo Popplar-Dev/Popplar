@@ -14,7 +14,7 @@ interface ImageSelect {
 }
 
 export default function ProfileImageSelectModal({ visible, onClose }:ImageSelect) {
-  let S3_URL = 'https://popplar-profile-image-bucket.s3.ap-northeast-2.amazonaws.com/'
+  const S3_URL = "https://popplar-profile-image-bucket.s3.ap-northeast-2.amazonaws.com/"
 	const profileimages = [
     { avatar: S3_URL+'avatar1.png' },
     { avatar: S3_URL+'avatar2.png' },
