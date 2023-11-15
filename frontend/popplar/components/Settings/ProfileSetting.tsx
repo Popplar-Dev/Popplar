@@ -102,7 +102,7 @@ function ProfileSetting() {
             onPress={openModal}>
             <View style={styles.edit}>
               <Text style={styles.text}>프로필 사진 수정</Text>
-            </View>
+            </View> */}
           </Pressable>
         <View>
           <View style={styles.info}>
@@ -114,7 +114,7 @@ function ProfileSetting() {
             <Text style={styles.t}>연동 정보 : </Text>
             <Text style={styles.t}>{userinfo.socialType}</Text>
           </View>
-          <View style={styles.info}>
+          {/* <View style={styles.info}>
             <Text style={styles.t}>내 위치  {isEnabled ? '끄기' : '켜기'}</Text>
             <Switch
               trackColor={{false: '#767577', true: '#8B90F7'}}
@@ -123,7 +123,7 @@ function ProfileSetting() {
               onValueChange={toggleSwitch}
               value={isEnabled}
             />
-          </View>
+          </View> */}
         </View>
         <ProfileImageSelectModal
           visible={modalVisible}
