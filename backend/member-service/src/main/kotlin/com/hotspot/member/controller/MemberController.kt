@@ -14,6 +14,9 @@ class MemberController(
     private val authService: AuthService,
 ) {
 
+    /**
+     * 회원 프로필 조회용 API
+     */
     @GetMapping("/{memberId}")
     fun getMemberProfile(@PathVariable memberId: Long): ResponseEntity<MemberProfileResDto> {
         return ResponseEntity<MemberProfileResDto>(
@@ -22,6 +25,9 @@ class MemberController(
         )
     }
 
+    /**
+     * 회원 프로필 수정용 API
+     */
     @PatchMapping("/{memberId}")
     fun updateMemberProfile(
         @RequestHeader("Member-Id") myId: Long,
@@ -37,12 +43,18 @@ class MemberController(
         )
     }
 
+    /**
+     * 멤버 탈퇴용 API
+     */
     @DeleteMapping("/{memberId}")
     fun deleteMember(@RequestHeader("Member-Id") myId: Long, @PathVariable memberId: Long) {
         authService.checkAuth(memberId, myId)
         memberService.deleteMember(memberId)
     }
 
+    /**
+     * 차단한 회원 조회용 API
+     */
     @GetMapping("/block")
     fun getBlockedMember(
         @RequestHeader("Member-Id") myId: Long
@@ -50,6 +62,9 @@ class MemberController(
         return memberService.getBlockedMember(myId)
     }
 
+    /**
+     * 회원 차단 API
+     */
     @PostMapping("/block/{blockedMemberId}")
     fun blockMember(
         @RequestHeader("Member-Id") myId: Long,
@@ -58,6 +73,9 @@ class MemberController(
         memberService.blockMember(myId, blockedMemberId)
     }
 
+    /**
+     * 회원 차단 취소 API
+     */
     @DeleteMapping("/block/{blockedMemberId}")
     fun unBlockMember(
         @RequestHeader("Member-Id") myId: Long,
@@ -66,6 +84,9 @@ class MemberController(
         memberService.unBlockMember(myId, blockedMemberId)
     }
 
+    /**
+     * 여러 회원 정보 조회 API
+     */
     @PostMapping("/info")
     fun getMemberInfoList(@RequestBody memberIdList: List<Long>): ResponseEntity<MemberInfoResponseDto> {
         return ResponseEntity<MemberInfoResponseDto>(
@@ -74,7 +95,9 @@ class MemberController(
         )
     }
 
-    // 이미 있는 유저의 파이어베이스 토큰 변경용
+    /**
+     * 기존 회원 Firebase Alarm Token 변경 API
+     */
     @PatchMapping("/firebase-token")
     fun updateFirebaseToken(
         @RequestHeader("Member-Id") memberId: Long,

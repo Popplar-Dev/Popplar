@@ -14,6 +14,9 @@ class AuthController(
     private val memberProfileResDtoRA: MemberProfileResDtoRA,
 ) {
 
+    /**
+     * 소셜 로그인 API
+     */
     @PostMapping("/login")
     fun login(@RequestBody oAuthLoginReqDto: OAuthLoginReqDto): EntityModel<MemberProfileResDto> {
         return memberProfileResDtoRA.toModel(

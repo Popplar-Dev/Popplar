@@ -1,6 +1,5 @@
 package com.hotspot.message.controller
 
-import com.hotspot.auth.service.AuthService
 import com.hotspot.message.dto.MessageReqDto
 import com.hotspot.message.dto.MessageResDto
 import com.hotspot.message.service.MessageService
@@ -13,9 +12,11 @@ import org.springframework.web.bind.annotation.*
 class MessageController(
 
     private val messageService: MessageService,
-    private val authService: AuthService,
 ) {
 
+    /**
+     * 쪽지 확인 API
+     */
     @GetMapping("/{messageId}")
     fun getMessage(
         @RequestHeader("Member-Id") myId: Long,
@@ -27,6 +28,9 @@ class MessageController(
         )
     }
 
+    /**
+     * 쪽지 삭제 API
+     */
     @PostMapping("/{receivedMemberId}")
     fun postMessage(
         @RequestHeader("Member-Id") myId: Long,
@@ -36,14 +40,9 @@ class MessageController(
         messageService.postMessage(myId, receivedMemberId, messageReqDto.content)
     }
 
-//    @DeleteMapping("/{messageId}")
-//    fun deleteMessage(
-//        @RequestHeader("Member-Id") myId: Long,
-//        @PathVariable messageId: Long
-//    ) {
-//        messageService.deleteMessage(myId, messageId)
-//    }
-
+    /**
+     * 받은 쪽지 리스트 조회 API
+     */
     @GetMapping("/received-all")
     fun getMyReceivedMessageList(
         @RequestHeader("Member-Id") myId: Long,
@@ -54,6 +53,9 @@ class MessageController(
         )
     }
 
+    /**
+     * 보낸 쪽지 리스트 조회 API
+     */
     @GetMapping("/sent-all")
     fun getMySentMessageList(
         @RequestHeader("Member-Id") myId: Long,
@@ -64,6 +66,9 @@ class MessageController(
         )
     }
 
+    /**
+     * 체크한 쪽지 삭제 API
+     */
     @DeleteMapping("/multi")
     fun deleteMultiMessage(
         @RequestHeader("Member-Id") myId: Long,
