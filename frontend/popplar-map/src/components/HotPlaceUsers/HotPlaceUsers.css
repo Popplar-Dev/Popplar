@@ -1,0 +1,9 @@
+.point {
+  position: absolute;
+  /* width: 30px;
+  height: 30px; */
+  z-index: 999;
+
+  /* border: 1px dotted red;
+  background-color: red; */
+}
