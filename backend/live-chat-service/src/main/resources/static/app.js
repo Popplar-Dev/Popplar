@@ -18,8 +18,8 @@ function connect() {
   stompClient.connect({}, function (frame) {
     setConnected(true);
     console.log('Connected: ' + frame);
-    stompClient.subscribe('/room/2', function (greeting) {
-      showGreeting(JSON.parse(greeting.body).content);
+    stompClient.subscribe('/room/21414107', function (greeting) {
+      showGreeting(JSON.parse(greeting.body));
     });
   });
 }
@@ -34,11 +34,12 @@ function disconnect() {
 
 function sendName() {
   let test = Math.floor(Math.random()*10)
-  stompClient.send(`/live-chat/chat/${test}`, {}, JSON.stringify({'memberId': 446164955855, 'chattingContent' : $("#name").val()}));
+  stompClient.send(`/live-chat/chat/21414107`, {}, JSON.stringify({'memberId': 446164955855, 'chattingContent' : $("#name").val()}));
 }
 
 function showGreeting(message) {
-  $("#greetings").append("<tr><td>" + message + "</td></tr>");
+  $("#greetings").append("<tr><td>" + message.memberName + " :        " + message.chattingContent + "         " + message.chattingCreatedAt + "</td></tr>");
+
 }
 
 $(function () {
