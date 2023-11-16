@@ -8,3 +8,10 @@ export type nonFlaggedLatLng = {
   x: string
   y: string
 }
+
+export type HotPlace = {
+  x: string
+  y: string
+  id: number
+  flagged?: boolean
+}

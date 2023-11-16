@@ -33,7 +33,7 @@ export default function ReceivedChatMessage({
           ))}
       </View>
       <View style={styles.messageContainer}>
-        {msgStart && <ChatNickname>{chatData.memberName}</ChatNickname>}
+        {msgStart && <ChatNickname>{chatData.conqueror ? `${chatData.memberName} 👑` : chatData.memberName}</ChatNickname>}
         <View style={styles.chatBubbleContainer}>
           <ChatBubble msgStart={msgStart}>
             {chatData.chattingContent}

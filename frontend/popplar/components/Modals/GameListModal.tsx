@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   },
   blurContent: {
     width: '90%',
-		height:470,
+		height:'60%',
   },
   modalContent: {
     backgroundColor: 'rgba(161, 161, 161, 0.2)',

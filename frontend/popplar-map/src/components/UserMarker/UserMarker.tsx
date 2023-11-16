@@ -29,6 +29,7 @@ export default function UserMarker({ user }: Props) {
   }, []); // Similar to componentDidMount
 
   const handleUserInfo = () => {
+    // console.log('hiiiiiiiiiiii')
     if (typeof window !== 'undefined' && window.ReactNativeWebView) {
       window.ReactNativeWebView.postMessage(
         JSON.stringify({ 

@@ -5,7 +5,7 @@ import './App.css';
 import { useRecoilState } from 'recoil';
 import { HotLatLngState } from "./recoil/hotLatLng/index";
 import { HotPlaceInfo } from "./recoil/hotPlaceInfo/index";
-import { LatLng } from './types/LatLng'
+import { LatLng, HotPlace } from './types/LatLng'
 
 import Map from './pages/Map'
 import Search from './pages/Search'
@@ -25,11 +25,11 @@ function App() {
   const [searchPlaceObj, setSearchPlacObj] = useState<any | null>(null)
   const [searchResult, setSearchResult] = useState<Place[] | null>(null);
   // 검색시 선택된 hotplace의 위도 경도 정보 recoil로 저장
-  const [hotPlaceLatLng, sethotPlaceLatLng] = useRecoilState<LatLng>(HotLatLngState);
+  const [hotPlaceLatLng, sethotPlaceLatLng] = useRecoilState<HotPlace>(HotLatLngState);
 
-  function placeSelectClick (x: string, y: string, status: boolean) {
+  function placeSelectClick (x: string, y: string, id: number, status: boolean) {
     setPlaceKeyword("")
-    const LatLngInfo = {x: x, y: y, flagged: status}
+    const LatLngInfo = {x: x, y: y, id: id, flagged: status}
     sethotPlaceLatLng(LatLngInfo)
   }
   
@@ -76,12 +76,12 @@ function App() {
       {/* <NeonFrame /> */}
       {/* <IoTelescopeSharp size="28" className={styles.telescope}/> */}
       {/* <div className={styles["telescope-background"]}></div> */}
-      <img src={earthRocket} className={styles["earth-icon"]} alt="Earth Icon"/>
+      {/* <img src={earthRocket} className={styles["earth-icon"]} alt="Earth Icon"/>
 
       {!placeKeyword ?
       (<div className={styles.message}>all spaces detected...</div>)
       :(<div className={styles.message}>search mode connected...</div>)
-      }
+      } */}
 
       {placeKeyword &&
       (<>
@@ -90,7 +90,7 @@ function App() {
       </>)
       }
 
-      <div className={styles.search}>Search...</div>
+      {/* <div className={styles.search}>Search...</div> */}
         <div className={styles.map}>
           <div className={styles.searchInput}>
             <input type="text" id='keyword' value={placeKeyword} placeholder="장소 검색..." onChange={

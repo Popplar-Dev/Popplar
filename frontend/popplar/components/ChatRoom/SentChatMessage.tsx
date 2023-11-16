@@ -1,4 +1,4 @@
-import {View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet} from 'react-native';
 import ChatBubble from './ChatComponents/ChatBubble';
 import ChatTime from './ChatComponents/ChatTime';
 import {ChatMessageType} from '../../types/chatType';
@@ -21,6 +21,7 @@ export default function SentChatMessage({
         <ChatBubble msgStart={msgStart} myMsg={true} color="#2c1a74">
           {chatData.chattingContent}
         </ChatBubble>
+        {chatData.conqueror && (msgStart ? <Text>👑</Text> : <Text>     </Text>)}
       </View>
     </View>
   );
