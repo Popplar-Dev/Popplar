@@ -2,7 +2,7 @@ package com.hotspot.member.entity
 
 import com.hotspot.global.entity.BaseEntity
 import com.hotspot.member.dto.MemberUpdateReqDto
-import com.hotspot.global.oauth.dto.OAuthMemberDto
+import com.hotspot.auth.dto.OAuthMemberDto
 import jakarta.persistence.*
 
 @Entity
@@ -24,15 +24,20 @@ class Member(
 
     var exp: Int,
 
-    var myHotPlaceId: Long
+    var myHotPlaceId: Long,
 
-
-    ) : BaseEntity() {
+    var firebaseToken: String? = null,
+) : BaseEntity() {
 
     fun update(memberUpdateReqDto: MemberUpdateReqDto) {
         this.name = memberUpdateReqDto.name ?: this.name
         this.profileImage = memberUpdateReqDto.profileImage ?: this.profileImage
         this.myHotPlaceId = memberUpdateReqDto.myHotPlaceId ?: this.myHotPlaceId
+    }
+
+    fun insertFirebaseToken(firebaseToken: String?): Member {
+        this.firebaseToken = firebaseToken
+        return this
     }
 
     companion object {

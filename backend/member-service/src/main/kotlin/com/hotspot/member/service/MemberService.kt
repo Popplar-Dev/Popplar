@@ -3,7 +3,7 @@ package com.hotspot.member.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.hotspot.global.eureka.dto.ChattingMemberReqDto
 import com.hotspot.global.eureka.dto.ChattingMemberResDto
-import com.hotspot.global.oauth.dto.OAuthMemberDto
+import com.hotspot.auth.dto.OAuthMemberDto
 import com.hotspot.global.service.WebClientService
 import com.hotspot.member.dto.*
 import com.hotspot.member.entity.BlockedMember
@@ -128,6 +128,19 @@ class MemberService(
         blockedMemberRepository.delete(blockedMember)
     }
 
+    fun getMemberInfo(memberIdList: List<Long>): MemberInfoResponseDto {
+        val memberList = memberRepository.findByIdIn(memberIdList)
+        return MemberInfoResponseDto(memberList.map { MemberInfoDto.create(it) }.toMutableList())
+    }
+
+    @Transactional
+    fun updateFirebaseToken(memberId: Long, firebaseToken: String): MemberProfileResDto {
+        return MemberProfileResDto.create(
+            cryptService,
+            findMemberByDecryptedId(memberId).insertFirebaseToken(firebaseToken)
+        )
+    }
+
     fun findMemberByDecryptedId(decryptedId: Long): Member {
         return memberRepository.findById(decryptedId)
             .orElseThrow { throw RuntimeException("사용자 정보가 없습니다.") }
@@ -138,10 +151,6 @@ class MemberService(
             .orElseThrow { throw RuntimeException("사용자 정보가 없습니다.") }
     }
 
-    fun getMemberInfo(memberIdList: List<Long>): MemberInfoResponseDto {
-        val memberList = memberRepository.findByIdIn(memberIdList)
-        return MemberInfoResponseDto(memberList.map { MemberInfoDto.create(it) }.toMutableList())
-    }
 //    @KafkaListener(topics = ["TOPIC"])
 //    fun consume(@Payload data: String): String {
 //        println(data)

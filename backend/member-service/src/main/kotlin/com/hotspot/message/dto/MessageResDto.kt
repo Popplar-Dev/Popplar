@@ -1,7 +1,7 @@
-package com.hotspot.member.dto
+package com.hotspot.message.dto
 
 import com.hotspot.member.entity.Member
-import com.hotspot.member.entity.Message
+import com.hotspot.message.entity.Message
 import com.hotspot.member.service.CryptService
 import java.time.LocalDateTime
 

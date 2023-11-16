@@ -1,13 +1,13 @@
-package com.hotspot.global.oauth.service.impl
+package com.hotspot.auth.service.impl
 
 import com.hotspot.member.entity.Member
 import com.hotspot.member.entity.SocialType
-import com.hotspot.global.oauth.dto.GoogleGetTokenDto
-import com.hotspot.global.oauth.dto.OAuthCodeDto
-import com.hotspot.global.oauth.dto.OAuthMemberDto
-import com.hotspot.global.oauth.dto.OAuthTokenDto
-import com.hotspot.global.oauth.service.JWTService
-import com.hotspot.global.oauth.service.OAuthService
+import com.hotspot.auth.dto.GoogleGetTokenDto
+import com.hotspot.auth.dto.OAuthCodeDto
+import com.hotspot.auth.dto.OAuthMemberDto
+import com.hotspot.auth.dto.OAuthTokenDto
+import com.hotspot.auth.service.JWTService
+import com.hotspot.auth.service.OAuthService
 import com.hotspot.member.dto.MemberProfileResDto
 import com.hotspot.member.repository.MemberRepository
 import com.hotspot.member.service.CryptService
@@ -75,6 +75,10 @@ class GoogleOAuthService(
     override fun login(oAuthMemberDto: OAuthMemberDto): Member {
         return memberRepository.findBySocialIdAndDeletedFalse(oAuthMemberDto.socialId)
             ?: memberRepository.save(Member.create(oAuthMemberDto))
+    }
+
+    override fun insertFirebaseToken(member: Member, firebaseToken: String): Member {
+        return member.insertFirebaseToken(firebaseToken)
     }
 
     override fun generateJWT(member: Member): MemberProfileResDto {
