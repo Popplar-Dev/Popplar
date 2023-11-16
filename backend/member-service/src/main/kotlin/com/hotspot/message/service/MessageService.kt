@@ -1,11 +1,12 @@
-package com.hotspot.member.service
+package com.hotspot.message.service
 
-import com.hotspot.member.dto.MessageResDto
+import com.hotspot.message.dto.MessageResDto
 import com.hotspot.member.entity.Member
-import com.hotspot.member.entity.Message
+import com.hotspot.message.entity.Message
 import com.hotspot.member.repository.BlockedMemberRepository
 import com.hotspot.member.repository.MemberRepository
-import com.hotspot.member.repository.MessageRepository
+import com.hotspot.message.repository.MessageRepository
+import com.hotspot.member.service.CryptService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

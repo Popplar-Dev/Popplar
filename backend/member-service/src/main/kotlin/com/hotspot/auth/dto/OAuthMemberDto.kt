@@ -1,4 +1,4 @@
-package com.hotspot.global.oauth.dto
+package com.hotspot.auth.dto
 
 import com.hotspot.member.entity.SocialType
 

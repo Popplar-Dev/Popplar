@@ -1,4 +1,4 @@
-package com.hotspot.global.oauth.service
+package com.hotspot.auth.service
 
 import com.hotspot.member.entity.SocialType
 import org.springframework.stereotype.Component
