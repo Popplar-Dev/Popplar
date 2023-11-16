@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+  database:
+    image: mysql:8.0
+    container_name: mysql-container-hot-place
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PWD}
+    ports:
+      - 3316:3306
+    volumes:
+      - mysql-db:/var/lib/mysql
+
+  backend:
+    image: popplar-hot-place:latest
+    container_name: hot-place
+    hostname: hot-place
+    env_file:
+      - .env
+    ports:
+      - "8200:8200"
+    build:
+      dockerfile: Dockerfile
+
+volumes:
+  mysql-db:

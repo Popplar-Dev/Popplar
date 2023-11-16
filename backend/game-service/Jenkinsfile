@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Gradle Build') {
+            steps {
+                dir('backend/game-service') {
+                    // gradlew 실행 권한 부여
+                    sh 'chmod +x gradlew'
+                    // gradlew를 사용해 프로젝트를 빌드하며 테스트는 제외합니다.
+                    sh './gradlew clean build -x test'
+                }
+            }
+        }
+
+        // docker-compose 기반 빌드
+        stage('Docker Build') {
+            steps {
+                dir('backend/game-service') {
+                    // 도커 컴포즈 빌드
+                    echo "docker compose build"
+                    sh "docker-compose -f docker-compose.yml build --no-cache"
+// 일반 빌드가 deprecated 되어서, BuildKit을 사용하는 코드. 여기서는 안되서 이전 버젼으로 진행
+//                     sh 'DOCKER_BUILDKIT=1 docker build -t herosof-trashbin:latest .'
+
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // 도커 컴포즈 업
+                dir('backend/game-service') {
+                    sh "docker-compose -f docker-compose.yml up -d"
+                }
+                // 새로운 이미지로 'hot-place' 컨테이너를 백그라운드에서 실행
+//                sh 'docker run -d --name hot-place -p 8200:8200 -u root popplar-hot-place:latest'
+            }
+        }
+
+        // 완료 스테이지: 더이상 사용되지 않는 Docker 이미지를 제거합니다.
+        stage('Finish') {
+            steps {
+                // 사용되지 않는 (dangling) 이미지를 찾아 제거합니다.
+                sh 'docker images -qf dangling=true | xargs -I{} docker rmi {}'
+            }
+        }
+    }
+}
