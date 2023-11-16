@@ -36,13 +36,13 @@ class MessageController(
         messageService.postMessage(myId, receivedMemberId, messageReqDto.content)
     }
 
-    @DeleteMapping("/{messageId}")
-    fun deleteMessage(
-        @RequestHeader("Member-Id") myId: Long,
-        @PathVariable messageId: Long
-    ) {
-        messageService.deleteMessage(myId, messageId)
-    }
+//    @DeleteMapping("/{messageId}")
+//    fun deleteMessage(
+//        @RequestHeader("Member-Id") myId: Long,
+//        @PathVariable messageId: Long
+//    ) {
+//        messageService.deleteMessage(myId, messageId)
+//    }
 
     @GetMapping("/received-all")
     fun getMyReceivedMessageList(
