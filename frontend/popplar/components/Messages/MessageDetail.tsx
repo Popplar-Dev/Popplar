@@ -55,7 +55,7 @@ export default function MessageDetail({
             <View style={styles.profilePicContainer}>
               <Image
                 source={{
-                  uri: tab === 'received' ? message.sentMemberProfileImage:message.sentMemberProfileImage,
+                  uri: tab === 'received' ? message.sentMemberProfileImage:message.receivedMemberProfile,
                 }}
                 style={styles.profilePic}
                 alt="profilepic"
