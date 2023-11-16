@@ -1,8 +1,6 @@
 package com.hotspot.visitor.dto;
 
-import com.hotspot.hotplace.entity.HotPlace;
-import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.Data;
 
 @Data
@@ -12,5 +10,5 @@ public class VisitorResDto {
 
     Long memberId;
 
-    LocalDateTime visitedDate;
+    LocalDate visitedDate;
 }
