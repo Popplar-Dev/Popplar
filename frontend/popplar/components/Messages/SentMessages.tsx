@@ -73,23 +73,23 @@ export default function ReceivedMessages({
       },
     );
 
-    // if (isDeleting) {
-    //   navigation.setOptions({
-    //     headerRight: () => {
-    //       return (
-    //         <Pressable onPress={deleteItems}>
-    //           <View style={styles.deleteButtonContainer}>
-    //             <Icon name="trash-outline" size={23} color="#8B90F7" />
-    //           </View>
-    //         </Pressable>
-    //       );
-    //     },
-    //   });
-    // } else {
-    //   navigation.setOptions({
-    //     headerRight: undefined,
-    //   });
-    // }
+    if (isDeleting) {
+      navigation.setOptions({
+        headerRight: () => {
+          return (
+            <Pressable onPress={deleteItems}>
+              <View style={styles.deleteButtonContainer}>
+                <Icon name="trash-outline" size={23} color="#8B90F7" />
+              </View>
+            </Pressable>
+          );
+        },
+      });
+    } else {
+      navigation.setOptions({
+        headerRight: undefined,
+      });
+    }
 
     return () => backHandler.remove();
   }, [isDeleting, checkedItems]);
@@ -120,7 +120,22 @@ export default function ReceivedMessages({
   };
 
   const deleteItems = async () => {
-    setCheckedItems([]); 
+    const userAccessToken = await getToken();
+    if (!userAccessToken) return;
+
+    try {
+      const url = `https://k9a705.p.ssafy.io:8000/member/message/multi`
+      const data = checkedItems.map(item => item.toString()) 
+      const res = await axios.delete(url, {
+        headers: { 'Access-Token': userAccessToken, 'Id-List': data}
+      })
+      const newMessages = messages.filter(item => !checkedItems.includes(item.messageId))
+      setMessages(newMessages);
+    } catch (e) {
+      console.error(e); 
+    }
+    setIsDeleting(false);
+    setCheckedItems([]);
   };
 
   const cancelDeletion = () => {
