@@ -12,7 +12,7 @@ interface OAuthService {
         return generateJWT(
             insertFirebaseToken(
                 login(getUser(oAuthLoginReqDto.accessToken)),
-                oAuthLoginReqDto.firebaseToken
+                oAuthLoginReqDto.firebaseToken?: "need to insert token"
             )
         )
     }
