@@ -98,7 +98,7 @@ const MapScreen: React.FC = () => {
   // webView 터치 이벤트 감지
   const handlePress = () => {
     // 여기에 클릭 시 실행할 로직을 추가합니다.
-    console.log('터치 이벤트가 발생했습니다.');
+    // console.log('터치 이벤트가 발생했습니다.');
     // 원하는 이동 등의 로직을 추가할 수 있습니다.
   };
 
@@ -481,7 +481,7 @@ const MapScreen: React.FC = () => {
   useEffect(() => {
     if (spaceInfo.x) {
       handle_hot_users()
-      console.log('지금 space', spaceInfo.place_name, spaceInfo.id)
+      // console.log('지금 space', spaceInfo.place_name, spaceInfo.id)
     }
     // if (myHotPlaceId==spaceInfo.id) {
     //   handle_entrance()
@@ -673,7 +673,7 @@ const MapScreen: React.FC = () => {
             onMessage={(event) => {
               const data: any = JSON.parse(event.nativeEvent.data)
               if (data.type=="test") {
-                console.log(data)
+                // console.log(data)
               } else if (data.type=="relocation") {
                 handlePresentModalClose();
                 native_to_web();
@@ -685,7 +685,6 @@ const MapScreen: React.FC = () => {
                 handle_hot_users()
               }  else {
                 handlePresentModalPress();
-                // setBottomSheetStatus(0)
                 setSpaceInfo(data.data)
                 setSpaceId(data.data.id)
                 // setSpaceLike(data.data.myLike)
