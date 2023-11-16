@@ -1,6 +1,6 @@
-package com.hotspot.member.repository;
+package com.hotspot.message.repository;
 
-import com.hotspot.member.entity.Message
+import com.hotspot.message.entity.Message
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface MessageRepository : JpaRepository<Message, Long> {

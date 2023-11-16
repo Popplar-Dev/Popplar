@@ -74,6 +74,20 @@ class MemberController(
         )
     }
 
+    // 이미 있는 유저의 파이어베이스 토큰 변경용
+    @PatchMapping("/firebase-token")
+    fun updateFirebaseToken(
+        @RequestHeader("Member-Id") memberId: Long,
+        @RequestHeader("Firebase-Token") firebaseToken: String
+    ): ResponseEntity<MemberProfileResDto> {
+        return ResponseEntity<MemberProfileResDto>(
+            memberService.updateFirebaseToken(
+                memberId,
+                firebaseToken
+            ), HttpStatus.OK
+        )
+    }
+
     @GetMapping("/test")
     fun test(@RequestHeader("Member-Id") memberId: Long) {
         memberService.test(memberId)

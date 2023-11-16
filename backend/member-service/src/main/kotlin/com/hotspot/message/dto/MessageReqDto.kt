@@ -1,4 +1,4 @@
-package com.hotspot.member.dto
+package com.hotspot.message.dto
 
 class MessageReqDto (
 

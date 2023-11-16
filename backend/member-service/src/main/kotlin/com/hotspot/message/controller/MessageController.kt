@@ -1,9 +1,9 @@
-package com.hotspot.member.controller
+package com.hotspot.message.controller
 
 import com.hotspot.auth.service.AuthService
-import com.hotspot.member.dto.MessageReqDto
-import com.hotspot.member.dto.MessageResDto
-import com.hotspot.member.service.MessageService
+import com.hotspot.message.dto.MessageReqDto
+import com.hotspot.message.dto.MessageResDto
+import com.hotspot.message.service.MessageService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
