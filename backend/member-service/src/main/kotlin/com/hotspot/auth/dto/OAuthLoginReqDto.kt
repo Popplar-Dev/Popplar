@@ -5,5 +5,5 @@ import com.hotspot.member.entity.SocialType
 class OAuthLoginReqDto(
     val accessToken: String,
     val loginType: SocialType,
-    val firebaseToken: String,
+    val firebaseToken: String?,
 )
