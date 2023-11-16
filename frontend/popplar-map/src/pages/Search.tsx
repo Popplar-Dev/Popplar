@@ -7,13 +7,13 @@ import SearchContentBox from '../components/SearchContentBox'
 
 type Props = {
   result: Place[] | null
-  placeSelectClick: (x: string, y: string, status: boolean) => void
+  placeSelectClick: (x: string, y: string, id: number, status: boolean) => void
 }
 
 export default function Search ({ result, placeSelectClick }: Props) {
 
-  function placeSelectHandler (x: string, y: string, status: boolean) {
-    placeSelectClick(x, y, status)
+  function placeSelectHandler (x: string, y: string, id: number, status: boolean) {
+    placeSelectClick(x, y, id, status)
   }
 
   useEffect(() => {

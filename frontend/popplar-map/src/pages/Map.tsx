@@ -3,6 +3,7 @@ import styles from './styles/map.module.css'
 import './styles/frame.css'
 
 import { BiSolidRocket } from 'react-icons/bi';
+import { MdOutlineGpsFixed } from "react-icons/md";
 import { Place, hotPlaceResDto } from '../types/place'
 
 import { useRecoilState } from 'recoil';
@@ -11,7 +12,7 @@ import { CenterLatState } from "../recoil/centerLat/index"
 import { CenterLngState } from "../recoil/centerLng/index"
 import { CurrLocation, Location } from "../recoil/currLocation/index"
 
-import { LatLng, nonFlaggedLatLng } from '../types/LatLng'
+import { LatLng, nonFlaggedLatLng, HotPlace } from '../types/LatLng'
 
 import { getAllHotplace, getIdHotplace } from '../api/getHotplace'
 
@@ -19,10 +20,7 @@ import HotPlaceUsers from '../components/HotPlaceUsers/HotPlaceUsers'
 import { getHotplaceUsers } from '../api/postLocation'
 
 import { BsFire, BsExclamationDiamondFill } from 'react-icons/bs'
-
-import rocket from '../assets/images/rocket.png';
-import Star2 from '../assets/images/Star2.png';
-import stars from '../assets/images/stars.png';
+import { FaUsers, FaUsersSlash, FaUser } from "react-icons/fa";
 
 const { kakao } = window;
 
@@ -37,7 +35,7 @@ export default function Map () {
   const [visibleMap, setVisibleMap] = useState<any | null>(null)
   const [hotplaceList, setHotplaceList] = useState<hotPlaceResDto[]>([])
   
-  const [hotPlaceLatLng, sethotPlaceLatLng] = useRecoilState<LatLng>(HotLatLngState);
+  const [hotPlaceLatLng, sethotPlaceLatLng] = useRecoilState<HotPlace>(HotLatLngState);
   const [searchHotPlace, setSearchHotPlace] = useState<nonFlaggedLatLng>({x: "", y: ""})
   // const [centerLat, setCenterLat] = useRecoilState<string>(CenterLatState);
   // const [centerLng, setCenterLng] = useRecoilState<string>(CenterLngState);
@@ -46,6 +44,27 @@ export default function Map () {
   const [currSpaceId, setCurrSpaceId] = useState<number>(0)
   const [showHotPlaceUsers, setShowHotPlaceUsers] = useState(false);
   const [hotplaceUsers, setHotplaceUsers] = useState<user[]>([])
+  const [hotuserStatus, setHotuserStatus] = useState<boolean>(false)
+
+
+  // 터치 이벤트 감지
+  useEffect(() => {
+    if (currSpaceId) {
+      const mapElement = document.getElementById('map');
+      if (mapElement) {
+        mapElement.addEventListener('touchstart', handleHotusers);
+      }
+    } else {
+      const mapElement = document.getElementById('map');
+      if (mapElement) {
+        mapElement.removeEventListener('touchstart', handleHotusers);
+      }
+    }
+  }, [currSpaceId])
+
+  const handleHotusers = () => {
+    setHotplaceUsers([])
+  }
 
   // 최초 마운트 시, 전체 hotplace 조회
   useEffect(() => {
@@ -64,12 +83,16 @@ export default function Map () {
     });
   }, [])
 
-  async function movemove(x: string, y: string) {
+  async function movemove(x: string, y: string, type:string) {
     var moveLatLon = new kakao.maps.LatLng(x, y);
     visibleMap.panTo(moveLatLon); 
 
     setTimeout(() => {
-      visibleMap.setLevel(2); 
+      if (type=="relocation") {
+        visibleMap.setLevel(4); 
+      } else {
+        visibleMap.setLevel(2); 
+      }
     }, 400)    
   }
 
@@ -93,11 +116,26 @@ export default function Map () {
     } else if (type=="postHotplace") {
       getAllHotplace()
       .then((res) => setHotplaceList(res.data))
+
     } else if (type=="pickHotPlace") {
       const Lat = data.y.toString().slice(0, -8)
       const Lng = data.x.toString().slice(0, -8)
       setSearchHotPlace({x: Lng, y: Lat})
       setCurrSpaceId(data.id)
+      // setCurrSpaceId(data.id)
+      // getHotplaceUsers(data.id)
+      // .then((res) => {
+      //   console.log('###########', res.data)
+      //   if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+      //     window.ReactNativeWebView.postMessage(
+      //       JSON.stringify({ 
+      //         type: 'test',
+      //         data: { data:`현재 위치 id 및 사용자 정보, ${data.id}, ${res.data}` }
+      //       })
+      //     );
+      //     }
+      //   // setHotplaceUsers(res.data)
+      // })
       // movemove(Lat, Lng)   
       // if (typeof window !== 'undefined' && window.ReactNativeWebView) {
       //   window.ReactNativeWebView.postMessage(
@@ -108,20 +146,22 @@ export default function Map () {
       //   );
       // }
     } else if (type=="entrance") {
-      setCurrSpaceId(data.id)
+      // setCurrSpaceId(data.id)
+      setHotplaceUsers(data)
+      setHotuserStatus(true)
       // getHotplaceUsers(data.id)
       // .then((res) => {
       //   console.log('###########', res.data)
-      //   setHotplaceUsers(res.data)
+      //   if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+      //     window.ReactNativeWebView.postMessage(
+      //       JSON.stringify({ 
+      //         type: 'test',
+      //         data: { data:`현재 위치 id 및 사용자 정보, ${data.id}, ${res.data}` }
+      //       })
+      //     );
+      //     }
+      //   // setHotplaceUsers(res.data)
       // })
-      // if (typeof window !== 'undefined' && window.ReactNativeWebView) {
-      // window.ReactNativeWebView.postMessage(
-      //   JSON.stringify({ 
-      //     type: 'test',
-      //     data: { data: `이번에야말로 정말?, ${data.id}` }
-      //   })
-      // );
-      // }
     }
   }
 
@@ -135,16 +175,35 @@ export default function Map () {
   )
   }, [])
 
-  // 현재 입장한 spaceId 갱신 시
+  //현재 입장한 spaceId 갱신 시
+  // useEffect(() => {
+  //   if (currSpaceId !== 0) {
+  //     getHotplaceUsers(currSpaceId)
+  //     .then((res) => {
+  //       console.log('###########', res.data)
+  //       setHotplaceUsers(res.data)
+  //     })
+  //   }
+  // }, [currSpaceId])
+
   useEffect(() => {
-    if (currSpaceId !== 0) {
-      getHotplaceUsers(currSpaceId)
-      .then((res) => {
-        console.log('###########', res.data)
-        setHotplaceUsers(res.data)
-      })
+    if (hotplaceUsers.length > 0) {
+
+      // getHotplaceUsers(currSpaceId)
+      // .then((res) => {
+      //   console.log('###########', res.data)
+      //   setHotplaceUsers(res.data)
+      // })
+
+      const timeoutId = setTimeout(() => {
+        setShowHotPlaceUsers(true);
+      }, 550);
+  
+      return () => clearTimeout(timeoutId); // Cleanup on component unmount or when currSpaceId changes
+    } else {
+      setShowHotPlaceUsers(false); // Reset showHotPlaceUsers when currSpaceId is 0
     }
-  }, [currSpaceId])
+  }, [hotplaceUsers]);
 
   // 내 위치 돌아가기 버튼 선택시, web- > native 에 내 위치 데이터 보내달라고 요청
   const requestLocation = () => {
@@ -185,7 +244,7 @@ export default function Map () {
   // 내 위치로 돌아가기
   async function moveToMypos() {
     if (hotPlaceLatLng.x) {
-      await sethotPlaceLatLng({x: "", y: "", flagged: false});
+      await sethotPlaceLatLng({x: "", y: "", id: 0, flagged: false});
     }
     await requestLocation();
     // await movemove(currLocation.Lat, currLocation.Lng)  
@@ -195,16 +254,19 @@ export default function Map () {
   useEffect(() => {
     window.kakao.maps.load(() => {
       setTimeout(() => {
+      setVisibleMap(null)
       var mapContainer = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
       if (hotPlaceLatLng.x) {
+        setCurrSpaceId(hotPlaceLatLng.id)
         const Lat = hotPlaceLatLng.y.slice(0, -8)
         const Lng = hotPlaceLatLng.x.slice(0, -8)
         var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
           center: new kakao.maps.LatLng(Lat, Lng), //지도의 중심좌표.
-          level: 4 //지도의 레벨(확대, 축소 정도)
+          level: 2 //지도의 레벨(확대, 축소 정도)
         };
         var map = new kakao.maps.Map(mapContainer, mapOptions); //지도 생성 및 객체 리턴
         setVisibleMap(map) 
+        // setDraggable(false)
 
         } else {
           var mapOptions = { //지도를 생성할 때 필요한 기본 옵션
@@ -214,16 +276,22 @@ export default function Map () {
 
           var map = new kakao.maps.Map(mapContainer, mapOptions); //지도 생성 및 객체 리턴
           setVisibleMap(map) 
+          // setDraggable(true)
         }
       }, 200)
-      setDraggable(false)
       // setZoomable(false)
       })
   }, [hotPlaceLatLng, hotplaceList])
 
   useEffect(() => {
-    movemove(currLocation.Lat, currLocation.Lng)  
+    movemove(currLocation.Lat, currLocation.Lng, "relocation")  
   }, [currLocation])
+
+  useEffect(() => {
+    movemove(searchHotPlace.y, searchHotPlace.x, "search")
+    // setDraggable(false)
+    // setZoomable(false)
+  }, [searchHotPlace])
 
   function setDraggable(draggable: boolean) {
     // 마우스 드래그로 지도 이동 가능여부를 설정합니다
@@ -234,19 +302,6 @@ export default function Map () {
       visibleMap.setZoomable(draggable);
     }
   }
-
-  function setZoomable(zoomable: boolean) {
-    // 마우스 휠로 지도 확대,축소 가능여부를 설정합니다
-    if (visibleMap) {
-      visibleMap.setZoomable(zoomable);
-    }    
-}
-
-  useEffect(() => {
-    movemove(searchHotPlace.y, searchHotPlace.x)
-    setDraggable(false)
-    // setZoomable(false)
-  }, [searchHotPlace])
 
   // 지도 위에, 내 위치 마커 띄우기
   // useEffect(() => {
@@ -299,8 +354,6 @@ export default function Map () {
 
       // 마커가 지도 위에 표시되도록 설정합니다
       marker.setMap(visibleMap);
-      setDraggable(false)
-      // setZoomable(false)
       }, 600)  
   }, [visibleMap])
 
@@ -311,15 +364,29 @@ export default function Map () {
     var positions = hotplaceList
 
     if (positions) {
+
+      var clusterer = new kakao.maps.MarkerClusterer({
+        map: visibleMap, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
+        averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
+        minLevel: 1 // 클러스터 할 최소 지도 레벨 
+      });
+  
+      // var markers = positions.map(function(position) {
+      //   return new kakao.maps.Marker({
+      //       position : new kakao.maps.LatLng(position.y, position.x)
+      //   });
+      // });
+  
+      // clusterer.addMarkers(markers);
       
       for (var i = 0; i < positions.length; i ++) {
         // console.log(positions[i])
         // 마커 이미지의 이미지 크기 입니다
         
         if (positions[i].placeType==="FLAG") {
-          var imageSize = new kakao.maps.Size(40, 45); 
+          var imageSize = new kakao.maps.Size(33, 45); 
           // 깃발 이미지
-          var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/b3564221-b312-4f4d-a073-fc14dccb3c15";
+          var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/c5886fe6-d455-42c6-8c13-624924126608";
         } else {
           var imageSize = new kakao.maps.Size(35, 45);
           if (positions[i].tier===5) {
@@ -349,6 +416,7 @@ export default function Map () {
         });
 
         hotMarker.setMap(visibleMap);
+        clusterer.addMarker(hotMarker)
 
         const place_name = positions[i].placeName
         const road_address_name = positions[i].roadAddressName
@@ -358,6 +426,7 @@ export default function Map () {
         kakao.maps.event.addListener(hotMarker, 'click', function() {
           // 클릭한 위도, 경도 정보를 가져옵니다 
           panToHandler(La, Ma);
+          setCurrSpaceId(Number(id))
           // requestPermission({
           //   id, 
           //   place_name, 
@@ -369,7 +438,7 @@ export default function Map () {
           .then((res) => res.data)
           // .then((res) => console.log(res))
           .then((res) => {
-            setDraggable(false)
+            // setDraggable(false)
             // setZoomable(false)
             requestPermission({
             id, 
@@ -412,17 +481,106 @@ export default function Map () {
     //   console.log('맵 마커 갱신 완료~~')
     //  } , 700)
 }, [visibleMap])
-useEffect(() => {
-  if (currSpaceId !== 0) {
-    const timeoutId = setTimeout(() => {
-      setShowHotPlaceUsers(true);
-    }, 550);
 
-    return () => clearTimeout(timeoutId); // Cleanup on component unmount or when currSpaceId changes
-  } else {
-    setShowHotPlaceUsers(false); // Reset showHotPlaceUsers when currSpaceId is 0
-  }
-}, [currSpaceId]);
+// 표시된 지도 위에, 현재 선택된 핫플에 위치한 마커 추가하는 로직
+// useEffect(() => {
+//   if (hotplaceUsers) {
+//   setTimeout(() => {
+//   // 핫플 마커 띄우기
+//   var positions = hotplaceUsers
+
+//   if (positions) {
+    
+//     for (var i = 0; i < positions.length; i ++) {
+//       // console.log(positions[i])
+//       // 마커 이미지의 이미지 크기 입니다
+
+//       const Lat = positions[i].y.toString().slice(0, -8)
+//       const Lng = positions[i].x.toString().slice(0, -8)
+//       // var markerPosition = new kakao.maps.LatLng(Lat, Lng);
+
+//       var imageSize = new kakao.maps.Size(40, 45);
+//       var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/8f938ed7-61cf-450d-b3fe-4e8ebbf070c9";
+//       var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
+
+      
+//       // 마커 이미지를 생성합니다    
+//       var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
+
+//       // 마커를 생성합니다
+//       var letMarker = new kakao.maps.Marker({
+//           map: visibleMap, // 마커를 표시할 지도
+//           position: new kakao.maps.LatLng(Lat, Lng),
+//           image : markerImage // 마커 이미지 
+//       });
+
+//       letMarker.setMap(visibleMap);
+
+//       const member_id = positions[i].memberId
+//       const hotplace_id = positions[i].hotPlaceId
+//       kakao.maps.event.addListener(letMarker, 'click', function() {
+//         if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+//           window.ReactNativeWebView.postMessage(
+//             JSON.stringify({ 
+//               type: 'user',
+//               data: { data: member_id }
+//             })
+//           );
+//         }
+//       })
+//       // 들어온 hotplace_id와 currSpaceId가 다르면 마커 삭제
+//       if (hotplace_id !== currSpaceId) {
+//         letMarker.setMap(null);
+//       }
+//     }}
+// })}}, [hotplaceUsers])
+
+// useEffect(() => {
+//   if (hotplaceUsers) {
+//   setTimeout(() => {
+//   // 핫플 마커 띄우기
+//   var positions = hotplaceUsers
+
+//   if (positions) {
+    
+//     for (var i = 0; i < positions.length; i ++) {
+//       // console.log(positions[i])
+//       // 마커 이미지의 이미지 크기 입니다
+
+//       const Lat = positions[i].y.toString().slice(0, -8)
+//       const Lng = positions[i].x.toString().slice(0, -8)
+//       // var markerPosition = new kakao.maps.LatLng(Lat, Lng);
+
+//       var imageSize = new kakao.maps.Size(40, 45);
+//       var imageSrc = "https://github.com/JiwooPaeng/popmmm/assets/122685653/8f938ed7-61cf-450d-b3fe-4e8ebbf070c9";
+//       var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
+
+      
+//       // 마커 이미지를 생성합니다    
+//       var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
+
+//       // 마커를 생성합니다
+//       var letMarker = new kakao.maps.Marker({
+//           map: visibleMap, // 마커를 표시할 지도
+//           position: new kakao.maps.LatLng(Lat, Lng),
+//           image : markerImage // 마커 이미지 
+//       });
+
+//       letMarker.setMap(visibleMap);
+
+//       const member_id = positions[i].memberId
+//       kakao.maps.event.addListener(letMarker, 'click', function() {
+//         if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+//           window.ReactNativeWebView.postMessage(
+//             JSON.stringify({ 
+//               type: 'user',
+//               data: { data: member_id }
+//             })
+//           );
+//         }
+//       })
+//     }}
+// })}}, [currSpaceId])
 
   return (
   <div className={`container`}>
@@ -433,7 +591,7 @@ useEffect(() => {
     <div className={`Box`} id={`right`}></div>
     <div className={`Box`} id={`bottom`}></div> */}
 
-    <img
+    {/* <img
         className={`Box`} id={`top`}
         src={stars} 
         alt="top"
@@ -452,27 +610,28 @@ useEffect(() => {
         className={`Box`} id={`bottom`}
         src={stars}
         alt="bottom"
-      />
-
-    <img
+        />
+        
+        <img
         className="sideRocket"
         src={rocket} 
         alt="sideRocket"
-      />
-    <img
+        />
+        <img
         className="sideStar"
         src={Star2} 
         alt="sideStar"
-      />
+      /> */}
 
+    <div id="map" className={styles.container}></div>
 
-    {showHotPlaceUsers && 
+    {showHotPlaceUsers &&
     <>
       <HotPlaceUsers hotplaceUsers={hotplaceUsers} />
     </>
     }
 
-    {(currSpaceId) && (
+    {/* {(currSpaceId) && (
       <>
       <div className={styles.draggableMessage}>
         <BsExclamationDiamondFill color={'red'} className={styles.exclamationIcon}/>
@@ -483,8 +642,8 @@ useEffect(() => {
         setDraggable(true)
         // setZoomable(true)
         setCurrSpaceId(0);
-        setHotplaceUsers([])
-        requestBottomSheet()
+        // setHotplaceUsers([])
+        // requestBottomSheet()
         }} className={styles.draggable}>
         <div style={{marginTop: '3px'}}><BsFire color={'#8B90F7'}/></div>
         <div className={styles.draggableText}>이동 허용하기</div>
@@ -496,7 +655,7 @@ useEffect(() => {
         <div style={{fontWeight: 600}}>: {hotplaceUsers.length}명</div>
       </button>
     </>
-    )}
+    )} */}
 
     {/* <button onClick={() => {
       // setDraggable(true)
@@ -508,18 +667,52 @@ useEffect(() => {
       <div className={styles.refreshUserText}>사용자 정보 갱신</div>
     </button> */}
 
-    <div id="map" className={styles.container}></div>
 
     <button className={styles.mypos} onClick={() => {
       moveToMypos();
-      setCurrSpaceId(0);
+      // setCurrSpaceId(0);
       setHotplaceUsers([])
-      setDraggable(true)
+      setCurrSpaceId(0)
+      // setDraggable(true)
       // setZoomable(true)
     }}>
-      <BiSolidRocket size={25} color={'#8B90F7'}/>
+      <MdOutlineGpsFixed size={27} color={'#8B90F7'}/>
     </button>
 
+    { currSpaceId !== 0 && (hotuserStatus ? (
+      <>
+      <button className={styles.userspos} onClick={() => {
+        // setCurrSpaceId(0);
+        setHotplaceUsers([])
+        setHotuserStatus(false)
+        // setDraggable(true)
+        // setZoomable(true)
+      }}>
+        <FaUsers size={27} color={'#8B90F7'}/>
+        {/* <FaUsersSlash size={27} color={'#8B90F7'}/> */}
+      </button>
+      <div className={styles.usernumberBox}>
+        <FaUser className={styles.userIcon} style={{marginRight: '5px', marginTop: '5px'}} size={13} color={'#8B90F7'}/>
+        <div className={styles.usernumber} style={{fontWeight: 600}}> {hotplaceUsers.length}명</div>
+      </div>
+      </>
+    ):(
+      <>
+      <button className={styles.userspos} onClick={() => {
+        setHotuserStatus(true)
+        if (typeof window !== 'undefined' && window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({ 
+              type: 'hotplaceUser',
+            })
+          );
+        }
+      }}>
+        <FaUsersSlash size={27} color={'#8B90F7'}/>
+        {/* <FaUsersSlash size={27} color={'#8B90F7'}/> */}
+      </button>
+      </>
+    ))}
     
   </div>
   )

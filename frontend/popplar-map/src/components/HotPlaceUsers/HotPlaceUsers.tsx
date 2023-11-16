@@ -35,6 +35,7 @@ export default function HotPlaceUsers({ hotplaceUsers }: Props) {
     //   setHotplaceUsers(res.data)
     
     const markers = generateRandomMarkers(hotplaceUsers.length)
+    // const markers = generateRandomMarkers(3)
     console.log('markers', markers[0])
     setMarkerPositions(markers)
     }, [hotplaceUsers]);
@@ -47,10 +48,6 @@ export default function HotPlaceUsers({ hotplaceUsers }: Props) {
           <UserMarker user={user}/>
         </div>
       ))}
-
-      <div>
-        
-      </div>
     </>
   );
 }
