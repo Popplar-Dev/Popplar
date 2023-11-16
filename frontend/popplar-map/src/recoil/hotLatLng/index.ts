@@ -1,11 +1,12 @@
 import { atom } from "recoil";
-import { LatLng } from "../../types/LatLng";
+import { HotPlace } from "../../types/LatLng";
 
-export const HotLatLngState= atom<LatLng>({
+export const HotLatLngState= atom<HotPlace>({
   key: 'HotLatLngState',
   default: {
     x: "",
     y: "",
+    id: 0,
     flagged: false
   },
 });
