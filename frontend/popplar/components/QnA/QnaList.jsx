@@ -171,7 +171,8 @@ const styles = StyleSheet.create({
   },
   qnacontainer: {
     width: '90%',
-    margin: 10,
+    marginTop: 10,
+    marginBottom: 90,
   },
   buttonbox: {
     flexDirection:'row',

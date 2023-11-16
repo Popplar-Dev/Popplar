@@ -105,25 +105,6 @@ function ProfileSetting() {
             </View>
           </Pressable>
         <View>
-          <View style={styles.info}>
-            <Text style={styles.t}>
-                경험치 : {userinfo.exp} xp
-            </Text>
-          </View>
-          <View style={styles.info}>
-            <Text style={styles.t}>연동 정보 : </Text>
-            <Text style={styles.t}>{userinfo.socialType}</Text>
-          </View>
-          {/* <View style={styles.info}>
-            <Text style={styles.t}>내 위치  {isEnabled ? '끄기' : '켜기'}</Text>
-            <Switch
-              trackColor={{false: '#767577', true: '#8B90F7'}}
-              thumbColor={isEnabled ? 'blue' : '#f4f3f4'}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
-              value={isEnabled}
-            />
-          </View> */}
         </View>
         <ProfileImageSelectModal
           visible={modalVisible}
@@ -227,7 +208,8 @@ const styles = StyleSheet.create({
   },
   delete: {
     color:'red',
-    margin:30
+    margin:30,
+    fontWeight:'bold'
   },
 });
 

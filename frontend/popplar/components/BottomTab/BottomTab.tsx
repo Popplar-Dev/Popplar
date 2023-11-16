@@ -1,6 +1,7 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import {View, StyleSheet, Alert} from 'react-native';
 import { useNavigation, useRoute, NavigationProp, useFocusEffect  } from '@react-navigation/native';
 import { TabNavigatorParamList } from '../types/NavigatorParams';
@@ -244,7 +245,7 @@ export default function BottomTab() {
         component={NotificationsScreen}
         options={{
           tabBarIcon: ({focused}) => (
-            <Icon name="bell" size={25} color={focused ? '#613EEA' : 'white'} />
+            <IonIcon name="mail-outline" size={30} color={focused ? '#613EEA' : 'white'} />
           ),
         }}
       />
