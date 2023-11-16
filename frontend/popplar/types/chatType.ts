@@ -7,5 +7,6 @@ export type ChatMessageType = {
   memberProfileImage: string;  
   chattingContent: string; 
   date?: string;
-  time?: string; 
+  time?: string;
+  conqueror: boolean; 
 }

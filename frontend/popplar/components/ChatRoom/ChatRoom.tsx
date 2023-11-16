@@ -97,6 +97,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
               memberId: number;
               memberName: string;
               memberProfileImage: string;
+              conqueror: boolean; 
             }) => {
               const [formattedDate, formattedTime] = getDateAndTime(
                 chat.chattingCreatedAt,
@@ -112,6 +113,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
                 chattingContent: chat.chattingContent,
                 date: formattedDate,
                 time: formattedTime,
+                conqueror: chat.conqueror
               };
               return newMessage;
             },
@@ -172,6 +174,7 @@ export default function ChatRoom({roomId}: {roomId: number}) {
                 chattingContent: messageBody.chattingContent,
                 date: formattedDate,
                 time: formattedTime,
+                conqueror: messageBody.conqueror
               };
 
               setMessages((prev: ChatMessageType[]) => [newMessage, ...prev]);
