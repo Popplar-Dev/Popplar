@@ -523,7 +523,7 @@ const MapScreen: React.FC = () => {
         {spaceInfo && spaceInfo.place_name &&
           <View style={styles.spaceName}>
             <TouchableWithoutFeedback handleLongPress={handleOutsideClick}>
-              <NameBox h={38} text={spaceInfo.place_name} />
+              <NameBox h={38} text={spaceInfo.place_name} tier={spaceInfo.tier}/>
             </TouchableWithoutFeedback>
             {!spaceInfo.placeType ? (
               <>
