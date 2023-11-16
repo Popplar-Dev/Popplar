@@ -101,6 +101,23 @@ const MapScreen: React.FC = () => {
     })
   }, [])
 
+  useFocusEffect(useCallback(() => {
+		const backAction = () => {
+      if (route.name==='MapScreen')
+			Alert.alert('앱 종료', '앱을 종료하시겠습니까?', [
+				{ text: '취소', onPress: () => null },
+				{ text: '확인', onPress: () => BackHandler.exitApp() },
+			]);
+			return true;
+		};
+	
+		const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+	
+		return () => {
+			backHandler.remove();
+		};
+	}, []));
+
   // 내 위치 5초마다 입력
   useEffect(() => {
     if (myHotPlaceId !== 0) {
@@ -238,7 +255,7 @@ const MapScreen: React.FC = () => {
 
   // location, spaceId, route.params 갱신시 distance 새로 구함
   useEffect(() => {
-    if (spaceInfo && spaceInfo.x && spaceInfo.y) {
+    if (spaceInfo && spaceInfo.x && spaceInfo.y && location.x && location.y) {
       let distance = getDistance(location.x, location.y, spaceInfo.x, spaceInfo.y)
         if (distance <= 500) {
           setInDistance(true)
@@ -420,16 +437,19 @@ const MapScreen: React.FC = () => {
     })
     .catch((e)=>console.error("핫플 아이디가 없음"))
     
-    let id = setInterval(() => {  
-      let distance = getDistance(location.x, location.y, pos.x, pos.y)
-
-      // redis에 내 위치 정보 저장
-      if (distance > 500) {
-        updateMyHotPlaceId(0, userInfo.id)
-        data.hotPlaceId = 0
+    let id = setInterval(() => {
+      if (location.x && location.y) {
+        let distance = getDistance(location.x, location.y, pos.x, pos.y)
+        console.log(location.x, location.y, pos.x, pos.y)
+        console.log("distance: ", distance)
+        // redis에 내 위치 정보 저장
+        if (distance > 500) {
+          updateMyHotPlaceId(0, userInfo.id)
+          data.hotPlaceId = 0
+        }
+        postMyHotLocation(data)
+        .then((res) => res)
       }
-      postMyHotLocation(data)
-      .then((res) => res)
     }, 5000);
 
     setIntervalId(id)

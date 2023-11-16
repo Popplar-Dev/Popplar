@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, TextInput, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, TextInput, FlatList, ActivityIndicator, Keyboard } from 'react-native';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { userInfoState } from '../recoil/userState';
@@ -45,7 +45,10 @@ export default function QnaDetail({ route }) {
   };
 
   const handleSubmitAnswer = () => {
-    const newAnswerText = newAnswer;
+    const newAnswerText = newAnswer.trim();
+    if (newAnswerText === '') {
+      return;
+    }
     const postUrl = `https://k9a705.p.ssafy.io:8000/member/qna/answer/${qnaId}`;
 
     const requestBody = {
@@ -71,6 +74,7 @@ export default function QnaDetail({ route }) {
           console.log("에러 메시지 ::", err);
         });
         setNewAnswer('');
+        Keyboard.dismiss();
       }}
     isLogin()  
   };
@@ -147,23 +151,41 @@ export default function QnaDetail({ route }) {
                       </View>
                       <Text style={styles.text}>{item.content}</Text>
                     </View>
-                    { !selectcomplete ? (
-                      <View
-                        style={item.id === questionDetail.adoptedAnswerId ? styles.selectButton : styles.cantselectButton}
-                      >
-                        <Text style={styles.selectButtonText}>
-                          {item.id === questionDetail.adoptedAnswerId ? '채택됨' : ''}
-                        </Text>
-                      </View>
+                    {userinfo.id === questionDetail.memberId ? (
+                      <>
+                        { !selectcomplete ? (
+                          <View
+                            style={item.id === questionDetail.adoptedAnswerId ? styles.selectButton : styles.cantselectButton}
+                          >
+                            <Text style={styles.selectButtonText}>
+                              {item.id === questionDetail.adoptedAnswerId ? '채택됨' : ''}
+                            </Text>
+                          </View>
+                        ) : (
+                          <Pressable
+                            style={item.id === questionDetail.adoptedAnswerId ? styles.selectButton : styles.nonselectButton}
+                            onPress={() => handleSelectAnswer(item.id)}
+                          >
+                            <Text style={styles.selectButtonText}>
+                              {item.id === questionDetail.adoptedAnswerId ? '채택됨' : '채택하기'}
+                            </Text>
+                          </Pressable>
+                        )}
+                      </>
                     ) : (
-                      <Pressable
-                        style={item.id === questionDetail.adoptedAnswerId ? styles.selectButton : styles.nonselectButton}
-                        onPress={() => handleSelectAnswer(item.id)}
-                      >
-                        <Text style={styles.selectButtonText}>
-                          {item.id === questionDetail.adoptedAnswerId ? '채택됨' : '채택하기'}
-                        </Text>
-                      </Pressable>
+                      <>
+                        { !selectcomplete ? (
+                          <View
+                            style={item.id === questionDetail.adoptedAnswerId ? styles.selectButton : styles.cantselectButton}
+                          >
+                            <Text style={styles.selectButtonText}>
+                              {item.id === questionDetail.adoptedAnswerId ? '채택됨' : ''}
+                            </Text>
+                          </View>
+                        ) : (
+                          null
+                        )}
+                      </>
                     )}
                   </View>
                 )}

@@ -16,6 +16,15 @@ export default function QnaList({ route }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [qnaData, setQnaData] = useState('');
   const [userinfo, setUserInfo] = useRecoilState(userInfoState);
+  const [showMyQna, setShowMyQna] = useState(false);
+
+  const handleToggleMyQna = () => {
+    setShowMyQna(!showMyQna);
+  };
+
+  const filteredQnaData = showMyQna
+    ? qnaData.filter(item => item.questionResDto.memberId === userinfo.id)
+    : qnaData;
 
   const handleItemPress = (qna) => {
     navigation.navigate('QnaDetail', { qnaId: qna.id, userid: qna.memberId, username: qna.memberName, profileimage: qna.memberProfileImage});
@@ -82,9 +91,17 @@ export default function QnaList({ route }) {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.hotplace}>{spacename}</Text>
-      <Pressable style={styles.createqna} onPress={() => openModal()}>
-        <Text style={styles.text}>질문하기</Text>
-      </Pressable>
+        <Pressable style={styles.createqna} onPress={() => openModal()}>
+          <Text style={styles.text}>질문하기</Text>
+        </Pressable>
+        <View style={styles.buttonbox}>
+          <Pressable style={styles.filter} onPress={handleToggleMyQna}>
+            <Text style={styles.text}>내 Q&A</Text>
+            <View style={[styles.checkbox, showMyQna && styles.checked]}>
+              {showMyQna && <Icon name="checkmark-outline" size={15} color="#fff" />}
+            </View>
+          </Pressable>
+        </View>
       {qnaData.length===0 ? (
         <View style={styles.nodata}>
           <Text style={styles.text}>아직 질문이 없습니다</Text>
@@ -92,7 +109,7 @@ export default function QnaList({ route }) {
       ) : (
         <FlatList
           style={styles.qnacontainer}
-          data={qnaData}
+          data={filteredQnaData}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
           <Pressable style={styles.qnabox} key={index} onPress={() => handleItemPress(item.questionResDto)}>
@@ -156,6 +173,11 @@ const styles = StyleSheet.create({
     width: '90%',
     margin: 10,
   },
+  buttonbox: {
+    flexDirection:'row',
+    width:'85%',
+    justifyContent:'flex-end'
+  },
   qnabox: {
     borderRadius: 20,
     borderStyle: 'solid',
@@ -185,8 +207,6 @@ const styles = StyleSheet.create({
   },
   createqna: {
     marginTop: 10,
-    borderColor: 'blue',
-    borderStyle: 'solid',
     backgroundColor: '#8B90F7',
     paddingBottom: 8,
     paddingTop: 3,
@@ -194,7 +214,25 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     borderRadius: 10,
     justifyContent: 'flex-end',
-    alignItems:'flex-end'
+    alignItems:'center'
+  },
+  filter: {
+    flexDirection:'row',
+    alignItems:'center'
+  },
+  checkbox: {
+    width: 17,
+    height: 17,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: '#8B90F7',
+    marginLeft: 5,
+    marginTop:3,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checked: {
+    // backgroundColor: 'white',
   },
   nodata: {
     flex:1,
