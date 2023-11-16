@@ -33,10 +33,13 @@ export default function QnaCreateModal({ visible, onClose, onSubmit }: QnaCreate
             </Pressable>
           </View>
 					<TextInput
-						style={styles.input}
+						style={[styles.input, styles.multilineInput]}
 						placeholder="ex) 거기 지금 웨이팅 많나요?"
 						value={newQuestion}
 						onChangeText={setNewQuestion}
+            multiline={true} // 여러 줄의 텍스트 입력을 가능하게 함
+            numberOfLines={4}
+            maxLength={100}
 					/>
 					<Pressable style={styles.submitButton} onPress={handleCreateQuestion}>
 						<Text style={styles.submitButtonText}>질문 등록</Text>
@@ -80,6 +83,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     height:100,
     color:'black'
+  },
+  multilineInput: {
+    height: 100, 
   },
   submitButton: {
     backgroundColor: '#8B90F7',

@@ -268,6 +268,7 @@ const styles = StyleSheet.create({
     borderColor: '#8B90F7',
     borderRadius:20,
     width:'96%',
+    marginBottom:30
   },
   planetcontainer: {
     flexDirection:'row',
