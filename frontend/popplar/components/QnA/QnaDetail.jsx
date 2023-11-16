@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, TextInput, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, TextInput, FlatList, ActivityIndicator, Keyboard } from 'react-native';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { userInfoState } from '../recoil/userState';
@@ -74,6 +74,7 @@ export default function QnaDetail({ route }) {
           console.log("에러 메시지 ::", err);
         });
         setNewAnswer('');
+        Keyboard.dismiss();
       }}
     isLogin()  
   };

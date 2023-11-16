@@ -29,7 +29,9 @@ export default function BottomSheetQnA(props) {
           {headers: {'Access-Token': userAccessToken}}
         )
           .then((response) => {
-            setQnaData(response.data[0])
+            const lastData = response.data[response.data.length - 1];
+            setQnaData(lastData);
+            // setQnaData(response.data[response.data.length-1])
           })
           .catch((err) => {
             console.log("에러 메시지 :", err)
