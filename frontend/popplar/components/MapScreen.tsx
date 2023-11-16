@@ -10,7 +10,6 @@ import HotRegisterButton from './HotRegisterButton/HotRegisterButton'
 import MetalIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import StampButton from './PlaceOptionBox/StampButton'
 
-
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -49,6 +48,8 @@ import { userInfoState } from './recoil/userState';
 import HotplaceUsers from './HotplaceUsers/HotplaceUsers'
 import UserModal from './Modals/UserModal'
 import { BackHandler } from 'react-native';
+
+import { getHotplaceUsers } from './services/postLocation'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -93,6 +94,13 @@ const MapScreen: React.FC = () => {
   const [isMemberModalVisible, setMemberModalVisible] = useState(false);
   const [intervalId, setIntervalId] = useState(null)
   const [bottomSheetStatus, setBottomSheetStatus] = useState<number>(0)
+  
+  // webView 터치 이벤트 감지
+  const handlePress = () => {
+    // 여기에 클릭 시 실행할 로직을 추가합니다.
+    console.log('터치 이벤트가 발생했습니다.');
+    // 원하는 이동 등의 로직을 추가할 수 있습니다.
+  };
 
   // setLocation -> granted
   useEffect(() => {
@@ -423,8 +431,8 @@ const MapScreen: React.FC = () => {
     let id = setInterval(() => {
       if (location.x && location.y) {
         let distance = getDistance(location.x, location.y, pos.x, pos.y)
-        console.log(location.x, location.y, pos.x, pos.y)
-        console.log("distance: ", distance)
+        // console.log(location.x, location.y, pos.x, pos.y)
+        // console.log("distance: ", distance)
         // redis에 내 위치 정보 저장
         if (distance > 500) {
           updateMyHotPlaceId(0, userInfo.id)
@@ -448,19 +456,33 @@ const MapScreen: React.FC = () => {
 
   // 해당 장소에 있는 다른 사람들 정보 출력하기 위해 webview로 데이터 전송
   async function handle_hot_users () {
-
-    const spaceData: { type: string, data: {id: string} } = {type: 'entrance', data: { id: spaceInfo.id }}
-    // console.log('spaceData', spaceData)
-    if (webRef.current) {
+    getHotplaceUsers(spaceInfo.id)
+    .then((res) => {
+      const spaceData: { type: string, data: any } = {type: 'entrance', data: res.data}
+      // const spaceData: { type: string } = {type: 'entrance'}
+      // console.log('spaceData', spaceData)
+      if (webRef.current) {
       webRef.current.injectJavaScript(`
       window.postMessage(${JSON.stringify(spaceData)}, '*')
-      `)
-    }
+      `)}
+    })
   }
+
+  // const spaceData: { type: string, data: {id: string} } = {type: 'entrance', data: { id: spaceInfo.id }}
+  // // const spaceData: { type: string } = {type: 'entrance'}
+  // // console.log('spaceData', spaceData)
+  // if (webRef.current) {
+  //   webRef.current.injectJavaScript(`
+  //   window.postMessage(${JSON.stringify(spaceData)}, '*')
+  //   `)
+  // }
 
   // 입장하기 누른 핫플레이스와, 현재 들어온 핫플레이스가 동일하다면 주변 사람들 정보 띄워줌
   useEffect(() => {
-    handle_hot_users()
+    if (spaceInfo.x) {
+      handle_hot_users()
+      console.log('지금 space', spaceInfo.place_name, spaceInfo.id)
+    }
     // if (myHotPlaceId==spaceInfo.id) {
     //   handle_entrance()
     // }
@@ -493,7 +515,9 @@ const MapScreen: React.FC = () => {
       {/* {spaceInfo && (bottomSheetStatus===0 ) &&
         <HotplaceUsers id={Number(spaceInfo.id)}/>
       } */}
+
       <View style={[styles.container]}>
+      {spaceInfo.id && (
         <BottomSheetModal
           ref={bottomSheetModalRef}
           index={0}
@@ -635,36 +659,41 @@ const MapScreen: React.FC = () => {
         }
         </View>
         </BottomSheetModal>
+        )}
 
-        <WebView 
-          ref={webRef}
-          style={styles.webview}
-          source={{uri: 'https://jiwoopaeng.github.io/popmmm/'}}
-          javaScriptEnabled={true}
-          onLoad={native_to_web_load}
-          // injectedJavaScript={inject}
-          onMessage={(event) => {
-            const data: any = JSON.parse(event.nativeEvent.data)
-            if (data.type=="test") {
-              // console.log(data)
-            } else if (data.type=="relocation") {
-              native_to_web();
-            } else if (data.type=="user") {
-              // console.log("user~~~~~~", data.data.data)
-              setUserId(data.data.data)
-              openMemberModal()
-            } else if (data.type=="handleBottomSheet") {
-              handlePresentModalClose();
-            } else {
-              handlePresentModalPress();
-              // setBottomSheetStatus(0)
-              setSpaceInfo(data.data)
-              setSpaceId(data.data.id)
-              // setSpaceLike(data.data.myLike)
-              // setSpaceLikeCount(data.data.likeCount)
-            }
-          }}
-        />
+        {/* <TouchableOpacity onPress={handlePress}> */}
+          <WebView 
+            ref={webRef}
+            style={styles.webview}
+            source={{uri: 'https://jiwoopaeng.github.io/popmmm_demo/'}}
+            // source={{uri: 'https://jiwoopaeng.github.io/popmmm/'}}
+            javaScriptEnabled={true}
+            onLoad={native_to_web_load}
+            // injectedJavaScript={inject}
+            onMessage={(event) => {
+              const data: any = JSON.parse(event.nativeEvent.data)
+              if (data.type=="test") {
+                console.log(data)
+              } else if (data.type=="relocation") {
+                handlePresentModalClose();
+                native_to_web();
+              } else if (data.type=="user") {
+                // console.log("user~~~~~~", data.data.data)
+                setUserId(data.data.data)
+                openMemberModal()
+              } else if (data.type=="hotplaceUser") {
+                handle_hot_users()
+              }  else {
+                handlePresentModalPress();
+                // setBottomSheetStatus(0)
+                setSpaceInfo(data.data)
+                setSpaceId(data.data.id)
+                // setSpaceLike(data.data.myLike)
+                // setSpaceLikeCount(data.data.likeCount)
+              }
+            }}
+          />
+        {/* </TouchableOpacity> */}
       </View>
     </BottomSheetModalProvider>
 
