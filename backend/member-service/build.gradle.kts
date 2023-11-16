@@ -42,6 +42,7 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	implementation ("org.springframework.kafka:spring-kafka")
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 }
 
 dependencyManagement {
