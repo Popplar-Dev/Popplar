@@ -34,54 +34,54 @@
 <div align="center">
  <table>
     <tr>
-      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">로그인 & 지도</td>
-      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">아지트 입장하기</td>
-      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">방문 스탬프 & 게임</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">로그인 & 지도</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">아지트 입장하기</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">방문 스탬프 & 게임</td>
     </tr>
     <tr>
-      <td align="center" style="width: 280px;"><img src="./assets/로그인및지도_1.gif" /></td>
-      <td align="center" style="width: 280px;"><img src="./assets/로그인및지도_1.gif" /></td>
-      <td align="center" style="width: 280px;"><img src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
     </tr>
 	  <br/>
 	<tr>
-      <td align="center" style="width: 280px;">소셜 로그인 후 아지트 정보가 포함된 지도 페이지로 이동</td>
-      <td align="center" style="width: 280px;">아지트와 사용자의 거리를 측정해 500미터 이내에 있다면 입장하기 버튼 활성화, 500미터 밖에 있다면 입장 불가</td>
-      <td align="center" style="width: 280px;">하루에 한번 방문 스탬프 기록 (방문 스탬프 누적 기록을 통해 아지트 레벨이 상승) / 두 가지 미니게임 점수를 합산해 가장 높은 점수를 달성한 오늘의 정복자 표시</td>
+      <td align="center">소셜 로그인 후 아지트 정보가 포함된 지도 페이지로 이동</td>
+      <td align="center">아지트와 사용자의 거리를 측정해 500미터 이내에 있다면 입장하기 버튼 활성화, 500미터 밖에 있다면 입장 불가</td>
+      <td align="center">하루에 한번 방문 스탬프 기록 (방문 스탬프 누적 기록을 통해 아지트 레벨이 상승) / 두 가지 미니게임 점수를 합산해 가장 높은 점수를 달성한 오늘의 정복자 표시</td>
     </tr>
 </table>
 <table>
     <tr>
-      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">QNA & 질문하기 & 채택하기</td>
-      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">채팅방 입장 후 채팅하기</td>
-      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">주변 사용자에게 쪽지 보내기 & 보낸 쪽지함, 받은 쪽지함</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">QNA & 질문하기 & 채택하기</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">채팅방 입장 후 채팅하기</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">주변 사용자에게 쪽지 보내기 & 보낸 쪽지함, 받은 쪽지함</td>
     </tr>
     <tr>
-      <td align="center" style="width: 280px;"><img src="./assets/로그인및지도_1.gif" /></td>
-      <td align="center" style="width: 280px;"><img src="./assets/로그인및지도_1.gif" /></td>
-      <td align="center" style="width: 280px;"><img src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
     </tr>
     <tr>
-			<td align="center" style="width: 280px; font-weight: bold; font-size: 18;">선택된 장소에 대해 자유롭게 질문하고 답변 가능. 질문자는 원하는 답변 채택 가능</td>
-      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">입장하기 후 실시간 아지트별 채팅방 입장 가능, 특정 사용자 차단 가능</td>
-      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">아지트 사용자 마커를 선택해 특정 사용자에게 쪽지 발송 가능. 받은 쪽지를 확인하고 답장 가능</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">선택된 장소에 대해 자유롭게 질문하고 답변 가능. 질문자는 원하는 답변 채택 가능</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">입장하기 후 실시간 아지트별 채팅방 입장 가능, 특정 사용자 차단 가능</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">아지트 사용자 마커를 선택해 특정 사용자에게 쪽지 발송 가능. 받은 쪽지를 확인하고 답장 가능</td>
     </tr>
 </table>
 <table>
     <tr>
-      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">마이페이지 (업적 / 내 정보 수정)</td>
-      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">전체 아지트 리스트 & 카테고리별</td>
-      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">장소 검색 & 아지트 등록</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">마이페이지 (업적 / 내 정보 수정)</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">전체 아지트 리스트 & 카테고리별</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">장소 검색 & 아지트 등록</td>
     </tr>
     <tr>
-      <td align="center" style="width: 280px;"><img src="./assets/로그인및지도_1.gif" /></td>
-      <td align="center" style="width: 280px;"><img src="./assets/로그인및지도_1.gif" /></td>
-      <td align="center" style="width: 280px;"><img src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
     </tr>
     <tr>
-      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">아지트 방문에 따른 장소 카테고리별 업적 갱신. 사용자 닉네임과 이미지 수정 가능</td>
-      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">전체 아지트 리스트 확인 가능. 장소 카테고리별 필터와 검색을 통해 원하는 아지트를 편리하게 찾을 수 있음</td>
-      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">장소 검색을 통해 아직 아지트 등록되지 않은 장소를 찾고 새로운 아지트로 등록 가능</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">아지트 방문에 따른 장소 카테고리별 업적 갱신. 사용자 닉네임과 이미지 수정 가능</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">전체 아지트 리스트 확인 가능. 장소 카테고리별 필터와 검색을 통해 원하는 아지트를 편리하게 찾을 수 있음</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">장소 검색을 통해 아직 아지트 등록되지 않은 장소를 찾고 새로운 아지트로 등록 가능</td>
     </tr>
  </table>
 </div>
