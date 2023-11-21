@@ -1,126 +1,83 @@
-# 서비스명 : Popplar
-
-## 기획 배경
-
-- 국내 핫플레이스들에 대한 인기가 높아진 만큼 길어진 웨이팅, 핫플레이스에서 같은 공간에서 지루한 대기 시간을 보내는 사람들끼리 서로 익명으로 대화하면서 핫플에 대한 정보도 공유하고, 게임도 하면서 즐겁게 웨이팅 시간을 보낼 수 있는 서비스.
-
-## 주기능
-
-1. 핫플레이스 맵 기능
-    1. 지도에서 핫플레이스 표기(핫플레이스는 사람이 많이 방문할수록 레벨이 높아짐)
-    2. 핫플레이스 주변으로 방문하면 핫플레이스에 입장 가능, 입장 시,  핫플레이스에서 익명의 유저들과 채팅과 간단한 게임이 가능함, 핫플레이스 범위를 나가면 일정 시간 후 모든 기능 사용 불가.
-    3. 핫플레이스 입장 시 핫플레이스에 방문해있는 유저들의 위치 정보를 지도에서 확인 (on / off)  ⇒ 특정 사용자에게 쪽지를 보낼 수 있는 기능도 제공.
-    4. 핫플레이스 입장 시 도장을 찍을 수 있음. ⇒ 수집 개수에 따른 칭호 부여
-    5.
-2. 핫플레이스 게임 기능
-    1. 핫플레이스에 입장한 사용자들끼리 간단한 게임(끝말잇기)을 할 수 있음
-        1. 미니게임과 10분마다 랜드마크 쟁탈전(5초안에 버튼 클릭 횟수<좋은데?>)
-    2. 게임에서 최종 1위한 사용자는 일정 시간 동안 해당 핫플레이스의 정복자가 될 수 있음
-        1. 정복자는 경험치와 함께, 채팅룸에서 특별한 메시지를 날릴 수 있음
-        2. 경험치가 올라가면 캐릭터 디자인과 채팅 색상이 변경됨
-3. 사용자 정의 핫플레이스 등록
-    1. 사용자는 핫플레이스 등록을 원하는 지역을 검색해 씨앗을 심을 수 있음
-    2. 다른 사용자들이 해당 핫플레이스에 투표를 해주면 일정 투표 수 이후 싹이 틈, 이후 핫플레이스 서비스가 열림
-
-
+# Popplar 
 <div align="center">
-<!-- <img src="https://github.com/fluffymn/readme-test/assets/55385934/faace829-e55b-4d32-ac3a-62af250bf783"/> -->
-<h2>
-	위치 기반 익명 채팅 및 SNS 서비스 
-	<img src="https://github.com/fluffymn/readme-test/assets/55385934/46ec4e62-f38a-4f76-bfa2-dbe8085ce0f1" width=30/>
-</h2>
-
-<p>
-<a href="https://play.google.com/store/apps/details?id=com.popplar.myapplication&hl=ko-KR"> 지금 바로 플레이스토어에서 설치해보기</a>
-</p>
-
-[프로젝트 소개](#🚀-프로젝트-소개) • [주요 기능](#✨-주요-기능) • [기술 스택](#🔧-기술-스택)• [인프라 구조](#⚙️-인프라-구조)• [개발 일지](#📚-팀-개발-일지)• [팀원 소개](#👩‍💻-팀원-소개)
-
+	<img src="https://github.com/Popplar-Dev.png" width=200/>
+	<h2>
+		위치 기반 익명 채팅 및 SNS 서비스 
+	</h2>
 </div>
 
+## 기획 배경
+국내 핫플레이스들에 대한 인기가 높아진 만큼 길어진 웨이팅, 핫플레이스에서 같은 공간에서 지루한 대기 시간을 보내는 사람들끼리 서로 익명으로 대화하면서 핫플에 대한 정보도 공유하고, 게임도 하면서 즐겁게 웨이팅 시간을 보낼 수 있는 서비스.
+
+<div align="center">
+	<p>
+	<a href="https://play.google.com/store/apps/details?id=com.popplar.myapplication&hl=ko-KR"> 지금 바로 플레이스토어에서 설치해보기</a>
+	</p>
+	
+[프로젝트 소개](#🚀-프로젝트-소개) • [주요 기능](#✨-주요-기능) • [기술 스택](#🔧-기술-스택)• [인프라 구조](#⚙️-인프라-구조)• [개발 일지](#📚-팀-개발-일지)• [팀원 소개](#👩‍💻-팀원-소개)
+	
+</div>
+
+<br/>
+
+## 📚 개발 기간
+<div>
+	<p>개발 기간 : 2023.08 - 2023.10 (7주)</p>
+</div>
+
+<br/>
+
 ## 🎉 프로젝트 소개
-
- <table>
-    <tr>
-<!--       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/f3324c96-e216-453d-84e0-5dd9cf1a9a68" /></td>
-      <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/0087115c-7aaf-476e-9983-233038ab2fb6" /></td>
-            <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/de5911ee-24e8-4d11-bc78-cde9bc1e6360" /></td> -->
-    </tr>
-    </table>
-
-<b>서비스 설명</b>
-
- **위치 기반 실시간 소셜 모바일 앱 서비스**
+🪐**위치 기반 실시간 소셜 모바일 앱 서비스**  
 내 주변 장소가 궁금한 여행자🚩, 익명의 사용자와 자유롭게 소통하고 싶은 사람들🤸‍♀️을 위해 **POPPLAR**가 탄생했습니다! **POPPLAR**를 통해 아지트를 방문하고 즐거운 시간을 함께 나누세요!
-
 
 <br />
 
-
 ## ✨ 주요 기능
-- 우리껄로 다 바꾸기 기능별로
 <div align="center">
  <table>
     <tr>
-      <td align="center" style="font-weight: bold; font-size: 18;">로그인 화면</td>
-      <td align="center" style="font-weight: bold; font-size: 18;">메인 화면</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">로그인 & 지도</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">아지트 입장하기</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">방문 스탬프 & 게임</td>
     </tr>
     <tr>
 <!--       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/f3324c96-e216-453d-84e0-5dd9cf1a9a68" /></td>
       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/0087115c-7aaf-476e-9983-233038ab2fb6" /></td> -->
     </tr>
+	  <br/>
 	<tr>
-      <td align="center">소셜 로그인으로 로그인이 가능한 페이지</td>
-      <td align="center">로그인 후 자동으로 메인 화면 접속</td>
+      <td align="center">소셜 로그인 후 아지트 정보가 포함된 지도 페이지로 이동</td>
+      <td align="center">아지트와 사용자의 거리를 측정해 500미터 이내에 있다면 입장하기 버튼 활성화, 500미터 밖에 있다면 입장 불가</td>
+      <td align="center">하루에 한번 방문 스탬프 기록 (방문 스탬프 누적 기록을 통해 아지트 레벨이 상승) / 두 가지 미니게임 점수를 합산해 가장 높은 점수를 달성한 오늘의 정복자 표시</td>
     </tr>
     <tr>
-      <td align="center" style="font-weight: bold; font-size: 18;">지도 화면</td>
-      <td align="center" style="font-weight: bold; font-size: 18;">핫플레이스 상세 정보</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">QNA & 질문하기 & 채택하기</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">채팅방 입장 후 채팅하기</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">주변 사용자에게 쪽지 보내기 & 보낸 쪽지함, 받은 쪽지함</td>
     </tr>
     <tr>
 <!--       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/de5911ee-24e8-4d11-bc78-cde9bc1e6360" /></td>
       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/fcc377e2-c916-4a50-a111-5364fd810083" /></td> -->
     </tr>
     <tr>
-      <td align="center">지도에서 핫플레이스 표기(핫플레이스는 사람이 많이 방문할수록 레벨이 높아짐</td>
-      <td align="center">핫플레이스 주변으로 방문하면 핫플레이스에 입장 가능, 입장 시,  핫플레이스에서 익명의 유저들과 채팅과 간단한 게임이 가능함, 핫플레이스 범위를 나가면 일정 시간 후 모든 기능 사용 불가.</td>
+			<td align="center" style="font-weight: bold; font-size: 18;">선택된 장소에 대해 자유롭게 질문하고 답변 가능. 질문자는 원하는 답변 채택 가능</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">입장하기 후 실시간 아지트별 채팅방 입장 가능, 특정 사용자 차단 가능</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">아지트 사용자 마커를 선택해 특정 사용자에게 쪽지 발송 가능. 받은 쪽지를 확인하고 답장 가능</td>
     </tr>
     <tr>
-      <td align="center" style="font-weight: bold; font-size: 18;">다른 유저 정보</td>
-      <td align="center" style="font-weight: bold; font-size: 18;">스탬프 기능</td>
+      <td align="center">마이페이지 (업적 / 내 정보 수정)</td>
+      <td align="center">전체 아지트 리스트 & 카테고리별</td>
+      <td align="center">장소 검색 & 아지트 등록</td>
     </tr>
     <tr>
 <!--       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/9dc8e364-23c2-4eb1-b494-8b55eccf3e10" /></td>
       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/74360783-3961-49f9-8ef4-f6123a897457" /></td> -->
     </tr>
     <tr>
-      <td align="center">핫플레이스 입장 시 핫플레이스에 방문해있는 유저들의 위치 정보를 지도에서 확인 (on / off)  ⇒ 특정 사용자에게 쪽지를 보낼 수 있는 기능도 제공.</td>
-      <td align="center">핫플레이스 입장 시 스탬프 찍을 수 있음. ⇒ 수집 개수에 따른 칭호 부여</td>
-    </tr>
-    <tr>
-      <td align="center" style="font-weight: bold; font-size: 18;">보낸 메시지 확인</td>
-      <td align="center" style="font-weight: bold; font-size: 18;">즐겨찾기</td>
-    </tr>
-    <tr>
-<!--       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/665f18f2-8dbe-4b8f-a2c9-d12a0608cdba" /></td>
-      <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/9291d0f5-0f66-4bca-b93d-8ff4befda04a" /></td> -->
-    </tr>
-    <tr>
-      <td align="center">메인 화면의 오른쪽 상단의 'My' 버튼을 터치하여<br>마이 페이지로 접속<br>'보낸버블' 탭에서 보낸 메시지들 확인 가능</td>
-      <td align="center">친구의 메인화면 오른쪽 하단의 '★' 버튼을 터치하여 즐겨찾기에 추가 가능<br>자신의 메인 화면의 오른쪽 상단의 'My' 버튼을 터치하여<br>마이 페이지로 접속<br>'즐겨찾기' 탭에서 친구들 확인 가능</td>
-    </tr>
-    <tr>
-      <td align="center" style="font-weight: bold; font-size: 18;">상태메시지 변경</td>
-      <td align="center" style="font-weight: bold; font-size: 18;">설정</td>
-    </tr>
-    <tr>
-<!--       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/337b67ca-2e81-4c00-b92a-33d2ff727cb7" /></td>
-      <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/e304e708-85e5-43c7-aa2c-5eb9beee90ca" width=475 /></td> -->
-    </tr>
-        <tr>
-      <td align="center">메인 화면의 중앙 상단의 상태 메시지를 터치하여<br>상태 메시지 수정 가능</td>
-      <td align="center">메인 화면의 오른쪽 상단의 'My' 버튼을 터치하여<br>마이페이지 접속 가능<br>마이페이지의 오른쪽 상단의 'Settings' 버튼을 터치하여<br>설정페이지 접속 가능
-      <br>프로필 수정 및 로그아웃, 탈퇴, 고객센터 문의 가능</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">아지트 방문에 따른 장소 카테고리별 업적 갱신. 사용자 닉네임과 이미지 수정 가능</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">전체 아지트 리스트 확인 가능. 장소 카테고리별 필터와 검색을 통해 원하는 아지트를 편리하게 찾을 수 있음</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">장소 검색을 통해 아직 아지트 등록되지 않은 장소를 찾고 새로운 아지트로 등록 가능</td>
     </tr>
  </table>
  
@@ -129,7 +86,6 @@
 <br />
 
 ## 🔧 기술 스택
-- 이것도 우리껄로 바꾸기
 ### Back-end
 <div>
 	<img src="https://img.shields.io/badge/Java%2017-3766AB?style=flat-square&logoColor=white"/>
@@ -148,7 +104,7 @@
 	<img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=black" />
 	<img src="https://img.shields.io/badge/React%20Native-61DAFB?style=flat-square&logo=react&logoColor=black" />
 	<img src="https://img.shields.io/badge/Recoil-3578E5?style=flat-square&logo=recoil&logoColor=black" />
-	<img src="https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=white" />
+	<img src="https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=black" />
 </div>
 
 ### Infra
@@ -167,23 +123,12 @@
 	<img src="https://img.shields.io/badge/Figma-F24E1E?style=flat-square&logo=figma&logoColor=white" />
 	<img src="https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white" />
 </div>
-<br />
 
 <br />
 
 ## ⚙️ 인프라 구조
 
 <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/81518305/284465263-8bb27a8c-f305-40e1-9d16-bb2d59a8d4b8.png" width="800" />
-
-<br />
-
-
-
-<br />
-
-## 📚 팀 ASHE 개발 일지
-
-- 추가할거 하셈요
 
 <br />
 
