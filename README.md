@@ -1,9 +1,6 @@
-# Popplar 
+# Popplar : 위치 기반 실시간 소셜 모바일 앱 서비스
 <div align="center">
 	<img src="https://github.com/Popplar-Dev.png" width=200/>
-	<h2>
-		위치 기반 익명 채팅 및 SNS 서비스 
-	</h2>
 </div>
 
 ## 📌 기획 배경
