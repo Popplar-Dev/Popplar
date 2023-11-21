@@ -94,9 +94,11 @@
 		<img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat-square&logo=spring&logoColor=white" />
 		<img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=gradle&logoColor=white" />
 		<img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white" />
+		<img src="https://img.shields.io/badge/mysql-4479A1?style=flat-square&logo=mysql&logoColor=white" />
 		<img src="https://img.shields.io/badge/Spring%20Data%20JPA-6DB33F?style=flat-square&logoColor=white"/>
 		<img src="https://img.shields.io/badge/JWT-000000?style=flat-square&logo=JSON%20web%20tokens&logoColor=white" />
 		<img src="https://img.shields.io/badge/MSA-FF4655?style=flat-square&logoColor=white"/>
+		<img src="https://img.shields.io/badge/Eureka-006D41?style=flat-square&logoColor=white"/>
 	</div>
 	<h4>Front-end</h4>
 	<div>
