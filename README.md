@@ -6,7 +6,7 @@
 	</h2>
 </div>
 
-## 기획 배경
+## 📌 기획 배경
 국내 핫플레이스들에 대한 인기가 높아진 만큼 길어진 웨이팅, 핫플레이스에서 같은 공간에서 지루한 대기 시간을 보내는 사람들끼리 서로 익명으로 대화하면서 핫플에 대한 정보도 공유하고, 게임도 하면서 즐겁게 웨이팅 시간을 보낼 수 있는 서비스.
 
 <div align="center">
@@ -80,60 +80,59 @@
       <td align="center" style="font-weight: bold; font-size: 18;">장소 검색을 통해 아직 아지트 등록되지 않은 장소를 찾고 새로운 아지트로 등록 가능</td>
     </tr>
  </table>
- 
 </div>
 
 <br />
 
 ## 🔧 기술 스택
-### Back-end
-<div>
-	<img src="https://img.shields.io/badge/Java%2017-3766AB?style=flat-square&logoColor=white"/>
-	<img src="https://img.shields.io/badge/Kotlin-7F52FF?style=flat-square&logo=kotlin&logoColor=white" />
-	<img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat-square&logo=spring&logoColor=white" />
-	<img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=gradle&logoColor=white" />
-	<img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white" />
-	<img src="https://img.shields.io/badge/Spring%20Data%20JPA-6DB33F?style=flat-square&logoColor=white"/>
-	<img src="https://img.shields.io/badge/JWT-000000?style=flat-square&logo=JSON%20web%20tokens&logoColor=white" />
-	<img src="https://img.shields.io/badge/MSA-FF4655?style=flat-square&logoColor=white"/>
-</div>
-
-### Front-end
-<div>
-	<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" />
-	<img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=black" />
-	<img src="https://img.shields.io/badge/React%20Native-61DAFB?style=flat-square&logo=react&logoColor=black" />
-	<img src="https://img.shields.io/badge/Recoil-3578E5?style=flat-square&logo=recoil&logoColor=black" />
-	<img src="https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=black" />
-</div>
-
-### Infra
-<div>
-	<img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" />
-	<img src="https://img.shields.io/badge/Jenkins-D24939?style=flat-square&logo=jenkins&logoColor=white" />
-	<img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=flat-square&logo=amazonec2&logoColor=white" />
-</div>
-
-### Tools
-<div>
-	<img src="https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white" />
-	<img src="https://img.shields.io/badge/GitLab-FC6D26?style=flat-square&logo=gitlab&logoColor=white" />
-	<img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white" />
-	<img src="https://img.shields.io/badge/Jira-0052CC?style=flat-square&logo=jira&logoColor=white" />
-	<img src="https://img.shields.io/badge/Figma-F24E1E?style=flat-square&logo=figma&logoColor=white" />
-	<img src="https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white" />
+<div align="center">
+	<h4>Back-end</h4>
+	<div>
+		<img src="https://img.shields.io/badge/Java%2017-3766AB?style=flat-square&logoColor=white"/>
+		<img src="https://img.shields.io/badge/Kotlin-7F52FF?style=flat-square&logo=kotlin&logoColor=white" />
+		<img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat-square&logo=spring&logoColor=white" />
+		<img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=gradle&logoColor=white" />
+		<img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white" />
+		<img src="https://img.shields.io/badge/Spring%20Data%20JPA-6DB33F?style=flat-square&logoColor=white"/>
+		<img src="https://img.shields.io/badge/JWT-000000?style=flat-square&logo=JSON%20web%20tokens&logoColor=white" />
+		<img src="https://img.shields.io/badge/MSA-FF4655?style=flat-square&logoColor=white"/>
+	</div>
+	<h4>Front-end</h4>
+	<div>
+		<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" />
+		<img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" />
+		<img src="https://img.shields.io/badge/React%20Native-61DAFB?style=flat-square&logo=react&logoColor=black" />
+		<img src="https://img.shields.io/badge/Recoil-3578E5?style=flat-square&logo=recoil&logoColor=black" />
+		<img src="https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=black" />
+		<img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white" />
+	</div>
+	<h4>Infra</h4>
+	<div>
+		<img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" />
+		<img src="https://img.shields.io/badge/Jenkins-D24939?style=flat-square&logo=jenkins&logoColor=white" />
+		<img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=flat-square&logo=amazonec2&logoColor=white" />
+	</div>
+	<h4>Tools</h4>
+	<div>
+		<img src="https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white" />
+		<img src="https://img.shields.io/badge/GitLab-FC6D26?style=flat-square&logo=gitlab&logoColor=white" />
+		<img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white" />
+		<img src="https://img.shields.io/badge/Jira-0052CC?style=flat-square&logo=jira&logoColor=white" />
+		<img src="https://img.shields.io/badge/Figma-F24E1E?style=flat-square&logo=figma&logoColor=white" />
+		<img src="https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white" />
+	</div>
+	
 </div>
 
 <br />
 
 ## ⚙️ 인프라 구조
-
-<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/81518305/284465263-8bb27a8c-f305-40e1-9d16-bb2d59a8d4b8.png" width="800" />
-
+<div align="center">
+	<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/81518305/284465263-8bb27a8c-f305-40e1-9d16-bb2d59a8d4b8.png" width="800" />
+</div>
 <br />
 
 ## 👩‍💻 팀원 소개
-
   <table align="center">
 		<h3 align="center">Back-end</h3>
     <tr>
