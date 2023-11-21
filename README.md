@@ -48,6 +48,8 @@
       <td align="center">아지트와 사용자의 거리를 측정해 500미터 이내에 있다면 입장하기 버튼 활성화, 500미터 밖에 있다면 입장 불가</td>
       <td align="center">하루에 한번 방문 스탬프 기록 (방문 스탬프 누적 기록을 통해 아지트 레벨이 상승) / 두 가지 미니게임 점수를 합산해 가장 높은 점수를 달성한 오늘의 정복자 표시</td>
     </tr>
+</table>
+<table>
     <tr>
       <td align="center" style="font-weight: bold; font-size: 18;">QNA & 질문하기 & 채택하기</td>
       <td align="center" style="font-weight: bold; font-size: 18;">채팅방 입장 후 채팅하기</td>
@@ -62,6 +64,8 @@
       <td align="center" style="font-weight: bold; font-size: 18;">입장하기 후 실시간 아지트별 채팅방 입장 가능, 특정 사용자 차단 가능</td>
       <td align="center" style="font-weight: bold; font-size: 18;">아지트 사용자 마커를 선택해 특정 사용자에게 쪽지 발송 가능. 받은 쪽지를 확인하고 답장 가능</td>
     </tr>
+</table>
+<table>
     <tr>
       <td align="center">마이페이지 (업적 / 내 정보 수정)</td>
       <td align="center">전체 아지트 리스트 & 카테고리별</td>
