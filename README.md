@@ -36,9 +36,9 @@
       <td align="center" style="font-weight: bold; font-size: 18;">방문 스탬프 & 게임</td>
     </tr>
     <tr>
-      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
-      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
-      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="250" src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="250" src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="250" src="./assets/로그인및지도_1.gif" /></td>
     </tr>
 	  <br/>
 	<tr>
@@ -54,9 +54,9 @@
       <td align="center" style="font-weight: bold; font-size: 18;">주변 사용자에게 쪽지 보내기 & 보낸 쪽지함, 받은 쪽지함</td>
     </tr>
     <tr>
-      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
-      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
-      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="250" src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="250" src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="250" src="./assets/로그인및지도_1.gif" /></td>
     </tr>
     <tr>
       <td align="center" style="font-weight: bold; font-size: 18;">선택된 장소에 대해 자유롭게 질문하고 답변 가능. 질문자는 원하는 답변 채택 가능</td>
@@ -71,9 +71,9 @@
       <td align="center" style="font-weight: bold; font-size: 18;">장소 검색 & 아지트 등록</td>
     </tr>
     <tr>
-      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
-      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
-      <td align="center"><img width="300" src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="250" src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="250" src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img width="250" src="./assets/로그인및지도_1.gif" /></td>
     </tr>
     <tr>
       <td align="center" style="font-weight: bold; font-size: 18;">아지트 방문에 따른 장소 카테고리별 업적 갱신. 사용자 닉네임과 이미지 수정 가능</td>
