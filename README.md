@@ -34,17 +34,14 @@
 <div align="center">
  <table>
     <tr>
-      <td align="center" style="font-weight: bold; font-size: 18;">로그인 & 지도
-      <img src="./assets/로그인및지도.gif"/>
-      </td>
-      <td align="center" style="font-weight: bold; font-size: 18;">아지트 입장하기
-      <img src="./assets/입장하기.gif"/>
-      </td>
-      <td align="center" style="font-weight: bold; font-size: 18;">방문 스탬프 & 게임</td>
+      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">로그인 & 지도</td>
+      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">아지트 입장하기</td>
+      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">방문 스탬프 & 게임</td>
     </tr>
     <tr>
-<!--       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/f3324c96-e216-453d-84e0-5dd9cf1a9a68" /></td>
-      <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/0087115c-7aaf-476e-9983-233038ab2fb6" /></td> -->
+      <td align="center"><img src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img src="./assets/로그인및지도_1.gif" /></td>
     </tr>
 	  <br/>
 	<tr>
@@ -55,13 +52,14 @@
 </table>
 <table>
     <tr>
-      <td align="center" style="font-weight: bold; font-size: 18;">QNA & 질문하기 & 채택하기</td>
-      <td align="center" style="font-weight: bold; font-size: 18;">채팅방 입장 후 채팅하기</td>
-      <td align="center" style="font-weight: bold; font-size: 18;">주변 사용자에게 쪽지 보내기 & 보낸 쪽지함, 받은 쪽지함</td>
+      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">QNA & 질문하기 & 채택하기</td>
+      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">채팅방 입장 후 채팅하기</td>
+      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">주변 사용자에게 쪽지 보내기 & 보낸 쪽지함, 받은 쪽지함</td>
     </tr>
     <tr>
-<!--       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/de5911ee-24e8-4d11-bc78-cde9bc1e6360" /></td>
-      <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/fcc377e2-c916-4a50-a111-5364fd810083" /></td> -->
+      <td align="center"><img src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img src="./assets/로그인및지도_1.gif" /></td>
     </tr>
     <tr>
 			<td align="center" style="font-weight: bold; font-size: 18;">선택된 장소에 대해 자유롭게 질문하고 답변 가능. 질문자는 원하는 답변 채택 가능</td>
@@ -71,13 +69,14 @@
 </table>
 <table>
     <tr>
-      <td align="center">마이페이지 (업적 / 내 정보 수정)</td>
-      <td align="center">전체 아지트 리스트 & 카테고리별</td>
-      <td align="center">장소 검색 & 아지트 등록</td>
+      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">마이페이지 (업적 / 내 정보 수정)</td>
+      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">전체 아지트 리스트 & 카테고리별</td>
+      <td align="center" style="width: 280px; font-weight: bold; font-size: 18;">장소 검색 & 아지트 등록</td>
     </tr>
     <tr>
-<!--       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/9dc8e364-23c2-4eb1-b494-8b55eccf3e10" /></td>
-      <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/74360783-3961-49f9-8ef4-f6123a897457" /></td> -->
+      <td align="center"><img src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img src="./assets/로그인및지도_1.gif" /></td>
+      <td align="center"><img src="./assets/로그인및지도_1.gif" /></td>
     </tr>
     <tr>
       <td align="center" style="font-weight: bold; font-size: 18;">아지트 방문에 따른 장소 카테고리별 업적 갱신. 사용자 닉네임과 이미지 수정 가능</td>
