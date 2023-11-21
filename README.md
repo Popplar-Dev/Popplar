@@ -75,21 +75,21 @@
 <!--       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/f3324c96-e216-453d-84e0-5dd9cf1a9a68" /></td>
       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/0087115c-7aaf-476e-9983-233038ab2fb6" /></td> -->
     </tr>
-        <tr>
+	<tr>
       <td align="center">소셜 로그인으로 로그인이 가능한 페이지</td>
       <td align="center">로그인 후 자동으로 메인 화면 접속</td>
     </tr>
     <tr>
-<!--       <td align="center" style="font-weight: bold; font-size: 18;">메시지 작성</td>
-      <td align="center" style="font-weight: bold; font-size: 18;">메시지 확인</td> -->
+      <td align="center" style="font-weight: bold; font-size: 18;">지도 화면</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">메시지 확인</td>
     </tr>
     <tr>
 <!--       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/de5911ee-24e8-4d11-bc78-cde9bc1e6360" /></td>
       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/fcc377e2-c916-4a50-a111-5364fd810083" /></td> -->
     </tr>
     <tr>
-      <td align="center">'버블 만들기' 버튼으로 메시지 작성 가능<br>답장을 받을 경우 분홍색 비눗방울로 메시지가 나타남</td>
-      <td align="center">메인 화면의 비눗 방울을 터치하여 메시지 확인 가능<br>읽은 메시지는 회색 비눗방울이 됨</td>
+      <td align="center">지도에서 핫플레이스 표기(핫플레이스는 사람이 많이 방문할수록 레벨이 높아짐</td>
+      <td align="center">핫플레이스 주변으로 방문하면 핫플레이스에 입장 가능, 입장 시,  핫플레이스에서 익명의 유저들과 채팅과 간단한 게임이 가능함, 핫플레이스 범위를 나가면 일정 시간 후 모든 기능 사용 불가.</td>
     </tr>
     <tr>
       <td align="center" style="font-weight: bold; font-size: 18;">튜토리얼</td>
