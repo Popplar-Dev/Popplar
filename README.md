@@ -34,8 +34,12 @@
 <div align="center">
  <table>
     <tr>
-      <td align="center" style="font-weight: bold; font-size: 18;">로그인 & 지도</td>
-      <td align="center" style="font-weight: bold; font-size: 18;">아지트 입장하기</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">로그인 & 지도
+      <img src="./assets/로그인및지도.gif"/>
+      </td>
+      <td align="center" style="font-weight: bold; font-size: 18;">아지트 입장하기
+      <img src="./assets/입장하기.gif"/>
+      </td>
       <td align="center" style="font-weight: bold; font-size: 18;">방문 스탬프 & 게임</td>
     </tr>
     <tr>
