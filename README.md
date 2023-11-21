@@ -11,11 +11,8 @@
 
 <div align="center">
 	<p>
-	<a href="https://play.google.com/store/apps/details?id=com.popplar.myapplication&hl=ko-KR"> 지금 바로 플레이스토어에서 설치해보기</a>
+	> <a href="https://play.google.com/store/apps/details?id=com.popplar.myapplication&hl=ko-KR"> 지금 바로 플레이스토어에서 이용하기</a> <
 	</p>
-	
-[프로젝트 소개](#🚀-프로젝트-소개) • [주요 기능](#✨-주요-기능) • [기술 스택](#🔧-기술-스택)• [인프라 구조](#⚙️-인프라-구조)• [개발 일지](#📚-팀-개발-일지)• [팀원 소개](#👩‍💻-팀원-소개)
-	
 </div>
 
 <br/>
@@ -28,7 +25,7 @@
 <br/>
 
 ## 🎉 프로젝트 소개
-🪐**위치 기반 실시간 소셜 모바일 앱 서비스**  
+🪐**위치 기반 실시간 소셜 모바일 앱 서비스** 🪐  
 내 주변 장소가 궁금한 여행자🚩, 익명의 사용자와 자유롭게 소통하고 싶은 사람들🤸‍♀️을 위해 **POPPLAR**가 탄생했습니다! **POPPLAR**를 통해 아지트를 방문하고 즐거운 시간을 함께 나누세요!
 
 <br />
