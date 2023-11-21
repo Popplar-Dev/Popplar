@@ -48,12 +48,11 @@
     </tr>
     </table>
 
-💙 <b>서비스 설명</b>
+<b>서비스 설명</b>
 
-> 간단 서비스설명1\
-> 서비스설명2\
-> 서비스설명3\
-> 서비스설명4
+ **위치 기반 실시간 소셜 모바일 앱 서비스**
+내 주변 장소가 궁금한 여행자🚩, 익명의 사용자와 자유롭게 소통하고 싶은 사람들🤸‍♀️을 위해 **POPPLAR**가 탄생했습니다! **POPPLAR**를 통해 아지트를 방문하고 즐거운 시간을 함께 나누세요!
+
 
 <br />
 
@@ -76,7 +75,7 @@
     </tr>
     <tr>
       <td align="center" style="font-weight: bold; font-size: 18;">지도 화면</td>
-      <td align="center" style="font-weight: bold; font-size: 18;">메시지 확인</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">핫플레이스 상세 정보</td>
     </tr>
     <tr>
 <!--       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/de5911ee-24e8-4d11-bc78-cde9bc1e6360" /></td>
@@ -87,16 +86,16 @@
       <td align="center">핫플레이스 주변으로 방문하면 핫플레이스에 입장 가능, 입장 시,  핫플레이스에서 익명의 유저들과 채팅과 간단한 게임이 가능함, 핫플레이스 범위를 나가면 일정 시간 후 모든 기능 사용 불가.</td>
     </tr>
     <tr>
-      <td align="center" style="font-weight: bold; font-size: 18;">튜토리얼</td>
-      <td align="center" style="font-weight: bold; font-size: 18;">공유하기</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">다른 유저 정보</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">스탬프 기능</td>
     </tr>
     <tr>
 <!--       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/9dc8e364-23c2-4eb1-b494-8b55eccf3e10" /></td>
       <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/74360783-3961-49f9-8ef4-f6123a897457" /></td> -->
     </tr>
     <tr>
-      <td align="center">메인 화면의 왼쪽 하단의 '?' 버튼을 터치하여<br>서비스 튜토리얼 확인 가능</td>
-      <td align="center">메인 화면의 왼쪽 상단의 'Share' 버튼을 터치하여<br> 카카오톡 , 트위터, 페이스북 공유 , 페이지 url 복사 가능</td>
+      <td align="center">핫플레이스 입장 시 핫플레이스에 방문해있는 유저들의 위치 정보를 지도에서 확인 (on / off)  ⇒ 특정 사용자에게 쪽지를 보낼 수 있는 기능도 제공.</td>
+      <td align="center">핫플레이스 입장 시 스탬프 찍을 수 있음. ⇒ 수집 개수에 따른 칭호 부여</td>
     </tr>
     <tr>
       <td align="center" style="font-weight: bold; font-size: 18;">보낸 메시지 확인</td>
@@ -131,42 +130,44 @@
 
 ## 🔧 기술 스택
 - 이것도 우리껄로 바꾸기
-<div align="center">
-<img src="https://img.shields.io/badge/Vue.js%202-4FC08D?style=flat-square&logo=vuedotjs&logoColor=black" />
-<img src="https://img.shields.io/badge/Vuetify-1867C0?style=flat-square&logo=vuetify&logoColor=white" />
-<img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white" />
-<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" />
-<img src="https://img.shields.io/badge/Node.js%2018.17.1-339933?style=flat-square&logo=nodedotjs&logoColor=white" />
-<img src="https://img.shields.io/badge/Google%20Analytics-E37400?style=flat-square&logo=googleanalytics&logoColor=white" />
-<br />
-<img src="https://img.shields.io/badge/Java%2017-3766AB?style=flat-square&logoColor=white"/>
-<img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat-square&logo=spring&logoColor=white" />
-<img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=gradle&logoColor=white" />
-<img src="https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=mariadb&logoColor=white" />
-<img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white" />
-<img src="https://img.shields.io/badge/Spring%20Data%20JPA-6DB33F?style=flat-square&logoColor=white"/>
-<br />
-<img src="https://img.shields.io/badge/Spring%20Cloud%20OpenFeign-6DB33F?style=flat-square&logoColor=white"/>
-<img src="https://img.shields.io/badge/JWT-000000?style=flat-square&logo=JSON%20web%20tokens&logoColor=white" />
-<img src="https://img.shields.io/badge/Kakao-FFCD00?style=flat-square&logo=kakao&logoColor=black" />
-<img src="https://img.shields.io/badge/Google-4285F4?style=flat-square&logo=google&logoColor=white" />
-<img src="https://img.shields.io/badge/JUnit5-25A162?style=flat-square&logo=junit5&logoColor=white" />
-<br />
-<img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" />
-<img src="https://img.shields.io/badge/Jenkins-D24939?style=flat-square&logo=jenkins&logoColor=white" />
-<img src="https://img.shields.io/badge/NGINX-009639?style=flat-square&logo=nginx&logoColor=white" />
-<img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=flat-square&logo=amazonec2&logoColor=white" />
-<img src="https://img.shields.io/badge/Linux-FCC624?style=flat-square&logo=linux&logoColor=black" />
-<br />
-<img src="https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white" />
-<img src="https://img.shields.io/badge/GitLab-FC6D26?style=flat-square&logo=gitlab&logoColor=white" />
-<img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white" />
-<img src="https://img.shields.io/badge/Figma-F24E1E?style=flat-square&logo=figma&logoColor=white" />
-<img src="https://img.shields.io/badge/Mattermost-0058CC?style=flat-square&logo=mattermost&logoColor=white" />
-<img src="https://img.shields.io/badge/Discord-5865F2?style=flat-square&logo=discord&logoColor=white" />
-<img src="https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white" />
-<img src="https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=swagger&logoColor=black" />
+### Back-end
+<div>
+	<img src="https://img.shields.io/badge/Java%2017-3766AB?style=flat-square&logoColor=white"/>
+	<img src="https://img.shields.io/badge/Kotlin-7F52FF?style=flat-square&logo=kotlin&logoColor=white" />
+	<img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat-square&logo=spring&logoColor=white" />
+	<img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=gradle&logoColor=white" />
+	<img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white" />
+	<img src="https://img.shields.io/badge/Spring%20Data%20JPA-6DB33F?style=flat-square&logoColor=white"/>
+	<img src="https://img.shields.io/badge/JWT-000000?style=flat-square&logo=JSON%20web%20tokens&logoColor=white" />
+	<img src="https://img.shields.io/badge/MSA-FF4655?style=flat-square&logoColor=white"/>
 </div>
+
+### Front-end
+<div>
+	<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" />
+	<img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=black" />
+	<img src="https://img.shields.io/badge/React%20Native-61DAFB?style=flat-square&logo=react&logoColor=black" />
+	<img src="https://img.shields.io/badge/Recoil-3578E5?style=flat-square&logo=recoil&logoColor=black" />
+	<img src="https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=white" />
+</div>
+
+### Infra
+<div>
+	<img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" />
+	<img src="https://img.shields.io/badge/Jenkins-D24939?style=flat-square&logo=jenkins&logoColor=white" />
+	<img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=flat-square&logo=amazonec2&logoColor=white" />
+</div>
+
+### Tools
+<div>
+	<img src="https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white" />
+	<img src="https://img.shields.io/badge/GitLab-FC6D26?style=flat-square&logo=gitlab&logoColor=white" />
+	<img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white" />
+	<img src="https://img.shields.io/badge/Jira-0052CC?style=flat-square&logo=jira&logoColor=white" />
+	<img src="https://img.shields.io/badge/Figma-F24E1E?style=flat-square&logo=figma&logoColor=white" />
+	<img src="https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white" />
+</div>
+<br />
 
 <br />
 
@@ -189,10 +190,11 @@
 ## 👩‍💻 팀원 소개
 
   <table align="center">
+		<h3 align="center">Back-end</h3>
     <tr>
-<!--       <td align="center"><img src="https://avatars.githubusercontent.com/u/102013524?s=96&v=4" width="160"></td>
-      <td align="center"><img src="https://avatars.githubusercontent.com/u/55385934?s=96&v=4" width="160"></td>
-      <td align="center"><img src="https://avatars.githubusercontent.com/u/101235186?s=96&v=4" width="160"></td> -->
+      <td align="center"><img src="https://github.com/joonsuk12.png" width="160"></td>
+      <td align="center"><img src="https://github.com/OhSeongRak.png" width="160"></td>
+      <td align="center"><img src="https://github.com/pxxnxx.png" width="160"></td>
     </tr>
     <tr>
       <td align="center">오준석</td>
@@ -200,14 +202,17 @@
       <td align="center">김민석</td>
     </tr>
     <tr>
-<!--       <td align="center"><a href="https://github.com/HyewonKkang" target="_blank">@jxixeun</a></td>
-      <td align="center"><a href="https://github.com/yscriuf" target="_blank" width="160">@fluffymn</a></td>
-      <td align="center"><a href="https://github.com/LouiMinister" target="_blank">@jungeunevepark</a></td> -->
+      <td align="center"><a href="https://github.com/joonsuk12" target="_blank">@joonsuk12</a></td>
+      <td align="center"><a href="https://github.com/OhSeongRak" target="_blank">@OhSeongRak</a></td>
+      <td align="center"><a href="https://github.com/pxxnxx" target="_blank">@pxxnxx</a></td>
     </tr>
+	</table>
+	<table align="center">
+		<h3 align="center">Front-end</h3>
     <tr>
       <td align="center"><img src="https://avatars.githubusercontent.com/u/77910839?s=96&v=4" width="160"></td>
-<!--       <td align="center"><img src="https://avatars.githubusercontent.com/u/77479853?s=64&v=4" width="160"></td>
-      <td align="center"><img src="https://avatars.githubusercontent.com/u/122580029?s=96&v=4" width="160"></td> -->
+      <td align="center"><img src="https://github.com/JiwooPaeng/JiwooPaeng/assets/122685653/2c41b503-5227-4ce9-a889-a67661c24736&v=4" width="160"></td>
+      <td align="center"><img src="https://github.com/JPark11.png" width="160"></td>
     </tr>
     <tr>
       <td align="center">서동훈</td>
@@ -216,6 +221,7 @@
     </tr>
     <tr>
       <td align="center"><a href="https://github.com/gns9541" target="_blank">@gns9541</a></td>
-
+      <td align="center"><a href="https://github.com/JiwooPaeng" target="_blank">@JiwooPaeng</a></td>
+      <td align="center"><a href="https://github.com/JPark11" target="_blank">@JPark11</a></td>
     </tr>
   </table>
