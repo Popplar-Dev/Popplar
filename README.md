@@ -1,4 +1,4 @@
-# 서비스명 : 뜨장
+# 서비스명 : Popplar
 
 ## 기획 배경
 
@@ -29,12 +29,7 @@
 	위치 기반 익명 채팅 및 SNS 서비스 
 	<img src="https://github.com/fluffymn/readme-test/assets/55385934/46ec4e62-f38a-4f76-bfa2-dbe8085ce0f1" width=30/>
 </h2>
-<!-- <p>
-💌사랑이 담긴 메세지  🍎사과가 담긴 메세지<br>
-🔒비밀이 담긴 메세지 🤣웃음이 담긴 메세지<br>
-<br>
-💙익명으로 진심을 전해보세요!💙
-</p> -->
+
 <p>
 <a href="https://play.google.com/store/apps/details?id=com.popplar.myapplication&hl=ko-KR"> 지금 바로 플레이스토어에서 설치해보기</a>
 </p>
