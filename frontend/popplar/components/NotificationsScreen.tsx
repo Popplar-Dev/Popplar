@@ -6,7 +6,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import ReceivedMessages from './Messages/ReceivedMessages';
 import SentMessages from './Messages/SentMessages';
 import MessageDetail from './Messages/MessageDetail';
-import {messageType} from './types/message';
+import {messageType} from '../types/message';
 import MessageDraft from './Messages/MessageDraft';
 
 type RootStackParamList = {

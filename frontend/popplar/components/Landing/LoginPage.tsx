@@ -5,8 +5,8 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import { useRecoilState } from 'recoil';
-import { userInfoState } from '../recoil/userState';
-import { userLoginState } from '../recoil/userState';
+import { userInfoState } from '../../recoil/userState';
+import { userLoginState } from '../../recoil/userState';
 import LocationPermission from './LocationPermission'
 
 const REST_API_KEY = '0da056655f3ed1ec3ebd8325d19ac9f6';

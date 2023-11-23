@@ -4,13 +4,13 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {View, StyleSheet, Alert} from 'react-native';
 import { useNavigation, useRoute, NavigationProp, useFocusEffect  } from '@react-navigation/native';
-import { TabNavigatorParamList } from '../types/NavigatorParams';
+import { TabNavigatorParamList } from '../../types/NavigatorParams';
 
 import React, {useCallback} from "react";
 import { BackHandler } from 'react-native';
 
 import {useRecoilState} from 'recoil';
-import {chatroomState} from '../recoil/chatroomState';
+import {chatroomState} from '../../recoil/chatroomState';
 
 //스크린 컴포넌트
 import MapScreen from '../MapScreen';

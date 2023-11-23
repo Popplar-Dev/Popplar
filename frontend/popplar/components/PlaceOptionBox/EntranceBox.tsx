@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { getAllHotplace, getIdHotplace } from '../services/getHotplace';
+import { getAllHotplace, getIdHotplace } from '../../services/getHotplace';
 
 type Props = {
     type: 'possible' | 'impossible';

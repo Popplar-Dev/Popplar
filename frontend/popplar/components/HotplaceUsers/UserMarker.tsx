@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, Button, Animated, Easing } from 'react-n
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-import { getHotplaceUsers } from '../services/postLocation'
+import { getHotplaceUsers } from '../../services/postLocation'
 import { generateRandomMarkers } from './randomPosition'
 
 type Props = {

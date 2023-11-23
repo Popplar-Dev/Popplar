@@ -4,7 +4,7 @@ import { BlurView } from "@react-native-community/blur";
 import { useState, useEffect } from 'react';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { userInfoState } from '../recoil/userState';
+import { userInfoState } from '../../recoil/userState';
 import { useRecoilState } from 'recoil';
 
 

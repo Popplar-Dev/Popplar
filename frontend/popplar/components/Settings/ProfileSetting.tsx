@@ -5,7 +5,7 @@ import axios from "axios";
 import * as ImagePicker from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRecoilValue } from 'recoil';
-import { userInfoState } from '../recoil/userState';
+import { userInfoState } from '../../recoil/userState';
 import { useRecoilState } from 'recoil';
 import ProfileImageSelectModal from '../Modals/ProfileImageSelectModal'
 

@@ -10,14 +10,14 @@ import {
 
 import {useFocusEffect} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {SentMessagesStackParamList} from '../types/NavigatorParams';
+import {SentMessagesStackParamList} from '../../types/NavigatorParams';
 import axios from 'axios';
-import {getToken} from '../services/getAccessToken';
+import {getToken} from '../../services/getAccessToken';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
-import {messageType} from '../types/message';
+import {messageType} from '../../types/message';
 
 import Message from './Message';
 

@@ -10,15 +10,15 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation} from '@react-navigation/native';
 import {NavigationProp} from '@react-navigation/native';
-import {TabNavigatorParamList} from '../types/NavigatorParams';
+import {TabNavigatorParamList} from '../../types/NavigatorParams';
 import GameListModal from '../Modals/GameListModal';
 
 import {useRecoilState} from 'recoil';
-import {chatroomState} from '../recoil/chatroomState';
+import {chatroomState} from '../../recoil/chatroomState';
 
 import axios from 'axios';
-import {getToken} from '../services/getAccessToken';
-import {deleteChatroom} from '../services/deleteChatroom';
+import {getToken} from '../../services/getAccessToken';
+import {deleteChatroom} from '../../services/deleteChatroom';
 
 type Props = {
   type: 'chat' | 'game';

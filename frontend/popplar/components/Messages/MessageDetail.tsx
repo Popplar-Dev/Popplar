@@ -2,9 +2,9 @@ import {useEffect} from 'react';
 import {Text, View, Image, Pressable, StyleSheet} from 'react-native';
 
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import { ReceivedMessageStackParamList } from '../types/NavigatorParams';
+import { ReceivedMessageStackParamList } from '../../types/NavigatorParams';
 import axios from 'axios';
-import { getToken } from '../services/getAccessToken';
+import { getToken } from '../../services/getAccessToken';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 

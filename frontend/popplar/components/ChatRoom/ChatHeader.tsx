@@ -4,11 +4,11 @@ import {Menu} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import {useRecoilState} from 'recoil';
-import {chatroomState} from '../recoil/chatroomState';
+import {chatroomState} from '../../recoil/chatroomState';
 
 import {NavigationProp} from '@react-navigation/native';
-import {TabNavigatorParamList} from '../types/NavigatorParams';
-import {getToken} from '../services/getAccessToken';
+import {TabNavigatorParamList} from '../../types/NavigatorParams';
+import {getToken} from '../../services/getAccessToken';
 import axios from 'axios';
 
 type headerProps = {

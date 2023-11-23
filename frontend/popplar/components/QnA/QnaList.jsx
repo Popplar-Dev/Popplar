@@ -6,7 +6,7 @@ import { useNavigation,useIsFocused } from '@react-navigation/native';
 import QnaCreateModal from '../Modals/QnaCreateModal';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { userInfoState } from '../recoil/userState';
+import { userInfoState } from '../../recoil/userState';
 import { useRecoilState } from 'recoil';
 
 export default function QnaList({ route }) {

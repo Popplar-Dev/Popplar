@@ -4,7 +4,7 @@ import { BlurView } from "@react-native-community/blur";
 import { useState, useEffect } from 'react';
 import axios from "axios";
 import { useRecoilValue } from 'recoil';
-import { userInfoState } from '../recoil/userState';
+import { userInfoState } from '../../recoil/userState';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 

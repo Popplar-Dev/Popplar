@@ -6,7 +6,7 @@ import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRecoilState } from 'recoil';
-import { userInfoState } from '../recoil/userState';
+import { userInfoState } from '../../recoil/userState';
 
 import LocationPermission from './LocationPermission'
 

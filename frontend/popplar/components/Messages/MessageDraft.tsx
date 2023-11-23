@@ -11,9 +11,9 @@ import {
 } from 'react-native';
 import { useNavigation, useRoute, NavigationProp, RouteProp } from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import { ReceivedMessageStackParamList } from '../types/NavigatorParams';
+import { ReceivedMessageStackParamList } from '../../types/NavigatorParams';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {getToken} from '../services/getAccessToken';
+import {getToken} from '../../services/getAccessToken';
 import axios from 'axios';
 
 export default function MessageDraft() {

@@ -25,31 +25,31 @@ import { FlipInEasyX } from 'react-native-reanimated';
 import { requestPermission } from '../utils/reqLocationPermission'
 
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { locationState } from './recoil/locationState'
-import { chatroomState } from './recoil/chatroomState';
+import { locationState } from '../recoil/locationState'
+import { chatroomState } from '../recoil/chatroomState';
 
-import { getIdHotplace, getMyInfo, updateMyHotPlaceId, getStamp, insertVisitor } from './services/getHotplace'
-import { likeHotplace, delLikeHotplace } from './services/postHotplace'
+import { getIdHotplace, getMyInfo, updateMyHotPlaceId, getStamp, insertVisitor } from '../services/getHotplace'
+import { likeHotplace, delLikeHotplace } from '../services/postHotplace'
 import { previousDay } from 'date-fns';
 
-import { SpaceInfo } from './types/place'
+import { SpaceInfo } from '../types/place'
 import { useNavigation } from '@react-navigation/native';
 import GameListModal from './Modals/GameListModal';
 import { useRoute } from '@react-navigation/native';
 
-import { getDistance } from './utils/GetDistance'
-import { getToken } from './services/getAccessToken'
-import { postMyHotLocation } from './services/postLocation'
-import { deleteChatroom } from './services/deleteChatroom'
+import { getDistance } from '../utils/GetDistance'
+import { getToken } from '../services/getAccessToken'
+import { postMyHotLocation } from '../services/postLocation'
+import { deleteChatroom } from '../services/deleteChatroom'
 import axios from 'axios';
 import EntranceBox from './PlaceOptionBox/EntranceBox';
-import { userInfoState } from './recoil/userState';
+import { userInfoState } from '../recoil/userState';
 
 import HotplaceUsers from './HotplaceUsers/HotplaceUsers'
 import UserModal from './Modals/UserModal'
 import { BackHandler } from 'react-native';
 
-import { getHotplaceUsers } from './services/postLocation'
+import { getHotplaceUsers } from '../services/postLocation'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -682,8 +682,8 @@ const MapScreen: React.FC = () => {
           <WebView 
             ref={webRef}
             style={styles.webview}
-            source={{uri: 'https://jiwoopaeng.github.io/popmmm_demo/'}}
-            // source={{uri: 'https://jiwoopaeng.github.io/popmmm/'}}
+            // source={{uri: 'https://jiwoopaeng.github.io/popmmm_demo/'}}
+            source={{uri: 'https://jiwoopaeng.github.io/popmmm/'}}
             javaScriptEnabled={true}
             onLoad={native_to_web_load}
             // injectedJavaScript={inject}

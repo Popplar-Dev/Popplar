@@ -3,12 +3,12 @@ import {View, Pressable, Text, Alert, StyleSheet} from 'react-native';
 import {Menu} from 'react-native-paper';
 
 import {useNavigation, NavigationProp} from '@react-navigation/native';
-import {ChatStackParamList} from '../../types/NavigatorParams';
+import {ChatStackParamList} from '../../../types/NavigatorParams';
 
 import {useRecoilState} from 'recoil';
-import {userBlockListState} from '../../recoil/userState';
+import {userBlockListState} from '../../../recoil/userState';
 
-import {getToken} from '../../services/getAccessToken';
+import {getToken} from '../../../services/getAccessToken';
 import axios from 'axios';
 
 import Icon from 'react-native-vector-icons/Ionicons';

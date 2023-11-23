@@ -5,7 +5,7 @@ import axios from "axios";
 import MapScreen from './MapScreen'
 import { useNavigation } from "@react-navigation/native";
 import { useRecoilValue } from 'recoil';
-import { userInfoState } from './recoil/userState';
+import { userInfoState } from '../recoil/userState';
 import { useRecoilState } from 'recoil';
 
 interface HotPlace {

@@ -1,7 +1,7 @@
 import {View, StyleSheet} from 'react-native';
 
 import {useRecoilState} from 'recoil';
-import {chatroomState} from './recoil/chatroomState';
+import {chatroomState} from '../recoil/chatroomState';
 
 import ChatRoom from './ChatRoom/ChatRoom';
 import NoChatroom from './ChatRoom/NoChatroom';

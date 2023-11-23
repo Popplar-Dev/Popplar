@@ -10,10 +10,10 @@ import {
 } from 'react-native';
 
 import {useNavigation, NavigationProp} from '@react-navigation/native';
-import {MapStackParamList} from '../types/NavigatorParams';
+import {MapStackParamList} from '../../types/NavigatorParams';
 
 import {BlurView} from '@react-native-community/blur';
-import {getMembersInfo} from '../services/getMember';
+import {getMembersInfo} from '../../services/getMember';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 interface Props {

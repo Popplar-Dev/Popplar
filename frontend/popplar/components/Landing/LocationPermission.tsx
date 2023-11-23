@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 import { useRecoilState } from 'recoil';
-import { locationState } from '../recoil/locationState'
+import { locationState } from '../../recoil/locationState'
 
 import { requestPermission } from '../../utils/reqLocationPermission'
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, Button } from 'react-native';
 
-import { getHotplaceUsers } from '../services/postLocation'
+import { getHotplaceUsers } from '../../services/postLocation'
 import { generateRandomMarkers } from './randomPosition'
 
 import UserMarker from './UserMarker'

@@ -12,7 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/native';
 
 import { useRecoilValue } from 'recoil';
-import { userInfoState } from './recoil/userState';
+import { userInfoState } from '../recoil/userState';
 
 function MyPageScreen() {
 	const [token, setToken] = useState('')

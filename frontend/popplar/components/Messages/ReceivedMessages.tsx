@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import { ReceivedMessageStackParamList } from '../types/NavigatorParams';
+import { ReceivedMessageStackParamList } from '../../types/NavigatorParams';
 import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -18,8 +18,8 @@ import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
-import {messageType} from '../types/message';
-import { getToken } from '../services/getAccessToken';
+import {messageType} from '../../types/message';
+import { getToken } from '../../services/getAccessToken';
 
 import Message from './Message';
 

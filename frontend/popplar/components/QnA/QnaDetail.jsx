@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, Pressable, TextInput, FlatList, ActivityIndicator, Keyboard } from 'react-native';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { userInfoState } from '../recoil/userState';
+import { userInfoState } from '../../recoil/userState';
 import { useRecoilState } from 'recoil';
 
 export default function QnaDetail({ route }) {

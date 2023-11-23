@@ -11,7 +11,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 
 import {useRecoilState, useRecoilValue} from 'recoil';
-import {userIdState, userBlockListState} from '../recoil/userState';
+import {userIdState, userBlockListState} from '../../recoil/userState';
 
 import {Client, IMessage, IFrame, wsErrorCallbackType} from '@stomp/stompjs';
 
@@ -22,8 +22,8 @@ import ChatDate from './ChatComponents/ChatDate';
 import ChatInput from './ChatInput';
 
 import {ChatMessageType} from '../../types/chatType';
-import {getToken} from '../services/getAccessToken';
-import {getDateAndTime} from '../utils/chat';
+import {getToken} from '../../services/getAccessToken';
+import {getDateAndTime} from '../../utils/chat';
 
 import axios from 'axios';
 

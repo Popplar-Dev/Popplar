@@ -5,11 +5,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-import { postHotplace } from '../services/postHotplace'
-import { getIdHotplace } from '../services/getHotplace'
-import { SpaceInfo } from '../types/place'
+import { postHotplace } from '../../services/postHotplace'
+import { getIdHotplace } from '../../services/getHotplace'
+import { SpaceInfo } from '../../types/place'
 
-import { likeHotplace } from '../services/postHotplace'
+import { likeHotplace } from '../../services/postHotplace'
 
 type Props = {
   props: SpaceInfo
